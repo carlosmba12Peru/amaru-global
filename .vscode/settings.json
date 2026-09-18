@@ -1,0 +1,15 @@
+{
+    "python.experiments.optOutFrom": [
+        "All"
+    ],
+    "python.analysis.indexing": false,
+    "python.analysis.userFileIndexingLimit": 10,
+    "files.watcherExclude": {
+        "**/.git/**": true,
+        "**/node_modules/**": true,
+        "**/.venv/**": true,
+        "**/venv/**": true,
+        "**/env/**": true
+    },
+    "json.schemaDownload.enable": true
+}

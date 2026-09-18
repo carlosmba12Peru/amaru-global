@@ -1,0 +1,45 @@
+{
+    "distritos": [
+        {
+            "nombre": "Lurigancho-Chosica",
+            "ubigeo": "150118",
+            "cuenca": "Rímac",
+            "quebrada": "Huaycoloro",
+            "regimen": "EL_NINO",
+            "lengua": "ES",
+            "canalTelegram": "-1001111111111"
+        },
+        {
+            "nombre": "Piura",
+            "ubigeo": "200101",
+            "cuenca": "Río Piura",
+            "regimen": "EL_NINO",
+            "lengua": "ES",
+            "canalTelegram": "-1002222222222"
+        },
+        {
+            "nombre": "Íllimo",
+            "ubigeo": "140304",
+            "cuenca": "Río La Leche",
+            "regimen": "EL_NINO",
+            "lengua": "ES",
+            "canalTelegram": "-1003333333333"
+        },
+        {
+            "nombre": "Santa Rosa / Mazocruz",
+            "ubigeo": "210505",
+            "cuenca": "Altiplano Puno",
+            "regimen": "LA_NINA",
+            "lengua": "AYMARA",
+            "canalTelegram": "-1004444444444"
+        },
+        {
+            "nombre": "Espinar",
+            "ubigeo": "080801",
+            "cuenca": "Cusco",
+            "regimen": "LA_NINA",
+            "lengua": "QUECHUA",
+            "canalTelegram": "-1005555555555"
+        }
+    ]
+}

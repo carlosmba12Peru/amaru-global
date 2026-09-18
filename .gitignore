@@ -1,0 +1,24 @@
+# Archivos de entorno y credenciales
+.env
+.env.local
+.env.*.local
+*.env
+
+# Python / FastAPI
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# Next.js / Node
+node_modules/
+.next/
+out/
+build/
+dist/
+
+# Archivos binarios pesados (conservados en data/ localmente)
+data/*.pdf
+data/**/*.pdf
+data/*.xls
+backups/

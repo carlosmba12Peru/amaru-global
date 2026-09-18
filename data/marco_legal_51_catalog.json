@@ -1,0 +1,938 @@
+{
+  "total_normas": 51,
+  "fecha_corte": "16 de Septiembre de 2026",
+  "resumen_categorias": {
+    "TRANSFERENCIA PRESUPUESTAL DE EMERGENCIA": 10,
+    "PRÓRROGA DE ESTADO DE EMERGENCIA": 9,
+    "CRÉDITO Y ENDEUDAMIENTO CONTINGENTE INTERNACIONAL": 17,
+    "MEDIDA REGULATORIA SECTORIAL": 10,
+    "DECLARATORIA DE ESTADO DE EMERGENCIA": 3,
+    "DECRETO DE URGENCIA (FINANCIAMIENTO & COMPRAS C2)": 2
+  },
+  "resumen_sectores": {
+    "MINISTERIO DE DEFENSA / INDECI": 13,
+    "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO": 19,
+    "MINISTERIO DE VIVIENDA, CONSTRUCCIÓN Y SANEAMIENTO": 1,
+    "MINISTERIO DE SALUD": 5,
+    "PRESIDENCIA DEL CONSEJO DE MINISTROS": 7,
+    "MINISTERIO DE TRANSPORTES Y COMUNICACIONES": 6
+  },
+  "normas": [
+    {
+      "id": "leg-01",
+      "archivo": "2507105-1.pdf",
+      "norma": "Resolución Ministerial N° 087-2018-",
+      "sector": "MINISTERIO DE DEFENSA / INDECI",
+      "fecha_publicacion": "Viernes 17 de abril de 2026",
+      "categoria": "TRANSFERENCIA PRESUPUESTAL DE EMERGENCIA",
+      "titulo": "Decreto Supremo que aprueba el",
+      "departamentos": [
+        "Lima",
+        "Loreto"
+      ],
+      "monto_referencial": "S/ 359",
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DEFENSA / INDECI para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-02",
+      "archivo": "2509442-1.pdf",
+      "norma": "DECRETO SUPREMO Nº 059-2026-",
+      "sector": "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO",
+      "fecha_publicacion": "LEGALESViernes 24 de abril de 2026",
+      "categoria": "PRÓRROGA DE ESTADO DE EMERGENCIA",
+      "titulo": "Decreto Supremo que prorroga el Estado de",
+      "departamentos": [
+        "Madre de Dios",
+        "Tumbes",
+        "ICA",
+        "Lambayeque",
+        "PIURA",
+        "CAJAMARCA"
+      ],
+      "monto_referencial": null,
+      "paginas": 5,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DESARROLLO AGRARIO Y RIEGO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-03",
+      "archivo": "2513355-1.pdf",
+      "norma": "DECRETO SUPREMO Nº 065-2026-",
+      "sector": "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO",
+      "fecha_publicacion": "Viernes 8 de mayo de 2026",
+      "categoria": "PRÓRROGA DE ESTADO DE EMERGENCIA",
+      "titulo": "Decreto Supremo que prorroga el Estado",
+      "departamentos": [
+        "Cusco",
+        "Apurímac",
+        "Madre de Dios",
+        "CAJAMARCA",
+        "AYACUCHO",
+        "Cajamarca"
+      ],
+      "monto_referencial": null,
+      "paginas": 6,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DESARROLLO AGRARIO Y RIEGO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-04",
+      "archivo": "2513355-2.pdf",
+      "norma": "DECRETO SUPREMO Nº 066-2026-",
+      "sector": "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO",
+      "fecha_publicacion": "LEGALESViernes 8 de mayo de 2026",
+      "categoria": "PRÓRROGA DE ESTADO DE EMERGENCIA",
+      "titulo": "Decreto Supremo que prorroga el Estado de",
+      "departamentos": [
+        "Cusco",
+        "Apurímac",
+        "Madre de Dios",
+        "CAJAMARCA",
+        "AYACUCHO",
+        "Cajamarca"
+      ],
+      "monto_referencial": null,
+      "paginas": 4,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DESARROLLO AGRARIO Y RIEGO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-05",
+      "archivo": "2516156-1.pdf",
+      "norma": "DECRETO SUPREMO N° 074-2026-",
+      "sector": "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO",
+      "fecha_publicacion": "bado 16 de mayo de 2026",
+      "categoria": "PRÓRROGA DE ESTADO DE EMERGENCIA",
+      "titulo": "establecen las disposiciones relativas a su",
+      "departamentos": [
+        "Ica",
+        "Tumbes",
+        "ICA",
+        "Piura",
+        "LA LIBERTAD",
+        "LAMBAYEQUE"
+      ],
+      "monto_referencial": null,
+      "paginas": 4,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DESARROLLO AGRARIO Y RIEGO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-06",
+      "archivo": "2516156-3.pdf",
+      "norma": "Decreto Supremo Nº 008-2005-",
+      "sector": "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO",
+      "fecha_publicacion": "bado 16 de mayo de 2026",
+      "categoria": "TRANSFERENCIA PRESUPUESTAL DE EMERGENCIA",
+      "titulo": "Decreto Supremo que autoriza",
+      "departamentos": [
+        "Lima"
+      ],
+      "monto_referencial": "S/ 359",
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DESARROLLO AGRARIO Y RIEGO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-07",
+      "archivo": "2520332-4.pdf",
+      "norma": "DECRETO SUPREMO Nº 009-2026-",
+      "sector": "MINISTERIO DE VIVIENDA, CONSTRUCCIÓN Y SANEAMIENTO",
+      "fecha_publicacion": "Viernes 29 de mayo de 2026",
+      "categoria": "CRÉDITO Y ENDEUDAMIENTO CONTINGENTE INTERNACIONAL",
+      "titulo": "Decreto Supremo que aprueba el",
+      "departamentos": [
+        "Lima"
+      ],
+      "monto_referencial": null,
+      "paginas": 8,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE VIVIENDA, CONSTRUCCIÓN Y SANEAMIENTO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-08",
+      "archivo": "2522158-2.pdf",
+      "norma": "Decreto Supremo Nº 051-2026-",
+      "sector": "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO",
+      "fecha_publicacion": "Jueves 4 de junio de 2026",
+      "categoria": "PRÓRROGA DE ESTADO DE EMERGENCIA",
+      "titulo": "Decreto Supremo que prorroga el Estado",
+      "departamentos": [
+        "Apurímac",
+        "Tumbes",
+        "ICA",
+        "TUMBES",
+        "Lambayeque",
+        "PIURA"
+      ],
+      "monto_referencial": null,
+      "paginas": 4,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DESARROLLO AGRARIO Y RIEGO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-09",
+      "archivo": "2527010-1.pdf",
+      "norma": "Resolución Ministerial N° 984-2025",
+      "sector": "MINISTERIO DE SALUD",
+      "fecha_publicacion": "LEGALESJueves 18 de junio de 2026",
+      "categoria": "CRÉDITO Y ENDEUDAMIENTO CONTINGENTE INTERNACIONAL",
+      "titulo": "Aprueban transferencias financieras a",
+      "departamentos": [
+        "PUNO",
+        "Apurímac",
+        "Madre de Dios",
+        "AMAZONAS",
+        "Lima",
+        "Ancash"
+      ],
+      "monto_referencial": "S/ 13",
+      "paginas": 10,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE SALUD para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-10",
+      "archivo": "2530995-1.pdf",
+      "norma": "DECRETO SUPREMO Nº 097-2026-",
+      "sector": "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO",
+      "fecha_publicacion": "Jueves 2 de julio de 2026",
+      "categoria": "CRÉDITO Y ENDEUDAMIENTO CONTINGENTE INTERNACIONAL",
+      "titulo": "Decreto Supremo que declara el Estado de",
+      "departamentos": [
+        "Apurímac",
+        "Tumbes",
+        "Madre de Dios",
+        "Lambayeque",
+        "AYACUCHO",
+        "Cajamarca"
+      ],
+      "monto_referencial": null,
+      "paginas": 9,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DESARROLLO AGRARIO Y RIEGO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-11",
+      "archivo": "2531912-1.pdf",
+      "norma": "RESOLUCIÓN MINISTERIAL N° 250-2026-",
+      "sector": "PRESIDENCIA DEL CONSEJO DE MINISTROS",
+      "fecha_publicacion": "Domingo 5 de julio de 2026",
+      "categoria": "PRÓRROGA DE ESTADO DE EMERGENCIA",
+      "titulo": "Aprueban la Vigésima primera convocatoria",
+      "departamentos": [
+        "Lima",
+        "San Martín"
+      ],
+      "monto_referencial": "S/ 500.00",
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por PRESIDENCIA DEL CONSEJO DE MINISTROS para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-12",
+      "archivo": "2532764-1.pdf",
+      "norma": "Ley Nº 29158",
+      "sector": "MINISTERIO DE TRANSPORTES Y COMUNICACIONES",
+      "fecha_publicacion": "rcoles 8 de julio de 2026",
+      "categoria": "MEDIDA REGULATORIA SECTORIAL",
+      "titulo": "Aprueban el Documento Técnico: “Hoja de",
+      "departamentos": [
+        "PUNO",
+        "AMAZONAS",
+        "Lima",
+        "LORETO",
+        "HUÁNUCO"
+      ],
+      "monto_referencial": null,
+      "paginas": 3,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE TRANSPORTES Y COMUNICACIONES para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-13",
+      "archivo": "2533014-1.pdf",
+      "norma": "Decreto Supremo Nº 033-2002-",
+      "sector": "MINISTERIO DE TRANSPORTES Y COMUNICACIONES",
+      "fecha_publicacion": "LEGALESJueves 9 de julio de 2026",
+      "categoria": "MEDIDA REGULATORIA SECTORIAL",
+      "titulo": "Decreto Supremo que aprueba la calificación",
+      "departamentos": [
+        "Lima"
+      ],
+      "monto_referencial": null,
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE TRANSPORTES Y COMUNICACIONES para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-14",
+      "archivo": "2534425-1.pdf",
+      "norma": "RESOLUCIÓN MINISTERIAL N° 261-2026-",
+      "sector": "MINISTERIO DE SALUD",
+      "fecha_publicacion": "LEGALESMartes 14 de julio de 2026",
+      "categoria": "CRÉDITO Y ENDEUDAMIENTO CONTINGENTE INTERNACIONAL",
+      "titulo": "establecen en el instructivo de cada proceso",
+      "departamentos": [
+        "Apurímac",
+        "Piura",
+        "Pasco",
+        "Lima",
+        "Lambayeque"
+      ],
+      "monto_referencial": "S/ 500.00",
+      "paginas": 3,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE SALUD para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-15",
+      "archivo": "2536345-1.pdf",
+      "norma": "Ley Nº 29664",
+      "sector": "MINISTERIO DE DEFENSA / INDECI",
+      "fecha_publicacion": "LEGALESDomingo 19 de julio de 2026",
+      "categoria": "CRÉDITO Y ENDEUDAMIENTO CONTINGENTE INTERNACIONAL",
+      "titulo": "Aprueban las “Orientaciones para la",
+      "departamentos": [
+        "Lima",
+        "Loreto"
+      ],
+      "monto_referencial": null,
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DEFENSA / INDECI para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-16",
+      "archivo": "2536800-1.pdf",
+      "norma": "DECRETO SUPREMO Nº 141-2026-",
+      "sector": "MINISTERIO DE DEFENSA / INDECI",
+      "fecha_publicacion": "LEGALESMartes 21 de julio de 2026",
+      "categoria": "TRANSFERENCIA PRESUPUESTAL DE EMERGENCIA",
+      "titulo": "Decreto Supremo que autoriza",
+      "departamentos": [
+        "Lima"
+      ],
+      "monto_referencial": "S/ 359",
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DEFENSA / INDECI para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-17",
+      "archivo": "2538837-1.pdf",
+      "norma": "RESOLUCIÓN MINISTERIAL N° 203-2026-",
+      "sector": "PRESIDENCIA DEL CONSEJO DE MINISTROS",
+      "fecha_publicacion": "LEGALESViernes 31 de julio de 2026",
+      "categoria": "DECLARATORIA DE ESTADO DE EMERGENCIA",
+      "titulo": "Decreto Supremo que declara el Estado de",
+      "departamentos": [
+        "Apurímac",
+        "Tumbes",
+        "Lambayeque",
+        "Cajamarca",
+        "Junín",
+        "Amazonas"
+      ],
+      "monto_referencial": "US$ 26,227,243.09",
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por PRESIDENCIA DEL CONSEJO DE MINISTROS para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-18",
+      "archivo": "2539575-1.pdf",
+      "norma": "Ley Nº 27867",
+      "sector": "MINISTERIO DE DEFENSA / INDECI",
+      "fecha_publicacion": "Jueves 6 de agosto de 2026",
+      "categoria": "MEDIDA REGULATORIA SECTORIAL",
+      "titulo": "Aprueban el Reglamento, Lineamientos y",
+      "departamentos": [
+        "Tacna",
+        "TACNA"
+      ],
+      "monto_referencial": null,
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DEFENSA / INDECI para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-19",
+      "archivo": "2540905-1.pdf",
+      "norma": "Ley Nº 29158",
+      "sector": "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO",
+      "fecha_publicacion": "Jueves 6 de agosto de 2026",
+      "categoria": "TRANSFERENCIA PRESUPUESTAL DE EMERGENCIA",
+      "titulo": "Decreto Supremo que autoriza",
+      "departamentos": [
+        "Lima"
+      ],
+      "monto_referencial": "S/ 2",
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DESARROLLO AGRARIO Y RIEGO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-20",
+      "archivo": "2542966-2.pdf",
+      "norma": "Ley Nº 29158",
+      "sector": "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO",
+      "fecha_publicacion": "rcoles 12 de agosto de 2026",
+      "categoria": "DECLARATORIA DE ESTADO DE EMERGENCIA",
+      "titulo": "Disposición oficial ante impacto del Fenómeno El Niño 2026-2027 (2542966-2.pdf)",
+      "departamentos": [
+        "Lima"
+      ],
+      "monto_referencial": "S/ 226,821.68",
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DESARROLLO AGRARIO Y RIEGO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-21",
+      "archivo": "2542969-2.pdf",
+      "norma": "DECRETO SUPREMO Nº 116-2026-",
+      "sector": "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO",
+      "fecha_publicacion": "Jueves 13 de agosto de 2026",
+      "categoria": "CRÉDITO Y ENDEUDAMIENTO CONTINGENTE INTERNACIONAL",
+      "titulo": "Decreto Supremo que declara el Estado",
+      "departamentos": [
+        "Cusco",
+        "Apurímac",
+        "Madre de Dios",
+        "AYACUCHO",
+        "Madre De Dios",
+        "Junín"
+      ],
+      "monto_referencial": null,
+      "paginas": 7,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DESARROLLO AGRARIO Y RIEGO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-22",
+      "archivo": "2544022-1.pdf",
+      "norma": "RESOLUCIÓN MINISTERIAL Nº 00272-2026-",
+      "sector": "MINISTERIO DE DEFENSA / INDECI",
+      "fecha_publicacion": "DOMINGO 16 \nDE AGOSTO DE 2026",
+      "categoria": "MEDIDA REGULATORIA SECTORIAL",
+      "titulo": "dictan otras disposiciones 1",
+      "departamentos": [
+        "Lima"
+      ],
+      "monto_referencial": null,
+      "paginas": 4,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DEFENSA / INDECI para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-23",
+      "archivo": "2544824-1.pdf",
+      "norma": "DECRETO DE URGENCIA Nº 008-2026",
+      "sector": "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO",
+      "fecha_publicacion": "Martes 18 de agosto de 2026",
+      "categoria": "PRÓRROGA DE ESTADO DE EMERGENCIA",
+      "titulo": "Aprueban el Cuadro para",
+      "departamentos": [
+        "Apurímac",
+        "Madre de Dios",
+        "Tumbes",
+        "SAN MARTÍN",
+        "Lambayeque",
+        "Cajamarca"
+      ],
+      "monto_referencial": "S/ 129",
+      "paginas": 6,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DESARROLLO AGRARIO Y RIEGO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-24",
+      "archivo": "2546500-1.pdf",
+      "norma": "Ley Nº 32513",
+      "sector": "MINISTERIO DE DEFENSA / INDECI",
+      "fecha_publicacion": "Domingo 23 de agosto de 2026",
+      "categoria": "DECLARATORIA DE ESTADO DE EMERGENCIA",
+      "titulo": "Decreto Supremo que aprueba las normas reglamentarias",
+      "departamentos": [
+        "Piura",
+        "Lima",
+        "La Libertad"
+      ],
+      "monto_referencial": null,
+      "paginas": 3,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DEFENSA / INDECI para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-25",
+      "archivo": "2546519-1.pdf",
+      "norma": "Decreto Supremo N° 054-2018-",
+      "sector": "PRESIDENCIA DEL CONSEJO DE MINISTROS",
+      "fecha_publicacion": "LEGALESDomingo 23 de agosto de 2026",
+      "categoria": "PRÓRROGA DE ESTADO DE EMERGENCIA",
+      "titulo": "Decreto Supremo que declara en",
+      "departamentos": [
+        "Cusco",
+        "Apurímac",
+        "Tumbes",
+        "Lambayeque",
+        "Amazonas",
+        "Junín"
+      ],
+      "monto_referencial": null,
+      "paginas": 3,
+      "resumen_ejecutivo": "Norma emitida por PRESIDENCIA DEL CONSEJO DE MINISTROS para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-26",
+      "archivo": "2546520-1.pdf",
+      "norma": "DECRETO SUPREMO Nº 117-2026-",
+      "sector": "MINISTERIO DE TRANSPORTES Y COMUNICACIONES",
+      "fecha_publicacion": "LEGALESDomingo 23 de agosto de 2026",
+      "categoria": "CRÉDITO Y ENDEUDAMIENTO CONTINGENTE INTERNACIONAL",
+      "titulo": "Decreto Supremo que declara el Estado",
+      "departamentos": [
+        "Moquegua",
+        "Tacna",
+        "Lima",
+        "Arequipa"
+      ],
+      "monto_referencial": null,
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE TRANSPORTES Y COMUNICACIONES para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-27",
+      "archivo": "2546521-1.pdf",
+      "norma": "Ley Nº 30498",
+      "sector": "MINISTERIO DE TRANSPORTES Y COMUNICACIONES",
+      "fecha_publicacion": "Domingo 23 de agosto de 2026",
+      "categoria": "CRÉDITO Y ENDEUDAMIENTO CONTINGENTE INTERNACIONAL",
+      "titulo": "Decreto Supremo que declara el Estado",
+      "departamentos": [
+        "Ayacucho",
+        "Lima",
+        "Tacna",
+        "Arequipa",
+        "Moquegua"
+      ],
+      "monto_referencial": null,
+      "paginas": 3,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE TRANSPORTES Y COMUNICACIONES para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-28",
+      "archivo": "2546976-1.pdf",
+      "norma": "RESOLUCIÓN MINISTERIAL Nº 00298-2026-",
+      "sector": "PRESIDENCIA DEL CONSEJO DE MINISTROS",
+      "fecha_publicacion": "Martes 25 de agosto de 2026",
+      "categoria": "MEDIDA REGULATORIA SECTORIAL",
+      "titulo": "Establecen medidas para fortalecer la",
+      "departamentos": [
+        "Lima",
+        "Cusco"
+      ],
+      "monto_referencial": null,
+      "paginas": 4,
+      "resumen_ejecutivo": "Norma emitida por PRESIDENCIA DEL CONSEJO DE MINISTROS para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-29",
+      "archivo": "2549507-1.pdf",
+      "norma": "DECRETO SUPREMO Nº 124-2026-",
+      "sector": "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO",
+      "fecha_publicacion": "LEGALESMartes 1 de setiembre de 2026",
+      "categoria": "CRÉDITO Y ENDEUDAMIENTO CONTINGENTE INTERNACIONAL",
+      "titulo": "Decreto Supremo que declara el Estado de",
+      "departamentos": [
+        "Apurímac",
+        "Tumbes",
+        "Madre de Dios",
+        "Lambayeque",
+        "AYACUCHO",
+        "Amazonas"
+      ],
+      "monto_referencial": null,
+      "paginas": 10,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DESARROLLO AGRARIO Y RIEGO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-30",
+      "archivo": "2549963-1.pdf",
+      "norma": "RESOLUCIÓN MINISTERIAL N° 000310-2026-",
+      "sector": "MINISTERIO DE DEFENSA / INDECI",
+      "fecha_publicacion": "rcoles 2 de setiembre de 2026",
+      "categoria": "CRÉDITO Y ENDEUDAMIENTO CONTINGENTE INTERNACIONAL",
+      "titulo": "Establecen límite de captura",
+      "departamentos": [
+        "Lambayeque",
+        "Lima"
+      ],
+      "monto_referencial": null,
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DEFENSA / INDECI para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-31",
+      "archivo": "2550403-1.pdf",
+      "norma": "DECRETO DE URGENCIA Nº 010-2026",
+      "sector": "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO",
+      "fecha_publicacion": "rcoles 2 de setiembre de 2026",
+      "categoria": "DECRETO DE URGENCIA (FINANCIAMIENTO & COMPRAS C2)",
+      "titulo": "aprueban, mediante",
+      "departamentos": [
+        "Lima"
+      ],
+      "monto_referencial": null,
+      "paginas": 4,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DESARROLLO AGRARIO Y RIEGO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-32",
+      "archivo": "2551397-1.pdf",
+      "norma": "RESOLUCIÓN MINISTERIAL Nº 790-2026",
+      "sector": "MINISTERIO DE SALUD",
+      "fecha_publicacion": "Viernes 4 de setiembre de 2026",
+      "categoria": "MEDIDA REGULATORIA SECTORIAL",
+      "titulo": "Aprueban el Documento Técnico: Plan de",
+      "departamentos": [
+        "Lima"
+      ],
+      "monto_referencial": null,
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE SALUD para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-33",
+      "archivo": "2551404-3.pdf",
+      "norma": "DECRETO SUPREMO Nº 127-2026-",
+      "sector": "MINISTERIO DE TRANSPORTES Y COMUNICACIONES",
+      "fecha_publicacion": "bado 5 de setiembre de 2026",
+      "categoria": "PRÓRROGA DE ESTADO DE EMERGENCIA",
+      "titulo": "Decreto Supremo que aprueba la Política",
+      "departamentos": [
+        "la libertad",
+        "Lima"
+      ],
+      "monto_referencial": null,
+      "paginas": 3,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE TRANSPORTES Y COMUNICACIONES para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-34",
+      "archivo": "2551404-5.pdf",
+      "norma": "Ley N° 32513",
+      "sector": "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO",
+      "fecha_publicacion": "bado 5 de setiembre de 2026",
+      "categoria": "CRÉDITO Y ENDEUDAMIENTO CONTINGENTE INTERNACIONAL",
+      "titulo": "aprueban mediante decreto supremo refrendado por el",
+      "departamentos": [
+        "Lima"
+      ],
+      "monto_referencial": "S/ 100",
+      "paginas": 3,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DESARROLLO AGRARIO Y RIEGO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-35",
+      "archivo": "2551414-1.pdf",
+      "norma": "Ley Nº 29763",
+      "sector": "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO",
+      "fecha_publicacion": "Domingo 6 de setiembre de 2026",
+      "categoria": "MEDIDA REGULATORIA SECTORIAL",
+      "titulo": "Aprueban modificación del Anexo",
+      "departamentos": [
+        "Lima"
+      ],
+      "monto_referencial": null,
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DESARROLLO AGRARIO Y RIEGO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-36",
+      "archivo": "2551455-1.pdf",
+      "norma": "DECRETO SUPREMO N° 179-2026-",
+      "sector": "MINISTERIO DE DEFENSA / INDECI",
+      "fecha_publicacion": "DOMINGO 6 \nDE SETIEMBRE DE 2026",
+      "categoria": "CRÉDITO Y ENDEUDAMIENTO CONTINGENTE INTERNACIONAL",
+      "titulo": "Decreto Supremo que autoriza",
+      "departamentos": [
+        "Ica",
+        "Tumbes",
+        "Piura",
+        "Lima",
+        "Lambayeque",
+        "La Libertad"
+      ],
+      "monto_referencial": "S/ 68",
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DEFENSA / INDECI para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-37",
+      "archivo": "2551455-2.pdf",
+      "norma": "DECRETO SUPREMO N° 180-2026-",
+      "sector": "MINISTERIO DE DEFENSA / INDECI",
+      "fecha_publicacion": "Domingo 6 de setiembre de 2026",
+      "categoria": "CRÉDITO Y ENDEUDAMIENTO CONTINGENTE INTERNACIONAL",
+      "titulo": "Decreto Supremo que autoriza",
+      "departamentos": [
+        "Ica",
+        "Tumbes",
+        "Piura",
+        "Lima",
+        "Lambayeque",
+        "La Libertad"
+      ],
+      "monto_referencial": "S/ 68",
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DEFENSA / INDECI para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-38",
+      "archivo": "2551455-3.pdf",
+      "norma": "DECRETO SUPREMO N° 181-2026-",
+      "sector": "MINISTERIO DE DEFENSA / INDECI",
+      "fecha_publicacion": "LEGALESDomingo 6 de setiembre de 2026",
+      "categoria": "TRANSFERENCIA PRESUPUESTAL DE EMERGENCIA",
+      "titulo": "Decreto Supremo que autoriza",
+      "departamentos": [
+        "Lima"
+      ],
+      "monto_referencial": "S/ \n25",
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DEFENSA / INDECI para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-39",
+      "archivo": "2551455-4.pdf",
+      "norma": "DECRETO SUPREMO N° 182-2026-",
+      "sector": "PRESIDENCIA DEL CONSEJO DE MINISTROS",
+      "fecha_publicacion": "LEGALESDomingo 6 de setiembre de 2026",
+      "categoria": "TRANSFERENCIA PRESUPUESTAL DE EMERGENCIA",
+      "titulo": "Decreto Supremo que autoriza",
+      "departamentos": [
+        "Lima"
+      ],
+      "monto_referencial": "S/ \n18",
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por PRESIDENCIA DEL CONSEJO DE MINISTROS para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-40",
+      "archivo": "2551935-1.pdf",
+      "norma": "Ley Nº 29565",
+      "sector": "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO",
+      "fecha_publicacion": "Martes 8 de setiembre de 2026",
+      "categoria": "MEDIDA REGULATORIA SECTORIAL",
+      "titulo": "Aprueban el “Listado de Servicios",
+      "departamentos": [],
+      "monto_referencial": null,
+      "paginas": 8,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DESARROLLO AGRARIO Y RIEGO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-41",
+      "archivo": "2551965-1.pdf",
+      "norma": "Resolución Jefatural N° 048-2024-",
+      "sector": "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO",
+      "fecha_publicacion": "Jueves 10 de setiembre de 2026",
+      "categoria": "CRÉDITO Y ENDEUDAMIENTO CONTINGENTE INTERNACIONAL",
+      "titulo": "Aprueban la Directiva N° 008-2026-MIDIS,",
+      "departamentos": [
+        "Lima"
+      ],
+      "monto_referencial": null,
+      "paginas": 3,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DESARROLLO AGRARIO Y RIEGO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-42",
+      "archivo": "2552723-1.pdf",
+      "norma": "RESOLUCION MINISTERIAL N° 000332-2026-",
+      "sector": "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO",
+      "fecha_publicacion": "rcoles 9 de setiembre de 2026",
+      "categoria": "TRANSFERENCIA PRESUPUESTAL DE EMERGENCIA",
+      "titulo": "Aprueban listado de servicios que pueden",
+      "departamentos": [
+        "Lambayeque"
+      ],
+      "monto_referencial": null,
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DESARROLLO AGRARIO Y RIEGO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-43",
+      "archivo": "2552915-1.pdf",
+      "norma": "Decreto de Urgencia N° 010-",
+      "sector": "MINISTERIO DE TRANSPORTES Y COMUNICACIONES",
+      "fecha_publicacion": "Jueves 10 de setiembre de 2026",
+      "categoria": "DECRETO DE URGENCIA (FINANCIAMIENTO & COMPRAS C2)",
+      "titulo": "Aprueban Relación de Servicios que pueden",
+      "departamentos": [
+        "Lima",
+        "Apurímac"
+      ],
+      "monto_referencial": null,
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE TRANSPORTES Y COMUNICACIONES para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-44",
+      "archivo": "2552922-1.pdf",
+      "norma": "Ley N° 32513",
+      "sector": "MINISTERIO DE SALUD",
+      "fecha_publicacion": "rcoles 9 de setiembre de 2026",
+      "categoria": "MEDIDA REGULATORIA SECTORIAL",
+      "titulo": "Aprueban la “Relación de Servicios que",
+      "departamentos": [
+        "Lima"
+      ],
+      "monto_referencial": null,
+      "paginas": 3,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE SALUD para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-45",
+      "archivo": "2552923-1.pdf",
+      "norma": "Ley Nº 27594",
+      "sector": "MINISTERIO DE SALUD",
+      "fecha_publicacion": "rcoles 9 de setiembre de 2026",
+      "categoria": "MEDIDA REGULATORIA SECTORIAL",
+      "titulo": "Aprueban Relación de Servicios que",
+      "departamentos": [
+        "Lima"
+      ],
+      "monto_referencial": null,
+      "paginas": 3,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE SALUD para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-46",
+      "archivo": "2552994-1.pdf",
+      "norma": "Ley Nº 29230",
+      "sector": "PRESIDENCIA DEL CONSEJO DE MINISTROS",
+      "fecha_publicacion": "LEGALESViernes 11 de setiembre de 2026",
+      "categoria": "CRÉDITO Y ENDEUDAMIENTO CONTINGENTE INTERNACIONAL",
+      "titulo": "Aprueban Relación de Servicios del Sector",
+      "departamentos": [],
+      "monto_referencial": null,
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por PRESIDENCIA DEL CONSEJO DE MINISTROS para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-47",
+      "archivo": "2553062-1.pdf",
+      "norma": "Ley N° 31821",
+      "sector": "PRESIDENCIA DEL CONSEJO DE MINISTROS",
+      "fecha_publicacion": "Viernes 11 de setiembre de 2026",
+      "categoria": "CRÉDITO Y ENDEUDAMIENTO CONTINGENTE INTERNACIONAL",
+      "titulo": "Aprueban la “Relación de Servicios del",
+      "departamentos": [
+        "Ica",
+        "Lima",
+        "Tacna",
+        "Arequipa",
+        "Moquegua"
+      ],
+      "monto_referencial": null,
+      "paginas": 3,
+      "resumen_ejecutivo": "Norma emitida por PRESIDENCIA DEL CONSEJO DE MINISTROS para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-48",
+      "archivo": "2553315-1.pdf",
+      "norma": "RESOLUCIÓN MINISTERIAL N° 1334-2026-",
+      "sector": "MINISTERIO DE DEFENSA / INDECI",
+      "fecha_publicacion": "Jueves 10 de setiembre de 2026",
+      "categoria": "TRANSFERENCIA PRESUPUESTAL DE EMERGENCIA",
+      "titulo": "Aprueban el “Servicio: Despliegue",
+      "departamentos": [
+        "Lima"
+      ],
+      "monto_referencial": "US$ 1",
+      "paginas": 3,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DEFENSA / INDECI para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-49",
+      "archivo": "2553486-1.pdf",
+      "norma": "Decreto Supremo N° 040-2014-",
+      "sector": "MINISTERIO DE DEFENSA / INDECI",
+      "fecha_publicacion": "LEGALESJueves 10 de setiembre de 2026",
+      "categoria": "CRÉDITO Y ENDEUDAMIENTO CONTINGENTE INTERNACIONAL",
+      "titulo": "Establecen disposiciones para atender las",
+      "departamentos": [
+        "Ayacucho",
+        "Cusco",
+        "Huancavelica",
+        "Apurímac",
+        "Huánuco",
+        "Loreto"
+      ],
+      "monto_referencial": null,
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DEFENSA / INDECI para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-50",
+      "archivo": "2554042-1.pdf",
+      "norma": "Resolución Ministerial N° 0175-2025-",
+      "sector": "MINISTERIO DE DESARROLLO AGRARIO Y RIEGO",
+      "fecha_publicacion": "bado 12 de setiembre de 2026",
+      "categoria": "TRANSFERENCIA PRESUPUESTAL DE EMERGENCIA",
+      "titulo": "Decreto Supremo que autoriza",
+      "departamentos": [
+        "Lima"
+      ],
+      "monto_referencial": "S/ 283",
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DESARROLLO AGRARIO Y RIEGO para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    },
+    {
+      "id": "leg-51",
+      "archivo": "2554042-2.pdf",
+      "norma": "DECRETO SUPREMO Nº 185-2026-",
+      "sector": "MINISTERIO DE DEFENSA / INDECI",
+      "fecha_publicacion": "bado 12 de setiembre de 2026",
+      "categoria": "TRANSFERENCIA PRESUPUESTAL DE EMERGENCIA",
+      "titulo": "Decreto Supremo que autoriza",
+      "departamentos": [
+        "Lima"
+      ],
+      "monto_referencial": "S/ 283",
+      "paginas": 2,
+      "resumen_ejecutivo": "Norma emitida por MINISTERIO DE DEFENSA / INDECI para acciones de preparación y respuesta ante el FEN 2026-2027.",
+      "facultad_principal": "Contratación directa de bienes y servicios para reducción del muy alto riesgo e intervención inmediata en cauces."
+    }
+  ]
+}

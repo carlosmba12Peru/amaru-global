@@ -1,0 +1,272 @@
+[
+  {
+    "id": "REP-2017-0841",
+    "fecha_registro": "2017-03-27T08:35:00",
+    "tipo_registro": "MEMORIA_HISTORICA",
+    "evento_historico_referencia": "FEN_2017",
+    "tipo_evento": "DESBORDE_RIO",
+    "ubigeo": "200105",
+    "distrito": "CATACAOS",
+    "provincia": "PIURA",
+    "departamento": "PIURA",
+    "lugar_especifico": "Jr. Comercio cdra. 6 y Malecón Huaca de la Cruz",
+    "coordenadas": {
+      "lat": -5.2652,
+      "lng": -80.6784
+    },
+    "nivel_afectacion": "TECHO_CATASTROFICO_200CM",
+    "calle_inundada": true,
+    "testimonio_restringido": "El 27 de marzo de 2017 a las 7:30 am cedió el dique en Viduque y el agua del Río Piura inundó todo Catacaos hasta más de dos metros de altura. Quedamos atrapados en los techos durante dos días.",
+    "evidencia_foto": {
+      "nombre_archivo": "catacaos_2017_inundacion_calle_comercio.jpg",
+      "url_interna": "/img/forensic/catacaos_2017.jpg",
+      "hash_sha256": "4b82f6e729a1b412e8b4e72390f12cba89736e4f1a2384758d9237c1d764ea01",
+      "exif_metadata": {
+        "dispositivo": "Samsung Galaxy S7 Edge (SM-G935F)",
+        "timestamp_captura": "2017-03-27T08:14:22",
+        "geotag_lat": -5.2650,
+        "geotag_lng": -80.6781,
+        "consistencia_gps": "GPS_COINCIDE_CON_DISTRITO"
+      }
+    },
+    "analisis_forense_ia": {
+      "score_autenticidad": 98.2,
+      "veredicto": "CONSISTENTE_VALIDADO",
+      "gemini_vision_audit": "La imagen exhibe textura y color de lodo arcilloso característico del valle del Bajo Piura. Las fachadas de quincha y adobe con basamentos de ladrillo corresponden a la arquitectura patrimonial de Catacaos. El nivel de marca de agua en muros corrobora una inundación >1.80m.",
+      "validacion_cruzada_cenepred": {
+        "cuenca": "Río Piura - Cuenca Baja",
+        "zona_riesgo_cenepred": "MUY_ALTO",
+        "distancia_a_punto_critico_m": 120,
+        "declarado_ds124": true
+      },
+      "consenso_espacial": {
+        "total_reportes_cluster": 7,
+        "radio_metros": 420,
+        "nivel_consenso": "ALTO_CONSENSO_HISTORICO"
+      }
+    },
+    "estado_operativo": "VALIDADO_OPERACIONES_C2",
+    "vista_publica": {
+      "mostrar_en_mapa": true,
+      "tipo_pin": "PUNTO_HISTORICO_CONFIRMADO",
+      "nivel_resumen": "Inundación Severa (>1.80m)",
+      "etiqueta_publica": "Señal Histórica Calibrada - FEN 2017"
+    }
+  },
+  {
+    "id": "REP-2017-1092",
+    "fecha_registro": "2017-03-16T15:20:00",
+    "tipo_registro": "MEMORIA_HISTORICA",
+    "evento_historico_referencia": "FEN_2017",
+    "tipo_evento": "HUAICO_ALUVION",
+    "ubigeo": "150118",
+    "distrito": "LURIGANCHO",
+    "provincia": "LIMA",
+    "departamento": "LIMA",
+    "lugar_especifico": "Quebrada Carossio y Jr. Colombia - Chosica",
+    "coordenadas": {
+      "lat": -11.9388,
+      "lng": -76.7025
+    },
+    "nivel_afectacion": "CINTURA_100CM",
+    "calle_inundada": true,
+    "testimonio_restringido": "El aluvión bajó de la quebrada Carossio con rocas gigantes y lodo espeso. Destruyó las barreras dinámicas que estaban saturadas de 2015. El agua llegó al primer piso de las viviendas en Jr. Colombia.",
+    "evidencia_foto": {
+      "nombre_archivo": "chosica_2017_quebrada_carossio.jpg",
+      "url_interna": "/img/forensic/chosica_2017.jpg",
+      "hash_sha256": "91a27e4c9f0b12753a4e98f7126cae741982b6e51c2384758d9237c1d764ff92",
+      "exif_metadata": {
+        "dispositivo": "Motorola Moto G4 Plus",
+        "timestamp_captura": "2017-03-16T15:02:19",
+        "geotag_lat": -11.9385,
+        "geotag_lng": -76.7020,
+        "consistencia_gps": "GPS_COINCIDE_CON_DISTRITO"
+      }
+    },
+    "analisis_forense_ia": {
+      "score_autenticidad": 96.5,
+      "veredicto": "CONSISTENTE_VALIDADO",
+      "gemini_vision_audit": "Bloques líticos subangulares de granodiorita y lodo aluvial viscoso característico de la cuenca media del Río Rímac. Coincide exactamente con el cono deyector de Quebrada Carossio.",
+      "validacion_cruzada_cenepred": {
+        "cuenca": "Río Rímac - Cuenca Media",
+        "zona_riesgo_cenepred": "MUY_ALTO",
+        "distancia_a_punto_critico_m": 85,
+        "declarado_ds124": true
+      },
+      "consenso_espacial": {
+        "total_reportes_cluster": 9,
+        "radio_metros": 350,
+        "nivel_consenso": "ALTO_CONSENSO_HISTORICO"
+      }
+    },
+    "estado_operativo": "VALIDADO_OPERACIONES_C2",
+    "vista_publica": {
+      "mostrar_en_mapa": true,
+      "tipo_pin": "PUNTO_HISTORICO_CONFIRMADO",
+      "nivel_resumen": "Huaico Mayor (Lodo >1.00m)",
+      "etiqueta_publica": "Señal Histórica Calibrada - FEN 2017"
+    }
+  },
+  {
+    "id": "REP-2023-0415",
+    "fecha_registro": "2023-03-10T11:45:00",
+    "tipo_registro": "MEMORIA_HISTORICA",
+    "evento_historico_referencia": "CICLON_YAKU_2023",
+    "tipo_evento": "DESBORDE_RIO",
+    "ubigeo": "140301",
+    "distrito": "ILLIMO",
+    "provincia": "LAMBAYEQUE",
+    "departamento": "LAMBAYEQUE",
+    "lugar_especifico": "Plaza de Armas y Jr. Real - Caserío La Puntilla",
+    "coordenadas": {
+      "lat": -6.5122,
+      "lng": -79.8564
+    },
+    "nivel_afectacion": "CINTURA_100CM",
+    "calle_inundada": true,
+    "testimonio_restringido": "El Río La Leche desbordó en horas de la madrugada debido al Ciclón Yaku. El casco urbano de Íllimo se convirtió en una laguna durante cuatro días. El agua ingresó a la posta médica y viviendas.",
+    "evidencia_foto": {
+      "nombre_archivo": "illimo_yaku_2023_rio_la_leche.jpg",
+      "url_interna": "/img/forensic/illimo_2023.jpg",
+      "hash_sha256": "1a56bc78ef391204d82f716298ac14559812bc672134981726a5418b76c9ef12",
+      "exif_metadata": {
+        "dispositivo": "Xiaomi Redmi Note 11",
+        "timestamp_captura": "2023-03-10T11:32:05",
+        "geotag_lat": -6.5120,
+        "geotag_lng": -79.8560,
+        "consistencia_gps": "GPS_COINCIDE_CON_DISTRITO"
+      }
+    },
+    "analisis_forense_ia": {
+      "score_autenticidad": 94.8,
+      "veredicto": "CONSISTENTE_VALIDADO",
+      "gemini_vision_audit": "Inundación masiva de lámina libre. Tipología de adobe con socavación basal en entorno rural costeño. Sin presencia de artefactos de renderizado ni discrepancia cromática de vegetación algarrobal.",
+      "validacion_cruzada_cenepred": {
+        "cuenca": "Río La Leche / Motupe",
+        "zona_riesgo_cenepred": "MUY_ALTO",
+        "distancia_a_punto_critico_m": 210,
+        "declarado_ds124": true
+      },
+      "consenso_espacial": {
+        "total_reportes_cluster": 4,
+        "radio_metros": 600,
+        "nivel_consenso": "ALTO_CONSENSO_HISTORICO"
+      }
+    },
+    "estado_operativo": "VALIDADO_OPERACIONES_C2",
+    "vista_publica": {
+      "mostrar_en_mapa": true,
+      "tipo_pin": "PUNTO_HISTORICO_CONFIRMADO",
+      "nivel_resumen": "Desborde de Río (>1.00m)",
+      "etiqueta_publica": "Señal Histórica Calibrada - Yaku 2023"
+    }
+  },
+  {
+    "id": "REP-2026-0042",
+    "fecha_registro": "2026-09-14T21:10:00",
+    "tipo_registro": "EN_VIVO_2026_2027",
+    "evento_historico_referencia": "FEN_2026_2027_LIVE",
+    "tipo_evento": "ACTIVACION_QUEBRADA",
+    "ubigeo": "130101",
+    "distrito": "TRUJILLO",
+    "provincia": "TRUJILLO",
+    "departamento": "LA LIBERTAD",
+    "lugar_especifico": "Prolongación Av. Miraflores / Quebrada San Ildefonso",
+    "coordenadas": {
+      "lat": -8.1120,
+      "lng": -79.0180
+    },
+    "nivel_afectacion": "RODILLA_50CM",
+    "calle_inundada": true,
+    "testimonio_restringido": "Se escuchó fuerte rugido en los cerros de Laredo e inició escorrentía rápida con piedras hacia El Porvenir y Av. Miraflores. El agua subió 40 centímetros en 20 minutos.",
+    "evidencia_foto": {
+      "nombre_archivo": "trujillo_san_ildefonso_2026_prealerta.jpg",
+      "url_interna": "/img/forensic/trujillo_live.jpg",
+      "hash_sha256": "c87a1923e812479f61b29845cd1209e743a218903c721984501a238914bca123",
+      "exif_metadata": {
+        "dispositivo": "Apple iPhone 13 Pro",
+        "timestamp_captura": "2026-09-14T21:04:12",
+        "geotag_lat": -8.1118,
+        "geotag_lng": -79.0177,
+        "consistencia_gps": "GPS_COINCIDE_CON_DISTRITO"
+      }
+    },
+    "analisis_forense_ia": {
+      "score_autenticidad": 91.7,
+      "veredicto": "CONSISTENTE_VALIDADO",
+      "gemini_vision_audit": "Flujo turbulento nocturno con iluminación vial pública de Trujillo. Se aprecian sedimentos finos y arrastre de desechos ligeros. Consistente con activación temprana de Quebrada San Ildefonso.",
+      "validacion_cruzada_cenepred": {
+        "cuenca": "Quebrada San Ildefonso / Río Moche",
+        "zona_riesgo_cenepred": "MUY_ALTO",
+        "distancia_a_punto_critico_m": 310,
+        "declarado_ds124": true
+      },
+      "consenso_espacial": {
+        "total_reportes_cluster": 3,
+        "radio_metros": 480,
+        "nivel_consenso": "CONSENSO_EN_VIVO_ALERTA_TACTICA"
+      }
+    },
+    "estado_operativo": "VALIDADO_OPERACIONES_C2",
+    "vista_publica": {
+      "mostrar_en_mapa": true,
+      "tipo_pin": "SENAL_TACTICA_EN_VIVO",
+      "nivel_resumen": "Flujo de Escorrentía Activo (40cm)",
+      "etiqueta_publica": "Alerta Ciudadana Validada - FEN 2026-2027"
+    }
+  },
+  {
+    "id": "REP-2026-0089",
+    "fecha_registro": "2026-09-15T03:15:00",
+    "tipo_registro": "EN_VIVO_2026_2027",
+    "evento_historico_referencia": "FEN_2026_2027_LIVE",
+    "tipo_evento": "HUAICO_ALUVION",
+    "ubigeo": "150118",
+    "distrito": "LURIGANCHO",
+    "provincia": "LIMA",
+    "departamento": "LIMA",
+    "lugar_especifico": "Puente Los Ángeles",
+    "coordenadas": {
+      "lat": -11.9540,
+      "lng": -76.7150
+    },
+    "nivel_afectacion": "TECHO_CATASTROFICO_200CM",
+    "calle_inundada": true,
+    "testimonio_restringido": "Se cayó el puente y hay carros arrastrados por un aluvión gigante de 5 metros que arrasó todo el pueblo.",
+    "evidencia_foto": {
+      "nombre_archivo": "video_viral_puente_colapso.mp4",
+      "url_interna": "/img/forensic/fake_test_01.jpg",
+      "hash_sha256": "f51278ba21908471203498fcedab7126589312bcae981273409182374619ab21",
+      "exif_metadata": {
+        "dispositivo": "No disponible / Metadata eliminada por app de mensajería",
+        "timestamp_captura": "2020-10-04T12:00:00",
+        "geotag_lat": null,
+        "geotag_lng": null,
+        "consistencia_gps": "SIN_METADATOS_GEOGRAFICOS"
+      }
+    },
+    "analisis_forense_ia": {
+      "score_autenticidad": 8.4,
+      "veredicto": "SOSPECHA_DESINFORMACION_FAKE_NEWS",
+      "gemini_vision_audit": "ALERTA FORENSE DE FAKE NEWS: La imagen corresponde al colapso de un puente en Kerala, India en 2020. No coincide con la vegetación, tipología constructiva ni iluminación de Lurigancho Chosica. El aforo de la estación Chosica (ANA) reporta caudal normal de 18 m³/s.",
+      "validacion_cruzada_cenepred": {
+        "cuenca": "Río Rímac",
+        "zona_riesgo_cenepred": "MUY_ALTO",
+        "distancia_a_punto_critico_m": 450,
+        "declarado_ds124": true
+      },
+      "consenso_espacial": {
+        "total_reportes_cluster": 1,
+        "radio_metros": 0,
+        "nivel_consenso": "REPORTE_AISLADO_SIN_CONSENSO"
+      }
+    },
+    "estado_operativo": "RECHAZADO_POR_FRAUDE",
+    "vista_publica": {
+      "mostrar_en_mapa": false,
+      "tipo_pin": "BLOQUEADO_POR_BLINDAJE_ANTI_FAKE",
+      "nivel_resumen": "Reporte No Aprobado",
+      "etiqueta_publica": "Filtrado por Algoritmo de Integridad de la Información"
+    }
+  }
+]

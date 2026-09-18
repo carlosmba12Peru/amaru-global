@@ -1,0 +1,177 @@
+[
+  {
+    "id": "10-2026",
+    "numero": "10-2026",
+    "titulo": "COMUNICADO OFICIAL ENFEN N° 10-2026",
+    "fecha": "29 de mayo 2026",
+    "fecha_iso": "2026-05-29",
+    "estado_alerta": "Alerta de El Niño Costero",
+    "horizonte": "Verano 2026 - 2027",
+    "probabilidades_nino_costero": {
+      "extraordinario": 10,
+      "fuerte": 42,
+      "moderado": 40,
+      "debil": 8
+    },
+    "probabilidades_nino_global": {
+      "muy_fuerte": 15,
+      "fuerte": 40,
+      "moderado": 35,
+      "debil": 10
+    },
+    "resumen": "ENFEN mantiene el estado de Alerta de El Niño Costero y prevé que se desarrolle de magnitud moderada a fuerte.",
+    "pesca": "Anchoveta en condición vulnerable en la zona centro-norte.",
+    "lluvias": "Escenarios normales a moderados.",
+    "archivo": "Comunicado Of_ENFEN N° 10-2026.pdf"
+  },
+  {
+    "id": "11-2026",
+    "numero": "11-2026",
+    "titulo": "COMUNICADO OFICIAL ENFEN N° 11-2026",
+    "fecha": "15 de junio 2026",
+    "fecha_iso": "2026-06-15",
+    "estado_alerta": "Alerta de El Niño Costero",
+    "horizonte": "Verano 2026 - 2027",
+    "probabilidades_nino_costero": {
+      "extraordinario": 14,
+      "fuerte": 48,
+      "moderado": 36,
+      "debil": 2
+    },
+    "probabilidades_nino_global": {
+      "muy_fuerte": 20,
+      "fuerte": 44,
+      "moderado": 30,
+      "debil": 6
+    },
+    "resumen": "Se prevé que el evento alcance una magnitud entre fuerte (48%) y moderada (36%).",
+    "pesca": "Presencia incipiente de especies de aguas oceánicas.",
+    "lluvias": "Incremento de probabilidad de lluvias en cuenca norte.",
+    "archivo": "Comunicado Of_ENFEN N° 11-2026.pdf"
+  },
+  {
+    "id": "12-2026",
+    "numero": "12-2026",
+    "titulo": "COMUNICADO OFICIAL ENFEN N° 12-2026",
+    "fecha": "26 de junio 2026",
+    "fecha_iso": "2026-06-26",
+    "estado_alerta": "Alerta de El Niño Costero",
+    "horizonte": "Verano 2026 - 2027",
+    "probabilidades_nino_costero": {
+      "extraordinario": 22,
+      "fuerte": 48,
+      "moderado": 28,
+      "debil": 2
+    },
+    "probabilidades_nino_global": {
+      "muy_fuerte": 28,
+      "fuerte": 46,
+      "moderado": 22,
+      "debil": 4
+    },
+    "resumen": "Proyección de magnitud fuerte consolidada en región Niño 1+2.",
+    "pesca": "Anchoveta replegada cerca a la costa.",
+    "lluvias": "Avisos de lluvias intensas en vertiente occidental.",
+    "archivo": "Comunicado_Of_ENFEN N° 12-2026.pdf"
+  },
+  {
+    "id": "13-2026",
+    "numero": "13-2026",
+    "titulo": "COMUNICADO OFICIAL ENFEN N° 13-2026",
+    "fecha": "17 de julio 2026",
+    "fecha_iso": "2026-07-17",
+    "estado_alerta": "Alerta de El Niño Costero",
+    "horizonte": "Verano 2026 - 2027",
+    "probabilidades_nino_costero": {
+      "extraordinario": 28,
+      "fuerte": 48,
+      "moderado": 22,
+      "debil": 2
+    },
+    "probabilidades_nino_global": {
+      "muy_fuerte": 35,
+      "fuerte": 45,
+      "moderado": 17,
+      "debil": 3
+    },
+    "resumen": "No se descarta la magnitud extraordinaria hacia finales de 2026.",
+    "pesca": "Disponibilidad de perico y barrilete en costa central.",
+    "lluvias": "Riesgo de precipitaciones extremas en Piura y Tumbes.",
+    "archivo": "Comunicado_Of_ENFEN N° 13-2026.pdf"
+  },
+  {
+    "id": "14-2026",
+    "numero": "14-2026",
+    "titulo": "COMUNICADO OFICIAL ENFEN N° 14-2026",
+    "fecha": "14 de agosto 2026",
+    "fecha_iso": "2026-08-14",
+    "estado_alerta": "Alerta de El Niño Costero",
+    "horizonte": "Verano 2026 - 2027",
+    "probabilidades_nino_costero": {
+      "extraordinario": 35,
+      "fuerte": 46,
+      "moderado": 18,
+      "debil": 1
+    },
+    "probabilidades_nino_global": {
+      "muy_fuerte": 42,
+      "fuerte": 45,
+      "moderado": 11,
+      "debil": 2
+    },
+    "resumen": "Magnitud más probable entre fuerte y extraordinaria hasta el verano 2027.",
+    "pesca": "Anchoveta profundizada por onda Kelvin cálida.",
+    "lluvias": "Precipitaciones sobre lo normal en el norte.",
+    "archivo": "Comunicado_Of_ENFEN N° 14-2026.pdf"
+  },
+  {
+    "id": "15-2026",
+    "numero": "15-2026",
+    "titulo": "COMUNICADO OFICIAL ENFEN N° 15-2026",
+    "fecha": "28 de agosto 2026",
+    "fecha_iso": "2026-08-28",
+    "estado_alerta": "Alerta de El Niño Costero",
+    "horizonte": "Verano 2026 - 2027",
+    "probabilidades_nino_costero": {
+      "extraordinario": 42,
+      "fuerte": 45,
+      "moderado": 12,
+      "debil": 1
+    },
+    "probabilidades_nino_global": {
+      "muy_fuerte": 48,
+      "fuerte": 42,
+      "moderado": 9,
+      "debil": 1
+    },
+    "resumen": "Alta probabilidad de que El Niño Costero persista con magnitud extraordinaria hasta verano de 2027.",
+    "pesca": "Especies ecuatoriales (samasa, pez sierra) en litoral central.",
+    "lluvias": "Previsión de desbordes fluviales tempranos.",
+    "archivo": "Comunicado_Of_ENFEN N° 15-2026.pdf"
+  },
+  {
+    "id": "16-2026",
+    "numero": "16-2026",
+    "titulo": "COMUNICADO OFICIAL ENFEN N° 16-2026",
+    "fecha": "14 de setiembre 2026",
+    "fecha_iso": "2026-09-14",
+    "estado_alerta": "Alerta de El Niño Costero",
+    "horizonte": "Verano 2026 - 2027 (Extendido a Otoño/Invierno 2027)",
+    "probabilidades_nino_costero": {
+      "extraordinario": 48,
+      "fuerte": 45,
+      "moderado": 7,
+      "debil": 0
+    },
+    "probabilidades_nino_global": {
+      "muy_fuerte": 55,
+      "fuerte": 40,
+      "moderado": 5,
+      "debil": 0
+    },
+    "resumen": "ENFEN sostiene que El Niño Costero continuaría hasta mediados de otoño de 2027, con la más alta probabilidad de una magnitud extraordinaria de setiembre 2026 a enero de 2027.",
+    "pesca": "Anchoveta norte-centro profundizada y replegada; disponibilidad sostenida de samasa, perico, barrilete, melva y atún aleta amarilla.",
+    "lluvias": "Costa norte y central con temperaturas récord y lluvias torrenciales desde noviembre. Sierra sur y Amazonía con condiciones de lluvia inferior a lo normal (riesgo hídrico y heladas).",
+    "archivo": "Comunicado_Of_ENFEN N° 16-2026.pdf"
+  }
+]

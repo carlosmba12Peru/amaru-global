@@ -27,11 +27,14 @@ class HistoricalDataService:
 
     def __init__(self):
         if not self._initialized:
+            self._search_cache = {}
             self._load_all_datasets()
             self._initialized = True
 
     def reload_datasets(self):
         """Fuerza la recarga de todos los datasets JSON en memoria."""
+        if hasattr(self, "_search_cache"):
+            self._search_cache.clear()
         self._load_all_datasets()
 
     def _load_json_safe(self, filename: str, default=None):
@@ -563,6 +566,10 @@ class HistoricalDataService:
         if not q:
             return []
 
+        cache_key = f"{q}_{limit}"
+        if hasattr(self, "_search_cache") and cache_key in self._search_cache:
+            return self._search_cache[cache_key]
+
         # Mapa de alias populares peruanos
         aliases = {
             "chosica": "lurigancho",
@@ -633,7 +640,12 @@ class HistoricalDataService:
                 })
 
         results.sort(key=lambda x: (-x["score"], x["distrito"]))
-        return results[:limit]
+        final_results = results[:limit]
+        if hasattr(self, "_search_cache"):
+            if len(self._search_cache) > 250:
+                self._search_cache.clear()
+            self._search_cache[cache_key] = final_results
+        return final_results
 
     def get_historical_district_memory(self, ubigeo: str) -> Optional[Dict[str, Any]]:
         """

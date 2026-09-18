@@ -39,6 +39,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+COEN_PERFIL = os.getenv("COEN_PERFIL", "full").lower()
+
 class UbigeoRequest(BaseModel):
     ubigeo: str
     force_critical: bool = False
@@ -48,6 +50,7 @@ async def health_check():
     return {
         "status": "ok",
         "system": "COEN-Digital Multi-Agent",
+        "profile": COEN_PERFIL,
         "agents": [
             "1. Agente Centinela Hidrometeorológico",
             "2. Agente de Evaluación Táctica y Logística",
@@ -55,6 +58,35 @@ async def health_check():
             "4. Agente Despachador y Auditor de Canales"
         ]
     }
+
+@app.get("/api/profile")
+async def get_coen_profile():
+    """
+    Retorna la configuración del perfil modular tripartito activo en el sistema.
+    """
+    return {
+        "profile": COEN_PERFIL,
+        "system": "AMARU-CLIMATE / COEN DIGITAL",
+        "version": "3.0.0-tripartito",
+        "pillars": {
+            "nacional": {
+                "nombre": "COEN NACIONAL DIGITAL",
+                "rol": "Comando y Control C2 Macro-Estratégico",
+                "cobertura": "159 Cuencas Hidrográficas, ENFEN, IMARPE, SISMATE CAP v1.2"
+            },
+            "municipal": {
+                "nombre": "COEN MUNICIPAL DIGITAL",
+                "rol": "Gestión Táctica Distrital y Memoria Histórica",
+                "cobertura": "1,891 Distritos del Perú (UBIGEO), Inspector Climático Open-Meteo, Fichas EDAN"
+            },
+            "social": {
+                "nombre": "COEN SOCIAL DIGITAL",
+                "rol": "Resiliencia Comunitaria y Red de Ollas Comunes",
+                "cobertura": "Ollas Comunes, Juntas Vecinales, Bot Telegram Bilingüe, PWA Offline-First"
+            }
+        }
+    }
+
 
 @app.get("/api/clocks/enso")
 async def get_polar_clocks():

@@ -108,32 +108,54 @@ La consola AMARU-LEX incorpora un redactor normativo automatizado que compila lo
 
 ---
 
-## 5. ESPECIFICACIÓN DE RUTAS Y CÓDIGO FUENTE IMPLEMENTADO
+---
 
-| Componente | Archivo Fuente / Ruta | Funcionalidad Clave |
-|---|---|---|
-| **Frontend Navegación** | [`frontend/src/components/HeaderNav.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/components/HeaderNav.tsx) | Enlaces directos a AMARU-YACHAY y AMARU-LEX |
-| **Reloj Polar C2 / Yachay** | [`frontend/src/components/TacticalPolarClock.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/components/TacticalPolarClock.tsx) | Alternador Mando C2 / Yachay, voces y bioindicadores |
-| **Consola AMARU-YACHAY** | [`frontend/src/app/yachay/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/yachay/page.tsx) | Checklist municipal, simulador económico, radio broadcast |
-| **Consola AMARU-LEX** | [`frontend/src/app/lex/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/lex/page.tsx) | Radar geolegal, catálogo 51 normas, generador resolutivo, RAG |
-| **Parser 51 Normas PDF** | [`backend/scripts/parse_marco_legal.py`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/backend/scripts/parse_marco_legal.py) | Extracción de metadatos, clasificación y resumen |
-| **Catálogo Digital 51 Normas** | [`data/marco_legal_51_catalog.json`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/data/marco_legal_51_catalog.json) | Base de datos indexada de las 51 normas |
-| **Servicio Legal Backend** | [`backend/services/legal_framework_service.py`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/backend/services/legal_framework_service.py) | API RAG, resoluciones automáticas, filtros de normas |
-| **Endpoints FastAPI** | [`backend/main.py`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/backend/main.py) | `/api/marco-legal/*` y `/api/yachay/*` |
+## 6. NÚCLEO V: ARQUITECTURA MODULAR TRIPARTITA Y MEMORIA HISTÓRICA MUNICIPAL
+
+### 6.1. Doctrina de Despliegue Tripartito
+El sistema unifica la acción del Estado y la sociedad civil bajo tres perfiles especializados:
+1. **COEN NACIONAL DIGITAL:** C2 Macro-Estratégico (159 cuencas, ENFEN, IMARPE, SISMATE CAP v1.2, Cloud Run + BigQuery).
+2. **COEN MUNICIPAL DIGITAL:** Táctico Territorial Distrital (1,891 municipios por UBIGEO, Memoria Histórica 1983-2017, Inspector Climático Open-Meteo y Ficha EDAN preliminar para SINPAD).
+3. **COEN SOCIAL DIGITAL:** Primera Línea Comunitaria (AMARU-AYNI, Ollas Comunes, Juntas Vecinales, Bot Telegram Bilingüe y PWA Offline-First < 3.5 MB con datos protegidos bajo Ley Nº 29733).
+
+### 6.2. Consola de Memoria Histórica Distrital (`/historico`)
+Integra y procesa los 5 compendios oficiales de desastres del país para los 1,891 distritos:
+* **CAF (304 pp.):** Lecciones aprendidas y costos de rehabilitación del FEN 1997-1998.
+* **INDECI:** Compendio histórico 1998 y Registro Oficial FEN Costero 2017.
+* **OPS / OMS (290 pp.):** Vigilancia de brotes de dengue, malaria, cólera y leptospirosis.
+* **MINEDU / PUCP (50 pp.):** Daños en locales escolares y suspensión de clases.
+* **MINAG-OIA (338 pp.):** Hectáreas de cultivo perdidas, canales de riego destruidos y familias campesinas afectadas.
 
 ---
 
-## 6. PROTOCOLO DE DESPLIEGUE Y CERTIFICACIÓN DE CALIDAD
+## 7. ESPECIFICACIÓN DE RUTAS Y CÓDIGO FUENTE IMPLEMENTADO
+
+| Componente | Archivo Fuente / Ruta | Funcionalidad Clave |
+|---|---|---|
+| **Frontend Navegación Tripartita** | [`frontend/src/components/HeaderNav.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/components/HeaderNav.tsx) | Selector de pilares: Nacional, Municipal y Social |
+| **Memoria Histórica Municipal** | [`frontend/src/app/historico/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/historico/page.tsx) | Consola de Memoria Histórica 1983-2017 por UBIGEO |
+| **Inspector Climático Distrital** | [`frontend/src/app/dashboard/[ubigeo]/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/dashboard/[ubigeo]/page.tsx) | Telemetría horaria Open-Meteo Pro y variables CAPE |
+| **Servicio Memoria Histórica** | [`backend/services/historical_data_service.py`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/backend/services/historical_data_service.py) | Ingesta 1,891 distritos y caché en memoria |
+| **PWA Social AMARU-AYNI** | [`frontend/src/app/ayni/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/ayni/page.tsx) | Gestión de Ollas Comunes y Padrón protegido |
+| **Reporte Ciudadano Blindado** | [`frontend/src/app/reporte-ciudadano/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/reporte-ciudadano/page.tsx) | Reporte offline en 3 toques con georreferenciación |
+| **Scripts de Respaldo y Rollback** | [`scripts/crear_backup_snapshot.ps1`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/scripts/crear_backup_snapshot.ps1) | Creación de snapshots ZIP y rollback seguro a `v1.0.0-stable` |
+| **Endpoints FastAPI** | [`backend/main.py`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/backend/main.py) | `/api/profile`, `/api/historico/*` y `/api/meteo/*` |
+
+---
+
+## 8. PROTOCOLO DE DESPLIEGUE Y CERTIFICACIÓN DE CALIDAD
 
 1. **Frontend (Next.js 14 / TypeScript):**
-   * Compilado con `npm run build` sin advertencias críticas.
-   * Rutas `/yachay` y `/lex` prerenderizadas como estáticas de alta velocidad (tiempo de carga inicial inferior a 120 ms).
+   * Verificado con navegación fluida y tiempos de respuesta HTTP 200 en todas las consolas.
+   * Carga dinámica con `next/dynamic` para aislamiento de componentes 3D.
 2. **Backend (FastAPI / Python 3.11):**
-   * Sintaxis verificada y probada mediante `py_compile`.
-   * Manejo asíncrono de endpoints para consultas de alto tráfico en situaciones de emergencia regional.
+   * Configurado con soporte de perfiles (`COEN_PERFIL`), caché en memoria y endpoints no bloqueantes.
+3. **Puntos de Restauración y Seguridad Operativa:**
+   * Tag Git inmutable `v1.0.0-stable` y snapshot físico en `backups/`.
 
 ---
 
 **REGISTRO Y CUSTODIA:**  
 Documento archivado en el repositorio confidencial del proyecto.  
 *COEN-DIGITAL • AMARU-CLIMATE • ASESORÍA DE GOBERNANZA CLIMÁTICA Y RESPUESTA A DESASTRES*
+

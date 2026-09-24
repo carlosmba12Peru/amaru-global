@@ -484,3 +484,5 @@ class SaludAmaruService:
                     self.registrar_paciente_desacoplado(s)
                 except Exception as e:
                     logger.error(f"[SaludAmaru Semillas] Error: {e}")
+
+salud_service = SaludAmaruService()

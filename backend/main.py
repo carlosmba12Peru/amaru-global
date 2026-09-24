@@ -1893,13 +1893,26 @@ async def get_auditoria_metricas_forenses():
     - Triaje NTS-105 y custodia Break-Glass
     - Circuit Breaker HITL y estado de parada de emergencia
     """
-    from services.mef_obras_service import mef_obras_service
-    from services.salud_service import salud_service
-    from services.damnificados_service import damnificados_service
-    
-    obras_kpis = mef_obras_service.get_resumen_nacional()
-    salud_metricas = salud_service.get_metricas_salud()
-    damn_stats = damnificados_service.get_estadisticas()
+    obras_kpis = {}
+    try:
+        from services.mef_obras_service import mef_obras_service
+        obras_kpis = mef_obras_service.get_resumen_nacional()
+    except Exception as e:
+        logger.warning(f"[Auditoria] Error obteniendo resumen de obras: {e}")
+
+    salud_metricas = {}
+    try:
+        from services.salud_service import salud_service
+        salud_metricas = salud_service.obtener_metricas_salud()
+    except Exception as e:
+        logger.warning(f"[Auditoria] Error obteniendo metricas salud: {e}")
+
+    damn_stats = {}
+    try:
+        from services.damnificados_service import damnificados_service
+        damn_stats = damnificados_service.obtener_metricas_padron()
+    except Exception as e:
+        logger.warning(f"[Auditoria] Error obteniendo metricas padron: {e}")
     
     return {
         "sistema": "AMARU-CLIMATE • Suite Tripartita Soberana",

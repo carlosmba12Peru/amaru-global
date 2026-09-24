@@ -138,14 +138,44 @@ class HistoricalAnalogueResult(BaseModel):
     distrito_declarado_ds124: bool
     nivel_peligro_cenepred: str
     sustento_juridico_pcm: str
-    quebradas_analizadas: List[QuebradaAlerta]
+    quebradas_analizadas: List[QuebradaAlerta] = []
     recomendacion_doctrinal: str
+    # Vertiente 1: Impacto Climático e Hidrológico
+    lead_time_horas: int = 72
+    factor_amplificacion_fen: float = 1.0
+    impacto_climatico_analogo: Dict[str, Any] = Field(default_factory=dict, description="Firma análoga, factor multiplicador FEN y lead time")
+    # Vertiente 2: Memoria de Gestión Pública, Infraestructura y Fiscal (MEF/CGR)
+    memoria_infraestructura_fallas: List[Dict[str, Any]] = Field(default_factory=list, description="Puentes y diques CAF colapsados en 1983/1998/2017")
+    cruce_fiscal_obras: List[Dict[str, Any]] = Field(default_factory=list, description="Obras MEF PP 0068 en puntos críticos históricos y advertencia Art. 377 CP")
+    # Vertiente 3: Memoria Social, Aislamiento y Sabiduría Ancestral (Yachay)
+    memoria_social_albergues: Dict[str, Any] = Field(default_factory=dict, description="Caseríos aislados y advertencia de locales escolares inundables")
+    bioindicadores_ancestrales: List[Dict[str, Any]] = Field(default_factory=list, description="Validación de bioindicadores milenarios Yachay")
 
 class AgentExecutionTrace(BaseModel):
     agente: str
     estado: str = "COMPLETADO"
     tiempo_ms: float
     resumen: str
+
+class ReNITLIForensicTicket(BaseModel):
+    """
+    Ticket Pericial Forense ReNITLI (Registro Nacional de Intérpretes y Traductores
+    en Lenguas Indígenas u Originarias - Ministerio de Cultura del Perú).
+    Conforme a Ley N.º 29735, D.S. N.º 004-2016-MC y Art. 220 del Código Procesal Penal.
+    Garantiza trazabilidad, inmutabilidad y fe pública para traducciones de emergencia.
+    """
+    folio_pericial: str
+    lengua_originaria: str
+    variante_linguistica: str
+    texto_fuente_castellano: str
+    texto_traducido_originaria: str
+    hash_sha256_castellano: str
+    hash_sha256_traduccion: str
+    estado_convalidacion: str = "ENVIADO_BANDEJA_RENITLI_MINCUL"
+    perito_colegiado_asignado: str
+    sello_tiempo_utc: str
+    validez_juicio_oral: bool = True
+    normativa_aplicable: str = "Ley N.º 29735 / Art. 220 CPP / D.S. 115-2025-PCM"
 
 class MultiAgentPipelineResponse(BaseModel):
     incident_id: str
@@ -158,4 +188,134 @@ class MultiAgentPipelineResponse(BaseModel):
     evaluacion_tactica: Optional[TacticalAssessment] = None
     analogo_historico: Optional[HistoricalAnalogueResult] = None
     mensajes_linguisticos: Optional[LinguisticMessages] = None
+    peritaje_renitli: Optional[ReNITLIForensicTicket] = None
     despacho_auditoria: Optional[DispatchAudit] = None
+
+
+# ==============================================================================
+# Esquemas para Nuevos Agentes Soberanos en Castellano
+# ==============================================================================
+
+# 1. Agente FISCALIZADOR (Presupuesto MEF & Contrataciones SEACE)
+class FiscalReportePresupuestal(BaseModel):
+    ubigeo: str
+    distrito: str
+    provincia: str
+    departamento: str
+    pim_pp0068_pen: float
+    devengado_pp0068_pen: float
+    saldo_disponible_pp0068_pen: float
+    porcentaje_ejecucion_pp0068: float
+    saldo_fondes_pen: float
+    requiere_credito_suplementario: bool
+    monto_sugerido_modificacion_pen: float
+    fuente_financiamiento_recomendada: str
+    fecha_consulta_mef: str
+    hash_sha256_consulta: str
+
+
+class RazonabilidadPrecioRequest(BaseModel):
+    tipo_maquinaria: str
+    precio_hora_ofertado_pen: float
+    departamento: str = "Piura"
+
+
+class RazonabilidadPrecioResponse(BaseModel):
+    tipo_maquinaria: str
+    precio_hora_ofertado_pen: float
+    precio_referencial_seace_pen: float
+    limite_superior_tolerable_pen: float
+    es_razonable: bool
+    porcentaje_desviacion: float
+    dictamen_anticorrupcion: str
+    base_legal: str = "Art. 27 Ley N.º 30225 y Directiva OSCE N.º 005-2020"
+
+
+class DictamenFiscalEmergencia(BaseModel):
+    folio_fiscal: str
+    ubigeo: str
+    distrito: str
+    monto_total_comprometido_pen: float
+    disponibilidad_presupuestal_certificada: bool
+    cumple_razonabilidad_precios: bool
+    resumen_dictamen: str
+    hash_sha256: str
+    fecha_emision: str
+
+
+# 2. Agente COMUNITARIO (Crowdsourcing Territorial & Anti-Bulos)
+class CitizenReportInput(BaseModel):
+    ubigeo: str
+    distrito: str
+    latitud: float
+    longitud: float
+    tipo_incidente: str
+    descripcion: str
+    canal_origen: str = "WHATSAPP_COMUNITARIO"
+    tiene_multimedia: bool = True
+    url_multimedia: Optional[str] = None
+    timestamp_reporte: Optional[str] = None
+
+
+class ComunitarioReporteVerificado(BaseModel):
+    reporte_id: str
+    ubigeo: str
+    distrito: str
+    es_autentico: bool
+    score_confianza_antibullying: float
+    clasificacion_anti_hoax: str
+    motivo_clasificacion: str
+    radar_coincidencia_lluvia: bool
+    prioridad_atencion: str
+    requiere_inspeccion_campo: bool
+    hash_sha256_evidencia: str
+    fecha_procesamiento: str
+
+
+class OllaComunMonitoreo(BaseModel):
+    olla_comun_id: str
+    nombre: str
+    ubigeo: str
+    distrito: str
+    sector: str
+    beneficiarios_atendidos: int
+    estado_acceso: str
+    requerimiento_alimentos_kg: float
+    requerimiento_agua_litros: float
+    prioridad_abastecimiento: str
+
+
+# 3. Agente SATELITAL (Radar SAR Sentinel-1 & Daños)
+class SatelitalEvaluacionSAR(BaseModel):
+    evaluacion_id: str
+    ubigeo: str
+    distrito: str
+    sensor_satelital: str = "Copernicus Sentinel-1 SAR (Banda C - 5.405 GHz)"
+    cobertura_nubosa_porcentaje: float = 98.5
+    capacidad_penetracion_nubes: bool = True
+    modo_adquisicion: str = "Interferometric Wide Swath (IW)"
+    polarizaciones: List[str] = Field(default_factory=lambda: ["VV", "VH"])
+    umbral_retrodispersion_db: float = -14.2
+    superficie_inundada_hectareas: float
+    hectareas_agricolas_afectadas: float
+    hectareas_urbanas_afectadas: float
+    principales_cultivos_comprometidos: List[str] = Field(default_factory=list)
+    puentes_o_vias_anegadas: List[str] = Field(default_factory=list)
+    indice_severidad_inundacion: str
+    poligono_geojson_resumen: Dict[str, Any] = Field(default_factory=dict)
+    hash_sha256_raster: str
+    fecha_pasada_satelital: str
+
+
+class SeguroAgricolaSACResponse(BaseModel):
+    expediente_sac_id: str
+    ubigeo: str
+    distrito: str
+    departamento: str
+    hectareas_elegibles_sac: float
+    cultivo_predominante: str
+    monto_indemnizacion_estimado_pen: float
+    aseguradora_operadora: str = "La Positiva Seguros / MIDAGRI SAC"
+    estado_activacion: str = "EXPEDIENTE_PARAMETRICO_APROBADO"
+    hash_sha256: str
+

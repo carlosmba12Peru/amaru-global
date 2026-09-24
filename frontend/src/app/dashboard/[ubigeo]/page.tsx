@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import DistrictWeatherInspector from "@/components/DistrictWeatherInspector";
-import { Bot, ShieldAlert, Languages, Send, Activity, Cpu, AlertTriangle, CheckCircle2, Clock, Waves, Radio, FileCode2, Zap, MapPin } from "lucide-react";
+import IrceAndGovernancePanel from "@/components/IrceAndGovernancePanel";
+import { Bot, ShieldAlert, Languages, Send, Activity, Cpu, AlertTriangle, CheckCircle2, Clock, Waves, Radio, FileCode2, Zap, MapPin, Building2 } from "lucide-react";
 
 const MapViewer = dynamic(() => import("@/components/MapViewer"), {
     ssr: false,
@@ -451,7 +452,7 @@ export default function ConsolaMunicipalPage({
                             href="/"
                             className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded transition border border-slate-700"
                         >
-                            ← Volver al COEN Nacional
+                            ← Volver al COED Nacional Amaru
                         </Link>
                         <span className="text-xs font-mono bg-blue-950 text-blue-300 border border-blue-800 px-2 py-0.5 rounded">
                             UBIGEO: {ubigeo}
@@ -480,8 +481,15 @@ export default function ConsolaMunicipalPage({
                     </p>
                 </div>
 
-                {/* Semáforo Táctico Municipal */}
-                <div className="flex items-center gap-3">
+                {/* Semáforo Táctico Municipal & Acceso Suite Municipal 360 */}
+                <div className="flex flex-wrap items-center gap-3">
+                    <Link
+                        href={`/municipal/${ubigeo}`}
+                        className="flex items-center gap-2 px-3.5 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-slate-950 font-bold rounded-lg text-xs transition-all shadow-md shadow-cyan-950/50"
+                    >
+                        <Building2 className="w-4 h-4" />
+                        <span>Suite Municipal 360°</span>
+                    </Link>
                     <div
                         className={`px-4 py-2 rounded-lg font-black text-sm tracking-wider border shadow-lg ${
                             data.nivel_alerta === "ROJO"
@@ -567,6 +575,9 @@ export default function ConsolaMunicipalPage({
                     }}
                 />
             </div>
+
+            {/* SECCIÓN DOCTRINAL Y OPERATIVA: IRCE-FEN (SAATY AHP) & PREPOSICIONAMIENTO CAF/PUCP */}
+            <IrceAndGovernancePanel ubigeo={ubigeo} />
 
             {/* CARTOGRAFÍA SATELITAL Y GEOVISOR TÁCTICO MUNICIPAL (GOOGLE MAPS PLATFORM) */}
             <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-3">

@@ -1,0 +1,366 @@
+{
+  "metadata": {
+    "entidad_rectora": "Autoridad Nacional del Agua (ANA) / SENAMHI (SNIRH) / PECHP / PEOT",
+    "sistema": "Red Hidrométrica Oficial de Alerta Fluvial de la Costa Norte frente a El Niño",
+    "fecha_actualizacion": "Septiembre 2026",
+    "total_cuencas": 8,
+    "total_estaciones_monitoreo": 16,
+    "total_represas_reguladoras": 3
+  },
+  "represas_principales": [
+    {
+      "id_represa": "REP-POECHOS",
+      "nombre": "Represa de Poechos (Proyecto Especial Chira-Piura)",
+      "rio": "Río Chira",
+      "cuenca": "Cuenca del Río Chira",
+      "departamento": "Piura",
+      "provincia": "Sullana",
+      "distrito": "Lancones",
+      "cota_coronacion_msnm": 108.0,
+      "cota_operacion_normal_msnm": 103.0,
+      "cota_actual_msnm": 101.4,
+      "capacidad_diseno_mmc": 1000.0,
+      "capacidad_actual_sedimentada_mmc": 440.0,
+      "volumen_almacenado_actual_mmc": 380.0,
+      "porcentaje_llenado": 86.4,
+      "caudal_ingreso_m3s": 420.0,
+      "caudal_descarga_alivio_m3s": 150.0,
+      "umbral_descarga_emergencia_m3s": 2500.0,
+      "estado_alerta": "NARANJA_VIGILANCIA",
+      "impacto_aguas_abajo": "Descargas >2,000 m³/s inundan el valle del Bajo Chira (Sullana, Salitral, Querecotillo, Colán, Vichayal)",
+      "leccion_historica": "En 1998 la represa recibió un ingreso récord de 8,000 m³/s, forzando la apertura total del aliviadero de emergencia para evitar el colapso de la presa."
+    },
+    {
+      "id_represa": "REP-GALLITO-CIEGO",
+      "nombre": "Represa Gallito Ciego (Proyecto Especial Jequetepeque-Zaña)",
+      "rio": "Río Jequetepeque",
+      "cuenca": "Cuenca del Río Jequetepeque",
+      "departamento": "Cajamarca / La Libertad",
+      "provincia": "Contumazá / Pacasmayo",
+      "distrito": "Yonán",
+      "cota_coronacion_msnm": 410.0,
+      "cota_operacion_normal_msnm": 404.0,
+      "cota_actual_msnm": 398.2,
+      "capacidad_diseno_mmc": 570.0,
+      "capacidad_actual_sedimentada_mmc": 390.0,
+      "volumen_almacenado_actual_mmc": 310.0,
+      "porcentaje_llenado": 79.5,
+      "caudal_ingreso_m3s": 180.0,
+      "caudal_descarga_alivio_m3s": 60.0,
+      "umbral_descarga_emergencia_m3s": 1200.0,
+      "estado_alerta": "AMARILLO_VIGILANCIA",
+      "impacto_aguas_abajo": "Descargas mayores a 1,000 m³/s cortan la Panamericana Norte en Ciudad de Dios y afectan bocatomas de riego",
+      "leccion_historica": "En 1998 las lluvias en la sierra cajamarquina llenaron el embalse en días, requiriendo laminación controlada de avenidas."
+    },
+    {
+      "id_represa": "REP-SAN-LORENZO",
+      "nombre": "Reservorio San Lorenzo / Los Cocos",
+      "rio": "Río Chipillico / Río Piura",
+      "cuenca": "Cuenca del Río Chipillico",
+      "departamento": "Piura",
+      "provincia": "Piura",
+      "distrito": "Tambogrande / Las Lomas",
+      "cota_coronacion_msnm": 290.0,
+      "cota_operacion_normal_msnm": 285.0,
+      "cota_actual_msnm": 281.5,
+      "capacidad_diseno_mmc": 258.0,
+      "capacidad_actual_sedimentada_mmc": 195.0,
+      "volumen_almacenado_actual_mmc": 165.0,
+      "porcentaje_llenado": 84.6,
+      "caudal_ingreso_m3s": 95.0,
+      "caudal_descarga_alivio_m3s": 40.0,
+      "umbral_descarga_emergencia_m3s": 600.0,
+      "estado_alerta": "AMARILLO_VIGILANCIA",
+      "impacto_aguas_abajo": "Alivios excesivos saturan el río Piura a la altura de Tambogrande",
+      "leccion_historica": "En 1983 y 1998 el rebose por vertedero inundó plantaciones de mango y limón en el valle de San Lorenzo."
+    }
+  ],
+  "cuencas_fluviales_norte": [
+    {
+      "id_cuenca": "CUENCA-PIURA",
+      "nombre": "Cuenca del Río Piura",
+      "departamento": "Piura",
+      "longitud_cauce_km": 280,
+      "ciudades_vulnerables": ["Tambogrande", "Piura", "Castilla", "Catacaos", "Cura Mori", "La Arena", "La Unión"],
+      "estaciones_aforo": [
+        {
+          "id_estacion": "EST-PIU-TAMBOGRANDE",
+          "nombre": "Estación Hidrométrica Tambogrande",
+          "posicion": "CUENCA_MEDIA_ALTA",
+          "lat": -4.9280,
+          "lon": -80.3420,
+          "caudal_actual_m3s": 650.0,
+          "umbral_amarillo_m3s": 800.0,
+          "umbral_naranja_m3s": 1400.0,
+          "umbral_rojo_desborde_m3s": 1900.0,
+          "record_historico_1998_m3s": 3800.0,
+          "tiempo_transito_hacia_piura_horas": 14.5,
+          "tiempo_transito_hacia_catacaos_horas": 18.0,
+          "estado_actual": "VERDE_NORMAL"
+        },
+        {
+          "id_estacion": "EST-PIU-SANCHEZ-CERRO",
+          "nombre": "Estación Puente Sánchez Cerro (Piura Urbana)",
+          "posicion": "CASCO_URBANO_CENTRAL",
+          "lat": -5.1953,
+          "lon": -80.6272,
+          "caudal_actual_m3s": 820.0,
+          "umbral_amarillo_m3s": 900.0,
+          "umbral_naranja_m3s": 1500.0,
+          "umbral_rojo_desborde_m3s": 2000.0,
+          "record_historico_1998_m3s": 4424.0,
+          "record_historico_2017_m3s": 3468.0,
+          "tiempo_transito_hacia_catacaos_horas": 3.5,
+          "estado_actual": "AMARILLO_VIGILANCIA"
+        },
+        {
+          "id_estacion": "EST-PIU-INDEPENDENCIA",
+          "nombre": "Estación Puente Independencia (Bajo Piura)",
+          "posicion": "CUENCA_BAJA_CATACAOS",
+          "lat": -5.2815,
+          "lon": -80.6842,
+          "caudal_actual_m3s": 980.0,
+          "umbral_amarillo_m3s": 1100.0,
+          "umbral_naranja_m3s": 1700.0,
+          "umbral_rojo_desborde_m3s": 1900.0,
+          "record_historico_1998_m3s": 4200.0,
+          "record_historico_2017_m3s": 3100.0,
+          "tiempo_transito_hacia_catacaos_horas": 0.0,
+          "estado_actual": "AMARILLO_VIGILANCIA"
+        }
+      ]
+    },
+    {
+      "id_cuenca": "CUENCA-LA-LECHE",
+      "nombre": "Cuenca del Río La Leche",
+      "departamento": "Lambayeque",
+      "longitud_cauce_km": 110,
+      "ciudades_vulnerables": ["Íllimo", "Pacora", "Túcume", "Mórrope", "Jayanca"],
+      "estaciones_aforo": [
+        {
+          "id_estacion": "EST-LEC-PUCHACA",
+          "nombre": "Estación Puchaca (Cabecera La Leche)",
+          "posicion": "CUENCA_ALTA",
+          "lat": -6.3720,
+          "lon": -79.6210,
+          "caudal_actual_m3s": 120.0,
+          "umbral_amarillo_m3s": 150.0,
+          "umbral_naranja_m3s": 220.0,
+          "umbral_rojo_desborde_m3s": 300.0,
+          "record_historico_1998_m3s": 850.0,
+          "tiempo_transito_hacia_illimo_horas": 3.0,
+          "estado_actual": "VERDE_NORMAL"
+        },
+        {
+          "id_estacion": "EST-LEC-ILLIMO",
+          "nombre": "Estación Puente La Leche (Íllimo)",
+          "posicion": "VALLE_MEDIO_URBANO",
+          "lat": -6.4830,
+          "lon": -79.8550,
+          "caudal_actual_m3s": 180.0,
+          "umbral_amarillo_m3s": 180.0,
+          "umbral_naranja_m3s": 250.0,
+          "umbral_rojo_desborde_m3s": 320.0,
+          "record_historico_1998_m3s": 980.0,
+          "record_historico_2023_m3s": 480.0,
+          "tiempo_transito_hacia_illimo_horas": 0.5,
+          "estado_actual": "AMARILLO_VIGILANCIA"
+        }
+      ]
+    },
+    {
+      "id_cuenca": "CUENCA-TUMBES",
+      "nombre": "Cuenca del Río Puyango-Tumbes",
+      "departamento": "Tumbes",
+      "longitud_cauce_km": 150,
+      "ciudades_vulnerables": ["Tumbes", "Bellavista", "San Jacinto", "Pampas de Hospital", "Corrales"],
+      "estaciones_aforo": [
+        {
+          "id_estacion": "EST-TUM-CABO-INGA",
+          "nombre": "Estación Cabo Inga",
+          "posicion": "FRONTERA_CUENCA_ALTA",
+          "lat": -3.9850,
+          "lon": -80.4120,
+          "caudal_actual_m3s": 380.0,
+          "umbral_amarillo_m3s": 500.0,
+          "umbral_naranja_m3s": 800.0,
+          "umbral_rojo_desborde_m3s": 1100.0,
+          "record_historico_1998_m3s": 3600.0,
+          "tiempo_transito_hacia_tumbes_horas": 8.0,
+          "estado_actual": "VERDE_NORMAL"
+        },
+        {
+          "id_estacion": "EST-TUM-EL-TIGRE",
+          "nombre": "Estación El Tigre (Tumbes)",
+          "posicion": "VALLE_MEDIO",
+          "lat": -3.7650,
+          "lon": -80.4580,
+          "caudal_actual_m3s": 450.0,
+          "umbral_amarillo_m3s": 600.0,
+          "umbral_naranja_m3s": 850.0,
+          "umbral_rojo_desborde_m3s": 1000.0,
+          "record_historico_1998_m3s": 3400.0,
+          "tiempo_transito_hacia_tumbes_horas": 3.5,
+          "estado_actual": "VERDE_NORMAL"
+        }
+      ]
+    },
+    {
+      "id_cuenca": "CUENCA-CHIRA",
+      "nombre": "Cuenca del Río Chira",
+      "departamento": "Piura",
+      "longitud_cauce_km": 300,
+      "ciudades_vulnerables": ["Sullana", "Bellavista", "Marcavelica", "Salitral", "Querecotillo", "Colán", "Vichayal"],
+      "estaciones_aforo": [
+        {
+          "id_estacion": "EST-CHI-CIRUELO",
+          "nombre": "Estación El Ciruelo",
+          "posicion": "INGRESO_A_POECHOS",
+          "lat": -4.3820,
+          "lon": -80.2150,
+          "caudal_actual_m3s": 520.0,
+          "umbral_amarillo_m3s": 1000.0,
+          "umbral_naranja_m3s": 1800.0,
+          "umbral_rojo_desborde_m3s": 2800.0,
+          "record_historico_1998_m3s": 6500.0,
+          "tiempo_transito_hacia_sullana_horas": 12.0,
+          "estado_actual": "VERDE_NORMAL"
+        },
+        {
+          "id_estacion": "EST-CHI-SULLANA",
+          "nombre": "Estación Puente Sullana",
+          "posicion": "VALLE_MEDIO_CHIRA",
+          "lat": -4.8967,
+          "lon": -80.6975,
+          "caudal_actual_m3s": 480.0,
+          "umbral_amarillo_m3s": 1200.0,
+          "umbral_naranja_m3s": 2200.0,
+          "umbral_rojo_desborde_m3s": 3000.0,
+          "record_historico_1998_m3s": 5200.0,
+          "tiempo_transito_hacia_sullana_horas": 1.0,
+          "estado_actual": "VERDE_NORMAL"
+        }
+      ]
+    },
+    {
+      "id_cuenca": "CUENCA-CHANCAY-LAMBAYEQUE",
+      "nombre": "Cuenca del Río Chancay-Lambayeque",
+      "departamento": "Lambayeque",
+      "longitud_cauce_km": 170,
+      "ciudades_vulnerables": ["Chongoyape", "Reque", "Monsefú", "Eten", "Chiclayo"],
+      "estaciones_aforo": [
+        {
+          "id_estacion": "EST-CHA-CARHUAQUERO",
+          "nombre": "Estación Carhuaquero",
+          "posicion": "CUENCA_ALTA",
+          "lat": -6.5820,
+          "lon": -79.2450,
+          "caudal_actual_m3s": 110.0,
+          "umbral_amarillo_m3s": 200.0,
+          "umbral_naranja_m3s": 350.0,
+          "umbral_rojo_desborde_m3s": 550.0,
+          "record_historico_1998_m3s": 1100.0,
+          "tiempo_transito_hacia_reque_horas": 7.0,
+          "estado_actual": "VERDE_NORMAL"
+        },
+        {
+          "id_estacion": "EST-CHA-REQUE",
+          "nombre": "Estación Bocatoma Monsefú - Reque",
+          "posicion": "DESEMBOCADURA_VALLE_BAJO",
+          "lat": -6.8680,
+          "lon": -79.8240,
+          "caudal_actual_m3s": 160.0,
+          "umbral_amarillo_m3s": 300.0,
+          "umbral_naranja_m3s": 550.0,
+          "umbral_rojo_desborde_m3s": 850.0,
+          "record_historico_1998_m3s": 1400.0,
+          "tiempo_transito_hacia_reque_horas": 0.5,
+          "estado_actual": "VERDE_NORMAL"
+        }
+      ]
+    },
+    {
+      "id_cuenca": "CUENCA-ZANA",
+      "nombre": "Cuenca del Río Zaña",
+      "departamento": "Lambayeque",
+      "longitud_cauce_km": 105,
+      "ciudades_vulnerables": ["Oyotún", "Nueva Arica", "Zaña", "Lagunas / Mocupe"],
+      "estaciones_aforo": [
+        {
+          "id_estacion": "EST-ZAN-OYOTUN",
+          "nombre": "Estación Oyotún",
+          "posicion": "CUENCA_MEDIA",
+          "lat": -6.8390,
+          "lon": -79.3020,
+          "caudal_actual_m3s": 65.0,
+          "umbral_amarillo_m3s": 120.0,
+          "umbral_naranja_m3s": 220.0,
+          "umbral_rojo_desborde_m3s": 380.0,
+          "record_historico_1998_m3s": 800.0,
+          "tiempo_transito_hacia_zana_horas": 4.5,
+          "estado_actual": "VERDE_NORMAL"
+        }
+      ]
+    },
+    {
+      "id_cuenca": "CUENCA-JEQUETEPEQUE",
+      "nombre": "Cuenca del Río Jequetepeque",
+      "departamento": "La Libertad / Cajamarca",
+      "longitud_cauce_km": 160,
+      "ciudades_vulnerables": ["Tembladera", "Yonán", "Ciudad de Dios", "Guadalupe", "Chepén"],
+      "estaciones_aforo": [
+        {
+          "id_estacion": "EST-JEQ-TALAMBO",
+          "nombre": "Estación Bocatoma Talambo",
+          "posicion": "AGUAS_ABAJO_REPRESA",
+          "lat": -7.2140,
+          "lon": -79.3520,
+          "caudal_actual_m3s": 95.0,
+          "umbral_amarillo_m3s": 250.0,
+          "umbral_naranja_m3s": 480.0,
+          "umbral_rojo_desborde_m3s": 750.0,
+          "record_historico_1998_m3s": 1650.0,
+          "tiempo_transito_hacia_ciudaddedios_horas": 2.5,
+          "estado_actual": "VERDE_NORMAL"
+        }
+      ]
+    },
+    {
+      "id_cuenca": "CUENCA-CHICAMA-MOCHE",
+      "nombre": "Cuencas de los Ríos Chicama y Moche",
+      "departamento": "La Libertad",
+      "longitud_cauce_km": 135,
+      "ciudades_vulnerables": ["Ascope", "Chicama", "Casa Grande", "Trujillo", "Moche", "Laredo"],
+      "estaciones_aforo": [
+        {
+          "id_estacion": "EST-CHI-SALINAR",
+          "nombre": "Estación Salinar (Río Chicama)",
+          "posicion": "VALLE_CHICAMA",
+          "lat": -7.6480,
+          "lon": -78.8520,
+          "caudal_actual_m3s": 140.0,
+          "umbral_amarillo_m3s": 300.0,
+          "umbral_naranja_m3s": 550.0,
+          "umbral_rojo_desborde_m3s": 850.0,
+          "record_historico_1998_m3s": 1800.0,
+          "tiempo_transito_hacia_ascope_horas": 3.0,
+          "estado_actual": "VERDE_NORMAL"
+        },
+        {
+          "id_estacion": "EST-MOC-QUIRIHAC",
+          "nombre": "Estación Quirihuac (Río Moche)",
+          "posicion": "VALLE_MOCHE",
+          "lat": -8.0850,
+          "lon": -78.9150,
+          "caudal_actual_m3s": 45.0,
+          "umbral_amarillo_m3s": 110.0,
+          "umbral_naranja_m3s": 190.0,
+          "umbral_rojo_desborde_m3s": 320.0,
+          "record_historico_1998_m3s": 650.0,
+          "tiempo_transito_hacia_moche_horas": 2.0,
+          "estado_actual": "VERDE_NORMAL"
+        }
+      ]
+    }
+  ]
+}

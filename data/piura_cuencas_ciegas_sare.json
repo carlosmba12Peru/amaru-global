@@ -1,0 +1,138 @@
+{
+  "metadata": {
+    "entidad": "Municipalidad Provincial de Piura / Ministerio de Vivienda, Construcción y Saneamiento (MVCS)",
+    "sistema": "Catastro de Depresiones Urbanas Inundables (Cuencas Ciegas) y Red de SAREs",
+    "ambito": "Provincia de Piura (Distritos de Piura, Castilla y Veintiséis de Octubre)",
+    "fecha_actualizacion": "Septiembre 2026",
+    "base_normativa": "Ley N° 29664 • D.S. N° 124-2026-PCM • Directiva INDECI Cuencas Ciegas"
+  },
+  "resumen_provincial": {
+    "total_cuencas_ciegas_inventariadas": 96,
+    "criticas_alta_prioridad": 6,
+    "volumen_total_almacenamiento_m3": 485000,
+    "capacidad_bombeo_instalada_litros_segundo": 6200,
+    "tiempo_promedio_evacuacion_horas_post_lluvia": 14.5
+  },
+  "cuencas_ciegas_criticas": [
+    {
+      "id": "CC-PIU-01",
+      "nombre": "Cuenca Ciega El Chilcal",
+      "distrito": "Piura",
+      "ubigeo": "200101",
+      "coordenadas": {
+        "latitud": -5.1985,
+        "longitud": -80.6382
+      },
+      "cota_topografica_msnm": 28.4,
+      "poblacion_afectada_directa": 4200,
+      "viviendas_expuestas": 850,
+      "volumen_maximo_m3": 45000,
+      "sistema_evacuacion": "SARE El Chilcal (Cámara de tormenta + 2 Electrobombas sumergibles 250 L/s)",
+      "punto_descarga": "Río Piura (altura Malecón Eguiguren)",
+      "longitud_linea_impulsion_metros": 1450,
+      "tiempo_evacuacion_nominal_horas": 8.0,
+      "estado_operativo": "OPERATIVO_ALERTA",
+      "vulnerabilidad_adicional": "Riesgo de anegamiento en centros de estudios y avenidas Grau y Vice."
+    },
+    {
+      "id": "CC-PIU-02",
+      "nombre": "Cuenca Ciega Ignacio Merino",
+      "distrito": "Piura",
+      "ubigeo": "200101",
+      "coordenadas": {
+        "latitud": -5.1764,
+        "longitud": -80.6455
+      },
+      "cota_topografica_msnm": 29.1,
+      "poblacion_afectada_directa": 6500,
+      "viviendas_expuestas": 1320,
+      "volumen_maximo_m3": 68000,
+      "sistema_evacuacion": "SARE Ignacio Merino (Cisterna subterránea de 3,500 m³ + 3 motobombas diesel 8'')",
+      "punto_descarga": "Dren Sullana",
+      "longitud_linea_impulsion_metros": 2100,
+      "tiempo_evacuacion_nominal_horas": 12.0,
+      "estado_operativo": "OPERATIVO",
+      "vulnerabilidad_adicional": "Zona residencial con sótanos vulnerables y red secundaria de desagüe colapsable."
+    },
+    {
+      "id": "CC-PIU-03",
+      "nombre": "Cuenca Ciega Los Polvorines",
+      "distrito": "Veintiséis de Octubre",
+      "ubigeo": "200115",
+      "coordenadas": {
+        "latitud": -5.2155,
+        "longitud": -80.6548
+      },
+      "cota_topografica_msnm": 26.8,
+      "poblacion_afectada_directa": 9800,
+      "viviendas_expuestas": 2100,
+      "volumen_maximo_m3": 95000,
+      "sistema_evacuacion": "SARE Los Polvorines (Piscina de retención temporal + motobombas móviles)",
+      "punto_descarga": "Dren Japón-Turquía",
+      "longitud_linea_impulsion_metros": 3200,
+      "tiempo_evacuacion_nominal_horas": 24.0,
+      "estado_operativo": "EN_MANTENIMIENTO",
+      "vulnerabilidad_adicional": "Asentamiento humano con viviendas de quincha y adobe; alto riesgo sanitario."
+    },
+    {
+      "id": "CC-PIU-04",
+      "nombre": "Cuenca Ciega Cinco Esquinas",
+      "distrito": "Castilla",
+      "ubigeo": "200104",
+      "coordenadas": {
+        "latitud": -5.2045,
+        "longitud": -80.6212
+      },
+      "cota_topografica_msnm": 27.9,
+      "poblacion_afectada_directa": 5400,
+      "viviendas_expuestas": 1150,
+      "volumen_maximo_m3": 52000,
+      "sistema_evacuacion": "SARE Cinco Esquinas (Cámara de captación y línea de impulsión de PEAD)",
+      "punto_descarga": "Río Piura (Margen Izquierda)",
+      "longitud_linea_impulsion_metros": 1100,
+      "tiempo_evacuacion_nominal_horas": 9.5,
+      "estado_operativo": "OPERATIVO_ALERTA",
+      "vulnerabilidad_adicional": "Interrumpe tránsito vehicular entre Castilla y Piura por Av. Guardia Civil."
+    },
+    {
+      "id": "CC-PIU-05",
+      "nombre": "Cuenca Ciega Tres Culturas (Centro Histórico)",
+      "distrito": "Piura",
+      "ubigeo": "200101",
+      "coordenadas": {
+        "latitud": -5.1942,
+        "longitud": -80.6305
+      },
+      "cota_topografica_msnm": 30.5,
+      "poblacion_afectada_directa": 3100,
+      "viviendas_expuestas": 480,
+      "volumen_maximo_m3": 25000,
+      "sistema_evacuacion": "Bombeo móvil de emergencia municipal (2 motobombas de 6'')",
+      "punto_descarga": "Río Piura por gravedad / bombeo",
+      "longitud_linea_impulsion_metros": 650,
+      "tiempo_evacuacion_nominal_horas": 6.0,
+      "estado_operativo": "OPERATIVO",
+      "vulnerabilidad_adicional": "Afectación de oficinas públicas, comercios y zona bancaria."
+    },
+    {
+      "id": "CC-PIU-06",
+      "nombre": "Cuenca Ciega Nuevo Catacaos / Viduque",
+      "distrito": "Catacaos",
+      "ubigeo": "200105",
+      "coordenadas": {
+        "latitud": -5.2638,
+        "longitud": -80.6722
+      },
+      "cota_topografica_msnm": 23.5,
+      "poblacion_afectada_directa": 7200,
+      "viviendas_expuestas": 1600,
+      "volumen_maximo_m3": 82000,
+      "sistema_evacuacion": "Dique de contención Viduque + 4 motobombas de 8'' hacia dren Sechura",
+      "punto_descarga": "Dren Troncal Sechura hacia la Laguna Ramón",
+      "longitud_linea_impulsion_metros": 4500,
+      "tiempo_evacuacion_nominal_horas": 18.0,
+      "estado_operativo": "VULNERABLE",
+      "vulnerabilidad_adicional": "Zona altamente inundable por crecidas del Río Piura que superen los 2,000 m³/s."
+    }
+  ]
+}

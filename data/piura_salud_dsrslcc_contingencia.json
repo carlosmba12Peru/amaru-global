@@ -1,0 +1,132 @@
+{
+  "metadata": {
+    "entidad": "Dirección Sub Regional de Salud Luciano Castillo Colonna (DSRSLCC)",
+    "dependencia": "Gobierno Regional de Piura / Dirección Regional de Salud (DIRESA)",
+    "sede_central": "Sullana, Piura",
+    "ambito_jurisdiccional": "Provincias de Sullana, Paita, Talara, Ayabaca y distritos de Tambogrande y Las Lomas",
+    "fecha_actualizacion": "Septiembre 2026",
+    "planes_oficiales_incorporados": [
+      {
+        "titulo": "Plan de Contingencia Frente al Fenómeno del Niño y Lluvias Intensas, Inundaciones y Movimientos en Masa 2023-2024 / 2024-2025",
+        "objetivo": "Garantizar la operatividad del sistema de salud y atención de víctimas ante emergencias pluviales."
+      },
+      {
+        "titulo": "Plan de Trabajo de Monitoreo y Supervisión de Vigilancia Epidemiológica de Dengue y otras Arbovirosis",
+        "acto_resolutivo": "Resolución Directoral N° 1740-2023-GOB REG PIURA-DRSP-DSRSLCC-OEGDRH",
+        "objetivo": "Control vectorial masivo del Aedes aegypti y manejo clínico de dengue en UVICLINs tras inundaciones."
+      },
+      {
+        "titulo": "Plan de Contingencia por Peligro Inminente ante Déficit Hídrico 2024-2025",
+        "objetivo": "Control microbiológico del agua para consumo humano y prevención de brotes diarreicos y cólera."
+      }
+    ]
+  },
+  "indicadores_capacidad_sanitaria": {
+    "total_establecimientos_salud": 182,
+    "establecimientos_alto_riesgo_inundacion": 34,
+    "camas_uviclin_disponibles": 140,
+    "camas_uviclin_requeridas_escenario_fen": 380,
+    "brigadas_fumigacion_nebulizacion": 48,
+    "kits_hidratacion_oral_stock": 25000,
+    "grupos_electrogenos_cadena_frio_operativos": 62
+  },
+  "establecimientos_prioritarios_contingencia": [
+    {
+      "id": "EES-DSRSLCC-01",
+      "nombre": "Centro de Salud Tambogrande (I-4)",
+      "distrito": "Tambogrande",
+      "provincia": "Piura",
+      "ubigeo": "200114",
+      "coordenadas": {
+        "latitud": -4.9285,
+        "longitud": -80.3421
+      },
+      "poblacion_adscrita": 48000,
+      "categoria": "I-4 (Con internamiento y atención 24h)",
+      "vulnerabilidad_hidrica": "Aislamiento recurrente por activación de Quebrada San Francisco (Malingas) y Quebrada Carneros.",
+      "capacidad_uviclin": 25,
+      "cadena_frio_respaldo": "Grupo electrógeno 15 kVA operativo",
+      "ruta_referencia_evacuacion": "Hospital de Apoyo II-2 Sullana / Hospital Santa Rosa Piura"
+    },
+    {
+      "id": "EES-DSRSLCC-02",
+      "nombre": "Centro de Salud Las Lomas (I-3)",
+      "distrito": "Las Lomas",
+      "provincia": "Piura",
+      "ubigeo": "200111",
+      "coordenadas": {
+        "latitud": -4.6542,
+        "longitud": -80.2458
+      },
+      "poblacion_adscrita": 29000,
+      "categoria": "I-3",
+      "vulnerabilidad_hidrica": "Riesgo de corte de transitabilidad en Quebrada Débito / Río Chipillico.",
+      "capacidad_uviclin": 12,
+      "cadena_frio_respaldo": "Panel solar + Grupo electrógeno auxiliar",
+      "ruta_referencia_evacuacion": "Hospital de Apoyo II-2 Sullana"
+    },
+    {
+      "id": "EES-DSRSLCC-03",
+      "nombre": "Hospital de Apoyo II-2 Sullana",
+      "distrito": "Sullana",
+      "provincia": "Sullana",
+      "ubigeo": "200601",
+      "coordenadas": {
+        "latitud": -4.8988,
+        "longitud": -80.6865
+      },
+      "poblacion_adscrita": 320000,
+      "categoria": "II-2 (Referencial de mayor complejidad)",
+      "vulnerabilidad_hidrica": "Filtraciones en techos del pabellón de emergencias; anegamiento perimétrico.",
+      "capacidad_uviclin": 60,
+      "cadena_frio_respaldo": "Grupo electrógeno principal 120 kVA",
+      "ruta_referencia_evacuacion": "Hospital Regional Cayetano Heredia (Essalud) / Hospital Santa Rosa Piura"
+    },
+    {
+      "id": "EES-DSRSLCC-04",
+      "nombre": "Centro de Salud Bellavista (I-4)",
+      "distrito": "Bellavista",
+      "provincia": "Sullana",
+      "ubigeo": "200602",
+      "coordenadas": {
+        "latitud": -4.8872,
+        "longitud": -80.6755
+      },
+      "poblacion_adscrita": 38000,
+      "categoria": "I-4",
+      "vulnerabilidad_hidrica": "Ubicado en cuenca ciega urbana con riesgo de anegamiento por colapso de colectores.",
+      "capacidad_uviclin": 20,
+      "cadena_frio_respaldo": "Grupo electrógeno 20 kVA",
+      "ruta_referencia_evacuacion": "Hospital de Apoyo II-2 Sullana"
+    },
+    {
+      "id": "EES-DSRSLCC-05",
+      "nombre": "Hospital Las Mercedes de Paita (II-1)",
+      "distrito": "Paita",
+      "provincia": "Paita",
+      "ubigeo": "200501",
+      "coordenadas": {
+        "latitud": -5.0892,
+        "longitud": -81.1075
+      },
+      "poblacion_adscrita": 110000,
+      "categoria": "II-1",
+      "vulnerabilidad_hidrica": "Deslizamiento y huaicos en acantilados de la parte alta hacia la parte baja del puerto.",
+      "capacidad_uviclin": 30,
+      "cadena_frio_respaldo": "Grupo electrógeno 45 kVA",
+      "ruta_referencia_evacuacion": "Red Hospitalaria de Piura"
+    }
+  ],
+  "modelo_brote_post_inundacion": {
+    "vector": "Aedes aegypti",
+    "enfermedades_asociadas": ["Dengue", "Zika", "Chikungunya"],
+    "dias_eclosion_post_lluvia": 7,
+    "pico_casos_semanas_post_evento": "Semana 2 a 6 post-impacto pluvial",
+    "medidas_prioritarias_inmediatas": [
+      "Abatización focal en depósitos de agua limpia en las primeras 48 horas.",
+      "Fumigación espacial termonebulizada en cuadrantes con índice aédico > 2%.",
+      "Habilitación inmediata de camas UVICLIN en postas I-3 y I-4 antes de la saturación hospitalaria.",
+      "Provisión de sales de rehidratación oral y acetaminofén para evitar la automedicación con AINEs."
+    ]
+  }
+}

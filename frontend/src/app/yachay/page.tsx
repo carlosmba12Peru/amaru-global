@@ -24,15 +24,27 @@ import {
     Download,
     Share2,
     FileText,
-    ArrowRight
+    ArrowRight,
+    Landmark,
+    CloudLightning,
+    Droplets,
+    Mountain,
+    Sun,
+    CloudRain,
+    ExternalLink,
+    Eye,
+    History,
+    Flame
 } from "lucide-react";
 
 export default function YachayPage() {
-    const [activeTab, setActiveTab] = useState<"autoridades" | "comunidades" | "simulador">("autoridades");
+    const [activeTab, setActiveTab] = useState<"milenaria" | "autoridades" | "comunidades" | "simulador">("milenaria");
     const [selectedLanguage, setSelectedLanguage] = useState<"QUECHUA_CHANKA" | "QUECHUA_COLLAO" | "AYMARA" | "CAST_LLANO">("QUECHUA_CHANKA");
     const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
     const [simScenario, setSimScenario] = useState<"temprana" | "tardia">("temprana");
     const [selectedBio, setSelectedBio] = useState<number>(0);
+    const [selectedHazard, setSelectedHazard] = useState<number>(0);
+    const [hazardViewMode, setHazardViewMode] = useState<"todos" | "individual">("todos");
 
     // Reproducción de voz sintética Web Speech API
     const speakText = (text: string, langCode: string = "es-PE") => {
@@ -95,6 +107,113 @@ export default function YachayPage() {
             correlacion_cientifica: "Debilitamiento del Anticiclón del Pacífico Sur (APS), permitiendo el avance libre de aguas cálidas hacia el litoral central.",
             leccion_comunal: "Reforzar defensas en bocatomas rústicas de canales de regadío y activar comités de regantes.",
             icono: "💨"
+        }
+    ];
+
+    const peligrosFEN = [
+        {
+            id: "lluvias",
+            nombre: "1. Lluvias Torrenciales Inusuales",
+            icon: CloudRain,
+            color: "text-blue-400",
+            bg: "bg-blue-950/40 border-blue-800/60",
+            badge: "bg-blue-500/20 text-blue-300 border-blue-500/40",
+            umbral: "> 70 - 150 mm / 24h",
+            regiones: "Tumbes, Piura, Lambayeque, La Libertad, Ancash, Lima e Ica",
+            mecanismo: "El calentamiento oceánico anómalo (TSM > 26.5°C - 28°C) debilita la inversión térmica de la Corriente de Humboldt, disparando violentas celdas convectivas de nubes Cumulonimbus sobre la franja desértica costera.",
+            impactoHistorico: "1983 y 1998: Registros pluviométricos históricos en Chulucanas y Morropón superando los 4,000 mm acumulados en la temporada (multiplicando por 20 el promedio anual).",
+            leccionAncestral: "Vichama y Caral edificaron en terrazas desérticas elevadas fuera del alcance de inundaciones pluviales, con drenajes litológicos para evacuar escorrentías sin dañar los cimientos."
+        },
+        {
+            id: "huaicos",
+            nombre: "2. Huaicos y Llocllas (Flujo de Detritos)",
+            icon: Droplets,
+            color: "text-amber-400",
+            bg: "bg-amber-950/40 border-amber-800/60",
+            badge: "bg-amber-500/20 text-amber-300 border-amber-500/40",
+            umbral: "> 20 - 25 mm/h en cuenca media",
+            regiones: "Vertiente Occidental: Rímac, Lurín, Chillón, Moche, Chicama, Santa, Casma",
+            mecanismo: "Precipitaciones violentas en quebradas áridas de fuerte pendiente remueven toneladas de material aluvial inconsolidado, formando una masa viscosa de agua, lodo y rocas de hasta varios metros de diámetro a gran velocidad.",
+            impactoHistorico: "2017: Activación en cadena de 46 quebradas en Lima (Huaycoloro, Quirio, Pedregal, Carosio) y la quebrada San Idelfonso en Trujillo, destruyendo cientos de viviendas edificadas en cauce seco.",
+            leccionAncestral: "La sabiduría andina denominó 'Lloclla' a este fenómeno recurrente. Las civilizaciones prehispánicas JAMÁS ocuparon los conos aluviales; conocían que la quebrada 'duerme' décadas pero siempre reclama su cauce."
+        },
+        {
+            id: "inundaciones",
+            nombre: "3. Inundaciones y Desbordes Fluviales",
+            icon: Waves,
+            color: "text-cyan-400",
+            bg: "bg-cyan-950/40 border-cyan-800/60",
+            badge: "bg-cyan-500/20 text-cyan-300 border-cyan-500/40",
+            umbral: "Caudal > 1,800 - 4,400 m³/s",
+            regiones: "Valles bajos de Piura, Tumbes, Chira, La Leche, Motupe, Chancay-Lambayeque",
+            mecanismo: "La colmatación masiva de sedimentos en el lecho fluvial reduce drásticamente la capacidad de porte hidráulico de los ríos costeros, provocando roturas de diques marginales e inundaciones laminares extensas.",
+            impactoHistorico: "1998: Caudal histórico de 4,420 m³/s en el río Piura sepultó los distritos de Catacaos y Cura Mori bajo más de 2 metros de agua.",
+            leccionAncestral: "Las culturas Vicús, Mochica y Lambayeque ubicaron sus centros ceremoniales y administrativos sobre montículos (huacas) y plataformas artificiales, reservando el lecho de inundación exclusivamente para agricultura de aluvión."
+        },
+        {
+            id: "aluviones",
+            nombre: "4. Aluviones y Derrumbes",
+            icon: Mountain,
+            color: "text-stone-300",
+            bg: "bg-stone-950/40 border-stone-800/60",
+            badge: "bg-stone-500/20 text-stone-300 border-stone-500/40",
+            umbral: "Saturación de macizo rocoso o rotura de lagunas",
+            regiones: "Cordillera Blanca, Callejón de Huaylas, Cordillera Huayhuash y cabeceras de cuenca",
+            mecanismo: "La combinación de lluvias orográficas intensas, desglaciación acelerada y desestabilización de morenas glaciares genera desprendimientos catastróficos de hielo y roca con volumen multimillonario.",
+            impactoHistorico: "Aluviones históricos en Huaraz (1941) y Yungay (1970); activación de torrentes en cuencas altas durante el FEN 1998.",
+            leccionAncestral: "Los antiguos constructores de Chavín de Huántar (3,000 BP) diseñaron una red subterránea de galerías hidráulicas capaces de disipar y dosificar la energía de las aguas torrenciales de los ríos Mosna y Huachecsa."
+        },
+        {
+            id: "deslizamientos",
+            nombre: "5. Deslizamientos de Laderas",
+            icon: Mountain,
+            color: "text-yellow-400",
+            bg: "bg-yellow-950/40 border-yellow-800/60",
+            badge: "bg-yellow-500/20 text-yellow-300 border-yellow-500/40",
+            umbral: "Saturación hídrica > 80% en taludes",
+            regiones: "Cajamarca, Amazonas, San Martín, Huánuco, Pasco, Junín y Puno ceja de selva",
+            mecanismo: "Pérdida de fricción interna y cohesión en estratos geológicos por infiltración profunda de agua pluvial en laderas con pendientes superiores a 35°, acelerado por la pérdida de cobertura vegetal nativa.",
+            impactoHistorico: "Interrupción sistemática de la Carretera Central en la sierra de Lima y Junín, aislando a la capital del suministro alimentario andino.",
+            leccionAncestral: "Los andenes andinos (terrazas de cultivo) escalonan y reconfiguran las laderas, reduciendo la fuerza gravitacional del agua e introduciendo muros de piedra con raíces de queñual y aliso que actúan como clavos biológicos."
+        },
+        {
+            id: "lahares",
+            nombre: "6. Lahares Volcánicos (Región Sur)",
+            icon: Flame,
+            color: "text-rose-400",
+            bg: "bg-rose-950/40 border-rose-800/60",
+            badge: "bg-rose-500/20 text-rose-300 border-rose-500/40",
+            umbral: "Lluvias > 15 mm en edificios volcánicos",
+            regiones: "Arequipa (volcanes Misti, Chachani, Sabancaya), Moquegua (Ubinas, Huaynaputina) y Tacna (Yucamane)",
+            mecanismo: "Precipitaciones torrenciales interactúan con los depósitos de ceniza y piroclastos sueltos acumulados en las faldas de los volcanes, formando densos flujos de lodo volcánico abrasivo que bajan por las torrenteras.",
+            impactoHistorico: "Episodios recurrentes de lahares en el valle de Ubinas e inundación de torrenteras en la ciudad de Arequipa, dañando plantas de tratamiento de agua potable.",
+            leccionAncestral: "Los antiguos Collaguas y Cabanas reconocían a los volcanes como deidades tutelares (Apus) y respetaban escrupulosamente los corredores naturales de descarga volcánica, sin asentar viviendas en sus cauces."
+        },
+        {
+            id: "tormentas",
+            nombre: "7. Tormentas Eléctricas y Vientos Huracanados",
+            icon: CloudLightning,
+            color: "text-purple-400",
+            bg: "bg-purple-950/40 border-purple-800/60",
+            badge: "bg-purple-500/20 text-purple-300 border-purple-500/40",
+            umbral: "Ráfagas > 50 - 70 km/h y descargas eléctricas",
+            regiones: "Litoral norte, valles costeros intermedios y vertiente occidental andina",
+            mecanismo: "Inestabilidad termodinámica extrema por choque de frentes cálidos marinos con aire frío de la cordillera genera tormentas eléctricas severas y vendavales que desprenden techos ligeros y colapsan redes eléctricas.",
+            impactoHistorico: "Tormentas eléctricas anómalas en Trujillo, Piura y Chiclayo durante el FEN Costero 2017 y Ciclón Yaku 2023, colapsando postes y subestaciones.",
+            leccionAncestral: "Estructuras arquitectónicas prehispánicas de quincha flexible y techos de barro aligerado con caña brava y doble vertiente que amortiguaban la tracción de los vientos marinos cruzados."
+        },
+        {
+            id: "sequias",
+            nombre: "8. Sequías Severas en Sierra Sur (Paradoja Bimodal)",
+            icon: Sun,
+            color: "text-orange-400",
+            bg: "bg-orange-950/40 border-orange-800/60",
+            badge: "bg-orange-500/20 text-orange-300 border-orange-500/40",
+            umbral: "Déficit de precipitación > 50% - 70%",
+            regiones: "Puno (Cuenca del Titicaca), Cusco, Apurímac, Ayacucho y Arequipa alta",
+            mecanismo: "La 'Paradoja Bimodal': mientras El Niño inunda el litoral norte, la alteración de la celda de Walker debilita la entrada de humedad amazónica hacia el sur andino, provocando prolongadas sequías meteorológicas y agrícolas.",
+            impactoHistorico: "1982-1983: La peor sequía del siglo XX en el Altiplano puneño; mortandad masiva de 300,000 cabezas de camélidos y ovinos y pérdida casi total de cosechas de papa y quinua.",
+            leccionAncestral: "Vichama plasmó con rostros cadavéricos el hambre de la sequía de 4,200 años. Tiwanaku perfeccionó los Waru Warus (camellones inundables) y qochas para almacenar agua freática y amortiguar el frío nocturno."
         }
     ];
 
@@ -177,17 +296,28 @@ export default function YachayPage() {
                 </div>
 
                 {/* Conmutador de Pestañas Principales */}
-                <div className="flex gap-2 mt-6 border-b border-slate-800 pt-2">
+                <div className="flex gap-2 mt-6 border-b border-slate-800 pt-2 overflow-x-auto scrollbar-thin scrollbar-thumb-slate-800">
+                    <button
+                        onClick={() => setActiveTab("milenaria")}
+                        className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-t-xl transition border-t border-x whitespace-nowrap ${
+                            activeTab === "milenaria"
+                                ? "bg-slate-900 text-rose-400 border-rose-500/40 border-b-2 border-b-rose-400 shadow-md"
+                                : "text-slate-400 hover:text-slate-200 border-transparent hover:bg-slate-800/50"
+                        }`}
+                    >
+                        <Landmark className="w-4 h-4 text-rose-400" />
+                        <span>Memoria Milenaria: Vichama (3,800 años) &amp; Peligros FEN</span>
+                    </button>
                     <button
                         onClick={() => setActiveTab("autoridades")}
-                        className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-t-xl transition border-t border-x ${
+                        className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-t-xl transition border-t border-x whitespace-nowrap ${
                             activeTab === "autoridades"
-                                ? "bg-slate-900 text-amber-400 border-amber-500/40 border-b-2 border-b-amber-400"
+                                ? "bg-slate-900 text-amber-400 border-amber-500/40 border-b-2 border-b-amber-400 shadow-md"
                                 : "text-slate-400 hover:text-slate-200 border-transparent hover:bg-slate-800/50"
                         }`}
                     >
                         <Building2 className="w-4 h-4" />
-                        <span>Mando para Autoridades (Alcaldes / COER / COEL)</span>
+                        <span>Mando para Autoridades (Alcaldes / COER)</span>
                     </button>
                     <button
                         onClick={() => setActiveTab("comunidades")}
@@ -213,6 +343,495 @@ export default function YachayPage() {
                     </button>
                 </div>
             </div>
+
+            {/* ========================================================================= */}
+            {/* PESTAÑA: MEMORIA MILENARIA, PELIGROS NATURALES FEN Y EDUCACIÓN CLIMÁTICA   */}
+            {/* Fuentes: Zona Arq. Caral (Mincul), Infobae 2026, Andina 2026, Memoria FEN  */}
+            {/* ========================================================================= */}
+            {activeTab === "milenaria" && (
+                <div className="space-y-8">
+                    {/* 1. SECCIÓN VICHAMA: LA PRIMERA ADVERTENCIA CLIMÁTICA DE AMÉRICA */}
+                    <div className="bg-gradient-to-br from-slate-900 via-rose-950/20 to-slate-900 border border-rose-500/30 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+                        <div className="absolute -top-12 -right-12 w-64 h-64 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
+                        
+                        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                            <div className="flex items-center gap-2">
+                                <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 flex items-center gap-1.5 shadow-sm">
+                                    <Landmark className="w-3.5 h-3.5" />
+                                    CIVILIZACIÓN CARAL · VICHAMA (3,800 - 4,200 AÑOS ANTES DEL PRESENTE)
+                                </span>
+                                <span className="text-xs text-slate-400 hidden sm:inline">Valle de Huaura, Végueta</span>
+                            </div>
+                            <button
+                                onClick={() => speakText(
+                                    "Vichama y la advertencia de hace 4,200 años. En el valle de Huaura, los frisos de barro de Vichama representan la primera memoria climática documentada de América. Sus relieves muestran cuerpos esqueléticos por la gran hambruna del cambio climático global, y en lo alto, el sapo antropomorfo que anuncia el regreso de las lluvias torrenciales y la reactivación de los ríos. Los antiguos peruanos jamás construyeron sobre conos aluviales ni cauces secos; desarrollaron las shicras antisísmicas y una red de intercambio costa y sierra para resistir las crisis climáticas."
+                                )}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition ${
+                                    isPlayingAudio
+                                        ? "bg-amber-500 text-slate-950 animate-pulse"
+                                        : "bg-slate-800 hover:bg-slate-700 text-rose-300 border border-rose-500/30"
+                                }`}
+                            >
+                                <Volume2 className="w-4 h-4" />
+                                <span>{isPlayingAudio ? "Pausar Narración" : "Escuchar Crónica Ancestral"}</span>
+                            </button>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                            <div className="lg:col-span-8 space-y-4">
+                                <h2 className="text-2xl font-black text-white leading-tight">
+                                    Vichama y la Advertencia de 4,200 Años: Cómo los Antiguos Peruanos Vencieron la Crisis Climática
+                                </h2>
+                                <p className="text-sm text-slate-300 leading-relaxed">
+                                    Las investigaciones lideradas por la <strong>Dra. Ruth Shady Solís</strong> y la Zona Arqueológica Caral revelan que hace aproximadamente 3,800 a 4,200 años la civilización de Vichama enfrentó el <em>Megaevento 4.2 ka calBP</em>, un colapso climático global que provocó décadas de sequías extremas, enfriamiento marino y posteriores lluvias torrenciales aluviales.
+                                </p>
+                                <p className="text-sm text-slate-300 leading-relaxed">
+                                    A diferencia del modelo moderno, los antiguos constructores <strong>plasmaron en sus muros de arcilla la memoria permanente del desastre</strong> para que ninguna generación futura olvidara las reglas de ocupación del territorio:
+                                </p>
+
+                                {/* Tarjetas de los 3 Frisos Clave */}
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+                                    <div className="p-3.5 rounded-xl bg-slate-950/70 border border-rose-900/50 space-y-1.5">
+                                        <div className="text-xs font-bold text-rose-400 flex items-center gap-1">
+                                            <span>💀</span> Los Adultos Esqueléticos
+                                        </div>
+                                        <p className="text-[11px] text-slate-300 leading-normal">
+                                            Danza fúnebre con costillas expuestas y vientres hundidos: testimonio de la mortífera hambruna causada por la sequía extrema en el valle.
+                                        </p>
+                                    </div>
+                                    <div className="p-3.5 rounded-xl bg-slate-950/70 border border-amber-900/50 space-y-1.5">
+                                        <div className="text-xs font-bold text-amber-400 flex items-center gap-1">
+                                            <span>🌱</span> Los Niños de la Resistencia
+                                        </div>
+                                        <p className="text-[11px] text-slate-300 leading-normal">
+                                            Infantes de pie entre los adultos cadavéricos: simbolizan la continuidad biológica y la resiliencia social para refundar la ciudad.
+                                        </p>
+                                    </div>
+                                    <div className="p-3.5 rounded-xl bg-slate-950/70 border border-cyan-900/50 space-y-1.5">
+                                        <div className="text-xs font-bold text-cyan-400 flex items-center gap-1">
+                                            <span>🐸</span> El Sapo Sagrado y el Rayo
+                                        </div>
+                                        <p className="text-[11px] text-slate-300 leading-normal">
+                                            El sapo antropomorfo que recibe un rayo sobre su cabeza: alegoría sagrada del fin del estiaje y el retorno de las lluvias y crecidas del río.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Columna de Fuentes Oficiales y Principios */}
+                            <div className="lg:col-span-4 bg-slate-950/80 border border-rose-900/40 rounded-xl p-4 space-y-4">
+                                <div>
+                                    <span className="text-[10px] font-bold text-rose-400 tracking-wider uppercase block mb-1.5">
+                                        Fuentes Oficiales Grounded
+                                    </span>
+                                    <div className="space-y-2 text-xs">
+                                        <a
+                                            href="https://www.gob.pe/institucion/caral/noticias/1433104-vichama-exposicion-muestra-como-una-sociedad-enfrento-los-cambios-ambientales-hace-3800-anos"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="block p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 hover:border-rose-500/50 transition group"
+                                        >
+                                            <div className="flex items-center justify-between text-rose-300 font-semibold text-[11px] mb-0.5">
+                                                <span>Zona Arq. Caral / MINCUL</span>
+                                                <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-rose-400" />
+                                            </div>
+                                            <p className="text-[10px] text-slate-400 line-clamp-2">
+                                                Exposición: Cómo una sociedad enfrentó los cambios ambientales hace 3,800 años (Dra. Ruth Shady).
+                                            </p>
+                                        </a>
+
+                                        <a
+                                            href="https://www.infobae.com/peru/2026/09/09/vichama-y-la-advertencia-de-hace-4200-anos-conoce-como-antiguas-civilizaciones-enfrentaron-una-crisis-climatica-global-como-el-fenomeno-el-nino/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="block p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 hover:border-rose-500/50 transition group"
+                                        >
+                                            <div className="flex items-center justify-between text-rose-300 font-semibold text-[11px] mb-0.5">
+                                                <span>Infobae Perú (09-Sep-2026)</span>
+                                                <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-rose-400" />
+                                            </div>
+                                            <p className="text-[10px] text-slate-400 line-clamp-2">
+                                                Vichama y la advertencia de hace 4,200 años frente al calentamiento y crisis globales.
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div className="p-3 bg-rose-950/30 border border-rose-800/40 rounded-lg">
+                                    <span className="text-[10px] font-bold text-rose-300 uppercase block mb-1">
+                                        Doctrina Territorial Ancestral
+                                    </span>
+                                    <p className="text-[11px] text-slate-300 leading-snug">
+                                        <em>"La quebrada nunca olvida su cauce"</em>. Vichama ubicó sus centros ceremoniales y viviendas sobre terrazas geológicas altas fuera de las llanuras aluviales, combinando la pesca de anchoveta salada para soportar las sequías agrícolas.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 2. LOS 8 PELIGROS NATURALES ASOCIADOS AL FEN COSTERO (AGENCIA ANDINA 2026) */}
+                    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+                            <div>
+                                <div className="flex items-center gap-2 mb-1">
+                                    <span className="px-2.5 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/40">
+                                        CATÁLOGO NACIONAL DE AMENAZAS (8 PELIGROS OFICIALES)
+                                    </span>
+                                    <span className="text-xs text-slate-400">Doctrina INDECI / Agencia Andina</span>
+                                </div>
+                                <h3 className="text-lg font-black text-white flex items-center gap-2">
+                                    <CloudLightning className="w-5 h-5 text-amber-400" />
+                                    Los 8 Peligros Naturales Asociados al Fenómeno El Niño en el Perú
+                                </h3>
+                            </div>
+                            <div className="flex items-center gap-2 flex-wrap">
+                                <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800">
+                                    <button
+                                        type="button"
+                                        onClick={() => setHazardViewMode("todos")}
+                                        className={`px-3 py-1 text-xs font-semibold rounded-lg transition ${
+                                            hazardViewMode === "todos"
+                                                ? "bg-blue-600 text-white shadow"
+                                                : "text-slate-400 hover:text-white"
+                                        }`}
+                                    >
+                                        Ver los 8 en Paralelo ({peligrosFEN.length})
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setHazardViewMode("individual")}
+                                        className={`px-3 py-1 text-xs font-semibold rounded-lg transition ${
+                                            hazardViewMode === "individual"
+                                                ? "bg-blue-600 text-white shadow"
+                                                : "text-slate-400 hover:text-white"
+                                        }`}
+                                    >
+                                        Modo Foco Individual
+                                    </button>
+                                </div>
+                                <a
+                                    href="https://andina.pe/agencia/noticia-el-nino-costero-conoce-peligros-naturales-asociados-a-este-fenomeno-el-peru-1092200.aspx"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-blue-400 border border-slate-700 transition"
+                                >
+                                    <span>Fuente Oficial Andina</span>
+                                    <ExternalLink className="w-3.5 h-3.5" />
+                                </a>
+                            </div>
+                        </div>
+
+                        {/* Botonera de Acceso Rápido a los 8 Peligros */}
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between text-[11px] text-slate-400">
+                                <span className="font-semibold uppercase tracking-wider text-slate-400">
+                                    Índice Rápido de Peligros (Clic para enfocar o navegar)
+                                </span>
+                                <span className="text-slate-400">Total: 8 Peligros Sistematizados</span>
+                            </div>
+                            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
+                                {peligrosFEN.map((p, idx) => {
+                                    const Icon = p.icon;
+                                    const isSelected = selectedHazard === idx;
+                                    return (
+                                        <button
+                                            key={p.id}
+                                            onClick={() => {
+                                                setSelectedHazard(idx);
+                                                const el = document.getElementById(`peligro-${p.id}`);
+                                                if (el && hazardViewMode === "todos") {
+                                                    el.scrollIntoView({ behavior: "smooth", block: "center" });
+                                                }
+                                            }}
+                                            className={`p-2 rounded-xl border text-center transition flex flex-col items-center justify-center gap-1 ${
+                                                isSelected
+                                                    ? "bg-slate-800/90 border-blue-500 shadow-md ring-1 ring-blue-500/50"
+                                                    : "bg-slate-950/60 border-slate-800/80 hover:bg-slate-800/40 hover:border-slate-700"
+                                            }`}
+                                        >
+                                            <Icon className={`w-4 h-4 ${p.color}`} />
+                                            <span className="text-[10px] font-bold text-slate-200 line-clamp-1">
+                                                #{idx + 1} {p.nombre.replace(/^\d+\.\s*/, "").split(" ")[0]}
+                                            </span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* VISTA 1: TODOS LOS 8 PELIGROS VISIBLES EN PARALELO (DEFAULT) */}
+                        {hazardViewMode === "todos" && (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+                                {peligrosFEN.map((p, idx) => {
+                                    const Icon = p.icon;
+                                    const isHighlighted = selectedHazard === idx;
+                                    return (
+                                        <div
+                                            key={p.id}
+                                            id={`peligro-${p.id}`}
+                                            className={`p-5 rounded-xl border transition-all flex flex-col justify-between gap-4 ${p.bg} ${
+                                                isHighlighted
+                                                    ? "ring-2 ring-blue-500 shadow-xl"
+                                                    : "hover:border-slate-700"
+                                            }`}
+                                        >
+                                            <div className="space-y-3">
+                                                <div className="flex items-start justify-between gap-2">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="p-2 rounded-lg bg-slate-950/80 border border-slate-800">
+                                                            <Icon className={`w-5 h-5 ${p.color}`} />
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-[10px] font-mono text-slate-400">Peligro #{idx + 1} de 8</span>
+                                                            <h4 className="text-sm font-bold text-white leading-tight">
+                                                                {p.nombre}
+                                                            </h4>
+                                                        </div>
+                                                    </div>
+                                                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold border shrink-0 ${p.badge}`}>
+                                                        {p.umbral}
+                                                    </span>
+                                                </div>
+
+                                                <div>
+                                                    <span className="text-[11px] font-bold text-slate-300 block mb-0.5">
+                                                        Mecanismo Físico:
+                                                    </span>
+                                                    <p className="text-xs text-slate-300 leading-relaxed">
+                                                        {p.mecanismo}
+                                                    </p>
+                                                </div>
+
+                                                <div className="text-xs text-slate-300 flex items-start gap-1.5 pt-1">
+                                                    <Compass className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+                                                    <span className="leading-snug">
+                                                        <strong className="text-slate-200">Zonas Críticas:</strong> {p.regiones}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-2.5 pt-3 border-t border-slate-800/80 bg-slate-950/40 -mx-5 -mb-5 p-4 rounded-b-xl">
+                                                <div>
+                                                    <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider block mb-0.5">
+                                                        Memoria Histórica Republicana (1983 - 1998 - 2017)
+                                                    </span>
+                                                    <p className="text-[11px] text-slate-300 leading-snug">
+                                                        {p.impactoHistorico}
+                                                    </p>
+                                                </div>
+                                                <div className="pt-2 border-t border-slate-800/60">
+                                                    <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider block mb-0.5">
+                                                        Sabiduría Prehispánica Aplicada
+                                                    </span>
+                                                    <p className="text-[11px] text-slate-300 leading-snug">
+                                                        {p.leccionAncestral}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+
+                        {/* VISTA 2: MODO FOCO INDIVIDUAL */}
+                        {hazardViewMode === "individual" && (() => {
+                            const p = peligrosFEN[selectedHazard];
+                            const Icon = p.icon;
+                            return (
+                                <div className={`p-5 rounded-xl border ${p.bg} grid grid-cols-1 lg:grid-cols-12 gap-5 transition-all`}>
+                                    <div className="lg:col-span-7 space-y-3">
+                                        <div className="flex items-center gap-2">
+                                            <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold border ${p.badge}`}>
+                                                {p.nombre}
+                                            </span>
+                                            <span className="text-xs text-slate-400">Umbral: <strong className="text-white">{p.umbral}</strong></span>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-sm font-bold text-white mb-1">Mecanismo Físico y Dinámica:</h4>
+                                            <p className="text-xs text-slate-300 leading-relaxed">{p.mecanismo}</p>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-sm font-bold text-white mb-1">Regiones y Cuencas Críticas:</h4>
+                                            <p className="text-xs text-slate-300 flex items-center gap-1.5">
+                                                <Compass className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                                                <span>{p.regiones}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="lg:col-span-5 space-y-3 bg-slate-950/70 border border-slate-800/80 rounded-xl p-4">
+                                        <div>
+                                            <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider block mb-1">
+                                                Memoria Histórica Republicana (1983 - 1998 - 2017)
+                                            </span>
+                                            <p className="text-xs text-slate-300 leading-snug">{p.impactoHistorico}</p>
+                                        </div>
+                                        <div className="pt-2 border-t border-slate-800">
+                                            <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider block mb-1">
+                                                Sabiduría Prehispánica Aplicada
+                                            </span>
+                                            <p className="text-xs text-slate-300 leading-snug">{p.leccionAncestral}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })()}
+                    </div>
+
+                    {/* 3. CONEXIÓN VIVA: MEMORIA HISTÓRICA REPUBLICANA FEN & LOS 1,891 DISTRITOS */}
+                    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div>
+                                <span className="px-2.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 uppercase">
+                                    La Paradoja de la Amnesia Territorial
+                                </span>
+                                <h3 className="text-xl font-black text-white mt-1">
+                                    Vichama vs Los 1,891 Distritos del Perú Republicano
+                                </h3>
+                                <p className="text-xs text-slate-400 mt-0.5">
+                                    ¿Por qué si hace 4,200 años supimos adaptarnos, hoy sufrimos el colapso de colegios, puentes y ciudades?
+                                </p>
+                            </div>
+                            <Link
+                                href="/historico"
+                                className="px-4 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white transition flex items-center gap-2 shadow-lg shadow-amber-900/30 shrink-0"
+                            >
+                                <History className="w-4 h-4" />
+                                <span>Explorar los 1,891 Distritos FEN</span>
+                                <ArrowRight className="w-3.5 h-3.5" />
+                            </Link>
+                        </div>
+
+                        {/* Comparación Directa Ancestral vs Republicano */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="p-4 rounded-xl bg-slate-950/80 border border-rose-900/40 space-y-3">
+                                <div className="flex items-center gap-2 text-rose-400 font-bold text-sm">
+                                    <Landmark className="w-4 h-4" />
+                                    <span>Modelo Ancestral (Vichama, Caral, Chimú)</span>
+                                </div>
+                                <ul className="text-xs text-slate-300 space-y-2">
+                                    <li className="flex items-start gap-2">
+                                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                                        <span><strong>Cero ocupación en lechos secos:</strong> Las quebradas se reservaban como corredores sagrados del agua.</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                                        <span><strong>Shicras sismorresistentes:</strong> Mallas de fibra vegetal rellenas de piedra que absorben aceleraciones sísmicas.</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                                        <span><strong>Complementariedad de pisos ecológicos:</strong> Anchoveta seca y camotes aseguraban calorías durante años de sequía.</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div className="p-4 rounded-xl bg-slate-950/80 border border-amber-900/40 space-y-3">
+                                <div className="flex items-center gap-2 text-amber-400 font-bold text-sm">
+                                    <AlertTriangle className="w-4 h-4" />
+                                    <span>Amnesia Republicana (1983, 1998, 2017)</span>
+                                </div>
+                                <ul className="text-xs text-slate-300 space-y-2">
+                                    <li className="flex items-start gap-2">
+                                        <ShieldAlert className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
+                                        <span><strong>Lotización de quebradas activas:</strong> Asentamiento en conos deyectores en Huaycoloro, Chosica y Trujillo.</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <ShieldAlert className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
+                                        <span><strong>Colapso de +12,400 escuelas:</strong> Módulos educativos levantados sobre llanuras inundables sin drenajes pluviales.</span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <ShieldAlert className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
+                                        <span><strong>Pérdida de 43 puentes en 1983:</strong> Diseño de luces insuficientes que estrangulan el caudal extraordinario del FEN.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        {/* Barra de Estadísticas de la Memoria FEN */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-slate-800">
+                            <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 text-center">
+                                <div className="text-lg font-black text-amber-400 font-mono">1,891</div>
+                                <div className="text-[10px] text-slate-400 uppercase tracking-wider">Distritos Registrados</div>
+                            </div>
+                            <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 text-center">
+                                <div className="text-lg font-black text-blue-400 font-mono">3 MegaNiños</div>
+                                <div className="text-[10px] text-slate-400 uppercase tracking-wider">1982-83 / 1997-98 / 2017</div>
+                            </div>
+                            <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 text-center">
+                                <div className="text-lg font-black text-rose-400 font-mono">+12,400</div>
+                                <div className="text-[10px] text-slate-400 uppercase tracking-wider">Colegios Afectados</div>
+                            </div>
+                            <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 text-center">
+                                <div className="text-lg font-black text-emerald-400 font-mono">100% Digital</div>
+                                <div className="text-[10px] text-slate-400 uppercase tracking-wider">Acceso a Expedientes</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 4. PROPUESTA TRANSFORMADORA: ¿QUÉ PODEMOS HACER CON LA EDUCACIÓN CLIMÁTICA? */}
+                    <div className="bg-gradient-to-br from-slate-900 via-emerald-950/20 to-slate-900 border border-emerald-500/30 rounded-2xl p-6 shadow-xl space-y-5">
+                        <div className="flex items-center gap-2">
+                            <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1.5">
+                                <GraduationCap className="w-3.5 h-3.5" />
+                                HOJA DE RUTA MINEDU / GOBIERNOS REGIONALES / COLEGIOS
+                            </span>
+                            <span className="text-xs text-slate-400">Propuesta de Políticas Educativas</span>
+                        </div>
+
+                        <div>
+                            <h3 className="text-xl font-black text-white">
+                                Los 4 Pilares de la Nueva Educación Climática Territorial para el Perú
+                            </h3>
+                            <p className="text-xs text-slate-300 mt-1">
+                                El Fenómeno El Niño no se vence con simulacros protocolares de 10 minutos. Requiere reintroducir la cultura territorial viva en el sistema educativo nacional:
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="p-4 rounded-xl bg-slate-950/80 border border-emerald-900/40 space-y-2">
+                                <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs">
+                                    <span className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center font-bold">1</span>
+                                    <span>Currículo de Cuenca y Territorio Vivo</span>
+                                </div>
+                                <p className="text-xs text-slate-300 leading-relaxed">
+                                    Sustituir la memorización estéril por salidas de campo donde los escolares recorran la quebrada de su distrito, reconozcan la faja marginal y aprendan a leer las huellas geológicas que dejó el Niño de 1998 o 2017.
+                                </p>
+                            </div>
+
+                            <div className="p-4 rounded-xl bg-slate-950/80 border border-emerald-900/40 space-y-2">
+                                <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs">
+                                    <span className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center font-bold">2</span>
+                                    <span>Red Nacional de Pluviómetros Escolares</span>
+                                </div>
+                                <p className="text-xs text-slate-300 leading-relaxed">
+                                    Equipar a los colegios secundarios de cuencas medias y altas con estaciones pluviométricas artesanales calibradas. Los estudiantes registran la lluvia diaria y envían la alerta temprana comunitaria si supera los 20 mm/h.
+                                </p>
+                            </div>
+
+                            <div className="p-4 rounded-xl bg-slate-950/80 border border-emerald-900/40 space-y-2">
+                                <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs">
+                                    <span className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center font-bold">3</span>
+                                    <span>Recuperación de la Memoria Oral y Toponimia</span>
+                                </div>
+                                <p className="text-xs text-slate-300 leading-relaxed">
+                                    Proyectos de investigación escolar donde los jóvenes entrevisten a los abuelos del pueblo para marcar en postes y plazas públicas la <em>cota máxima de inundación</em> histórica y recuperar vocablos ancestrales como <em>Lloclla</em> o <em>Waru Waru</em>.
+                                </p>
+                            </div>
+
+                            <div className="p-4 rounded-xl bg-slate-950/80 border border-emerald-900/40 space-y-2">
+                                <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs">
+                                    <span className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center font-bold">4</span>
+                                    <span>Veto Ciudadano a la Invasión de Quebradas</span>
+                                </div>
+                                <p className="text-xs text-slate-300 leading-relaxed">
+                                    Empoderar a las futuras generaciones con pensamiento crítico para rechazar la compra o construcción de viviendas en zonas catalogadas como de <em>Muy Alto Riesgo No Mitigable</em> por CENEPRED, rompiendo el ciclo de la corrupción urbana.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* ========================================================================= */}
             {/* PESTAÑA 1: DOCTRINA PARA AUTORIDADES REGIONALES Y LOCALES                 */}

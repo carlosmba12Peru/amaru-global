@@ -295,6 +295,162 @@
       "regla_de_seguridad": "Requiere triple coincidencia geográfica independiente en ventana de 30 minutos para elevar pre-alerta a consola. Nunca gatilla cálculos numéricos directos ni modifica el IRCE.",
       "gatilla_calculo_directo": false,
       "estado": "ACTIVO_AUDITADO"
+    },
+    {
+      "id": "SRC-INGEMMET-DGAR-2017",
+      "nombre": "INGEMMET - Evaluación Geológica de las Zonas Afectadas por el Niño Costero 2017 en las Regiones La Libertad y Cajamarca",
+      "ente": "INGEMMET (Dirección de Geología Ambiental y Riesgo Geológico)",
+      "tier": "TIER_1_OFICIAL_ESTATAL",
+      "dominio_autorizado": "https://repositorio.ingemmet.gob.pe",
+      "endpoint_especifico": "https://repositorio.ingemmet.gob.pe/handle/20.500.12544/InformeTecnicoNiñoCostero2017",
+      "categoria": "GEODINAMICA_ZONAS_CRITICAS",
+      "metodo_extraccion": "REPOSITORIO_PERICIAL_INGEMMET",
+      "frecuencia_minutos": 1440,
+      "variables_clave": [
+        "zonas_criticas_movimientos_en_masa",
+        "flujos_detritos_huaicos_manning",
+        "deslizamientos_rotacionales_escarpa_terzaghi",
+        "erosion_fluvial_socavacion_estribos",
+        "vulnerabilidad_infraestructura_vial_puentes"
+      ],
+      "gatilla_calculo_directo": true,
+      "estado": "ACTIVO_AUDITADO"
+    },
+    {
+      "id": "SRC-INDECI-COMPENDIO-2017",
+      "nombre": "INDECI - Compendio Estadístico del INDECI 2017: Gestión Reactiva (Niño Costero Enero-Mayo 2017)",
+      "ente": "INDECI (Dirección de Políticas, Planes y Evaluación)",
+      "tier": "TIER_1_OFICIAL_ESTATAL",
+      "dominio_autorizado": "https://www.indeci.gob.pe",
+      "endpoint_especifico": "https://www.indeci.gob.pe/compendio-estadistico-2017/",
+      "categoria": "REGISTRO_OFICIAL_DANOS_SINPAD",
+      "metodo_extraccion": "COMPENDIO_ESTADISTICO_PROCESADO_95.5PCT",
+      "frecuencia_minutos": 1440,
+      "variables_clave": [
+        "damnificados_validados_95.5pct",
+        "viviendas_colapsadas_inhabitables",
+        "carreteras_puentes_destruidos",
+        "hectareas_agricolas_perdidas",
+        "albergues_familias_instaladas"
+      ],
+      "gatilla_calculo_directo": true,
+      "estado": "ACTIVO_AUDITADO"
+    },
+    {
+      "id": "SRC-PNP-MININTER-COMISARIAS-2026",
+      "nombre": "PNP / MININTER - Línea Base de Información Georreferenciada de Comisarías Básicas a Nivel Nacional",
+      "ente": "Policía Nacional del Perú (PNP) / Ministerio del Interior (MININTER)",
+      "tier": "TIER_1_OFICIAL_ESTATAL",
+      "dominio_autorizado": "https://www.gob.pe/mininter",
+      "endpoint_especifico": "https://www.gob.pe/institucion/mininter/informes-publicaciones/comisarias-operativas-nacional",
+      "categoria": "SEGURIDAD_ORDEN_PUBLICO_SINAGERD",
+      "metodo_extraccion": "LINEA_BASE_PP0030_1332_CPNP",
+      "frecuencia_minutos": 1440,
+      "variables_clave": [
+        "cod_cpnp_oficial",
+        "cod_uni",
+        "nombre_comisaria",
+        "tipo_comisaria_categoria",
+        "sectores_patrullaje_cuadrante",
+        "region_policial",
+        "ubigeo_jurisdiccion"
+      ],
+      "gatilla_calculo_directo": true,
+      "estado": "ACTIVO_AUDITADO"
+    },
+    {
+      "id": "SRC-MINEDU-ESCALE-SIGMED-2026",
+      "nombre": "MINEDU / ESCALE - Padrón Georreferenciado de Instituciones y Servicios Educativos (SIGMED)",
+      "ente": "Ministerio de Educación (MINEDU) - Unidad de Estadística Educativa (ESCALE)",
+      "tier": "TIER_1_OFICIAL_ESTATAL",
+      "dominio_autorizado": "https://sigmed.minedu.gob.pe",
+      "endpoint_especifico": "https://sigmed.minedu.gob.pe/mapaeducativo/mapassee.aspx",
+      "categoria": "ALBERGUES_REFUGIOS_INFRAESTRUCTURA_ESCOLAR",
+      "metodo_extraccion": "REST_SVC_PADRON_UBIGEO",
+      "frecuencia_minutos": 1440,
+      "variables_clave": [
+        "codigo_modular",
+        "codigo_local_oficial",
+        "nombre_escuela",
+        "nivel_modalidad",
+        "gestion_dependencia_publica_privada",
+        "coordenadas_gps_lat_lon_altitud",
+        "codigo_ugel",
+        "aptitud_albergue_temporal_indeci"
+      ],
+      "gatilla_calculo_directo": true,
+      "estado": "ACTIVO_AUDITADO"
+    },
+    {
+      "id": "SRC-INEI-DIRECTORIO-MUNIS-2026",
+      "nombre": "INEI - Directorio Nacional de Municipalidades Provinciales y Distritales 2026",
+      "ente": "Instituto Nacional de Estadística e Informática (INEI)",
+      "tier": "TIER_1_OFICIAL_ESTATAL",
+      "dominio_autorizado": "https://www.gob.pe/inei",
+      "endpoint_especifico": "https://www.gob.pe/institucion/inei/informes-publicaciones/3908763-directorio-nacional-de-municipalidades-provinciales-y-distritales-agosto-2026",
+      "categoria": "AUTORIDADES_LOCALES_DEFENSA_CIVIL_SINAGERD",
+      "metodo_extraccion": "DIRECTORIO_OFICIAL_INEI_SETIEMBRE_2026",
+      "frecuencia_minutos": 1440,
+      "variables_clave": [
+        "ubigeo",
+        "alcalde_presidente_gt_grd",
+        "cargo_alcalde_distrital_provincial",
+        "telefonos_contacto_alcaldia",
+        "correo_electronico_mesa_partes",
+        "direccion_sede_palacio_municipal_coed"
+      ],
+      "gatilla_calculo_directo": true,
+      "estado": "ACTIVO_AUDITADO"
+    },
+    {
+      "id": "SRC-SENAMHI-OBSERVATORIO-ESTACIONES",
+      "nombre": "SENAMHI - Red Nacional de 982 Estaciones (Observatorio Nacional del Tiempo, Agua y Clima)",
+      "ente": "SENAMHI",
+      "tier": "TIER_1_OFICIAL_ESTATAL",
+      "dominio_autorizado": "https://observatorio.senamhi.gob.pe",
+      "endpoint_especifico": "https://servicios.senamhi.gob.pe/api/researchers/stations",
+      "categoria": "HIDROMETEOROLOGIA_ESTACIONES_RED_NACIONAL",
+      "metodo_extraccion": "HTTP_GET_REST_JSON",
+      "frecuencia_minutos": 30,
+      "variables_clave": [
+        "id_estacion",
+        "nombre_estacion",
+        "tipo (Meteorológica/Hidrológica)",
+        "subtipo (Automática/Convencional)",
+        "latitud_wgs84",
+        "longitud_wgs84",
+        "temperatura_aire_horaria_n_airtemp",
+        "precipitacion_lluvia_horaria_n_lluvia",
+        "humedad_relativa_n_humedad",
+        "viento_velocidad_direccion",
+        "nivel_rio_tirante_metros_06h_10h_14h_18h_promedio"
+      ],
+      "gatilla_calculo_directo": true,
+      "estado": "ACTIVO_AUDITADO"
+    },
+    {
+      "id": "SRC-OPEN-METEO-GLOBAL-CORE",
+      "nombre": "Open-Meteo Global Numerical Weather & Flood Models (ECMWF IFS 9km / GloFAS Copernicus / ERA5)",
+      "ente": "Open-Meteo / ECMWF / GloFAS",
+      "tier": "TIER_2_INSTITUCIONAL_INTERNACIONAL",
+      "dominio_autorizado": "https://api.open-meteo.com",
+      "endpoint_especifico": "https://api.open-meteo.com/v1/forecast",
+      "categoria": "METEOROLOGIA_NUMERICA_GLOBAL",
+      "metodo_extraccion": "HTTP_GET_REST_JSON",
+      "frecuencia_minutos": 60,
+      "variables_clave": [
+        "precipitacion_horaria_diaria_mm",
+        "temperatura_2m_max_min",
+        "cape_convectivo_j_kg",
+        "humedad_suelo_4_capas",
+        "river_discharge_glofas_m3_s",
+        "reanalisis_historico_era5_1940_hoy",
+        "temperatura_superficial_mar_sst_oleaje"
+      ],
+      "gatilla_calculo_directo": true,
+      "estado": "ACTIVO_AUDITADO"
     }
   ]
 }
+
+

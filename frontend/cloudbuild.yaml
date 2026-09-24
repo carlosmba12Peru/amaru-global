@@ -1,0 +1,14 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+    - 'build'
+    - '--build-arg'
+    - 'NEXT_PUBLIC_API_URL=https://coen-backend-289004262994.us-central1.run.app'
+    - '--build-arg'
+    - 'NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaSyCQpoz3Zw4JarglGM7w2aq46d9XCtwfTyE'
+    - '-t'
+    - 'gcr.io/amaru-fen-demo/coen-frontend:latest'
+    - '.'
+images:
+  - 'gcr.io/amaru-fen-demo/coen-frontend:latest'
+timeout: '1200s'

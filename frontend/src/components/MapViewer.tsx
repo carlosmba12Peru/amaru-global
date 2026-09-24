@@ -507,7 +507,7 @@ export default function MapViewer({ mode = "national", ubigeo }: Props) {
     const infoWindowRef = useRef<any>(null);
     const markersRef = useRef<any[]>([]);
     const polygonRef = useRef<any>(null);
-    const DEFAULT_MAPS_KEY = "AIzaSyCQpoz3Zw4JarglGM7w2aq46d9XCtwfTyE";
+    const DEFAULT_MAPS_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
     // Capas Dinámicas con Telemetría Viva (Inicializadas con fallback de contingencia)
     const [marinosList, setMarinosList] = useState<PuntoTerritorial[]>(BOYAS_OCEANOGRAFICAS);
@@ -725,6 +725,17 @@ export default function MapViewer({ mode = "national", ubigeo }: Props) {
     useEffect(() => {
         if (!apiKey || typeof window === "undefined") return;
 
+        // Registrar callback global esperado por la URL de Google Maps
+        (window as any).__gmapsMeteoInit = () => {
+            initGoogleMap();
+        };
+
+        // Capturar errores de autenticación/restricciones de Google Maps
+        (window as any).gm_authFailure = () => {
+            console.error("[GoogleMaps] gm_authFailure: Error de autenticación en Google Maps Platform.");
+            setMapError("Google Maps Platform: Error de autenticación con la clave API. Revisa que el proyecto tenga facturación activa (Billing) y que este dominio esté autorizado en 'Restricciones de sitios web'.");
+        };
+
         if ((window as any).google?.maps?.Map) {
             initGoogleMap();
             return;
@@ -743,7 +754,7 @@ export default function MapViewer({ mode = "national", ubigeo }: Props) {
                 initGoogleMap();
             };
             script.onerror = () => {
-                setMapError("Error al descargar la librería de Google Maps Platform.");
+                setMapError("Error al descargar la librería de Google Maps Platform (revisa conexión o bloqueador de anuncios).");
             };
             document.head.appendChild(script);
         } else {

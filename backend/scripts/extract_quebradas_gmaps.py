@@ -7,7 +7,7 @@ import urllib.parse
 DATA_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data", "catalogo_quebradas_criticas.json"))
 BACKUP_FILE = DATA_FILE + ".bak"
 
-API_KEY = os.getenv("NEXT_PUBLIC_GOOGLE_MAPS_API_KEY", "AIzaSyCQpoz3Zw4JarglGM7w2aq46d9XCtwfTyE")
+API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", os.getenv("NEXT_PUBLIC_GOOGLE_MAPS_API_KEY", ""))
 
 # Catálogo exhaustivo de Quebradas de la Costa Peruana (ANA / INGEMMET / INDECI) a verificar con Google Maps Platform
 QUEBRADAS_COSTA_PERUANA = [

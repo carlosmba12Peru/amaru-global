@@ -3,6 +3,7 @@ import json
 import logging
 from typing import Dict, Any, List, Optional
 from datetime import datetime
+from services.secure_vault import secure_vault
 
 logger = logging.getLogger("ayni_service")
 
@@ -11,6 +12,7 @@ class AyniCommunityService:
     Servicio de Inteligencia Territorial y Participación Ciudadana: AMARU-AYNI.
     Gestiona Ollas Comunes, Juntas Vecinales, Agentes Comunitarios de Salud,
     Faenas Vecinales (Minkas) y despacho de alertas vía Telegram y Correo Electrónico.
+    Blindado con Bóveda Criptográfica Zero-PII (NIST SP 800-57 Envelope Encryption / Ley 29733).
     """
 
     def __init__(self):
@@ -26,6 +28,7 @@ class AyniCommunityService:
         self._init_mock_data()
 
     def _init_mock_data(self):
+        # 1. Ollas Comunes con lideresas protegidas y teléfonos enmascarados
         self.ollas_comunes = [
             {
                 "id": "OLLA-01",
@@ -33,8 +36,8 @@ class AyniCommunityService:
                 "ubigeo": "150118",
                 "distrito": "Lurigancho-Chosica",
                 "sector": "Carapongo - Ribera del Río Rímac",
-                "lideresa": "Sra. María Quispe Huamán",
-                "telefono": "987-654-321",
+                "lideresa": secure_vault.mask_name("María Quispe Huamán"),
+                "telefono": secure_vault.mask_phone("987654321"),
                 "raciones_diarias": 140,
                 "dias_autonomia_alimentos": 4,
                 "estado_agua": "Cisterna requerida con urgencia",
@@ -48,8 +51,8 @@ class AyniCommunityService:
                 "ubigeo": "150118",
                 "distrito": "Lurigancho-Chosica",
                 "sector": "Quebrada San Antonio de Pedregal",
-                "lideresa": "Sra. Carmen Rosa Mendoza",
-                "telefono": "976-543-210",
+                "lideresa": secure_vault.mask_name("Carmen Rosa Mendoza"),
+                "telefono": secure_vault.mask_phone("976543210"),
                 "raciones_diarias": 210,
                 "dias_autonomia_alimentos": 9,
                 "estado_agua": "Tanque comunitario con pastillas de cloro",
@@ -63,8 +66,8 @@ class AyniCommunityService:
                 "ubigeo": "150118",
                 "distrito": "Lurigancho-Chosica",
                 "sector": "Quebrada Quirio - Parte Alta",
-                "lideresa": "Sra. Juana Mamani Calisaya",
-                "telefono": "965-432-109",
+                "lideresa": secure_vault.mask_name("Juana Mamani Calisaya"),
+                "telefono": secure_vault.mask_phone("965432109"),
                 "raciones_diarias": 115,
                 "dias_autonomia_alimentos": 2,
                 "estado_agua": "Sin agua potable, acarreo en bidones",
@@ -78,8 +81,8 @@ class AyniCommunityService:
                 "ubigeo": "200101",
                 "distrito": "Piura",
                 "sector": "Asociación Santa Rosa - Faja Bajo Piura",
-                "lideresa": "Sra. Rosaura Yamunaqué Chunga",
-                "telefono": "954-321-098",
+                "lideresa": secure_vault.mask_name("Rosaura Yamunaqué Chunga"),
+                "telefono": secure_vault.mask_phone("954321098"),
                 "raciones_diarias": 180,
                 "dias_autonomia_alimentos": 6,
                 "estado_agua": "Bidones clorados por Agente de Salud",
@@ -89,6 +92,7 @@ class AyniCommunityService:
             }
         ]
 
+        # 2. Juntas Vecinales de Seguridad Ciudadana
         self.juntas_vecinales = [
             {
                 "id": "JUVESC-01",
@@ -96,7 +100,7 @@ class AyniCommunityService:
                 "ubigeo": "150118",
                 "distrito": "Lurigancho-Chosica",
                 "sector": "Quebrada Corrales / Moyopampa",
-                "coordinador": "Sr. Walter Ramos Pérez",
+                "coordinador": secure_vault.mask_name("Walter Ramos Pérez"),
                 "integrantes": 24,
                 "sirenas_activas": 2,
                 "megafonos_operativos": 4,
@@ -110,7 +114,7 @@ class AyniCommunityService:
                 "ubigeo": "150118",
                 "distrito": "Lurigancho-Chosica",
                 "sector": "Margen Izquierda Río Rímac Km 15",
-                "coordinador": "Sr. Humberto Cárdenas Soto",
+                "coordinador": secure_vault.mask_name("Humberto Cárdenas Soto"),
                 "integrantes": 31,
                 "sirenas_activas": 1,
                 "megafonos_operativos": 3,
@@ -124,7 +128,7 @@ class AyniCommunityService:
                 "ubigeo": "150132",
                 "distrito": "San Juan de Lurigancho",
                 "sector": "Quebrada Canto Grande",
-                "coordinador": "Sra. Elena Córdova Vilca",
+                "coordinador": secure_vault.mask_name("Elena Córdova Vilca"),
                 "integrantes": 18,
                 "sirenas_activas": 1,
                 "megafonos_operativos": 2,
@@ -134,7 +138,8 @@ class AyniCommunityService:
             }
         ]
 
-        self.padron_vulnerables = [
+        # 3. Padrón de Ciudadanos Vulnerables: Precintado criptográfico Zero-PII en Bóveda RAM
+        raw_vulnerables = [
             {
                 "id": "VULN-001",
                 "nombre": "Don Saturnino Huamán (84 años)",
@@ -166,6 +171,22 @@ class AyniCommunityService:
                 "contacto_emergencia": "955-777-888"
             }
         ]
+
+        self.padron_vulnerables: List[Dict[str, Any]] = []
+        for raw in raw_vulnerables:
+            cup, _ = secure_vault.seal_pii(raw, prefix="AYNI", metadata_categoria="VULNERABLE_PADRON")
+            self.padron_vulnerables.append({
+                "id": raw["id"],
+                "cup": cup,
+                "nombre": f"Ciudadano Protegido [{cup}]",
+                "condicion": raw["condicion"],
+                "sector": raw["sector"],
+                "brigadista_asignado_1": secure_vault.mask_name(raw["brigadista_asignado_1"]),
+                "brigadista_asignado_2": secure_vault.mask_name(raw["brigadista_asignado_2"]),
+                "punto_evacuacion": raw["punto_evacuacion"],
+                "contacto_emergencia": secure_vault.mask_phone(raw["contacto_emergencia"]),
+                "protegido_zero_pii": True
+            })
 
         self.faenas_comunitarias = [
             {
@@ -253,7 +274,8 @@ class AyniCommunityService:
                 "correo_smtp": "Activo (Notificaciones Institucionales y Dirigencias)",
                 "whatsapp_web": "Integrado vía enlace directo de mensajería"
             },
-            "marco_legal": "Ley SINAGERD 29664 Art. 12 / Ley 31458 (Ollas Comunes) / Ley 27933 (Juntas Vecinales)"
+            "blindaje_zero_pii": secure_vault.get_metrics(),
+            "marco_legal": "Ley SINAGERD 29664 Art. 12 / Ley 31458 (Ollas Comunes) / Ley 27933 (Juntas Vecinales) / Ley 29733 (Zero-PII)"
         }
 
     def get_ollas_list(self) -> List[Dict[str, Any]]:
@@ -353,20 +375,44 @@ class AyniCommunityService:
         return registro
 
     def add_vulnerable_person(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """Registra a un ciudadano vulnerable para asistencia prioritaria."""
+        """
+        Registra a un ciudadano vulnerable blindando su identidad mediante
+        la Bóveda Criptográfica Zero-PII (AES-256-GCM / Envelope Encryption / Ley 29733).
+        """
         new_id = f"VULN-{len(self.padron_vulnerables) + 1:03d}"
-        registro = {
+        raw_payload = {
             "id": new_id,
             "nombre": data.get("nombre", "Ciudadano Vulnerable"),
             "condicion": data.get("condicion", "Adulto Mayor"),
             "sector": data.get("sector", "Sector no especificado"),
-            "brigadista_asignado_1": data.get("brigadista_1", "Brigadista Comunitario Asignado"),
+            "brigadista_asignado_1": data.get("brigadista_1", "Brigadista Comunitario"),
             "brigadista_asignado_2": data.get("brigadista_2", "Vecino de Soporte"),
-            "punto_evacuacion": data.get("punto_evacuacion", "Losa o Local Comunal Seguro"),
+            "punto_evacuacion": data.get("punto_evacuacion", "Zona Segura Asignada"),
             "contacto_emergencia": data.get("contacto", "Sin teléfono")
         }
-        self.padron_vulnerables.append(registro)
-        return registro
+        cup, _ = secure_vault.seal_pii(raw_payload, prefix="AYNI", metadata_categoria="VULNERABLE_PADRON")
+
+        registro_publico = {
+            "id": new_id,
+            "cup": cup,
+            "nombre": f"Ciudadano Protegido [{cup}]",
+            "condicion": raw_payload["condicion"],
+            "sector": raw_payload["sector"],
+            "brigadista_asignado_1": secure_vault.mask_name(raw_payload["brigadista_asignado_1"]),
+            "brigadista_asignado_2": secure_vault.mask_name(raw_payload["brigadista_asignado_2"]),
+            "punto_evacuacion": raw_payload["punto_evacuacion"],
+            "contacto_emergencia": secure_vault.mask_phone(raw_payload["contacto_emergencia"]),
+            "protegido_zero_pii": True
+        }
+        self.padron_vulnerables.append(registro_publico)
+        return registro_publico
+
+    def resolve_vulnerable_pii(self, cup: str, authority_role: str, officer_id: str = "AUTORIDAD_MUNICIPAL") -> Optional[Dict[str, Any]]:
+        """
+        Desprecinta los datos reales de un ciudadano vulnerable para rescate táctico.
+        Solo permitido a SUPER_ADMIN o AUTORIDAD_MUNICIPAL.
+        """
+        return secure_vault.unseal_pii(cup, authority_role, officer_id)
 
     def request_olla_support(self, olla_id: str, motivo: str) -> Dict[str, Any]:
         """Registra un pedido urgente de cisterna de agua o insumos para una olla común."""

@@ -38,14 +38,20 @@ class HistoricalDataService:
         self._load_all_datasets()
 
     def _load_json_safe(self, filename: str, default=None):
-        filepath = os.path.join(DATA_DIR, filename)
-        if not os.path.exists(filepath):
-            # Probar relativo al root del repo
-            alt_path = os.path.join(os.path.dirname(DATA_DIR), "data", filename)
-            if os.path.exists(alt_path):
-                filepath = alt_path
-            else:
-                return default if default is not None else {}
+        # Rutas candidatas: backend/data y Lab4/data
+        candidates = [
+            os.path.join(DATA_DIR, filename),
+            os.path.join(os.path.dirname(os.path.dirname(DATA_DIR)), "data", filename),
+            os.path.join("..", "data", filename),
+            os.path.join("data", filename)
+        ]
+        
+        valid_paths = [p for p in candidates if os.path.exists(p)]
+        if not valid_paths:
+            return default if default is not None else {}
+            
+        # Seleccionar el archivo existente con fecha de modificación más reciente
+        filepath = max(valid_paths, key=lambda p: os.path.getmtime(p))
         try:
             with open(filepath, "r", encoding="utf-8") as f:
                 return json.load(f)
@@ -102,10 +108,75 @@ class HistoricalDataService:
         self.memoria_historica_metadata = memoria_data.get("metadata", {})
         self.memoria_historica_distritos = memoria_data.get("distritos", {})
 
+        # 10. Catálogo Maestro de Eventos Históricos FEN y Cuencas Críticas (CAF 1998, SENAMHI 2014, CENEPRED 2017)
+        self.catalogo_maestro = self._load_json_safe("catalogo_maestro_historico_fen.json", {})
+        total_cuencas = len(self.catalogo_maestro.get("cuencas_estrategicas", {}))
+
+        # 11. Comisarías Básicas de la Policía Nacional del Perú (MININTER / PP 0030 - 15DIC2025)
+        comisarias_data = self._load_json_safe("comisarias_pnp_nacional_2026.json", {})
+        self.comisarias_metadata = comisarias_data.get("metadata", {})
+        self.comisarias_por_ubigeo = comisarias_data.get("por_ubigeo", {})
+
+        # 12. Directorio Nacional de Municipalidades Provinciales y Distritales (INEI - Setiembre 2026)
+        muni_data = self._load_json_safe("directorio_municipalidades_inei_2026.json", {})
+        self.municipalidades_metadata = muni_data.get("metadata", {})
+        self.municipalidades_por_ubigeo = muni_data.get("por_ubigeo", {})
+
         print(f"[HistoricalDataService] Indexados: {len(self.distritos_1891)} distritos nacionales, "
               f"{len(self.distritos_ds124)} distritos D.S. 124, {len(self.quebradas)} quebradas criticas, "
               f"{len(self.distritos_heladas)} distritos de heladas, "
-              f"{len(self.memoria_historica_distritos)} distritos con memoria histórica FEN.")
+              f"{len(self.memoria_historica_distritos)} distritos con memoria histórica FEN, "
+              f"{len(self.comisarias_por_ubigeo)} distritos con comisarías PNP, "
+              f"{len(self.municipalidades_por_ubigeo)} municipalidades INEI 2026, "
+              f"{total_cuencas} cuencas en Catálogo Maestro FEN.")
+
+    def get_municipalidad_por_ubigeo(self, ubigeo: str) -> Optional[Dict[str, Any]]:
+        """Retorna los datos oficiales del Alcalde, teléfonos, correo y sede municipal según INEI 2026."""
+        muni = self.municipalidades_por_ubigeo.get(ubigeo)
+        if not muni:
+            return None
+        res = dict(muni)
+        res["telefono"] = res.get("telefonos_contacto", "")
+        res["correo"] = res.get("correo_electronico", "")
+        res["direccion"] = res.get("direccion_sede_municipal", "")
+        res["fecha_corte"] = self.municipalidades_metadata.get("fecha_corte", "02/09/2026")
+        return res
+
+    def get_comisarias_por_ubigeo(self, ubigeo: str) -> List[Dict[str, Any]]:
+        """Retorna las comisarías operativas de la PNP asignadas al distrito según la línea base MININTER."""
+        return self.comisarias_por_ubigeo.get(ubigeo, [])
+
+    def get_centros_educativos_por_ubigeo(self, ubigeo: str) -> Dict[str, Any]:
+        """Retorna el padrón de centros educativos oficiales MINEDU/ESCALE para el distrito."""
+        from services.minedu_sigmed_service import get_minedu_sigmed_service
+        return get_minedu_sigmed_service().get_centros_educativos_por_ubigeo(ubigeo)
+
+    def get_albergues_temporales_indeci(self, ubigeo: str) -> List[Dict[str, Any]]:
+        """Retorna los colegios públicos priorizados como albergues temporales INDECI según Ley 29664."""
+        from services.minedu_sigmed_service import get_minedu_sigmed_service
+        return get_minedu_sigmed_service().get_albergues_temporales_indeci(ubigeo)
+
+    def get_distrito_info(self, ubigeo: str) -> Optional[Dict[str, Any]]:
+        """Retorna información básica o perfil completo del distrito por UBIGEO."""
+        return self.get_district_full_profile(ubigeo)
+
+    def get_distrito_nombre(self, ubigeo: str) -> str:
+        """Retorna el nombre del distrito para un UBIGEO dado."""
+        info = self.get_distrito_info(ubigeo)
+        return info.get("distrito", f"Distrito {ubigeo}") if info else f"Distrito {ubigeo}"
+
+    def es_distrito_critico(self, ubigeo: str) -> bool:
+        """Determina si un distrito es considerado crítico (D.S. 124 o peligro Muy Alto)."""
+        if ubigeo in self.distritos_ds124:
+            return True
+        info = self.get_distrito_info(ubigeo)
+        if info and str(info.get("peligro_cenepred", "")).upper() in ["MUY ALTO", "ALTO", "CRÍTICO", "CRITICO"]:
+            return True
+        return False
+
+    def get_quebradas_por_ubigeo(self, ubigeo: str) -> List[Dict[str, Any]]:
+        """Retorna la lista de quebradas críticas asignadas al UBIGEO."""
+        return self.quebradas_por_ubigeo.get(ubigeo, [])
 
     def get_district_full_profile(self, ubigeo: str) -> Dict[str, Any]:
         """
@@ -151,6 +222,13 @@ class HistoricalDataService:
         }
         cap_code = cap_map.get(variante, "es-PE")
 
+        # Contacto de Defensa Civil enriquecido con Directorio Municipal INEI 2026 (Alcalde = Presidente GT-GRD)
+        muni_inei = self.get_municipalidad_por_ubigeo(ubigeo)
+        alcalde_nom = muni_inei.get("alcalde") if muni_inei else None
+        tel_muni = muni_inei.get("telefono") if muni_inei and muni_inei.get("telefono") else contactos.get("telefono_emergencia", "115 (COEN/INDECI)")
+        correo_muni = muni_inei.get("correo") if muni_inei and muni_inei.get("correo") else contactos.get("correo", f"defensacivil_{ubigeo}@gob.pe")
+        direccion_muni = muni_inei.get("direccion") if muni_inei else None
+
         return {
             "ubigeo": ubigeo,
             "distrito": distrito_nom,
@@ -188,9 +266,14 @@ class HistoricalDataService:
             ],
             "contacto_defensa_civil": {
                 "funcionario": contactos.get("responsable_grd", "Oficina de Defensa Civil Municipal"),
-                "telefono": contactos.get("telefono_emergencia", "115 (COEN/INDECI)"),
-                "correo": contactos.get("correo", f"defensacivil_{ubigeo}@gob.pe")
-            }
+                "telefono": tel_muni,
+                "correo": correo_muni,
+                "alcalde": alcalde_nom,
+                "direccion_municipal": direccion_muni,
+                "sede_coed": direccion_muni or "Palacio Municipal / Sede Central Distrital",
+                "fuente": "INEI - Directorio Nacional de Municipalidades Provinciales y Distritales 2026 (Corte 02/09/2026)" if muni_inei else "COEN / INDECI"
+            },
+            "autoridad_municipal_inei": muni_inei
         }
 
     def get_etnoterritorial_profile(self, ubigeo: str) -> Dict[str, Any]:
@@ -215,6 +298,20 @@ class HistoricalDataService:
             prioridad = "VIGILANCIA_PREVENTIVA"
             accion_doctrinal = "Seguimiento hidrometeorológico continuo."
 
+        # Enriquecer con Directorio Oficial de Municipalidades INEI 2026
+        muni = self.get_municipalidad_por_ubigeo(ubigeo)
+        contacto = base.get("contacto_defensa_civil") or {}
+        if muni:
+            contacto = {
+                "funcionario": f"{muni.get('alcalde')} ({muni.get('cargo', 'Alcalde')})",
+                "telefono": muni.get("telefonos_contacto", "Central Municipal"),
+                "correo": muni.get("correo_electronico", "mesadepartes@municipalidad.gob.pe"),
+                "sede_municipal": muni.get("direccion_sede_municipal", "Palacio Municipal"),
+                "cargo_oficial": muni.get("cargo"),
+                "rol_sinagerd": "Presidente de la Plataforma Distrital de Defensa Civil (Ley 29664)",
+                "fuente": "INEI - Directorio Nacional de Municipalidades Setiembre 2026"
+            }
+
         return {
             "ubigeo": ubigeo,
             "distrito": base["distrito"],
@@ -231,7 +328,8 @@ class HistoricalDataService:
                 "accion_recomendada": accion_doctrinal
             },
             "quebradas_criticas": base["quebradas_criticas"],
-            "contacto_defensa_civil": base["contacto_defensa_civil"]
+            "contacto_defensa_civil": contacto,
+            "autoridad_municipal_inei": muni
         }
 
     def get_quebradas_criticas_list(self) -> List[Dict[str, Any]]:
@@ -700,7 +798,11 @@ class HistoricalDataService:
                         "CAF - Memorias del FEN en el Perú"
                     ]
                 },
-                "contacto_defensa_civil": base.get("contacto_defensa_civil")
+                "contacto_defensa_civil": base.get("contacto_defensa_civil"),
+                "autoridad_municipal_inei": self.get_municipalidad_por_ubigeo(ubigeo),
+                "comisarias_pnp": self.get_comisarias_por_ubigeo(ubigeo),
+                "centros_educativos": self.get_centros_educativos_por_ubigeo(ubigeo),
+                "albergues_temporales_indeci": self.get_albergues_temporales_indeci(ubigeo)
             }
 
         # Enriquecer con datos del perfil territorial y contactos
@@ -708,6 +810,10 @@ class HistoricalDataService:
         memoria_completa = dict(memoria)
         memoria_completa["contacto_defensa_civil"] = perfil.get("contacto_defensa_civil")
         memoria_completa["etnoterritorial"] = perfil.get("etnoterritorial_renalio")
+        memoria_completa["comisarias_pnp"] = self.get_comisarias_por_ubigeo(ubigeo)
+        memoria_completa["centros_educativos"] = self.get_centros_educativos_por_ubigeo(ubigeo)
+        memoria_completa["albergues_temporales_indeci"] = self.get_albergues_temporales_indeci(ubigeo)
+        memoria_completa["autoridad_municipal_inei"] = self.get_municipalidad_por_ubigeo(ubigeo)
         return memoria_completa
 
     def get_historical_summary_metrics(self) -> Dict[str, Any]:
@@ -730,13 +836,47 @@ class HistoricalDataService:
             "eventos_analizados": ["1982-1983 (Mega Niño)", "1997-1998 (Mega Niño)", "2017 (Niño Costero)"],
             "fuentes_oficiales": [
                 {"fuente": "CAF", "documento": "Las lecciones de El Niño: Memoria, Retos y Soluciones (304 págs.)"},
-                {"fuente": "INDECI / SINPAD", "documento": "Compendio Estadístico del FEN 2017 (Gestión Reactiva)"},
+                {"fuente": "INDECI / SINPAD", "documento": "Compendio Estadístico del INDECI 2017 - Gestión Reactiva (45 págs.)"},
+                {"fuente": "INGEMMET (DGAR)", "documento": "Evaluación Geológica de las Zonas Afectadas por el Niño Costero 2017 en La Libertad y Cajamarca (87 págs.)"},
                 {"fuente": "OPS / OMS", "documento": "Crónica de Desastres y Repercusiones Sanitarias FEN (290 págs.)"},
                 {"fuente": "MINEDU / CISE PUCP", "documento": "Colección Especial Manuel Etesse: El FEN y la Escuela Peruana (50 págs.)"},
+                {"fuente": "MINEDU / ESCALE (SIGMED)", "documento": "Padrón Georreferenciado de Instituciones y Servicios Educativos - Albergues Temporales INDECI (Ley 29664)"},
+                {"fuente": "PNP / MININTER (PP 0030)", "documento": "Línea Base Georreferenciada de Comisarías Básicas a Nivel Nacional (1,332 CPNP, D.S. 012-2025-IN)"},
+                {"fuente": "INEI (Directorio Nacional 2026)", "documento": "Directorio Nacional de Municipalidades Provinciales y Distritales (1,899 Gobiernos Locales - Setiembre 2026)"},
                 {"fuente": "PCM / CENEPRED", "documento": "D.S. 124-2026-PCM y Catálogo SIGRID de 1,891 distritos"}
             ]
         }
 
+    def get_master_catalog(self) -> Dict[str, Any]:
+        """
+        Retorna el Catálogo Maestro FEN unificado (Cuencas, Infraestructura CAF,
+        Firmas Precursoras y Matriz Bivalente SENAMHI).
+        """
+        if not self.catalogo_maestro:
+            self.catalogo_maestro = self._load_json_safe("catalogo_maestro_historico_fen.json", {})
+        return self.catalogo_maestro
+
+    def get_cuencas_summary(self) -> List[Dict[str, Any]]:
+        """
+        Retorna el listado resumen de las cuencas estratégicas indexadas.
+        """
+        cat = self.get_master_catalog()
+        cuencas_map = cat.get("cuencas_estrategicas", {})
+        summary = []
+        for cid, c in cuencas_map.items():
+            summary.append({
+                "id": cid,
+                "nombre": c.get("nombre"),
+                "region_macro": c.get("region_macro"),
+                "departamentos": c.get("departamentos", []),
+                "total_ubigeos": len(c.get("ubigeos_asociados", [])),
+                "total_puentes_vulnerables": len(c.get("infraestructura_critica", {}).get("puentes_vulnerables", [])),
+                "caserios_recurrentes": c.get("caserios_inundacion_recurrente", []),
+                "lecciones_caf": c.get("lecciones_caf")
+            })
+        return summary
+
 # Instancia singleton accesible globalmente
 historical_service = HistoricalDataService()
+historical_data_service = historical_service
 

@@ -1,0 +1,410 @@
+{
+  "documento_metadatos": {
+    "sigrid_codigo": 21362,
+    "titulo": "Plan de prevención y reducción del riesgo de desastres ante inundaciones fluviales ocasionadas por lluvias intensas, distrito de Eduardo Villanueva, provincia de San Marcos, región de Cajamarca 2025-2030",
+    "ubigeo": "061003",
+    "departamento": "Cajamarca",
+    "provincia": "San Marcos",
+    "distrito": "Eduardo Villanueva",
+    "capital": "La Grama",
+    "periodo_vigencia": "2025-2030",
+    "autoridad_edil": "Wilder Alex Ávila Tirado (Alcalde - Presidente GT-GRD)",
+    "marco_aprobacion": {
+      "resolucion_alcaldia_gtgrd": "Resolución de Alcaldía N° 098-2024-MDEV-A",
+      "resolucion_alcaldia_aprobacion": "Resolución de Alcaldía N° 012-2024-MDEV/A",
+      "ordenanza_municipal": "Ordenanza Municipal N° 06-2024-MDEV-CM"
+    },
+    "asistencia_tecnica": "CENEPRED - Dirección de Fortalecimiento y Asistencia Técnica (DIFAT)",
+    "responsable_elaboracion": "Arq. Yesi Betsabe Díaz Ávila (Oficina de Gestión del Riesgo de Desastres)",
+    "cuenca_hidrografica": "Cuenca del Río Crisnejas y Río Cajamarquino (Subcuenca Marañón - Vertiente Atlántico)",
+    "altitud_media_msnm": 2020,
+    "coordenadas_referenciales_capital": {
+      "latitud": -7.4339,
+      "longitud": -78.1353,
+      "utm_zona": "17S",
+      "este": 818300,
+      "norte": 9177500
+    }
+  },
+  "grilla_virtual_pisco_senamhi": [
+    {
+      "celda_id": "PISCO_061003_CEDROCUCHO",
+      "nombre": "Cabecera Microcuenca Quebrada Cedrocucho",
+      "coordenadas": {"lat": -7.421, "lon": -78.118, "altitud_msnm": 2480},
+      "tipo_estacion": "Grilla PISCOp / PISCO-hy v2.1",
+      "area_drenaje_km2": 14.8,
+      "tiempo_concentracion_horas": 1.45,
+      "curva_cn_soil": 76.5,
+      "umbral_alerta_amarilla_mm_dia": 25.0,
+      "umbral_alerta_naranja_mm_dia": 45.0,
+      "umbral_alerta_roja_mm_dia": 65.0
+    },
+    {
+      "celda_id": "PISCO_061003_YUNGUILLA",
+      "nombre": "Cabecera Microcuenca Quebrada Yunguilla",
+      "coordenadas": {"lat": -7.442, "lon": -78.109, "altitud_msnm": 2540},
+      "tipo_estacion": "Grilla PISCOp / PISCO-hy v2.1",
+      "area_drenaje_km2": 18.2,
+      "tiempo_concentracion_horas": 1.70,
+      "curva_cn_soil": 78.0,
+      "umbral_alerta_amarilla_mm_dia": 25.0,
+      "umbral_alerta_naranja_mm_dia": 45.0,
+      "umbral_alerta_roja_mm_dia": 65.0
+    },
+    {
+      "celda_id": "PISCO_061003_CRISNEJAS",
+      "nombre": "Valle Aluvial Río Crisnejas - La Grama",
+      "coordenadas": {"lat": -7.435, "lon": -78.136, "altitud_msnm": 2015},
+      "tipo_estacion": "Grilla PISCO-hy Hidrológica Fluvial",
+      "area_drenaje_km2": 2150.0,
+      "tiempo_concentracion_horas": 8.50,
+      "curva_cn_soil": 72.0,
+      "umbral_alerta_amarilla_m3_s": 85.0,
+      "umbral_alerta_naranja_m3_s": 140.0,
+      "umbral_alerta_roja_m3_s": 210.0
+    },
+    {
+      "celda_id": "PISCO_061003_CAJAMARQUINO",
+      "nombre": "Confluencia Río Cajamarquino - Huacacorral/Colpón",
+      "coordenadas": {"lat": -7.468, "lon": -78.158, "altitud_msnm": 2005},
+      "tipo_estacion": "Grilla PISCO-hy Hidrológica Fluvial",
+      "area_drenaje_km2": 1840.0,
+      "tiempo_concentracion_horas": 7.80,
+      "curva_cn_soil": 74.0,
+      "umbral_alerta_amarilla_m3_s": 75.0,
+      "umbral_alerta_naranja_m3_s": 125.0,
+      "umbral_alerta_roja_m3_s": 190.0
+    }
+  ],
+  "puntos_criticos_medidas_estructurales": [
+    {
+      "id": "MDEV-EST-01",
+      "denominacion": "Defensa Ribereña Quebrada Cedrocucho (Aguas Calientes)",
+      "codigo_ficha_plan": "Ficha Pág. 137",
+      "sector": "Centro Poblado Aguas Calientes",
+      "cauce": "Quebrada Cedrocucho",
+      "altitud_msnm": 2037,
+      "coordenadas_utm_17s": {
+        "inicio": {"este": 818352.78, "norte": 9174904.87},
+        "final": {"este": 818256.62, "norte": 9178888.13}
+      },
+      "nivel_peligro": "MUY ALTO",
+      "nivel_vulnerabilidad": "MUY ALTO",
+      "elementos_expuestos": {
+        "poblacion_afectada": 449,
+        "viviendas_expuestas": 342,
+        "material_predominante": "Adobe y quincha con cubierta liviana",
+        "infraestructura_publica": [
+          "01 Mercado comunal Aguas Calientes",
+          "01 Puente vehicular",
+          "400 m de vía afirmada",
+          "01 Recreo campestre / balneario",
+          "Losa deportiva y redes de agua potable/alcantarillado"
+        ]
+      },
+      "metrados_obra": {
+        "descolmatacion_cauce_km": 1.324,
+        "dique_material_propio_km": 0.889,
+        "enrocado_proteccion_km": 0.889
+      },
+      "presupuesto_estimado_pen": 3000000.00,
+      "plazo_ejecucion_dias": 60,
+      "fuente_financiamiento_propuesta": "FONDES / MVCS - PP 0068"
+    },
+    {
+      "id": "MDEV-EST-02",
+      "denominacion": "Defensa Ribereña Quebrada Yunguilla (Aguas Calientes / El Chirimoyo)",
+      "codigo_ficha_plan": "Ficha Pág. 138",
+      "sector": "Centro Poblado Aguas Calientes / Sector El Chirimoyo",
+      "cauce": "Quebrada Yunguilla",
+      "altitud_msnm": 2029,
+      "coordenadas_utm_17s": {
+        "inicio": {"este": 819218.80, "norte": 9175174.81},
+        "final": {"este": 819394.30, "norte": 9174329.69}
+      },
+      "nivel_peligro": "MUY ALTO",
+      "nivel_vulnerabilidad": "MUY ALTO",
+      "elementos_expuestos": {
+        "poblacion_afectada": 810,
+        "viviendas_expuestas": 365,
+        "material_predominante": "Adobe y quincha",
+        "infraestructura_publica": [
+          "Complejo balneario aguas termales",
+          "Parque recreativo",
+          "Trocha carrozable de acceso vecinal",
+          "Canales de riego agrícolas"
+        ]
+      },
+      "metrados_obra": {
+        "descolmatacion_cauce_km": 1.175,
+        "dique_material_propio_km": 1.175,
+        "enrocado_proteccion_km": 1.000
+      },
+      "presupuesto_estimado_pen": 3000000.00,
+      "plazo_ejecucion_dias": 60,
+      "fuente_financiamiento_propuesta": "FONDES / MVCS - PP 0068"
+    },
+    {
+      "id": "MDEV-EST-03",
+      "denominacion": "Defensa Ribereña Quebrada La Grama",
+      "codigo_ficha_plan": "Prioridad 1 - Pág. 103",
+      "sector": "Capital Distrital La Grama",
+      "cauce": "Quebrada La Grama",
+      "altitud_msnm": 2020,
+      "coordenadas_utm_17s": {
+        "inicio": {"este": 817920.00, "norte": 9177400.00},
+        "final": {"este": 818450.00, "norte": 9177100.00}
+      },
+      "nivel_peligro": "MUY ALTO",
+      "nivel_vulnerabilidad": "ALTO",
+      "elementos_expuestos": {
+        "poblacion_afectada": 1250,
+        "viviendas_expuestas": 410,
+        "material_predominante": "Adobe y albañilería",
+        "infraestructura_publica": [
+          "Puesto de Salud La Grama",
+          "Eje comercial Av. San Juan",
+          "Puente de enlace urbano"
+        ]
+      },
+      "metrados_obra": {
+        "descolmatacion_cauce_km": 0.950,
+        "dique_material_propio_km": 0.850,
+        "enrocado_proteccion_km": 0.850
+      },
+      "presupuesto_estimado_pen": 2000000.00,
+      "plazo_ejecucion_dias": 60,
+      "fuente_financiamiento_propuesta": "FONDES / Recursos Ordinarios"
+    },
+    {
+      "id": "MDEV-EST-04",
+      "denominacion": "Defensa Ribereña Margen Derecha Río Crisnejas - La Grama",
+      "codigo_ficha_plan": "Prioridad 2 - Pág. 103",
+      "sector": "La Grama / El Tingo",
+      "cauce": "Río Crisnejas",
+      "altitud_msnm": 2012,
+      "coordenadas_utm_17s": {
+        "inicio": {"este": 817100.00, "norte": 9176800.00},
+        "final": {"este": 818900.00, "norte": 9176200.00}
+      },
+      "nivel_peligro": "MUY ALTO",
+      "nivel_vulnerabilidad": "ALTO",
+      "elementos_expuestos": {
+        "poblacion_afectada": 650,
+        "viviendas_expuestas": 180,
+        "material_predominante": "Adobe rústico",
+        "infraestructura_publica": [
+          "210 hectáreas de cultivo de maíz y frutales",
+          "Bocatomas de riego campesinas",
+          "Carretera PE-3N tramo de aproximación"
+        ]
+      },
+      "metrados_obra": {
+        "descolmatacion_cauce_km": 2.100,
+        "dique_material_propio_km": 1.600,
+        "enrocado_proteccion_km": 1.400
+      },
+      "presupuesto_estimado_pen": 3000000.00,
+      "plazo_ejecucion_dias": 90,
+      "fuente_financiamiento_propuesta": "FONDES / MVCS"
+    },
+    {
+      "id": "MDEV-EST-05",
+      "denominacion": "Defensa Ribereña Margen Derecha Río Cajamarquino - Huacacorral",
+      "codigo_ficha_plan": "Ficha Pág. 139",
+      "sector": "Caserío Huacacorral",
+      "cauce": "Río Cajamarquino",
+      "altitud_msnm": 2009,
+      "coordenadas_utm_17s": {
+        "inicio": {"este": 812724.52, "norte": 9174317.41},
+        "final": {"este": 813402.12, "norte": 9173776.56}
+      },
+      "nivel_peligro": "MUY ALTO",
+      "nivel_vulnerabilidad": "ALTO",
+      "elementos_expuestos": {
+        "poblacion_afectada": 52,
+        "viviendas_expuestas": 13,
+        "material_predominante": "Adobe rústico",
+        "infraestructura_publica": [
+          "84 hectáreas de cultivos de panllevar",
+          "90 cabezas de ganado vacuno/ovino",
+          "Vía carrozable de acceso comunal"
+        ]
+      },
+      "metrados_obra": {
+        "descolmatacion_cauce_km": 1.200,
+        "dique_material_propio_km": 0.950,
+        "enrocado_proteccion_km": 0.950
+      },
+      "presupuesto_estimado_pen": 3000000.00,
+      "plazo_ejecucion_dias": 60,
+      "fuente_financiamiento_propuesta": "FONDES / MVCS"
+    },
+    {
+      "id": "MDEV-EST-06",
+      "denominacion": "Defensa Ribereña Quebrada Higuerón - Campo Alegre",
+      "codigo_ficha_plan": "Prioridad 6 - Pág. 103",
+      "sector": "Caserío Campo Alegre",
+      "cauce": "Quebrada Higuerón",
+      "altitud_msnm": 2018,
+      "coordenadas_utm_17s": {
+        "inicio": {"este": 814200.00, "norte": 9175100.00},
+        "final": {"este": 814800.00, "norte": 9174600.00}
+      },
+      "nivel_peligro": "ALTO",
+      "nivel_vulnerabilidad": "ALTO",
+      "elementos_expuestos": {
+        "poblacion_afectada": 190,
+        "viviendas_expuestas": 48,
+        "material_predominante": "Adobe",
+        "infraestructura_publica": [
+          "65 hectáreas de parcelas agrícolas",
+          "Trocha comunal Campo Alegre"
+        ]
+      },
+      "metrados_obra": {
+        "descolmatacion_cauce_km": 1.050,
+        "dique_material_propio_km": 0.800,
+        "enrocado_proteccion_km": 0.800
+      },
+      "presupuesto_estimado_pen": 3000000.00,
+      "plazo_ejecucion_dias": 60,
+      "fuente_financiamiento_propuesta": "FONDES / MVCS"
+    },
+    {
+      "id": "MDEV-EST-07",
+      "denominacion": "Defensa Ribereña Margen Derecha Río Cajamarquino - Campo Alegre",
+      "codigo_ficha_plan": "Prioridad 7 - Pág. 103",
+      "sector": "Sector Campo Alegre",
+      "cauce": "Río Cajamarquino",
+      "altitud_msnm": 2008,
+      "coordenadas_utm_17s": {
+        "inicio": {"este": 814100.00, "norte": 9174200.00},
+        "final": {"este": 815200.00, "norte": 9173800.00}
+      },
+      "nivel_peligro": "MUY ALTO",
+      "nivel_vulnerabilidad": "ALTO",
+      "elementos_expuestos": {
+        "poblacion_afectada": 220,
+        "viviendas_expuestas": 55,
+        "material_predominante": "Adobe",
+        "infraestructura_publica": [
+          "92 hectáreas agrícolas de vega",
+          "Canal de derivación Campo Alegre"
+        ]
+      },
+      "metrados_obra": {
+        "descolmatacion_cauce_km": 1.400,
+        "dique_material_propio_km": 1.100,
+        "enrocado_proteccion_km": 1.000
+      },
+      "presupuesto_estimado_pen": 3000000.00,
+      "plazo_ejecucion_dias": 60,
+      "fuente_financiamiento_propuesta": "FONDES / MVCS"
+    },
+    {
+      "id": "MDEV-EST-08",
+      "denominacion": "Defensa Ribereña Margen Derecha Río Cajamarquino - Colpón",
+      "codigo_ficha_plan": "Prioridad 8 - Pág. 103",
+      "sector": "Caserío Colpón",
+      "cauce": "Río Cajamarquino",
+      "altitud_msnm": 2005,
+      "coordenadas_utm_17s": {
+        "inicio": {"este": 815500.00, "norte": 9173600.00},
+        "final": {"este": 816700.00, "norte": 9173100.00}
+      },
+      "nivel_peligro": "MUY ALTO",
+      "nivel_vulnerabilidad": "ALTO",
+      "elementos_expuestos": {
+        "poblacion_afectada": 310,
+        "viviendas_expuestas": 72,
+        "material_predominante": "Adobe",
+        "infraestructura_publica": [
+          "115 hectáreas de producción lechera y forrajes",
+          "Puente colgante peatonal",
+          "Sistema de bombeo comunal"
+        ]
+      },
+      "metrados_obra": {
+        "descolmatacion_cauce_km": 1.500,
+        "dique_material_propio_km": 1.200,
+        "enrocado_proteccion_km": 1.100
+      },
+      "presupuesto_estimado_pen": 3000000.00,
+      "plazo_ejecucion_dias": 60,
+      "fuente_financiamiento_propuesta": "FONDES / MVCS"
+    },
+    {
+      "id": "MDEV-EST-09",
+      "denominacion": "Defensa Ribereña Quebrada Santa Lucía - Colpón",
+      "codigo_ficha_plan": "Prioridad 9 - Pág. 103",
+      "sector": "Caserío Colpón",
+      "cauce": "Quebrada Santa Lucía",
+      "altitud_msnm": 2010,
+      "coordenadas_utm_17s": {
+        "inicio": {"este": 816100.00, "norte": 9174000.00},
+        "final": {"este": 816500.00, "norte": 9173300.00}
+      },
+      "nivel_peligro": "ALTO",
+      "nivel_vulnerabilidad": "ALTO",
+      "elementos_expuestos": {
+        "poblacion_afectada": 160,
+        "viviendas_expuestas": 42,
+        "material_predominante": "Adobe y quincha",
+        "infraestructura_publica": [
+          "56 hectáreas agrícolas",
+          "Captación de agua potable comunitaria"
+        ]
+      },
+      "metrados_obra": {
+        "descolmatacion_cauce_km": 0.900,
+        "dique_material_propio_km": 0.750,
+        "enrocado_proteccion_km": 0.750
+      },
+      "presupuesto_estimado_pen": 2870000.00,
+      "plazo_ejecucion_dias": 60,
+      "fuente_financiamiento_propuesta": "FONDES / MVCS"
+    }
+  ],
+  "resumen_inversion_estructural": {
+    "total_proyectos": 9,
+    "presupuesto_global_pen": 25870000.00,
+    "longitud_total_descolmatacion_km": 11.699,
+    "longitud_total_diques_km": 9.489,
+    "longitud_total_enrocado_km": 8.739,
+    "poblacion_protegida_directa": 4091,
+    "viviendas_protegidas": 1477,
+    "hectareas_agricolas_blindadas": 622.93
+  },
+  "diagnostico_pp0068_historico": {
+    "fuente": "MEF - Consulta Amigable 2015-2024 / Plan 21362 Tabla 27 y 28",
+    "comportamiento_pia": {
+      "promedio_anual_pia_pen": 1000.00,
+      "maximo_pia_pen": 3000.00,
+      "diagnostico_forense": "Presupuesto Inicial de Apertura insignificante; evidencia que la prevención estructural no se prioriza en el presupuesto municipal regular."
+    },
+    "paralisis_2019": {
+      "pim_pen": 0.00,
+      "ejecutado_pen": 0.00,
+      "tasa_ejecucion": 0.0,
+      "causa_doctrinal": "Primer año de gobierno municipal entrante (efecto 100 días de parálisis post-electoral 2018)."
+    },
+    "distorsion_productos": {
+      "gasto_reactivo_acciones_comunes_pct": 82.4,
+      "gasto_preventivo_proteccion_fisica_pct": 0.23,
+      "inversion_proteccion_fisica_10_anos_pen": 18192.00
+    }
+  },
+  "salvaguarda_transicion_100_dias": {
+    "fecha_termino_mandato_actual": "2026-12-31",
+    "autoridad_saliente": "Wilder Alex Ávila Tirado",
+    "inicio_temporada_lluvias_pico": "Enero a Marzo 2027",
+    "riesgo_institucional": "Vacío de autoridad y firmas durante los primeros 100 días del FEN 2027.",
+    "instrumento_blindaje": "Dossier Cero Días Criptográfico (SHA-256)",
+    "articulos_habilitantes": [
+      "Ley 29664 (SINAGERD) Art. 14 (Responsabilidad indelegable de alcaldes)",
+      "Ley 30225 (Ley de Contrataciones) Art. 27 literal b (Emergencia)",
+      "D.S. 048-2011-PCM (Reglamento SINAGERD)"
+    ]
+  }
+}

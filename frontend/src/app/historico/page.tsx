@@ -28,8 +28,27 @@ import {
     Mail,
     Sprout,
     Coins,
-    FileSpreadsheet
+    FileSpreadsheet,
+    TrendingUp,
+    Gauge,
+    Radio,
+    Eye,
+    Zap,
+    CloudRain,
+    Wind,
+    Thermometer,
+    Flame,
+    RefreshCw,
+    AlertOctagon,
+    ArrowUpRight,
+    HelpCircle,
+    Truck,
+    Navigation
 } from "lucide-react";
+
+import DossierExportModal from "@/components/DossierExportModal";
+import HistoricalFailureNodesPanel from "@/components/HistoricalFailureNodesPanel";
+import HistoricalInfrastructureMap from "@/components/HistoricalInfrastructureMap";
 
 interface ImpactoEducativo {
     colegios_afectados: number;
@@ -105,6 +124,27 @@ interface MemoriaDistrital {
         hectareas_agricolas_perdidas: number;
         patron_hidrologico: string;
     };
+    danos_oficiales_indeci_2017?: {
+        departamento: string;
+        fuente: string;
+        damnificados_departamentales_validados?: number;
+        afectados_departamentales_validados?: number;
+        fallecidos_departamentales?: number;
+        viviendas_colapsadas_inhabitables_departamentales?: number;
+        carreteras_destruidas_afectadas_km?: number;
+        hectareas_agricolas_perdidas_departamentales?: number;
+        albergues_oficiales_instalados?: number;
+        carpas_albergues?: number;
+        poblacion_albergada?: number;
+        decreto_supremo_declaratoria?: string;
+        provincias_afectadas?: number;
+        distritos_afectados?: number;
+        carreteras_destruidas_km?: number;
+        hectareas_agricolas_perdidas?: number;
+        vulnerabilidad_eje?: string;
+    };
+    analisis_geologico_ingemmet_2017?: string;
+    fuentes_oficiales_cruzadas?: string[];
     lecciones_aprendidas_caf_indeci: {
         sintesis_lecciones: string;
         fuentes_validadas: string[];
@@ -113,6 +153,24 @@ interface MemoriaDistrital {
         funcionario: string;
         telefono: string;
         correo: string;
+        alcalde?: string;
+        direccion_municipal?: string;
+        sede_coed?: string;
+        fuente?: string;
+    };
+    autoridad_municipal_inei?: {
+        ubigeo: string;
+        departamento: string;
+        provincia: string;
+        distrito: string;
+        tipo_municipalidad: string;
+        alcalde: string;
+        direccion: string;
+        telefono: string;
+        correo: string;
+        web?: string;
+        fuente: string;
+        fecha_corte: string;
     };
     etnoterritorial?: {
         variante_linguistica: string;
@@ -120,6 +178,118 @@ interface MemoriaDistrital {
         es_bilingue_requerido: boolean;
         regimen_difusion: string;
     };
+    comisarias_pnp?: {
+        cod_cpnp: string;
+        cod_uni: string;
+        nombre: string;
+        tipo_comisaria: string;
+        sectores_patrullaje_cuadrante: number;
+        region_policial: string;
+        departamento: string;
+        provincia: string;
+        distrito: string;
+        rol_en_contingencia?: string;
+    }[];
+    albergues_temporales_indeci?: {
+        codigo_local: string;
+        codigo_modular: string;
+        nombre_ie: string;
+        nivel_modalidad: string;
+        gestion: string;
+        direccion: string;
+        centro_poblado?: string;
+        latitud?: number;
+        longitud?: number;
+        altitud?: number;
+        cod_ugel?: string;
+    }[];
+    centros_educativos?: {
+        total_servicios_educativos: number;
+        total_publicas: number;
+        total_privadas: number;
+        total_albergues_potenciales: number;
+        albergues_recomendados?: any[];
+    };
+}
+
+// Interfaces del Motor Predictivo de Análogos y Radar FEN
+interface DiaHorizonteAnalog {
+    dia_numero: number;
+    fecha: string;
+    dia_semana: string;
+    horas_anticipacion: number;
+    temperatura_max: number;
+    temperatura_min: number;
+    lluvia_proyectada_openmeteo_mm: number;
+    factor_amplificacion_fen: number;
+    lluvia_extrema_estimada_mm: number;
+    similitud_analoga_pct: number;
+    evento_analogo_referencia: string;
+    nivel_alerta_anticipada: string;
+    condicion_viento_alisio: string;
+}
+
+interface InfraestructuraAmenazada {
+    tipo: string;
+    nombre?: string;
+    tramo?: string;
+    riesgo_historico?: string;
+    impacto?: string;
+    patron_dano?: string;
+}
+
+interface AcoplamientoBipolar {
+    regla_activa: string;
+    descripcion: string;
+    zonas_alerta_inversa?: string[];
+    accion_preventiva_recomendada?: string;
+}
+
+interface AnalogMatchResult {
+    ubigeo: string;
+    distrito: string;
+    provincia: string;
+    departamento: string;
+    cuenca_id: string;
+    cuenca_nombre: string;
+    region_macro: string;
+    poblacion_expuesta: number;
+    dia_maximo_riesgo: DiaHorizonteAnalog;
+    horizonte_7_dias: DiaHorizonteAnalog[];
+    infraestructura_amenazada_caf: InfraestructuraAmenazada[];
+    acoplamiento_bipolar: AcoplamientoBipolar;
+    oportunidades_territoriales_fen: { oportunidad: string; detalle: string }[];
+    fuentes_validadas: string[];
+}
+
+interface CuencaRadarItem {
+    cuenca_id: string;
+    cuenca_nombre: string;
+    region_macro: string;
+    distrito_centinela: string;
+    ubigeo: string;
+    dia_critico_numero: number;
+    horas_anticipacion: number;
+    similitud_analoga_pct: number;
+    evento_referencia: string;
+    factor_amplificacion: number;
+    lluvia_proyectada_mm: number;
+    lluvia_extrema_amplificada_mm: number;
+    nivel_alerta: string;
+    puentes_en_riesgo_caf: number;
+}
+
+interface RadarNacionalResult {
+    radar_nacional_version: string;
+    total_cuencas_vigiladas: number;
+    resumen_semaforo: {
+        cuencas_alerta_roja: number;
+        cuencas_alerta_naranja: number;
+        cuencas_alerta_amarilla: number;
+        cuencas_alerta_verde: number;
+    };
+    cuencas: CuencaRadarItem[];
+    generado_el: string;
 }
 
 const DISTRITOS_RAPIDOS = [
@@ -131,7 +301,8 @@ const DISTRITOS_RAPIDOS = [
     { ubigeo: "150118", nombre: "Chosica (Lurigancho)", depto: "Lima", icono: "⛰️" },
     { ubigeo: "130102", nombre: "El Porvenir", depto: "La Libertad", icono: "⚠️" },
     { ubigeo: "240101", nombre: "Tumbes", depto: "Tumbes", icono: "🌴" },
-    { ubigeo: "021101", nombre: "Huarmey", depto: "Áncash", icono: "🚧" }
+    { ubigeo: "021101", nombre: "Huarmey", depto: "Áncash", icono: "🚧" },
+    { ubigeo: "210501", nombre: "Ilave (Altiplano)", depto: "Puno", icono: "❄️" }
 ];
 
 export default function HistoricoConsolePage() {
@@ -140,30 +311,79 @@ export default function HistoricoConsolePage() {
     const [isSearching, setIsSearching] = useState(false);
     const [currentUbigeo, setCurrentUbigeo] = useState("200105"); // Default: Catacaos
     const [memoria, setMemoria] = useState<MemoriaDistrital | null>(null);
+    const [analogData, setAnalogData] = useState<AnalogMatchResult | null>(null);
+    const [radarData, setRadarData] = useState<RadarNacionalResult | null>(null);
+    const [masterCatalog, setMasterCatalog] = useState<any | null>(null);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<"general" | "educacion" | "salud" | "hidrologia" | "agropecuario" | "lecciones">("general");
+    const [loadingAnalog, setLoadingAnalog] = useState(false);
+    const [loadingRadar, setLoadingRadar] = useState(false);
+    const [radarFilter, setRadarFilter] = useState<string>("TODAS");
+    const [activeTab, setActiveTab] = useState<
+        "general" | "infraestructura" | "educacion" | "salud" | "hidrologia" | "agropecuario" | "lecciones" | "predictor" | "radar" | "bivalente"
+    >("general");
     const [selectedYear, setSelectedYear] = useState<"1983" | "1998" | "2017">("2017");
+    const [showDossierModal, setShowDossierModal] = useState(false);
 
     const searchTimeout = useRef<NodeJS.Timeout | null>(null);
 
-    // Cargar distrito activo
+    const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+    // Cargar distrito activo y su evaluación análoga Open-Meteo Pro a 7 días en paralelo desacoplado
     useEffect(() => {
-        async function fetchDistrito(ubg: string) {
+        async function fetchDistritoData(ubg: string) {
             setLoading(true);
+            setLoadingAnalog(true);
+
+            // 1. Cargar Memoria Histórica Territorial (ultra rápido, se renderiza de inmediato en milisegundos)
+            fetch(`${API_BASE}/api/historico/distrito/${ubg}`)
+                .then(res => res.ok ? res.json() : null)
+                .then(data => {
+                    if (data) setMemoria(data);
+                })
+                .catch(err => console.error("Error al cargar memoria histórica:", err))
+                .finally(() => setLoading(false));
+
+            // 2. Cargar Evaluación Análoga Meteorológica a 7 días en segundo plano (Open-Meteo Pro)
+            fetch(`${API_BASE}/api/historico/analog-match/${ubg}`)
+                .then(res => res.ok ? res.json() : null)
+                .then(aData => {
+                    setAnalogData(aData);
+                })
+                .catch(err => {
+                    console.error("Error al cargar análogo:", err);
+                    setAnalogData(null);
+                })
+                .finally(() => setLoadingAnalog(false));
+        }
+        fetchDistritoData(currentUbigeo);
+    }, [currentUbigeo]);
+
+    // Cargar radar nacional de 17 cuencas y catálogo maestro
+    useEffect(() => {
+        async function fetchGlobalData() {
+            setLoadingRadar(true);
             try {
-                const res = await fetch(`http://localhost:8000/api/historico/distrito/${ubg}`);
-                if (res.ok) {
-                    const data = await res.json();
-                    setMemoria(data);
+                const [resRadar, resCat] = await Promise.allSettled([
+                    fetch(`${API_BASE}/api/historico/radar-nacional-analogos`),
+                    fetch(`${API_BASE}/api/historico/catalogo-maestro`)
+                ]);
+
+                if (resRadar.status === "fulfilled" && resRadar.value.ok) {
+                    const rData = await resRadar.value.json();
+                    setRadarData(rData);
+                }
+                if (resCat.status === "fulfilled" && resCat.value.ok) {
+                    const cData = await resCat.value.json();
+                    setMasterCatalog(cData);
                 }
             } catch (err) {
-                console.error("Error al cargar memoria histórica:", err);
+                console.error("Error al cargar radar o catálogo maestro:", err);
             } finally {
-                setLoading(false);
+                setLoadingRadar(false);
             }
         }
-        fetchDistrito(currentUbigeo);
-    }, [currentUbigeo]);
+        fetchGlobalData();
+    }, []);
 
     // Búsqueda autocompletada
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -175,7 +395,7 @@ export default function HistoricoConsolePage() {
             setIsSearching(true);
             searchTimeout.current = setTimeout(async () => {
                 try {
-                    const res = await fetch(`http://localhost:8000/api/data/districts/search?q=${encodeURIComponent(val)}&limit=8`);
+                    const res = await fetch(`${API_BASE}/api/data/districts/search?q=${encodeURIComponent(val)}&limit=8`);
                     if (res.ok) {
                         const results = await res.json();
                         setSearchResults(results);
@@ -229,21 +449,29 @@ export default function HistoricoConsolePage() {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-2.5 w-full lg:w-auto justify-end">
+                    <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto justify-end">
+                        <button
+                            id="btn-export-dossier-pdf"
+                            onClick={() => setShowDossierModal(true)}
+                            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 border border-red-500/50 text-xs font-bold text-white transition shadow-md shadow-red-900/30 hover:scale-[1.02]"
+                        >
+                            <FileText className="w-4 h-4 text-red-200" />
+                            <span>📄 Exportar Dossier PDF (Fase 4)</span>
+                        </button>
                         <button
                             id="btn-print-dossier"
                             onClick={handlePrint}
                             className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-200 hover:text-white transition shadow-sm"
                         >
                             <Printer className="w-4 h-4 text-amber-400" />
-                            <span>Imprimir Ficha Ejecutiva</span>
+                            <span>Imprimir Ficha</span>
                         </button>
                         <Link
                             href={`/dashboard/${currentUbigeo}`}
                             className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-blue-600/30 hover:bg-blue-600/50 border border-blue-500/40 text-xs font-semibold text-blue-300 hover:text-white transition shadow-sm"
                         >
                             <Activity className="w-4 h-4 text-blue-400" />
-                            <span>Ver Telemetría en Vivo</span>
+                            <span>Ver Telemetría</span>
                         </Link>
                     </div>
                 </div>
@@ -333,6 +561,9 @@ export default function HistoricoConsolePage() {
                 </div>
             ) : memoria ? (
                 <div className="space-y-6">
+                    {/* [ESCUDO C2] Nodos de Falla Histórica (1983-2023), Anti-Fake News y Fichas de Ingeniería Pre-Impacto */}
+                    <HistoricalFailureNodesPanel ubigeoSeleccionado={currentUbigeo} />
+
                     {/* Tarjeta de Identidad Territorial del Municipio */}
                     <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
@@ -393,26 +624,72 @@ export default function HistoricoConsolePage() {
                             </div>
                         </div>
 
-                        {/* Metadatos adicionales de contacto municipal */}
-                        {memoria.contacto_defensa_civil && (
-                            <div className="mt-4 pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between text-xs text-slate-400 gap-3">
-                                <div className="flex items-center gap-4">
-                                    <span className="flex items-center gap-1.5">
-                                        <Building2 className="w-3.5 h-3.5 text-slate-500" />
-                                        <strong>GRD Municipal:</strong> {memoria.contacto_defensa_civil.funcionario}
-                                    </span>
-                                    <span className="flex items-center gap-1.5">
-                                        <Phone className="w-3.5 h-3.5 text-emerald-400" />
-                                        {memoria.contacto_defensa_civil.telefono}
-                                    </span>
-                                    <span className="flex items-center gap-1.5">
-                                        <Mail className="w-3.5 h-3.5 text-sky-400" />
-                                        {memoria.contacto_defensa_civil.correo}
-                                    </span>
+                        {/* Comando Político-Operativo Local y Plataforma de Defensa Civil (INEI 2026 / Ley 29664) */}
+                        {(memoria.contacto_defensa_civil || memoria.autoridad_municipal_inei) && (
+                            <div className="mt-4 pt-4 border-t border-slate-800/80 space-y-2">
+                                <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs">
+                                    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                                        {(memoria.autoridad_municipal_inei?.alcalde || memoria.contacto_defensa_civil?.alcalde) && (
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shrink-0">
+                                                    <Building2 className="w-4 h-4 text-emerald-400" />
+                                                </div>
+                                                <div>
+                                                    <div className="text-[10px] text-emerald-400 font-bold tracking-wider uppercase">
+                                                        Alcalde Titular • Presidente GT-GRD
+                                                    </div>
+                                                    <div className="text-white font-black text-xs">
+                                                        {memoria.autoridad_municipal_inei?.alcalde || memoria.contacto_defensa_civil?.alcalde}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {(memoria.autoridad_municipal_inei?.direccion || memoria.contacto_defensa_civil?.sede_coed) && (
+                                            <div className="hidden lg:flex items-center gap-2 border-l border-slate-800 pl-3">
+                                                <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                                                <div>
+                                                    <div className="text-[10px] text-slate-400 font-medium">Sede COED / Palacio</div>
+                                                    <div className="text-slate-200 text-xs font-semibold truncate max-w-[220px]">
+                                                        {memoria.autoridad_municipal_inei?.direccion || memoria.contacto_defensa_civil?.sede_coed}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="flex flex-wrap items-center gap-3">
+                                        {(memoria.autoridad_municipal_inei?.telefono || memoria.contacto_defensa_civil?.telefono) && (
+                                            <a
+                                                href={`tel:${(memoria.autoridad_municipal_inei?.telefono || memoria.contacto_defensa_civil?.telefono || "").split("/")[0].trim()}`}
+                                                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 font-bold hover:bg-emerald-500/20 transition text-[11px]"
+                                            >
+                                                <Phone className="w-3 h-3 text-emerald-400" />
+                                                <span>{memoria.autoridad_municipal_inei?.telefono || memoria.contacto_defensa_civil?.telefono}</span>
+                                            </a>
+                                        )}
+                                        {(memoria.autoridad_municipal_inei?.correo || memoria.contacto_defensa_civil?.correo) && (
+                                            <a
+                                                href={`mailto:${memoria.autoridad_municipal_inei?.correo || memoria.contacto_defensa_civil?.correo}`}
+                                                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-300 font-medium hover:bg-sky-500/20 transition text-[11px]"
+                                            >
+                                                <Mail className="w-3 h-3 text-sky-400" />
+                                                <span className="truncate max-w-[180px]">{memoria.autoridad_municipal_inei?.correo || memoria.contacto_defensa_civil?.correo}</span>
+                                            </a>
+                                        )}
+                                        <span className="text-[10px] px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 font-semibold uppercase">
+                                            INEI 2026
+                                        </span>
+                                    </div>
                                 </div>
+
                                 {memoria.etnoterritorial && (
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-[11px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
+                                    <div className="flex items-center justify-between text-xs text-slate-400 pt-1">
+                                        <span className="flex items-center gap-1.5 text-slate-400 text-[11px]">
+                                            <Activity className="w-3.5 h-3.5 text-indigo-400" />
+                                            <strong>Protocolo Lingüístico:</strong> {memoria.etnoterritorial.variante_linguistica}
+                                        </span>
+                                        <span className="text-[11px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 font-semibold">
                                             Régimen {memoria.etnoterritorial.regimen_difusion} ({memoria.etnoterritorial.lengua_nombre})
                                         </span>
                                     </div>
@@ -420,6 +697,205 @@ export default function HistoricoConsolePage() {
                             </div>
                         )}
                     </div>
+
+                    {/* Tarjeta Hero de Alerta Predictiva Análoga Open-Meteo Pro a 7 Días */}
+                    {analogData && (
+                        <div
+                            className={`rounded-2xl p-5 border backdrop-blur-md shadow-2xl relative overflow-hidden transition-all duration-300 ${
+                                analogData.dia_maximo_riesgo.nivel_alerta_anticipada === "ROJA"
+                                    ? "bg-gradient-to-br from-red-950/50 via-slate-900 to-slate-950 border-red-500/50 shadow-red-950/30"
+                                    : analogData.dia_maximo_riesgo.nivel_alerta_anticipada === "NARANJA"
+                                    ? "bg-gradient-to-br from-orange-950/50 via-slate-900 to-slate-950 border-orange-500/50 shadow-orange-950/30"
+                                    : analogData.dia_maximo_riesgo.nivel_alerta_anticipada === "AMARILLA"
+                                    ? "bg-gradient-to-br from-amber-950/40 via-slate-900 to-slate-950 border-amber-500/40 shadow-amber-950/20"
+                                    : "bg-gradient-to-br from-emerald-950/30 via-slate-900 to-slate-950 border-emerald-500/30 shadow-emerald-950/20"
+                            }`}
+                        >
+                            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
+                                <div className="flex items-center gap-3">
+                                    <div
+                                        className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl font-bold shadow-lg shrink-0 ${
+                                            analogData.dia_maximo_riesgo.nivel_alerta_anticipada === "ROJA"
+                                                ? "bg-red-600/30 border border-red-500 text-red-400 animate-pulse"
+                                                : analogData.dia_maximo_riesgo.nivel_alerta_anticipada === "NARANJA"
+                                                ? "bg-orange-600/30 border border-orange-500 text-orange-400"
+                                                : analogData.dia_maximo_riesgo.nivel_alerta_anticipada === "AMARILLA"
+                                                ? "bg-amber-600/30 border border-amber-500 text-amber-400"
+                                                : "bg-emerald-600/30 border border-emerald-500 text-emerald-400"
+                                        }`}
+                                    >
+                                        <Zap className="w-6 h-6" />
+                                    </div>
+                                    <div>
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                            <span
+                                                className={`text-[11px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider border ${
+                                                    analogData.dia_maximo_riesgo.nivel_alerta_anticipada === "ROJA"
+                                                        ? "bg-red-500/20 text-red-300 border-red-500/50"
+                                                        : analogData.dia_maximo_riesgo.nivel_alerta_anticipada === "NARANJA"
+                                                        ? "bg-orange-500/20 text-orange-300 border-orange-500/50"
+                                                        : analogData.dia_maximo_riesgo.nivel_alerta_anticipada === "AMARILLA"
+                                                        ? "bg-amber-500/20 text-amber-300 border-amber-500/50"
+                                                        : "bg-emerald-500/20 text-emerald-300 border-emerald-500/50"
+                                                }`}
+                                            >
+                                                ALERTA PREDICTIVA ANÁLOGA: {analogData.dia_maximo_riesgo.nivel_alerta_anticipada}
+                                            </span>
+                                            <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                                                ⏱️ Lead Time: {analogData.dia_maximo_riesgo.horas_anticipacion}h (Día +{analogData.dia_maximo_riesgo.dia_numero} - {analogData.dia_maximo_riesgo.dia_semana})
+                                            </span>
+                                            <span className="text-[10px] px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/40">
+                                                Open-Meteo Pro ECMWF IFS 9km
+                                            </span>
+                                        </div>
+                                        <h3 className="text-base font-black text-white mt-1">
+                                            Vigilancia Retrospectiva FEN • {analogData.cuenca_nombre}
+                                        </h3>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-2 w-full lg:w-auto justify-end">
+                                    <button
+                                        onClick={() => setActiveTab("predictor")}
+                                        className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold text-xs shadow-lg shadow-orange-600/20 transition"
+                                    >
+                                        <Sparkles className="w-3.5 h-3.5" />
+                                        <span>Ver Modelo 7 Días Detallado</span>
+                                        <ArrowUpRight className="w-3.5 h-3.5" />
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Grid de 4 Métricas Clave de Anticipación */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
+                                <div className="p-3 bg-slate-950/70 rounded-xl border border-slate-800">
+                                    <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                                        Análogo Histórico Cercano
+                                    </span>
+                                    <span className="text-xs font-black text-amber-300 block mt-1 truncate">
+                                        {analogData.dia_maximo_riesgo.evento_analogo_referencia}
+                                    </span>
+                                    <div className="flex items-center gap-2 mt-2">
+                                        <div className="flex-1 bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                                            <div
+                                                className="bg-amber-500 h-full rounded-full"
+                                                style={{ width: `${analogData.dia_maximo_riesgo.similitud_analoga_pct}%` }}
+                                            />
+                                        </div>
+                                        <span className="text-[10px] font-mono font-bold text-slate-300">
+                                            {analogData.dia_maximo_riesgo.similitud_analoga_pct}%
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="p-3 bg-slate-950/70 rounded-xl border border-slate-800">
+                                    <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                                        Factor Amplificador FEN (M_FEN)
+                                    </span>
+                                    <div className="flex items-baseline gap-2 mt-1">
+                                        <span className="text-xl font-black text-orange-400">
+                                            {analogData.dia_maximo_riesgo.factor_amplificacion_fen}x
+                                        </span>
+                                        <span className="text-[10px] text-slate-400">
+                                            Multiplicador de saturación
+                                        </span>
+                                    </div>
+                                    <p className="text-[10px] text-slate-500 mt-1">
+                                        Basado en la respuesta no lineal de la cuenca (CAF 1998)
+                                    </p>
+                                </div>
+
+                                <div className="p-3 bg-slate-950/70 rounded-xl border border-slate-800">
+                                    <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                                        Precipitación Estimada Pico
+                                    </span>
+                                    <div className="flex items-baseline gap-2 mt-1">
+                                        <span className="text-xl font-black text-sky-400">
+                                            {analogData.dia_maximo_riesgo.lluvia_extrema_estimada_mm} mm
+                                        </span>
+                                        <span className="text-[10px] text-slate-400">
+                                            (Crudo: {analogData.dia_maximo_riesgo.lluvia_proyectada_openmeteo_mm} mm)
+                                        </span>
+                                    </div>
+                                    <p className="text-[10px] text-slate-500 mt-1">
+                                        Proyección corregida por hidrogramas históricos
+                                    </p>
+                                </div>
+
+                                <div className="p-3 bg-slate-950/70 rounded-xl border border-slate-800">
+                                    <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                                        Firma Precursora &amp; Viento
+                                    </span>
+                                    <div className="flex items-center justify-between mt-1">
+                                        <span className="text-xs font-bold text-white">
+                                            Alisios: {analogData.dia_maximo_riesgo.condicion_viento_alisio}
+                                        </span>
+                                        <span className="text-[10px] font-mono text-slate-400">
+                                            {analogData.dia_maximo_riesgo.temperatura_min}°C / {analogData.dia_maximo_riesgo.temperatura_max}°C
+                                        </span>
+                                    </div>
+                                    <p className="text-[10px] text-slate-500 mt-1">
+                                        Debilitamiento de alisios favorece convección
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Infraestructura Crítica Amenazada de la CAF */}
+                            {analogData.infraestructura_amenazada_caf && analogData.infraestructura_amenazada_caf.length > 0 && (
+                                <div className="mt-4 pt-3 border-t border-slate-800/80">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <ShieldAlert className="w-3.5 h-3.5 text-red-400" />
+                                        <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                                            Infraestructura Crítica CAF en Riesgo Inmediato:
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-wrap gap-2">
+                                        {analogData.infraestructura_amenazada_caf.map((inf, idx) => (
+                                            <div
+                                                key={idx}
+                                                className="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-xs flex items-center gap-1.5"
+                                                title={inf.riesgo_historico || inf.impacto || inf.patron_dano}
+                                            >
+                                                <span className="text-red-400">⚠️</span>
+                                                <span className="font-semibold text-slate-200">
+                                                    {inf.nombre || inf.tramo}
+                                                </span>
+                                                <span className="text-[10px] text-slate-500">
+                                                    ({inf.tipo.replace("_", " ")})
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Banner de Acoplamiento Bipolar Norte-Sur (SENAMHI Dossier Pág. 21) */}
+                            {analogData.acoplamiento_bipolar && analogData.acoplamiento_bipolar.regla_activa !== "REGULAR" && (
+                                <div className="mt-4 p-3 rounded-xl bg-purple-950/40 border border-purple-800/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs">
+                                    <div className="flex items-start gap-2.5">
+                                        <Radio className="w-4 h-4 text-purple-400 shrink-0 mt-0.5 animate-pulse" />
+                                        <div>
+                                            <div className="flex items-center gap-2">
+                                                <strong className="text-purple-300 font-bold">
+                                                    Acoplamiento Bipolar FEN Territorial (SENAMHI Pág. 21):
+                                                </strong>
+                                                <span className="text-[10px] px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-200 border border-purple-500/40 font-mono">
+                                                    COSTA NORTE ◄► SIERRA SUR
+                                                </span>
+                                            </div>
+                                            <p className="text-purple-200/80 mt-0.5 leading-relaxed">
+                                                {analogData.acoplamiento_bipolar.descripcion}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="shrink-0 bg-slate-950/80 px-3 py-2 rounded-lg border border-purple-900/50 text-[11px] text-slate-300">
+                                        <strong className="text-amber-400 block mb-0.5">Acción Preventiva COEN:</strong>
+                                        {analogData.acoplamiento_bipolar.accion_preventiva_recomendada}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
 
                     {/* Selector de Pestañas Temáticas */}
                     <div className="flex flex-wrap gap-2 border-b border-slate-800 pb-2">
@@ -434,6 +910,18 @@ export default function HistoricoConsolePage() {
                         >
                             <Calendar className="w-4 h-4" />
                             <span>1. Radiografía Comparativa (1983 - 1998 - 2017)</span>
+                        </button>
+                        <button
+                            id="tab-btn-infraestructura"
+                            onClick={() => setActiveTab("infraestructura")}
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
+                                activeTab === "infraestructura"
+                                    ? "bg-gradient-to-r from-red-600 to-amber-600 text-white shadow-md shadow-red-600/30"
+                                    : "bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800"
+                            }`}
+                        >
+                            <Truck className="w-4 h-4 text-amber-300" />
+                            <span>Puentes &amp; Carreteras Colapsadas (CAF)</span>
                         </button>
                         <button
                             id="tab-btn-educacion"
@@ -494,6 +982,42 @@ export default function HistoricoConsolePage() {
                         >
                             <BookOpen className="w-4 h-4" />
                             <span>6. Lecciones CAF &amp; Hoja de Ruta</span>
+                        </button>
+                        <button
+                            id="tab-btn-predictor"
+                            onClick={() => setActiveTab("predictor")}
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
+                                activeTab === "predictor"
+                                    ? "bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-md shadow-orange-600/30"
+                                    : "bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800"
+                            }`}
+                        >
+                            <Sparkles className="w-4 h-4 text-amber-300" />
+                            <span>7. Predictor Análogo 7 Días (Open-Meteo Pro)</span>
+                        </button>
+                        <button
+                            id="tab-btn-radar"
+                            onClick={() => setActiveTab("radar")}
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
+                                activeTab === "radar"
+                                    ? "bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-md shadow-red-600/30"
+                                    : "bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800"
+                            }`}
+                        >
+                            <Compass className="w-4 h-4 text-rose-300" />
+                            <span>8. Radar Nacional 17 Cuencas FEN</span>
+                        </button>
+                        <button
+                            id="tab-btn-bivalente"
+                            onClick={() => setActiveTab("bivalente")}
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
+                                activeTab === "bivalente"
+                                    ? "bg-gradient-to-r from-teal-600 to-emerald-600 text-white shadow-md shadow-emerald-600/30"
+                                    : "bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800"
+                            }`}
+                        >
+                            <Layers className="w-4 h-4 text-teal-300" />
+                            <span>9. Matriz Bivalente FEN (Riesgos vs. Oportunidades)</span>
                         </button>
                     </div>
 
@@ -657,6 +1181,187 @@ export default function HistoricoConsolePage() {
                                     </p>
                                 </div>
                             </div>
+
+                            {/* Evaluación Geológica de Zonas Críticas (INGEMMET 2017) & Compendio INDECI 2017 */}
+                            {(memoria.analisis_geologico_ingemmet_2017 || memoria.danos_oficiales_indeci_2017) && (
+                                <div className="space-y-4 pt-2">
+                                    {/* Bloque INGEMMET DGAR */}
+                                    {memoria.analisis_geologico_ingemmet_2017 && (
+                                        <div className="p-5 bg-gradient-to-br from-amber-950/20 via-slate-900 to-slate-900 border border-amber-500/30 rounded-2xl relative overflow-hidden">
+                                            <div className="flex items-start justify-between gap-4 mb-3">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="p-2 bg-amber-500/10 border border-amber-500/30 rounded-lg text-amber-400">
+                                                        <AlertTriangle className="w-5 h-5" />
+                                                    </div>
+                                                    <div>
+                                                        <div className="flex items-center gap-2">
+                                                            <h4 className="text-sm font-black text-amber-200 uppercase tracking-wide">
+                                                                Dictamen Geológico Pericial (INGEMMET DGAR 2017)
+                                                            </h4>
+                                                            <span className="px-2 py-0.5 text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full">
+                                                                TIER 1 OFICIAL
+                                                            </span>
+                                                        </div>
+                                                        <p className="text-[11px] text-slate-400">
+                                                            Evaluación Geológica de Zonas Afectadas por el Niño Costero 2017 (La Libertad y Cajamarca)
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <span className="text-[10px] font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">
+                                                    SRC-INGEMMET-DGAR-2017
+                                                </span>
+                                            </div>
+                                            <p className="text-xs text-slate-300 leading-relaxed bg-slate-950/60 p-3.5 rounded-xl border border-slate-800/80 mb-3">
+                                                {memoria.analisis_geologico_ingemmet_2017}
+                                            </p>
+                                            {memoria.fuentes_oficiales_cruzadas && memoria.fuentes_oficiales_cruzadas.length > 0 && (
+                                                <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                                                    <span className="text-[10px] text-slate-400 font-semibold mr-1">Fuentes Validadas Cruzadas:</span>
+                                                    {memoria.fuentes_oficiales_cruzadas.map((src, i) => (
+                                                        <span key={i} className="text-[10px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
+                                                            {src}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* Bloque INDECI Compendio Estadístico 2017 */}
+                                    {memoria.danos_oficiales_indeci_2017 && (
+                                        <div className="p-5 bg-gradient-to-br from-red-950/20 via-slate-900 to-slate-900 border border-red-500/30 rounded-2xl">
+                                            <div className="flex items-start justify-between gap-4 mb-3">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="p-2 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400">
+                                                        <ShieldAlert className="w-5 h-5" />
+                                                    </div>
+                                                    <div>
+                                                        <div className="flex items-center gap-2">
+                                                            <h4 className="text-sm font-black text-red-200 uppercase tracking-wide">
+                                                                Registro de Impactos Validados (INDECI 2017 - Gestión Reactiva)
+                                                            </h4>
+                                                            <span className="px-2 py-0.5 text-[10px] font-bold bg-red-500/20 text-red-300 border border-red-500/40 rounded-full">
+                                                                COMPENDIO ESTADÍSTICO
+                                                            </span>
+                                                        </div>
+                                                        <p className="text-[11px] text-slate-400">
+                                                            {memoria.danos_oficiales_indeci_2017.decreto_supremo_declaratoria 
+                                                                ? `Marco Legal: ${memoria.danos_oficiales_indeci_2017.decreto_supremo_declaratoria}` 
+                                                                : `Área Departamental: ${memoria.danos_oficiales_indeci_2017.departamento}`}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <span className="text-[10px] font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">
+                                                    SRC-INDECI-COMPENDIO-2017
+                                                </span>
+                                            </div>
+
+                                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+                                                {memoria.danos_oficiales_indeci_2017.damnificados_departamentales_validados !== undefined && (
+                                                    <div className="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
+                                                        <span className="text-[10px] text-slate-400 block font-semibold uppercase">Damnificados Dptal.</span>
+                                                        <span className="text-lg font-black text-red-400">
+                                                            {memoria.danos_oficiales_indeci_2017.damnificados_departamentales_validados.toLocaleString()}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                {memoria.danos_oficiales_indeci_2017.viviendas_colapsadas_inhabitables_departamentales !== undefined && (
+                                                    <div className="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
+                                                        <span className="text-[10px] text-slate-400 block font-semibold uppercase">Viviendas Colap/Inhab</span>
+                                                        <span className="text-lg font-black text-amber-400">
+                                                            {memoria.danos_oficiales_indeci_2017.viviendas_colapsadas_inhabitables_departamentales.toLocaleString()}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                {(memoria.danos_oficiales_indeci_2017.carreteras_destruidas_afectadas_km !== undefined || memoria.danos_oficiales_indeci_2017.carreteras_destruidas_km !== undefined) && (
+                                                    <div className="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
+                                                        <span className="text-[10px] text-slate-400 block font-semibold uppercase">Vías Destruidas/Afect.</span>
+                                                        <span className="text-lg font-black text-orange-400">
+                                                            {(memoria.danos_oficiales_indeci_2017.carreteras_destruidas_afectadas_km || memoria.danos_oficiales_indeci_2017.carreteras_destruidas_km || 0).toLocaleString()} km
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                {memoria.danos_oficiales_indeci_2017.albergues_oficiales_instalados !== undefined && (
+                                                    <div className="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
+                                                        <span className="text-[10px] text-slate-400 block font-semibold uppercase">Albergues Oficiales</span>
+                                                        <span className="text-lg font-black text-sky-400">
+                                                            {memoria.danos_oficiales_indeci_2017.albergues_oficiales_instalados} ({memoria.danos_oficiales_indeci_2017.poblacion_albergada?.toLocaleString()} alb.)
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {memoria.danos_oficiales_indeci_2017.vulnerabilidad_eje && (
+                                                <p className="text-[11px] text-slate-400 mt-2 italic">
+                                                    Foco Geográfico: {memoria.danos_oficiales_indeci_2017.vulnerabilidad_eje}
+                                                </p>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* Bloque PNP: Dispositivo Policial de Seguridad y Evacuación */}
+                                    {memoria.comisarias_pnp && memoria.comisarias_pnp.length > 0 && (
+                                        <div className="p-5 bg-gradient-to-br from-blue-950/20 via-slate-900 to-slate-900 border border-blue-500/30 rounded-2xl">
+                                            <div className="flex items-start justify-between gap-4 mb-3">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="p-2 bg-blue-500/10 border border-blue-500/30 rounded-lg text-blue-400">
+                                                        <ShieldAlert className="w-5 h-5" />
+                                                    </div>
+                                                    <div>
+                                                        <div className="flex items-center gap-2">
+                                                            <h4 className="text-sm font-black text-blue-200 uppercase tracking-wide">
+                                                                Dispositivo Policial de Seguridad & Orden Público (PNP)
+                                                            </h4>
+                                                            <span className="px-2 py-0.5 text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/40 rounded-full">
+                                                                PLAN DE CONTINGENCIA
+                                                            </span>
+                                                        </div>
+                                                        <p className="text-[11px] text-slate-400">
+                                                            Fuerza Pública Asignada, Protección Perimetral de Albergues y Cierre de Puentes (Art. 67 Ley 29664)
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <span className="text-[10px] font-mono text-slate-500 bg-slate-800 px-2 py-1 rounded">
+                                                    SRC-PNP-MININTER-COMISARIAS-2026
+                                                </span>
+                                            </div>
+
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 pt-1">
+                                                {memoria.comisarias_pnp.map((cpnp, idx) => (
+                                                    <div key={idx} className="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 flex flex-col justify-between space-y-2">
+                                                        <div>
+                                                            <div className="flex items-center justify-between">
+                                                                <span className="text-[10px] font-mono text-blue-400 bg-blue-950/60 px-1.5 py-0.5 rounded border border-blue-900">
+                                                                    COD: {cpnp.cod_cpnp}
+                                                                </span>
+                                                                <span className="text-[10px] font-bold text-slate-300 bg-slate-800 px-1.5 py-0.5 rounded">
+                                                                    Tipo {cpnp.tipo_comisaria}
+                                                                </span>
+                                                            </div>
+                                                            <h5 className="text-xs font-black text-white mt-1.5">
+                                                                {cpnp.nombre}
+                                                            </h5>
+                                                            <p className="text-[11px] text-slate-400 mt-0.5">
+                                                                Región: {cpnp.region_policial}
+                                                            </p>
+                                                        </div>
+                                                        <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px]">
+                                                            <span className="text-slate-400">Cuadrantes de Evacuación:</span>
+                                                            <span className="font-bold text-emerald-400">{cpnp.sectores_patrullaje_cuadrante} Sectores</span>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* PESTAÑA INFRAESTRUCTURA: PUENTES & CARRETERAS HISTÓRICAS (CAF 1983-2023) */}
+                    {activeTab === "infraestructura" && (
+                        <div className="space-y-6">
+                            <HistoricalInfrastructureMap />
                         </div>
                     )}
 
@@ -732,6 +1437,88 @@ export default function HistoricoConsolePage() {
                                         ))}
                                     </div>
                                 </div>
+
+                                {/* PADRÓN OFICIAL DE ALBERGUES TEMPORALES INDECI (MINEDU / ESCALE - SIGMED 2026) */}
+                                {memoria.centros_educativos && (
+                                    <div className="mt-6 p-5 bg-gradient-to-br from-slate-950 via-blue-950/20 to-slate-950 border border-blue-500/40 rounded-2xl shadow-xl">
+                                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-blue-900/40">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-blue-400 font-black">
+                                                    🏛️
+                                                </div>
+                                                <div>
+                                                    <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                                                        Albergues Temporales & Infraestructura Escolar Oficial (MINEDU / ESCALE)
+                                                        <span className="text-[10px] font-black px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/40">
+                                                            SIGMED 2026
+                                                        </span>
+                                                    </h4>
+                                                    <p className="text-xs text-slate-400">
+                                                        Marco Legal: Ley Nº 29664 (SINAGERD) • Padrón Georreferenciado de Infraestructura Educativa
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex items-center gap-2">
+                                                <div className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-center">
+                                                    <span className="text-[10px] text-slate-400 block font-bold">TOTAL II.EE.</span>
+                                                    <span className="text-sm font-black text-white">{memoria.centros_educativos.total_servicios_educativos}</span>
+                                                </div>
+                                                <div className="px-3 py-1.5 rounded-lg bg-blue-950/40 border border-blue-800/40 text-center">
+                                                    <span className="text-[10px] text-blue-300 block font-bold">PÚBLICAS</span>
+                                                    <span className="text-sm font-black text-blue-400">{memoria.centros_educativos.total_publicas}</span>
+                                                </div>
+                                                <div className="px-3 py-1.5 rounded-lg bg-amber-950/40 border border-amber-800/40 text-center">
+                                                    <span className="text-[10px] text-amber-300 block font-bold">ALBERGUES APTOS</span>
+                                                    <span className="text-sm font-black text-amber-400">{memoria.centros_educativos.total_albergues_potenciales}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {memoria.albergues_temporales_indeci && memoria.albergues_temporales_indeci.length > 0 ? (
+                                            <div className="mt-4">
+                                                <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-3">
+                                                    Colegios Públicos Priorizados como Centros de Refugio Comunitario:
+                                                </span>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                                    {memoria.albergues_temporales_indeci.slice(0, 6).map((alb, idx) => (
+                                                        <div
+                                                            key={idx}
+                                                            className="p-3.5 bg-slate-900/80 hover:bg-slate-900 border border-blue-900/30 hover:border-blue-500/50 rounded-xl transition-all shadow-md group"
+                                                        >
+                                                            <div className="flex items-start justify-between gap-2 mb-1.5">
+                                                                <span className="text-xs font-bold text-white group-hover:text-blue-300 transition-colors line-clamp-1">
+                                                                    🏫 {alb.nombre_ie}
+                                                                </span>
+                                                                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800/40 flex-shrink-0">
+                                                                    Cód: {alb.codigo_local}
+                                                                </span>
+                                                            </div>
+                                                            <div className="text-[11px] text-slate-400 space-y-1">
+                                                                <div className="text-slate-300">
+                                                                    <strong>Nivel:</strong> {alb.nivel_modalidad}
+                                                                </div>
+                                                                <div className="truncate text-slate-400">
+                                                                    <strong>Dirección:</strong> {alb.direccion || "Área Urbana/Rural"}
+                                                                </div>
+                                                                {alb.latitud && alb.longitud ? (
+                                                                    <div className="text-[10px] text-slate-500 font-mono flex items-center justify-between pt-1 border-t border-slate-800">
+                                                                        <span>GPS: {alb.latitud.toFixed(4)}, {alb.longitud.toFixed(4)}</span>
+                                                                        <span className="text-emerald-400 font-bold">✓ Geo-Validado</span>
+                                                                    </div>
+                                                                ) : null}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <p className="text-xs text-slate-400 mt-3 italic">
+                                                Consultando inventario de infraestructura escolar en la base georreferenciada de MINEDU / ESCALE...
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}
@@ -1120,6 +1907,452 @@ export default function HistoricoConsolePage() {
                             </div>
                         </div>
                     )}
+
+                    {/* PESTAÑA 7: PREDICTOR ANÁLOGO 7 DÍAS (OPEN-METEO PRO) */}
+                    {activeTab === "predictor" && (
+                        <div className="space-y-6">
+                            <div className="p-5 bg-slate-900 border border-orange-500/40 rounded-2xl shadow-xl">
+                                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-xl bg-orange-500/20 border border-orange-500/40 flex items-center justify-center text-orange-400">
+                                            <Sparkles className="w-5 h-5" />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-base font-bold text-white flex items-center gap-2">
+                                                <span>Modelado Predictivo de Análogos a 7 Días</span>
+                                                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/20 text-orange-300 border border-orange-500/40">
+                                                    OPEN-METEO PRO ECMWF IFS (9 KM)
+                                                </span>
+                                            </h3>
+                                            <p className="text-xs text-slate-400">
+                                                Correlación multivariable de horizonte extendido contra eventos FEN 1982-1983, 1997-1998 y 2017 en {memoria.distrito} ({memoria.cuenca_principal})
+                                            </p>
+                                        </div>
+                                    </div>
+                                    {analogData && (
+                                        <div className="flex items-center gap-2 text-xs">
+                                            <span className="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 font-mono">
+                                                Margen Crítico: <strong className="text-amber-400">{analogData.dia_maximo_riesgo.horas_anticipacion}h</strong>
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {analogData ? (
+                                    <div className="mt-5 space-y-6">
+                                        {/* Horizonte de 7 Días: Tarjetas Día a Día */}
+                                        <div>
+                                            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3 flex items-center gap-2">
+                                                <Clock className="w-4 h-4 text-orange-400" />
+                                                Evolución Proyectada Día a Día (Día +1 a Día +7):
+                                            </h4>
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2.5">
+                                                {analogData.horizonte_7_dias.map((d) => (
+                                                    <div
+                                                        key={d.dia_numero}
+                                                        className={`p-3 rounded-xl border flex flex-col justify-between transition-all ${
+                                                            d.nivel_alerta_anticipada === "ROJA"
+                                                                ? "bg-red-950/40 border-red-500/60 shadow-md shadow-red-950/40"
+                                                                : d.nivel_alerta_anticipada === "NARANJA"
+                                                                ? "bg-orange-950/30 border-orange-500/50"
+                                                                : d.nivel_alerta_anticipada === "AMARILLA"
+                                                                ? "bg-amber-950/20 border-amber-500/40"
+                                                                : "bg-slate-950 border-slate-800"
+                                                        }`}
+                                                    >
+                                                        <div>
+                                                            <div className="flex items-center justify-between">
+                                                                <span className="text-[11px] font-black text-white">
+                                                                    Día +{d.dia_numero}
+                                                                </span>
+                                                                <span
+                                                                    className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
+                                                                        d.nivel_alerta_anticipada === "ROJA"
+                                                                            ? "bg-red-500 text-slate-950 font-black"
+                                                                            : d.nivel_alerta_anticipada === "NARANJA"
+                                                                            ? "bg-orange-500 text-slate-950 font-black"
+                                                                            : d.nivel_alerta_anticipada === "AMARILLA"
+                                                                            ? "bg-amber-500 text-slate-950 font-black"
+                                                                            : "bg-emerald-900/60 text-emerald-300"
+                                                                    }`}
+                                                                >
+                                                                    {d.nivel_alerta_anticipada}
+                                                                </span>
+                                                            </div>
+                                                            <div className="text-[10px] text-slate-400 font-mono mt-0.5">
+                                                                {d.dia_semana} {d.fecha.slice(5)}
+                                                            </div>
+                                                            <div className="text-[10px] text-slate-500 font-mono">
+                                                                +{d.horas_anticipacion}h
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="my-2.5 py-2 border-y border-slate-800/80">
+                                                            <div className="text-[10px] text-slate-400">Precip. FEN:</div>
+                                                            <div className="text-lg font-black text-sky-400">
+                                                                {d.lluvia_extrema_estimada_mm} <span className="text-[10px]">mm</span>
+                                                            </div>
+                                                            <div className="text-[9px] text-slate-500">
+                                                                Crudo: {d.lluvia_proyectada_openmeteo_mm} mm
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="space-y-1 text-[10px]">
+                                                            <div className="flex justify-between text-slate-400">
+                                                                <span>Factor FEN:</span>
+                                                                <strong className="text-orange-400 font-mono">{d.factor_amplificacion_fen}x</strong>
+                                                            </div>
+                                                            <div className="flex justify-between text-slate-400">
+                                                                <span>Similitud:</span>
+                                                                <strong className="text-amber-300 font-mono">{d.similitud_analoga_pct}%</strong>
+                                                            </div>
+                                                            <div className="flex justify-between text-slate-400">
+                                                                <span>Temp:</span>
+                                                                <span className="text-slate-300 font-mono">{d.temperatura_min}°/{d.temperatura_max}°</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Explicación Técnica del Factor de Amplificación y Anti-Alucinación */}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div className="p-4 bg-slate-950 rounded-xl border border-slate-800">
+                                                <h4 className="text-xs font-bold uppercase tracking-wider text-orange-400 mb-2 flex items-center gap-2">
+                                                    <Gauge className="w-4 h-4" />
+                                                    ¿Por qué se aplica el Factor Amplificador FEN (M_FEN)?
+                                                </h4>
+                                                <p className="text-xs text-slate-300 leading-relaxed">
+                                                    Los modelos de predicción numérica global como el <strong>ECMWF IFS</strong> predicen la lámina bruta de precipitación atmosférica.
+                                                    Sin embargo, durante eventos El Niño registrados en el Perú (CAF 1998, Cuadro IV-1), la persistencia de lluvias previas satura el suelo
+                                                    y colmata los lechos de los ríos con sedimentos. Esto provoca que una lluvia moderada (ej. 15 mm) genere escorrentías e inundaciones
+                                                    equivalentes a <strong>{analogData.dia_maximo_riesgo.factor_amplificacion_fen} veces</strong> su volumen normal.
+                                                </p>
+                                                <div className="mt-3 p-2.5 bg-orange-950/20 border border-orange-900/30 rounded-lg text-[11px] text-orange-200">
+                                                    <strong>Fórmula de Transvase:</strong> Lluvia_Proyectada = Precipitación_ECMWF × Factor_FEN(Similitud_Vectorial)
+                                                </div>
+                                            </div>
+
+                                            <div className="p-4 bg-slate-950 rounded-xl border border-slate-800">
+                                                <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-2 flex items-center gap-2">
+                                                    <CheckCircle2 className="w-4 h-4" />
+                                                    Garantía de Cero Alucinación del Agente Predictivo
+                                                </h4>
+                                                <p className="text-xs text-slate-300 leading-relaxed">
+                                                    El motor de análogos opera exclusivamente con el <strong>Catálogo Maestro FEN</strong> auditado a partir de los documentos oficiales
+                                                    de la <strong>CAF</strong>, <strong>SENAMHI</strong> e <strong>INDECI</strong>. Si un municipio no cuenta con infraestructura
+                                                    o antecedentes directos en la cuenca, el sistema no inventa datos: asigna un factor neutro de <strong>1.0x</strong>, semáforo <strong>VERDE</strong>
+                                                    y lista vacía de obras en peligro.
+                                                </p>
+                                                <div className="mt-3 flex items-center gap-2 text-[11px] text-slate-400">
+                                                    <span className="text-emerald-400">✓</span> 17 Cuencas Estratégicas delimitadas con coordenadas y lecciones reales.
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Inventario de Infraestructura Vulnerable CAF para esta Cuenca */}
+                                        <div className="p-4 bg-slate-950 rounded-xl border border-slate-800">
+                                            <h4 className="text-xs font-bold uppercase tracking-wider text-rose-400 mb-3 flex items-center gap-2">
+                                                <ShieldAlert className="w-4 h-4" />
+                                                Inventario de Infraestructura Crítica en la Cuenca (Fuente: CAF 1998, Vol. V):
+                                            </h4>
+                                            {analogData.infraestructura_amenazada_caf.length > 0 ? (
+                                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                                    {analogData.infraestructura_amenazada_caf.map((inf, idx) => (
+                                                        <div key={idx} className="p-3 bg-slate-900/80 rounded-lg border border-slate-800 text-xs">
+                                                            <div className="flex items-center justify-between mb-1">
+                                                                <strong className="text-white">
+                                                                    {inf.nombre || inf.tramo}
+                                                                </strong>
+                                                                <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 font-mono">
+                                                                    {inf.tipo}
+                                                                </span>
+                                                            </div>
+                                                            <p className="text-[11px] text-slate-300 leading-snug">
+                                                                {inf.riesgo_historico || inf.impacto || inf.patron_dano}
+                                                            </p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <p className="text-xs text-slate-400 italic">
+                                                    No se registran obras hidráulicas ni puentes críticos de alta vulnerabilidad inventariados por la CAF en este distrito específico.
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="p-8 text-center text-slate-400">
+                                        <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-orange-400" />
+                                        <span>Calculando análogos históricos para este distrito...</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* PESTAÑA 8: RADAR NACIONAL DE 17 CUENCAS FEN */}
+                    {activeTab === "radar" && (
+                        <div className="space-y-6">
+                            <div className="p-5 bg-slate-900 border border-red-500/40 rounded-2xl shadow-xl">
+                                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-xl bg-red-500/20 border border-red-500/40 flex items-center justify-center text-red-400">
+                                            <Compass className="w-5 h-5" />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-base font-bold text-white flex items-center gap-2">
+                                                <span>Radar Nacional de las 17 Cuencas Estratégicas del FEN</span>
+                                                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-red-500/20 text-red-300 border border-red-500/40">
+                                                    COEN • MONITOREO MULTI-CUENCA
+                                                </span>
+                                            </h3>
+                                            <p className="text-xs text-slate-400">
+                                                Red nacional de alerta temprana de 7 días evaluando en paralelo todas las cuencas vulnerables del Perú
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {radarData && (
+                                        <div className="flex items-center gap-3">
+                                            <div className="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs">
+                                                <span className="text-slate-400">Cuencas en Alerta: </span>
+                                                <strong className="text-red-400">
+                                                    {(radarData.resumen_semaforo.cuencas_alerta_roja || 0) +
+                                                     (radarData.resumen_semaforo.cuencas_alerta_naranja || 0) +
+                                                     (radarData.resumen_semaforo.cuencas_alerta_amarilla || 0)}
+                                                </strong>
+                                                <span className="text-slate-500"> / {radarData.total_cuencas_vigiladas}</span>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Filtros por Macro-Región */}
+                                <div className="flex items-center gap-2 mt-4 flex-wrap">
+                                    <span className="text-xs font-semibold text-slate-400 mr-2">Filtrar por Región:</span>
+                                    {["TODAS", "Costa Norte", "Costa Centro", "Costa Sur", "Sierra Sur"].map((region) => (
+                                        <button
+                                            key={region}
+                                            onClick={() => setRadarFilter(region)}
+                                            className={`px-3 py-1 rounded-lg text-xs font-semibold transition border ${
+                                                radarFilter === region
+                                                    ? "bg-red-600 text-white border-red-500 shadow-sm"
+                                                    : "bg-slate-950 text-slate-400 hover:text-white border-slate-800"
+                                            }`}
+                                        >
+                                            {region}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {/* Grid de las 17 Cuencas */}
+                                {radarData ? (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
+                                        {radarData.cuencas
+                                            .filter((c) => radarFilter === "TODAS" || c.region_macro === radarFilter)
+                                            .map((c) => (
+                                                <div
+                                                    key={c.cuenca_id}
+                                                    className={`p-4 rounded-xl border flex flex-col justify-between transition-all hover:border-slate-600 ${
+                                                        c.nivel_alerta === "ROJA"
+                                                            ? "bg-red-950/30 border-red-500/50"
+                                                            : c.nivel_alerta === "NARANJA"
+                                                            ? "bg-orange-950/25 border-orange-500/40"
+                                                            : c.nivel_alerta === "AMARILLA"
+                                                            ? "bg-amber-950/20 border-amber-500/30"
+                                                            : "bg-slate-950/80 border-slate-800"
+                                                    }`}
+                                                >
+                                                    <div>
+                                                        <div className="flex items-center justify-between gap-2 mb-2">
+                                                            <span
+                                                                className={`text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider ${
+                                                                    c.nivel_alerta === "ROJA"
+                                                                        ? "bg-red-500 text-slate-950"
+                                                                        : c.nivel_alerta === "NARANJA"
+                                                                        ? "bg-orange-500 text-slate-950"
+                                                                        : c.nivel_alerta === "AMARILLA"
+                                                                        ? "bg-amber-500 text-slate-950"
+                                                                        : "bg-emerald-900/60 text-emerald-300"
+                                                                }`}
+                                                            >
+                                                                {c.nivel_alerta}
+                                                            </span>
+                                                            <span className="text-[10px] font-mono text-slate-400">
+                                                                +{c.horas_anticipacion}h (Día +{c.dia_critico_numero})
+                                                            </span>
+                                                        </div>
+
+                                                        <h4 className="text-sm font-bold text-white leading-tight">
+                                                            {c.cuenca_nombre}
+                                                        </h4>
+                                                        <span className="text-[11px] text-slate-400 font-medium block mt-0.5">
+                                                            {c.region_macro} • Distrito foco: <strong className="text-slate-200">{c.distrito_centinela}</strong>
+                                                        </span>
+
+                                                        <div className="grid grid-cols-2 gap-2 mt-3 p-2.5 bg-slate-900/90 rounded-lg border border-slate-800 text-[11px]">
+                                                            <div>
+                                                                <span className="text-slate-400 block text-[10px]">Similitud Análoga</span>
+                                                                <strong className="text-amber-300 font-mono">{c.similitud_analoga_pct}%</strong>
+                                                            </div>
+                                                            <div>
+                                                                <span className="text-slate-400 block text-[10px]">Factor FEN</span>
+                                                                <strong className="text-orange-400 font-mono">{c.factor_amplificacion}x</strong>
+                                                            </div>
+                                                            <div className="col-span-2 pt-1 border-t border-slate-800/80 flex items-center justify-between">
+                                                                <span className="text-slate-400 text-[10px]">Precipitación Pico:</span>
+                                                                <strong className="text-sky-400 font-mono">{c.lluvia_extrema_amplificada_mm} mm</strong>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="mt-2.5 text-[10px] text-slate-400">
+                                                            Correlación: <span className="text-slate-300">{c.evento_referencia}</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between">
+                                                        <span className="text-[10px] text-slate-500">
+                                                            {c.puentes_en_riesgo_caf} puentes en peligro (CAF)
+                                                        </span>
+                                                        <button
+                                                            onClick={() => {
+                                                                handleSelectDistrito(c.ubigeo);
+                                                                setActiveTab("predictor");
+                                                            }}
+                                                            className="flex items-center gap-1 text-xs font-bold text-sky-400 hover:text-sky-300 transition"
+                                                        >
+                                                            <span>Auditar en Consola</span>
+                                                            <ChevronRight className="w-3.5 h-3.5" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                    </div>
+                                ) : (
+                                    <div className="p-12 text-center text-slate-400">
+                                        <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-red-400" />
+                                        <span>Escaneando las 17 cuencas en tiempo real con Open-Meteo Pro...</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* PESTAÑA 9: MATRIZ BIVALENTE FEN (RIESGOS VS. OPORTUNIDADES) */}
+                    {activeTab === "bivalente" && (
+                        <div className="space-y-6">
+                            <div className="p-5 bg-slate-900 border border-teal-500/40 rounded-2xl shadow-xl">
+                                <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
+                                    <div className="w-10 h-10 rounded-xl bg-teal-500/20 border border-teal-500/40 flex items-center justify-center text-teal-400">
+                                        <Layers className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-base font-bold text-white flex items-center gap-2">
+                                            <span>Matriz Bivalente del Fenómeno El Niño: Riesgos Destructivos vs. Oportunidades Territoriales</span>
+                                        </h3>
+                                        <p className="text-xs text-slate-400">
+                                            Doctrina SENAMHI (Dossier 2014, Pág. 19-25) &amp; CAF: El Niño no solo es destrucción, transforma la hidrología y genera bonanza si el Estado planifica.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                                    {/* Columna 1: Impactos Destructivos a Mitigar */}
+                                    <div className="p-5 bg-red-950/20 border border-red-900/40 rounded-xl space-y-4">
+                                        <div className="flex items-center gap-2 pb-2 border-b border-red-900/40">
+                                            <AlertTriangle className="w-5 h-5 text-red-400" />
+                                            <h4 className="text-sm font-black uppercase tracking-wider text-red-300">
+                                                Impactos Destructivos a Mitigar (Plan de Contingencia)
+                                            </h4>
+                                        </div>
+
+                                        <div className="space-y-3 text-xs text-slate-300">
+                                            <div className="p-3 bg-slate-950 rounded-lg border border-red-950">
+                                                <strong className="text-white block mb-1">1. Socavación y Colapso de Puentes Troncales:</strong>
+                                                En 1983, 1998 y 2017 colapsaron puentes como Independencia, Bolognesi, Sánchez Cerro y Huambacho.
+                                                La falla no es por el tirante de agua, sino por la socavación profunda de estribos y pilas en lechos arenosos.
+                                            </div>
+
+                                            <div className="p-3 bg-slate-950 rounded-lg border border-red-950">
+                                                <strong className="text-white block mb-1">2. Aislamiento Territorial Prolongado:</strong>
+                                                Corte de la Panamericana Norte y vías de penetración andina. Caseríos rurales quedan aislados entre 18 y 45 días sin acceso a alimentos ni medicinas.
+                                            </div>
+
+                                            <div className="p-3 bg-slate-950 rounded-lg border border-red-950">
+                                                <strong className="text-white block mb-1">3. Siniestro Agrícola &amp; Colapso de Bocatomas:</strong>
+                                                Anegamiento de cultivos de exportación (mango, banano, uva, algodón) y colmatación violenta de canales matrices por huaicos en valles costeros.
+                                            </div>
+
+                                            <div className="p-3 bg-slate-950 rounded-lg border border-red-950">
+                                                <strong className="text-white block mb-1">4. Crisis Sanitaria Post-Inundación:</strong>
+                                                Proliferación de aguas estancadas, detonando epidemias de dengue, zika, chikungunya y brotes diarreicos por contaminación de redes de agua potable.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Columna 2: Oportunidades Territoriales a Explotar */}
+                                    <div className="p-5 bg-teal-950/20 border border-teal-900/40 rounded-xl space-y-4">
+                                        <div className="flex items-center gap-2 pb-2 border-b border-teal-900/40">
+                                            <Sprout className="w-5 h-5 text-teal-400" />
+                                            <h4 className="text-sm font-black uppercase tracking-wider text-teal-300">
+                                                Oportunidades Territoriales a Explotar (Plan de Desarrollo)
+                                            </h4>
+                                        </div>
+
+                                        <div className="space-y-3 text-xs text-slate-300">
+                                            <div className="p-3 bg-slate-950 rounded-lg border border-teal-950">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <span className="text-base">💧</span>
+                                                    <strong className="text-white">Recarga Masiva de Acuíferos Subterráneos:</strong>
+                                                </div>
+                                                Las lluvias extraordinarias recargan las napas freáticas de los valles áridos de Piura, Lambayeque e Ica, asegurando reservas hídricas para los siguientes 5 a 10 años de agricultura tecnificada.
+                                            </div>
+
+                                            <div className="p-3 bg-slate-950 rounded-lg border border-teal-950">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <span className="text-base">🌳</span>
+                                                    <strong className="text-white">Pastizales y Bosques Secos en Sechura:</strong>
+                                                </div>
+                                                Aparición de la gigantesca <em>Laguna La Niña</em> en el desierto de Sechura. Explosión de pastos naturales para ganado caprino y regeneración masiva de bosques secos de algarrobo y zapote.
+                                            </div>
+
+                                            <div className="p-3 bg-slate-950 rounded-lg border border-teal-950">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <span className="text-base">🐟</span>
+                                                    <strong className="text-white">Pesca Pelágica de Aguas Cálidas:</strong>
+                                                </div>
+                                                Mientras la anchoveta migra hacia el sur, aguas cálidas traen abundancia de especies de alto valor comercial: Perico / Dorado (<em>Coryphaena hippurus</em>), Atún de aleta amarilla, Barrilete y bonanza de langostinos en los manglares.
+                                            </div>
+
+                                            <div className="p-3 bg-slate-950 rounded-lg border border-teal-950">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <span className="text-base">🌾</span>
+                                                    <strong className="text-white">Agricultura en Zonas Áridas de Ciclo Corto:</strong>
+                                                </div>
+                                                Tierras usualmente yermas adquieren humedad suficiente para sembrar maíz, frijol y cucurbitáceas con cosechas récord de ciclo corto si el campesinado recibe semillas a tiempo.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Decálogo de Coordinación Interinstitucional */}
+                                <div className="mt-6 p-4 bg-slate-950 rounded-xl border border-slate-800">
+                                    <h4 className="text-xs font-bold uppercase tracking-wider text-amber-400 mb-2 flex items-center gap-2">
+                                        <Building2 className="w-4 h-4" />
+                                        Directiva Bivalente para Alcaldes y Autoridades Regionales:
+                                    </h4>
+                                    <p className="text-xs text-slate-300 leading-relaxed">
+                                        La gestión del riesgo moderno (Ley N° 29664 SINAGERD) exige no solo una postura reactiva de socorro ante el desastre,
+                                        sino una <strong>visión prospectiva</strong>: canalizar los excedentes de agua hacia depresiones desérticas para crear reservorios naturales,
+                                        habilitar créditos de emergencia para pesca pelágica y coordinar con el MINAGRI la entrega de forraje e insumos veterinarios para aprovechar
+                                        la biomasa vegetal temporal.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             ) : (
                 <div className="p-16 text-center bg-slate-900/50 border border-slate-800 rounded-2xl">
@@ -1130,6 +2363,15 @@ export default function HistoricoConsolePage() {
                     </p>
                 </div>
             )}
+
+            {/* Modal de Exportación de Dossier Ejecutivo Oficial (Fase 4) */}
+            <DossierExportModal
+                isOpen={showDossierModal}
+                onClose={() => setShowDossierModal(false)}
+                ubigeo={currentUbigeo}
+                distritoNombre={memoria?.distrito || "Distrito"}
+                departamento={memoria?.departamento || "LIMA"}
+            />
         </div>
     );
 }

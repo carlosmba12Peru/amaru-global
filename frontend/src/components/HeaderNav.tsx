@@ -20,8 +20,18 @@ import {
     GraduationCap,
     Users,
     Layers,
-    Filter
+    Filter,
+    Database,
+    Truck,
+    UserCheck,
+    Landmark,
+    Activity,
+    FileText,
+    FileEdit,
+    HeartPulse
 } from "lucide-react";
+
+import UserNavBadge from "@/components/UserNavBadge";
 
 type PillarType = "ALL" | "NACIONAL" | "MUNICIPAL" | "SOCIAL";
 
@@ -128,8 +138,96 @@ export default function HeaderNav() {
             badge: null,
             badgeColor: ""
         },
+        {
+            href: "/rios-norte",
+            label: "Control Fluvial & ANA C2",
+            pillar: "NACIONAL",
+            icon: Waves,
+            badge: "SNIRH 2026",
+            badgeColor: "bg-cyan-500/20 text-cyan-300 border-cyan-500/40"
+        },
+        {
+            href: "/quebradas",
+            label: "Quebradas C2",
+            pillar: "NACIONAL",
+            icon: AlertTriangle,
+            badge: "ISAAC + IGP",
+            badgeColor: "bg-rose-500/20 text-rose-300 border-rose-500/40"
+        },
+        {
+            href: "/fuentes",
+            label: "Fuentes C2",
+            pillar: "NACIONAL",
+            icon: Database,
+            badge: "KURAQ",
+            badgeColor: "bg-indigo-500/20 text-indigo-300 border-indigo-500/40"
+        },
+        {
+            href: "/logistica",
+            label: "Logística VRP",
+            pillar: "NACIONAL",
+            icon: Truck,
+            badge: "Anti-Corte",
+            badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+        },
+        {
+            href: "/contraloria",
+            label: "Control Concurrente",
+            pillar: "NACIONAL",
+            icon: ShieldCheck,
+            badge: "CGR 2026",
+            badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40"
+        },
+        {
+            href: "/auditoria",
+            label: "Auditoría Forense",
+            pillar: "NACIONAL",
+            icon: ShieldAlert,
+            badge: "SAGF-MC",
+            badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+        },
+        {
+            href: "/fiscal",
+            label: "Control Fiscal MEF",
+            pillar: "NACIONAL",
+            icon: Landmark,
+            badge: "PP 0068",
+            badgeColor: "bg-rose-500/20 text-rose-300 border-rose-500/40"
+        },
+        {
+            href: "/salud",
+            label: "Vigilancia Dengue",
+            pillar: "NACIONAL",
+            icon: Activity,
+            badge: "CDC MINSA",
+            badgeColor: "bg-teal-500/20 text-teal-300 border-teal-500/40"
+        },
+        {
+            href: "/salud/consola-medica",
+            label: "C2 Salud MINSA",
+            pillar: "NACIONAL",
+            icon: HeartPulse,
+            badge: "Break-Glass",
+            badgeColor: "bg-red-500/20 text-red-300 border-red-500/40 animate-pulse"
+        },
 
         // ==================== PILAR 2: COEN MUNICIPAL DIGITAL ====================
+        {
+            href: "/edan",
+            label: "EDAN SINPAD v2",
+            pillar: "MUNICIPAL",
+            icon: Building2,
+            badge: "Bono BAE",
+            badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+        },
+        {
+            href: "/reniec",
+            label: "Validación RENIEC",
+            pillar: "MUNICIPAL",
+            icon: UserCheck,
+            badge: "PIDE",
+            badgeColor: "bg-sky-500/20 text-sky-300 border-sky-500/40"
+        },
         {
             href: "/historico",
             label: "Memoria Histórica",
@@ -139,12 +237,52 @@ export default function HeaderNav() {
             badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40"
         },
         {
+            href: "/municipal/200101",
+            label: "Suite Municipal 360°",
+            pillar: "MUNICIPAL",
+            icon: Building2,
+            badge: "PP 0068 C2",
+            badgeColor: "bg-cyan-500/20 text-cyan-300 border-cyan-500/40"
+        },
+        {
             href: "/dashboard/150118",
             label: "Inspector Distrital",
             pillar: "MUNICIPAL",
             icon: Building2,
             badge: "UBIGEO",
             badgeColor: "bg-indigo-500/20 text-indigo-300 border-indigo-500/40"
+        },
+        {
+            href: "/piura",
+            label: "Plan Piura 2026-27",
+            pillar: "MUNICIPAL",
+            icon: Building2,
+            badge: "COEP FEN",
+            badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+        },
+        {
+            href: "/cajamarca",
+            label: "PPRRD Cajamarca",
+            pillar: "MUNICIPAL",
+            icon: Waves,
+            badge: "PISCO / 21362",
+            badgeColor: "bg-cyan-500/20 text-cyan-300 border-cyan-500/40"
+        },
+        {
+            href: "/planes",
+            label: "Planes FEN 2026-27",
+            pillar: "MUNICIPAL",
+            icon: FileText,
+            badge: "AMARU-PLAN",
+            badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+        },
+        {
+            href: "/redactor",
+            label: "Redactor QILQAY",
+            pillar: "MUNICIPAL",
+            icon: FileEdit,
+            badge: "ESCRIBANO",
+            badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
         },
         {
             href: "/meteo",
@@ -171,6 +309,14 @@ export default function HeaderNav() {
             icon: ShieldCheck,
             badge: "Blindado",
             badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+        },
+        {
+            href: "/salud/triaje",
+            label: "Triaje Salud FEN",
+            pillar: "SOCIAL",
+            icon: HeartPulse,
+            badge: "CUP Cripto",
+            badgeColor: "bg-rose-500/20 text-rose-300 border-rose-500/40"
         },
         {
             href: "/yachay",
@@ -210,17 +356,17 @@ export default function HeaderNav() {
                                     AMARU-CLIMATE
                                 </span>
                                 <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-400 border border-amber-500/40">
-                                    COEN TRIPARTITO
+                                    COED-AMARU
                                 </span>
                             </div>
                             <span className="text-[10px] text-slate-400 block tracking-wider uppercase">
-                                Plataforma Nacional, Municipal &amp; Comunitaria
+                                Centro de Operaciones de Emergencia Digital
                             </span>
                         </div>
                     </Link>
                 </div>
 
-                {/* SELECTOR DE PILAR TRIPARTITO (COEN NACIONAL | COEN MUNICIPAL | COEN SOCIAL) */}
+                {/* SELECTOR DE PILAR TRIPARTITO (COED NACIONAL | COED MUNICIPAL | COED SOCIAL) */}
                 <div className="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 shadow-inner text-xs">
                     <button
                         onClick={() => handlePillarChange("ALL")}
@@ -229,7 +375,7 @@ export default function HeaderNav() {
                                 ? "bg-slate-700 text-white font-bold shadow"
                                 : "text-slate-400 hover:text-slate-200"
                         }`}
-                        title="Ver todas las consolas integradas"
+                        title="Ver todas las consolas digitales integradas"
                     >
                         <Layers className="w-3.5 h-3.5" />
                         <span>Todos</span>
@@ -242,9 +388,9 @@ export default function HeaderNav() {
                                 ? "bg-sky-600 text-white font-bold shadow-md shadow-sky-600/30"
                                 : "text-sky-400/80 hover:text-sky-300"
                         }`}
-                        title="COEN Nacional: C2 Macro-Estratégico, ENFEN, IMARPE, SISMATE"
+                        title="COED Nacional Amaru: C2 Macro-Estratégico Digital, ENFEN, IMARPE, Radares y Cuencas"
                     >
-                        <span>🏛️ COEN Nacional</span>
+                        <span>🌐 COED Nacional Amaru</span>
                     </button>
 
                     <button
@@ -254,9 +400,9 @@ export default function HeaderNav() {
                                 ? "bg-amber-600 text-white font-bold shadow-md shadow-amber-600/30"
                                 : "text-amber-400/80 hover:text-amber-300"
                         }`}
-                        title="COEN Municipal: Memoria Histórica 1983-2017, Inspector Distrital Open-Meteo"
+                        title="COED Municipal Amaru: Suite Municipal 360°, Obras PP 0068, Reloj FEN tc y Planes PCMD/PPRRD"
                     >
-                        <span>🏢 COEN Municipal</span>
+                        <span>🏛️ COED Municipal Amaru</span>
                     </button>
 
                     <button
@@ -266,9 +412,9 @@ export default function HeaderNav() {
                                 ? "bg-rose-600 text-white font-bold shadow-md shadow-rose-600/30"
                                 : "text-rose-400/80 hover:text-rose-300"
                         }`}
-                        title="COEN Social: AMARU-AYNI, Ollas Comunes, Reporte Ciudadano, Saberes Yachay"
+                        title="COED Social Amaru: AMARU-AYNI Comunitario, Ollas Comunes Ley 31458, Triaje Anti-Bulos"
                     >
-                        <span>🤝 COEN Social</span>
+                        <span>👥 COED Social Amaru</span>
                     </button>
                 </div>
 
@@ -309,6 +455,9 @@ export default function HeaderNav() {
                         <Clock className="w-3 h-3 text-slate-400" />
                         <span>{horaLocal || "--:--:--"}</span>
                     </div>
+
+                    {/* Identidad y Rol del Usuario Conectado */}
+                    <UserNavBadge />
                 </div>
             </div>
 

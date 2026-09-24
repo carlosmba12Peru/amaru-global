@@ -67,12 +67,16 @@ Por ello, se establece la **Doctrina del Empaquetamiento Modular Tripartito**, e
 * **Propósito:** Brindar al Estado Mayor de la Emergencia Nacional una visión holística e inmutable de la situación hidrometeorológica, oceanográfica e infraestructura crítica.
 * **Componentes Backend Clave:**
   * `agents/sentinel_agent.py`: Escaneo batch cada 15 min de las 159 cuencas hidrográficas con telemetría Open-Meteo Pro.
+  * `agents/kuraq/kuraq_agent.py`: **Agente KURAQ** (Curador & Centinela de Ingesta Multifuente Soberana) - Supervisión y sincronización de 27 fuentes oficiales (IMARPE SIOFEN BDO 24h, ENFEN quincenal, Radares SENAMHI) con sellado WORM SHA-256.
+  * `services/national/senamhi_radar_service.py`: Integración telemétrica con radares meteorológicos Doppler Banda C (Piura e Ica) para Nowcasting (0 a 120 min).
   * `agents/tactical_agent.py`: Monitoreo de infraestructura crítica nacional (hospitales MINSA/EsSalud, puentes MTC, fajas marginales ANA).
   * `services/national/`: Integración directa de la Bitácora Diaria Oceanográfica (BDO) de IMARPE (isoterma 15°C, vientos alisios) y reportes de la Comisión Multisectorial ENFEN.
   * `services/legal_framework_service.py` (AMARU-LEX): Auditoría continua de decretos de emergencia (D.S. 124-2026-PCM) y cumplimiento de metas del presupuesto por resultados (PpR 068).
   * `agents/dispatcher_agent.py`: Generación y firma digital SHA-256 de mensajes en formato CAP v1.2 para interoperar con SISMATE (MTC) e INDECI.
 * **Componentes Frontend Clave:**
   * Videowall 3D Nacional (`/` y `/dashboard`): Renderizado masivo acelerado por WebGL/Deck.gl.
+  * Consola C2 de Telemetría Oficial & Gobernanza de Fuentes (`/fuentes`).
+  * Visor de Radares Doppler Banda C y Nowcasting (`/piura`).
   * Geovisor Nacional Multicapa (`/geovisor`).
   * Relojes Polares Cinemáticos AMARU-FEN y AMARU-CHIRI (`/clocks`).
   * Centro Oceanográfico IMARPE/ENFEN (`/imarpe`, `/enfen`).

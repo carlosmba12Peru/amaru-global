@@ -47,6 +47,15 @@ const MapViewer = dynamic(() => import("@/components/MapViewer"), {
 
 import TacticalPolarClock from "@/components/TacticalPolarClock";
 
+const DopplerRadarConsole = dynamic(() => import("@/components/DopplerRadarConsole"), {
+    ssr: false,
+    loading: () => (
+        <div className="w-full h-80 flex items-center justify-center bg-slate-950 text-slate-500 font-mono text-xs rounded-2xl border border-slate-800">
+            Iniciando Consola de Radar Doppler Banda C...
+        </div>
+    )
+});
+
 export interface CuencaCritica {
     ubigeo: string;
     nombre: string;
@@ -879,6 +888,9 @@ export default function NationalDashboard() {
                     </Link>
                 </div>
             </div>
+
+            {/* [ESTACIÓN ESTRATÉGICA] RADAR METEOROLÓGICO DOPPLER BANDA C (NOWCASTING COED) */}
+            <DopplerRadarConsole defaultLocalidad="PIU" />
 
             {/* Banner Táctico: Matriz de Triple Vulnerabilidad e IPI */}
             <div className="bg-purple-950/40 border border-purple-800/70 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-3 shadow-lg">

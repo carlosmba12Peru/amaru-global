@@ -1,0 +1,444 @@
+{
+  "almacenes_indeci": [
+    {
+      "id": "ALM-LIMA-CENTRAL",
+      "nombre": "Almacén Nacional Central INDECI (Callao / Lima)",
+      "codigo_sinpad": "ALM-001-NAC",
+      "tipo": "ALMACEN_NACIONAL",
+      "departamento": "Lima",
+      "provincia": "Callao",
+      "distrito": "Callao",
+      "coordenadas": {
+        "lat": -12.0285,
+        "lon": -77.1085
+      },
+      "capacidad_tn": 5000,
+      "stock_raciones_frias": 150000,
+      "stock_agua_lts": 500000,
+      "stock_carpas_familiares": 8000,
+      "stock_camas_plegables": 12000,
+      "stock_herramientas_palas_picos": 15000,
+      "estado_operativo": "OPERATIVO_100_PCT"
+    },
+    {
+      "id": "ALM-PIURA-REG",
+      "nombre": "Almacén Regional INDECI Piura (Castilla)",
+      "codigo_sinpad": "ALM-020-PIU",
+      "tipo": "ALMACEN_REGIONAL_ESTRATEGICO",
+      "departamento": "Piura",
+      "provincia": "Piura",
+      "distrito": "Castilla",
+      "coordenadas": {
+        "lat": -5.195,
+        "lon": -80.62
+      },
+      "capacidad_tn": 1200,
+      "stock_raciones_frias": 45000,
+      "stock_agua_lts": 120000,
+      "stock_carpas_familiares": 2500,
+      "stock_camas_plegables": 4000,
+      "stock_herramientas_palas_picos": 5000,
+      "estado_operativo": "OPERATIVO_100_PCT"
+    },
+    {
+      "id": "ALM-CHICLAYO-REG",
+      "nombre": "Almacén Regional INDECI Chiclayo (Pomalca)",
+      "codigo_sinpad": "ALM-014-LAM",
+      "tipo": "ALMACEN_REGIONAL_ESTRATEGICO",
+      "departamento": "Lambayeque",
+      "provincia": "Chiclayo",
+      "distrito": "Pomalca",
+      "coordenadas": {
+        "lat": -6.7714,
+        "lon": -79.8409
+      },
+      "capacidad_tn": 1000,
+      "stock_raciones_frias": 38000,
+      "stock_agua_lts": 95000,
+      "stock_carpas_familiares": 1800,
+      "stock_camas_plegables": 3200,
+      "stock_herramientas_palas_picos": 4200,
+      "estado_operativo": "OPERATIVO_100_PCT"
+    },
+    {
+      "id": "ALM-TRUJILLO-REG",
+      "nombre": "Almacén Regional INDECI Trujillo (El Milagro)",
+      "codigo_sinpad": "ALM-013-LIB",
+      "tipo": "ALMACEN_REGIONAL_ESTRATEGICO",
+      "departamento": "La Libertad",
+      "provincia": "Trujillo",
+      "distrito": "Huanchaco",
+      "coordenadas": {
+        "lat": -8.082,
+        "lon": -79.055
+      },
+      "capacidad_tn": 1500,
+      "stock_raciones_frias": 52000,
+      "stock_agua_lts": 140000,
+      "stock_carpas_familiares": 3000,
+      "stock_camas_plegables": 5000,
+      "stock_herramientas_palas_picos": 6000,
+      "estado_operativo": "OPERATIVO_100_PCT"
+    },
+    {
+      "id": "ALM-CHIMBOTE-REG",
+      "nombre": "Almacén Regional INDECI Áncash (Nuevo Chimbote)",
+      "codigo_sinpad": "ALM-002-ANC",
+      "tipo": "ALMACEN_REGIONAL_ESTRATEGICO",
+      "departamento": "Áncash",
+      "provincia": "Santa",
+      "distrito": "Nuevo Chimbote",
+      "coordenadas": {
+        "lat": -9.112,
+        "lon": -78.532
+      },
+      "capacidad_tn": 800,
+      "stock_raciones_frias": 28000,
+      "stock_agua_lts": 70000,
+      "stock_carpas_familiares": 1200,
+      "stock_camas_plegables": 2200,
+      "stock_herramientas_palas_picos": 3000,
+      "estado_operativo": "OPERATIVO_100_PCT"
+    },
+    {
+      "id": "ALM-TUMBES-REG",
+      "nombre": "Almacén Regional INDECI Tumbes",
+      "codigo_sinpad": "ALM-024-TUM",
+      "tipo": "ALMACEN_REGIONAL_AVANZADO",
+      "departamento": "Tumbes",
+      "provincia": "Tumbes",
+      "distrito": "Tumbes",
+      "coordenadas": {
+        "lat": -3.571,
+        "lon": -80.459
+      },
+      "capacidad_tn": 600,
+      "stock_raciones_frias": 20000,
+      "stock_agua_lts": 50000,
+      "stock_carpas_familiares": 900,
+      "stock_camas_plegables": 1500,
+      "stock_herramientas_palas_picos": 2000,
+      "estado_operativo": "OPERATIVO_100_PCT"
+    },
+    {
+      "id": "ALM-CAJAMARCA-REG",
+      "nombre": "Almacén Regional INDECI Cajamarca",
+      "codigo_sinpad": "ALM-006-CAJ",
+      "tipo": "ALMACEN_REGIONAL_SIERRA",
+      "departamento": "Cajamarca",
+      "provincia": "Cajamarca",
+      "distrito": "Cajamarca",
+      "coordenadas": {
+        "lat": -7.1638,
+        "lon": -78.5003
+      },
+      "capacidad_tn": 700,
+      "stock_raciones_frias": 25000,
+      "stock_agua_lts": 60000,
+      "stock_carpas_familiares": 1100,
+      "stock_camas_plegables": 1800,
+      "stock_herramientas_palas_picos": 2800,
+      "estado_operativo": "OPERATIVO_100_PCT"
+    }
+  ],
+  "albergues_destinos": [
+    {
+      "id": "ALB-CATACAOS-SANPABLO",
+      "nombre": "Albergue San Pablo (Catacaos - Bajo Piura km 980)",
+      "departamento": "Piura",
+      "provincia": "Piura",
+      "distrito": "Catacaos",
+      "ubigeo": "200105",
+      "coordenadas": {
+        "lat": -5.289,
+        "lon": -80.678
+      },
+      "poblacion_albergada": 4200,
+      "familias": 930,
+      "demanda_raciones_dia": 12600,
+      "demanda_agua_lts_dia": 21000,
+      "puente_critico_acceso": "puente-independencia-catacaos",
+      "puente_urbano_secundario": "puente-bolognesi-piura",
+      "historico_incomunicacion_dias": 21,
+      "solucion_historica": "Puente aéreo FAP en 2017 y tránsito restringido por la cresta del dique izquierdo.",
+      "riesgo_aislamiento": "EXTREMO"
+    },
+    {
+      "id": "ALB-NUEVO-CURAMORI",
+      "nombre": "Albergue Nuevo Cura Mori (Bajo Piura km 988)",
+      "departamento": "Piura",
+      "provincia": "Piura",
+      "distrito": "Cura Mori",
+      "ubigeo": "200107",
+      "coordenadas": {
+        "lat": -5.334,
+        "lon": -80.665
+      },
+      "poblacion_albergada": 3100,
+      "familias": 690,
+      "demanda_raciones_dia": 9300,
+      "demanda_agua_lts_dia": 15500,
+      "puente_critico_acceso": "puente-independencia-catacaos",
+      "puente_urbano_secundario": "puente-sanchez-cerro-piura",
+      "historico_incomunicacion_dias": 21,
+      "solucion_historica": "Helicópteros Mi-171Sh descargaron víveres y agua en bolsas en la pampa seca.",
+      "riesgo_aislamiento": "EXTREMO"
+    },
+    {
+      "id": "ALB-ILLIMO-PACORA",
+      "nombre": "Albergue Comunal Íllimo - Cruz de Chalpón (Valle La Leche)",
+      "departamento": "Lambayeque",
+      "provincia": "Lambayeque",
+      "distrito": "Íllimo",
+      "ubigeo": "140304",
+      "coordenadas": {
+        "lat": -6.485,
+        "lon": -79.858
+      },
+      "poblacion_albergada": 2800,
+      "familias": 620,
+      "demanda_raciones_dia": 8400,
+      "demanda_agua_lts_dia": 14000,
+      "puente_critico_acceso": "puente-la-leche-illimo",
+      "puente_urbano_secundario": "carretera-panamericana-norte-illimo",
+      "historico_incomunicacion_dias": 30,
+      "solucion_historica": "Desvío por Panamericana Nueva vía Mórrope y lanchas zodiac de la Marina en casco urbano.",
+      "riesgo_aislamiento": "MUY_ALTO"
+    },
+    {
+      "id": "ALB-VIRU-VICTORRAUL",
+      "nombre": "Albergue Víctor Raúl (Virú - Panamericana km 515)",
+      "departamento": "La Libertad",
+      "provincia": "Virú",
+      "distrito": "Virú",
+      "ubigeo": "131201",
+      "coordenadas": {
+        "lat": -8.412,
+        "lon": -78.748
+      },
+      "poblacion_albergada": 3500,
+      "familias": 780,
+      "demanda_raciones_dia": 10500,
+      "demanda_agua_lts_dia": 17500,
+      "puente_critico_acceso": "puente-viru-pe1n",
+      "puente_urbano_secundario": null,
+      "historico_incomunicacion_dias": 18,
+      "solucion_historica": "Instalación de puente modular Bailey provisional en 18 días por el MTC.",
+      "riesgo_aislamiento": "ALTO"
+    },
+    {
+      "id": "ALB-CHICAMA-SAUSAL",
+      "nombre": "Albergue Valle Chicama - Sausal / Careaga (Panamericana km 590)",
+      "departamento": "La Libertad",
+      "provincia": "Ascope",
+      "distrito": "Chicama",
+      "ubigeo": "130202",
+      "coordenadas": {
+        "lat": -7.785,
+        "lon": -79.12
+      },
+      "poblacion_albergada": 1900,
+      "familias": 420,
+      "demanda_raciones_dia": 5700,
+      "demanda_agua_lts_dia": 9500,
+      "puente_critico_acceso": "VIAL-LIB-03",
+      "puente_urbano_secundario": "carretera-panamericana-norte-el-milagro",
+      "historico_incomunicacion_dias": 14,
+      "solucion_historica": "Paso alternado por el puente viejo de tren azucarero rehabilitado de urgencia.",
+      "riesgo_aislamiento": "MEDIO_ALTO"
+    },
+    {
+      "id": "ALB-CASMA-SECHIN",
+      "nombre": "Albergue Estadio Municipal de Casma (Valle Sechín km 376)",
+      "departamento": "Áncash",
+      "provincia": "Casma",
+      "distrito": "Casma",
+      "ubigeo": "020801",
+      "coordenadas": {
+        "lat": -9.472,
+        "lon": -78.305
+      },
+      "poblacion_albergada": 2200,
+      "familias": 490,
+      "demanda_raciones_dia": 6600,
+      "demanda_agua_lts_dia": 11000,
+      "puente_critico_acceso": "puente-sechin-casma",
+      "puente_urbano_secundario": null,
+      "historico_incomunicacion_dias": 12,
+      "solucion_historica": "Desvío por badén de piedras en lecho seco del río Sechín y ruta andina Pativilca - Huaraz.",
+      "riesgo_aislamiento": "ALTO"
+    },
+    {
+      "id": "ALB-HUARMEY-CENTRAL",
+      "nombre": "Centro de Acopio Huarmey (Valle Huarmey km 298)",
+      "departamento": "Áncash",
+      "provincia": "Huarmey",
+      "distrito": "Huarmey",
+      "ubigeo": "021101",
+      "coordenadas": {
+        "lat": -10.068,
+        "lon": -78.152
+      },
+      "poblacion_albergada": 3900,
+      "familias": 870,
+      "demanda_raciones_dia": 11700,
+      "demanda_agua_lts_dia": 19500,
+      "puente_critico_acceso": "puente-sechin-casma",
+      "puente_urbano_secundario": null,
+      "historico_incomunicacion_dias": 9,
+      "solucion_historica": "Evacuación marítima y desembarco de cisternas desde el puerto de Punta Lobitos.",
+      "riesgo_aislamiento": "MEDIO_ALTO"
+    },
+    {
+      "id": "ALB-CHOSICA-LURIGANCHO",
+      "nombre": "Albergue Pablo Patrón / Moyopampa (Chosica Carretera Central km 40)",
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Lurigancho-Chosica",
+      "ubigeo": "150118",
+      "coordenadas": {
+        "lat": -11.938,
+        "lon": -76.702
+      },
+      "poblacion_albergada": 1800,
+      "familias": 400,
+      "demanda_raciones_dia": 5400,
+      "demanda_agua_lts_dia": 9000,
+      "puente_critico_acceso": "carretera-central-chosica-matucana",
+      "puente_urbano_secundario": "puente-huachipa-huaycoloro",
+      "historico_incomunicacion_dias": 15,
+      "solucion_historica": "Ruta alterna Lima - Canta - Huayllay - Huánuco/La Oroya para abastecer la capital.",
+      "riesgo_aislamiento": "ALTO"
+    },
+    {
+      "id": "ALB-HUAYCOLORO-CAMPOY",
+      "nombre": "Albergue Quebrada Huaycoloro / Campoy (SJL - Lima)",
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "San Juan de Lurigancho",
+      "ubigeo": "150132",
+      "coordenadas": {
+        "lat": -12.012,
+        "lon": -76.955
+      },
+      "poblacion_albergada": 2500,
+      "familias": 550,
+      "demanda_raciones_dia": 7500,
+      "demanda_agua_lts_dia": 12500,
+      "puente_critico_acceso": "puente-huachipa-huaycoloro",
+      "puente_urbano_secundario": "puente-solidaridad-lima",
+      "historico_incomunicacion_dias": 15,
+      "solucion_historica": "Desvío por Autopista Ramiro Prialé y puente Bailey militar en tiempo récord de 7 días.",
+      "riesgo_aislamiento": "MEDIO"
+    },
+    {
+      "id": "ALB-CHICLETE-CONTUMAZA",
+      "nombre": "Albergue Sector Tabacal / Chilete (Cajamarca)",
+      "departamento": "Cajamarca",
+      "provincia": "Contumazá",
+      "distrito": "Chilete",
+      "ubigeo": "060503",
+      "coordenadas": {
+        "lat": -7.228,
+        "lon": -78.852
+      },
+      "poblacion_albergada": 1400,
+      "familias": 310,
+      "demanda_raciones_dia": 4200,
+      "demanda_agua_lts_dia": 7000,
+      "puente_critico_acceso": "VIAL-CAJ-03",
+      "puente_urbano_secundario": "VIAL-CAJ-01",
+      "historico_incomunicacion_dias": 22,
+      "solucion_historica": "Trocha andina por Cascas - Contumazá apta solo para vehículos 4x4 y mulas de carga.",
+      "riesgo_aislamiento": "MUY_ALTO"
+    },
+    {
+      "id": "ALB-CANCHAQUE-HUANCABAMBA",
+      "nombre": "Albergue Los Ranchos / Canchaque (Sierra de Piura)",
+      "departamento": "Piura",
+      "provincia": "Huancabamba",
+      "distrito": "Canchaque",
+      "ubigeo": "200302",
+      "coordenadas": {
+        "lat": -5.375,
+        "lon": -79.61
+      },
+      "poblacion_albergada": 1600,
+      "familias": 350,
+      "demanda_raciones_dia": 4800,
+      "demanda_agua_lts_dia": 8000,
+      "puente_critico_acceso": "carretera-canchaque-huancabamba",
+      "puente_urbano_secundario": null,
+      "historico_incomunicacion_dias": 28,
+      "solucion_historica": "Lanzamiento aéreo de víveres por helicópteros del Ejército en helipuerto comunal.",
+      "riesgo_aislamiento": "EXTREMO"
+    },
+    {
+      "id": "ALB-TUMBES-SANJACINTO",
+      "nombre": "Albergue Sector Francos / San Jacinto (Río Tumbes)",
+      "departamento": "Tumbes",
+      "provincia": "Tumbes",
+      "distrito": "San Jacinto",
+      "ubigeo": "240105",
+      "coordenadas": {
+        "lat": -3.642,
+        "lon": -80.441
+      },
+      "poblacion_albergada": 2100,
+      "familias": 460,
+      "demanda_raciones_dia": 6300,
+      "demanda_agua_lts_dia": 10500,
+      "puente_critico_acceso": "puente-tumbes-urbano",
+      "puente_urbano_secundario": null,
+      "historico_incomunicacion_dias": 35,
+      "solucion_historica": "Botes zodiac de la Capitanía de Puerto de Zorritos y puente provisional Corrales.",
+      "riesgo_aislamiento": "MUY_ALTO"
+    }
+  ],
+  "flota_vehiculos": [
+    {
+      "tipo_id": "CAMION_PESADO_15T",
+      "nombre": "Camión Militar Pesado 6x4 (15 Toneladas)",
+      "descripcion": "Vehículo de carga troncal MAN/Volvo FMX para transporte de víveres en pallet y carpas.",
+      "capacidad_carga_tn": 15.0,
+      "km_por_galon": 2.8,
+      "velocidad_asfalto_kmh": 65,
+      "velocidad_desvio_kmh": 25,
+      "requiere_puente_minimo_ton": 15.0,
+      "tipo_combustible": "DIESEL_B5"
+    },
+    {
+      "tipo_id": "CISTERNA_AGUA_3000G",
+      "nombre": "Camión Cisterna de Agua Potable (3,000 Galones / 12 Tn)",
+      "descripcion": "Cisterna de abastecimiento de emergencia para albergues sin agua de red.",
+      "capacidad_carga_tn": 12.0,
+      "km_por_galon": 3.2,
+      "velocidad_asfalto_kmh": 60,
+      "velocidad_desvio_kmh": 20,
+      "requiere_puente_minimo_ton": 12.0,
+      "tipo_combustible": "DIESEL_B5"
+    },
+    {
+      "tipo_id": "CAMIONETA_RESCATE_4X4",
+      "nombre": "Camioneta Táctica 4x4 Rápida (1.5 Toneladas)",
+      "descripcion": "Vehículo ligero de avanzada militar/bomberos con kits médicos de primera respuesta.",
+      "capacidad_carga_tn": 1.5,
+      "km_por_galon": 9.5,
+      "velocidad_asfalto_kmh": 90,
+      "velocidad_desvio_kmh": 45,
+      "requiere_puente_minimo_ton": 3.0,
+      "tipo_combustible": "DIESEL_B5"
+    },
+    {
+      "tipo_id": "CONVOY_MIXTO_TACTICO",
+      "nombre": "Convoy Mixto Militar (2 Camiones 15T + 1 Cisterna + 1 Rescate)",
+      "descripcion": "Despliegue operativo completo de auxilio estatal con escolta de la PNP y Ejército.",
+      "capacidad_carga_tn": 43.5,
+      "km_por_galon": 2.5,
+      "velocidad_asfalto_kmh": 55,
+      "velocidad_desvio_kmh": 18,
+      "requiere_puente_minimo_ton": 15.0,
+      "tipo_combustible": "DIESEL_B5"
+    }
+  ]
+}

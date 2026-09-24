@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import HeaderNav from "@/components/HeaderNav";
 import {
     Waves,
@@ -22,7 +22,8 @@ import {
     Layers,
     X,
     Flame,
-    ArrowUpDown
+    ArrowUpDown,
+    Upload
 } from "lucide-react";
 import {
     ResponsiveContainer,
@@ -134,6 +135,8 @@ export default function ConsolaImarpePage() {
     ]);
     const [ordenEstaciones, setOrdenEstaciones] = useState<"calor_anomalia" | "calor_tsm" | "geografico">("calor_anomalia");
     const [syncMessage, setSyncMessage] = useState<string | null>(null);
+    const [uploadingPdf, setUploadingPdf] = useState<boolean>(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -225,6 +228,36 @@ export default function ConsolaImarpePage() {
         } finally {
             setSyncing(false);
             setTimeout(() => setSyncMessage(null), 5000);
+        }
+    };
+
+    const handleUploadPdf = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setUploadingPdf(true);
+        setSyncMessage(`Procesando e indexando ${file.name} con extracción forense SHA-256...`);
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            const res = await fetch(`${API_BASE}/api/imarpe/upload-pdf`, {
+                method: "POST",
+                body: formData,
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setSyncMessage(`¡Éxito! Boletín BDO N° ${data.boletin_nro || file.name} procesado (${data.estaciones_procesadas || 12} estaciones, SHA: ${data.hash_sha256?.substring(0, 10)}...).`);
+                setCacheBuster(Date.now());
+                await fetchData();
+            } else {
+                const err = await res.json();
+                setSyncMessage(`Error procesando PDF: ${err.detail || "Fallo en servidor"}`);
+            }
+        } catch (err: any) {
+            setSyncMessage(`Error de conexión al subir PDF: ${err.message}`);
+        } finally {
+            setUploadingPdf(false);
+            if (fileInputRef.current) fileInputRef.current.value = "";
+            setTimeout(() => setSyncMessage(null), 8000);
         }
     };
 
@@ -334,6 +367,24 @@ export default function ConsolaImarpePage() {
                             </div>
                         )}
 
+                        {/* Botón de Carga Manual Forense de PDF */}
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            accept=".pdf"
+                            className="hidden"
+                            onChange={handleUploadPdf}
+                        />
+                        <button
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={uploadingPdf}
+                            className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-teal-300 text-xs font-bold px-4 py-2.5 rounded-xl border border-teal-500/40 transition disabled:opacity-50 shadow-md"
+                            title="Subir y procesar manualmente un Boletín BDO en PDF oficial de IMARPE"
+                        >
+                            <Upload className={`w-3.5 h-3.5 ${uploadingPdf ? "animate-bounce" : ""}`} />
+                            <span>{uploadingPdf ? "Indexando PDF..." : "Depositar BDO (PDF)"}</span>
+                        </button>
+
                         <button
                             onClick={handleSync}
                             disabled={syncing}
@@ -341,7 +392,7 @@ export default function ConsolaImarpePage() {
                             title="Escanear y procesar nuevos boletines PDF agregados a la carpeta"
                         >
                             <RefreshCw className={`w-3.5 h-3.5 ${syncing ? "animate-spin" : ""}`} />
-                            <span>{syncing ? "Sincronizando..." : "Sincronizar PDFs"}</span>
+                            <span>{syncing ? "Sincronizando..." : "Sincronizar Lote"}</span>
                         </button>
                     </div>
                 </div>

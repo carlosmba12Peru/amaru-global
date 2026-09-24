@@ -99,3 +99,35 @@ Aprovecha la suscripción Open-Meteo Pro con parámetros extendidos:
 1. **Unificación de Criterios:** El alcalde distrital y el comandante del COEN ven exactamente la misma telemetría calibrada de Open-Meteo Pro y ECMWF IFS 9km.
 2. **Anticipación a Huaicos:** La combinación de la tabla de lluvia horaria con los picos de CAPE a las 14:00 permite evacuar quebradas antes de que empiece la lluvia en la cabecera.
 3. **Usabilidad Familiar:** Al mantener la estética familiar y clara de los servicios populares de clima (íconos grandes, métricas de humedad/nubes/presión y amanecer/atardecer), el personal municipal y los brigadistas asimilan los datos sin necesidad de entrenamiento complejo.
+
+---
+
+## 6. CALIBRACIÓN HÍBRIDA CON RED DE ESTACIONES OBSERVATORIO SENAMHI (GROUND TRUTH FUSION)
+
+A fin de eliminar la incertidumbre propia de los modelos meteorológicos numéricos globales en la agreste orografía andina peruana, el sistema incorpora el servicio maestro de fusión **`AmaruMeteoFusionService`** (`backend/services/national/amaru_meteo_fusion_service.py`) y el conector especializado **`SenamhiObservatorioConnector`** (`backend/agents/kuraq/connectors/senamhi_observatorio_connector.py`), orquestados por el agente **KURAQ**:
+
+### 6.1. Integración de la Red de Estaciones del Observatorio SENAMHI
+* **Catálogo Nacional Georreferenciado:** Ingesta en tiempo real de 983 estaciones oficiales (`https://servicios.senamhi.gob.pe/api/researchers/stations`), clasificadas en:
+  - **709 Meteorológicas:** Pluviometría, temperatura, humedad y presión superficial.
+  - **246 Hidrológicas:** Niveles de ríos y caudales de aforo en cuencas costeras y amazónicas.
+  - **325 Automáticas:** Telemetría horaria continua con transmisión satelital/GPRS.
+* **Búsqueda Esférica Haversine:** Para cualquiera de los 1,891 distritos del Perú, el sistema localiza instantáneamente la estación física más cercana calculando la distancia geodésica $d_{\text{km}}$ y el diferencial de altitud $\Delta h$ (msnm).
+
+### 6.2. Motor de Corrección de Sesgo Orográfico (*Orographic Bias Correction*)
+El modelo ECMWF IFS 9km de Open-Meteo se calibra dinámicamente con las lecturas de suelo (*Ground Truth*):
+$$P_{\text{fusion}} = \alpha \cdot P_{\text{estación}} + (1 - \alpha) \cdot P_{\text{ECMWF IFS}}$$
+Donde el factor de ponderación $\alpha$ decae exponencialmente según la distancia a la estación y la antigüedad del dato telemétrico:
+$$\alpha = \alpha_0 \cdot \exp\left(-\frac{d}{d_0}\right) \cdot \exp\left(-\frac{\Delta t}{t_0}\right)$$
+Si la estación física se encuentra a menos de 15 km, el peso del dato observado alcanza hasta un 85%, anulando la sobreestimación o subestimación del modelo global en valles interandinos y quebradas ciegas.
+
+### 6.3. Monitoreo Fluvial Doble: GloFAS 0.05° + Miras de Aforo SENAMHI
+Para los distritos ribereños con quebradas activas o cuencas vulnerables (Rímac, Piura, Chira, Chancay-Lambayeque, Majes):
+1. **Caudal Proyectado (GloFAS / Open-Meteo Flood API):** Predicción de caudal de descarga en $m^3/s$ a 7 días.
+2. **Nivel Observado (Estaciones Hidrológicas SENAMHI):** Lectura en metros sobre la mira hidrométrica.
+3. **Asesoría de "Ventana Dorada" Municipal:** Cuando el caudal proyectado o nivel observado supere el umbral de alerta naranja ($Q > 15\text{ m}^3/s$ o tirante crítico), el sistema emite automáticamente la recomendación táctica de evacuación y cierre de bocatomas antes de la llegada del pulso aluvial.
+
+### 6.4. Endpoints Expuestos en FastAPI
+* `GET /api/v1/climate/stations`: Catálogo completo de 983 estaciones georreferenciadas con metadatos.
+* `GET /api/v1/climate/stations/nearest?lat={lat}&lon={lon}`: Búsqueda Haversine de estación más cercana.
+* `GET /api/v1/climate/hybrid-forecast?ubigeo={ubigeo}&days=7`: Pronóstico calibrado híbrido para cualquier distrito.
+* `GET /api/v1/climate/flood-monitoring?ubigeo={ubigeo}`: Doble validación fluvial (GloFAS $m^3/s$ + SENAMHI hidrológico).

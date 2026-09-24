@@ -1,5 +1,281 @@
 [
   {
+    "id": "REP-2026-0009",
+    "folio_tsa": "TSA-COEN-20260919-3967D91C",
+    "fecha_registro": "2026-09-19T13:28:23.650953",
+    "tipo_registro": "EN_VIVO_2026_2027",
+    "evento_historico_referencia": "FEN_2026_2027_LIVE",
+    "tipo_evento": "HUAICO_ACTIVO",
+    "ubigeo": "150118",
+    "distrito": "Lurigancho",
+    "provincia": "Lima",
+    "departamento": "Lima",
+    "lugar_especifico": "Quebrada Quirio",
+    "coordenadas": {
+      "lat": -11.938,
+      "lng": -76.702
+    },
+    "nivel_afectacion": "CINTURA_100CM",
+    "calle_inundada": true,
+    "testimonio_restringido": "Activación repentina de torrentera con arrastre de lodo.",
+    "evidencia_foto": {
+      "nombre_archivo": "quebrada_quirio.jpg",
+      "mime_type": "image/jpeg",
+      "tamano_bytes": 54,
+      "url_interna": "/img/forensic/REP-2026-0009.jpg",
+      "hash_sha256": "273324ce4983cc2f71e12cff160c505ed728b42dcc328286a0c689a559afa2d0",
+      "folio_tsa": "TSA-COEN-20260919-3967D91C",
+      "magic_bytes_verificado": true,
+      "exif_metadata": {
+        "dispositivo": "Terminal Móvil Ciudadano",
+        "timestamp_captura": "2026-09-19T13:28:23.650953",
+        "geotag_lat": -11.938,
+        "geotag_lng": -76.702,
+        "consistencia_gps": "GPS_COINCIDE_CON_DISTRITO"
+      }
+    },
+    "cadena_custodia_iso27037": {
+      "tsa_provider": "COEN-TSA-FORENSIC-AUTHORITY-RFC3161",
+      "folio_custodia": "TSA-COEN-20260919-3967D91C",
+      "timestamp_iso": "2026-09-19T18:28:23.650953+00:00Z",
+      "timestamp_epoch": 1789842503.6509538,
+      "hash_algoritmo": "SHA-256",
+      "hash_resumen_digital": "273324ce4983cc2f71e12cff160c505ed728b42dcc328286a0c689a559afa2d0",
+      "estado_custodia": "WORM_COMPLIANT_INMUTABLE",
+      "norma_tecnica": "NTP-ISO/IEC 27037:2012 / Art. 220 CPP"
+    },
+    "analisis_forense_ia": {
+      "score_autenticidad": 97.5,
+      "veredicto": "CONSISTENTE_VALIDADO",
+      "gemini_vision_audit": "Evidencia consistente con la dinámica morfológica de Lurigancho. Niveles de turbidez fluvial concuerdan con la cuenca Quebrada Crítica CENEPRED.",
+      "validacion_cruzada_cenepred": {
+        "cuenca": "Quebrada Crítica CENEPRED",
+        "zona_riesgo_cenepred": "ALTO",
+        "distancia_a_punto_critico_m": 350.0,
+        "declarado_ds124": true
+      },
+      "consenso_espacial": {
+        "total_reportes_cluster": 5,
+        "radio_metros": 600,
+        "nivel_consenso": "CONSENSO_TACTICO_CONFIRMADO"
+      }
+    },
+    "estado_operativo": "VALIDADO_OPERACIONES_C2",
+    "vista_publica": {
+      "mostrar_en_mapa": true,
+      "tipo_pin": "SENAL_TACTICA_EN_VIVO",
+      "nivel_resumen": "CINTURA_100CM",
+      "etiqueta_publica": "Señal Táctica Calibrada - Lurigancho"
+    }
+  },
+  {
+    "id": "REP-2026-0008",
+    "folio_tsa": "TSA-COEN-20260919-27120E44",
+    "fecha_registro": "2026-09-19T13:23:36.177465",
+    "tipo_registro": "EN_VIVO_2026_2027",
+    "evento_historico_referencia": "FEN_2026_2027_LIVE",
+    "tipo_evento": "HUAICO_ACTIVO",
+    "ubigeo": "150118",
+    "distrito": "Lurigancho",
+    "provincia": "Lima",
+    "departamento": "Lima",
+    "lugar_especifico": "Quebrada Quirio",
+    "coordenadas": {
+      "lat": -11.938,
+      "lng": -76.702
+    },
+    "nivel_afectacion": "CINTURA_100CM",
+    "calle_inundada": true,
+    "testimonio_restringido": "Activación repentina de torrentera con arrastre de lodo.",
+    "evidencia_foto": {
+      "nombre_archivo": "quebrada_quirio.jpg",
+      "mime_type": "image/jpeg",
+      "tamano_bytes": 54,
+      "url_interna": "/img/forensic/REP-2026-0008.jpg",
+      "hash_sha256": "273324ce4983cc2f71e12cff160c505ed728b42dcc328286a0c689a559afa2d0",
+      "folio_tsa": "TSA-COEN-20260919-27120E44",
+      "magic_bytes_verificado": true,
+      "exif_metadata": {
+        "dispositivo": "Terminal Móvil Ciudadano",
+        "timestamp_captura": "2026-09-19T13:23:36.177465",
+        "geotag_lat": -11.938,
+        "geotag_lng": -76.702,
+        "consistencia_gps": "GPS_COINCIDE_CON_DISTRITO"
+      }
+    },
+    "cadena_custodia_iso27037": {
+      "tsa_provider": "COEN-TSA-FORENSIC-AUTHORITY-RFC3161",
+      "folio_custodia": "TSA-COEN-20260919-27120E44",
+      "timestamp_iso": "2026-09-19T18:23:36.177465+00:00Z",
+      "timestamp_epoch": 1789842216.177466,
+      "hash_algoritmo": "SHA-256",
+      "hash_resumen_digital": "273324ce4983cc2f71e12cff160c505ed728b42dcc328286a0c689a559afa2d0",
+      "estado_custodia": "WORM_COMPLIANT_INMUTABLE",
+      "norma_tecnica": "NTP-ISO/IEC 27037:2012 / Art. 220 CPP"
+    },
+    "analisis_forense_ia": {
+      "score_autenticidad": 97.5,
+      "veredicto": "CONSISTENTE_VALIDADO",
+      "gemini_vision_audit": "Evidencia consistente con la dinámica morfológica de Lurigancho. Niveles de turbidez fluvial concuerdan con la cuenca Quebrada Crítica CENEPRED.",
+      "validacion_cruzada_cenepred": {
+        "cuenca": "Quebrada Crítica CENEPRED",
+        "zona_riesgo_cenepred": "ALTO",
+        "distancia_a_punto_critico_m": 350.0,
+        "declarado_ds124": true
+      },
+      "consenso_espacial": {
+        "total_reportes_cluster": 4,
+        "radio_metros": 600,
+        "nivel_consenso": "CONSENSO_TACTICO_CONFIRMADO"
+      }
+    },
+    "estado_operativo": "VALIDADO_OPERACIONES_C2",
+    "vista_publica": {
+      "mostrar_en_mapa": true,
+      "tipo_pin": "SENAL_TACTICA_EN_VIVO",
+      "nivel_resumen": "CINTURA_100CM",
+      "etiqueta_publica": "Señal Táctica Calibrada - Lurigancho"
+    }
+  },
+  {
+    "id": "REP-2026-0007",
+    "folio_tsa": "TSA-COEN-20260919-C0A2114D",
+    "fecha_registro": "2026-09-19T13:15:13.547833",
+    "tipo_registro": "EN_VIVO_2026_2027",
+    "evento_historico_referencia": "FEN_2026_2027_LIVE",
+    "tipo_evento": "HUAICO_ACTIVO",
+    "ubigeo": "150118",
+    "distrito": "Lurigancho",
+    "provincia": "Lima",
+    "departamento": "Lima",
+    "lugar_especifico": "Quebrada Quirio",
+    "coordenadas": {
+      "lat": -11.938,
+      "lng": -76.702
+    },
+    "nivel_afectacion": "CINTURA_100CM",
+    "calle_inundada": true,
+    "testimonio_restringido": "Activación repentina de torrentera con arrastre de lodo.",
+    "evidencia_foto": {
+      "nombre_archivo": "quebrada_quirio.jpg",
+      "mime_type": "image/jpeg",
+      "tamano_bytes": 54,
+      "url_interna": "/img/forensic/REP-2026-0007.jpg",
+      "hash_sha256": "273324ce4983cc2f71e12cff160c505ed728b42dcc328286a0c689a559afa2d0",
+      "folio_tsa": "TSA-COEN-20260919-C0A2114D",
+      "magic_bytes_verificado": true,
+      "exif_metadata": {
+        "dispositivo": "Terminal Móvil Ciudadano",
+        "timestamp_captura": "2026-09-19T13:15:13.547833",
+        "geotag_lat": -11.938,
+        "geotag_lng": -76.702,
+        "consistencia_gps": "GPS_COINCIDE_CON_DISTRITO"
+      }
+    },
+    "cadena_custodia_iso27037": {
+      "tsa_provider": "COEN-TSA-FORENSIC-AUTHORITY-RFC3161",
+      "folio_custodia": "TSA-COEN-20260919-C0A2114D",
+      "timestamp_iso": "2026-09-19T18:15:13.547259+00:00Z",
+      "timestamp_epoch": 1789841713.5472598,
+      "hash_algoritmo": "SHA-256",
+      "hash_resumen_digital": "273324ce4983cc2f71e12cff160c505ed728b42dcc328286a0c689a559afa2d0",
+      "estado_custodia": "WORM_COMPLIANT_INMUTABLE",
+      "norma_tecnica": "NTP-ISO/IEC 27037:2012 / Art. 220 CPP"
+    },
+    "analisis_forense_ia": {
+      "score_autenticidad": 97.5,
+      "veredicto": "CONSISTENTE_VALIDADO",
+      "gemini_vision_audit": "Evidencia consistente con la dinámica morfológica de Lurigancho. Niveles de turbidez fluvial concuerdan con la cuenca Quebrada Crítica CENEPRED.",
+      "validacion_cruzada_cenepred": {
+        "cuenca": "Quebrada Crítica CENEPRED",
+        "zona_riesgo_cenepred": "ALTO",
+        "distancia_a_punto_critico_m": 350.0,
+        "declarado_ds124": true
+      },
+      "consenso_espacial": {
+        "total_reportes_cluster": 3,
+        "radio_metros": 600,
+        "nivel_consenso": "CONSENSO_TACTICO_CONFIRMADO"
+      }
+    },
+    "estado_operativo": "VALIDADO_OPERACIONES_C2",
+    "vista_publica": {
+      "mostrar_en_mapa": true,
+      "tipo_pin": "SENAL_TACTICA_EN_VIVO",
+      "nivel_resumen": "CINTURA_100CM",
+      "etiqueta_publica": "Señal Táctica Calibrada - Lurigancho"
+    }
+  },
+  {
+    "id": "REP-2026-0006",
+    "folio_tsa": "TSA-COEN-20260919-683137FC",
+    "fecha_registro": "2026-09-19T13:14:28.538965",
+    "tipo_registro": "EN_VIVO_2026_2027",
+    "evento_historico_referencia": "FEN_2026_2027_LIVE",
+    "tipo_evento": "HUAICO_ACTIVO",
+    "ubigeo": "150118",
+    "distrito": "Lurigancho",
+    "provincia": "Lima",
+    "departamento": "Lima",
+    "lugar_especifico": "Quebrada Quirio",
+    "coordenadas": {
+      "lat": -11.938,
+      "lng": -76.702
+    },
+    "nivel_afectacion": "CINTURA_100CM",
+    "calle_inundada": true,
+    "testimonio_restringido": "Activación repentina de torrentera con arrastre de lodo.",
+    "evidencia_foto": {
+      "nombre_archivo": "quebrada_quirio.jpg",
+      "mime_type": "image/jpeg",
+      "tamano_bytes": 54,
+      "url_interna": "/img/forensic/REP-2026-0006.jpg",
+      "hash_sha256": "273324ce4983cc2f71e12cff160c505ed728b42dcc328286a0c689a559afa2d0",
+      "folio_tsa": "TSA-COEN-20260919-683137FC",
+      "magic_bytes_verificado": true,
+      "exif_metadata": {
+        "dispositivo": "Terminal Móvil Ciudadano",
+        "timestamp_captura": "2026-09-19T13:14:28.538965",
+        "geotag_lat": -11.938,
+        "geotag_lng": -76.702,
+        "consistencia_gps": "GPS_COINCIDE_CON_DISTRITO"
+      }
+    },
+    "cadena_custodia_iso27037": {
+      "tsa_provider": "COEN-TSA-FORENSIC-AUTHORITY-RFC3161",
+      "folio_custodia": "TSA-COEN-20260919-683137FC",
+      "timestamp_iso": "2026-09-19T18:14:28.538389Z",
+      "timestamp_epoch": 1789841668.538966,
+      "hash_algoritmo": "SHA-256",
+      "hash_resumen_digital": "273324ce4983cc2f71e12cff160c505ed728b42dcc328286a0c689a559afa2d0",
+      "estado_custodia": "WORM_COMPLIANT_INMUTABLE",
+      "norma_tecnica": "NTP-ISO/IEC 27037:2012 / Art. 220 CPP"
+    },
+    "analisis_forense_ia": {
+      "score_autenticidad": 92.5,
+      "veredicto": "CONSISTENTE_VALIDADO",
+      "gemini_vision_audit": "Evidencia consistente con la dinámica morfológica de Lurigancho. Niveles de turbidez fluvial concuerdan con la cuenca Quebrada Crítica CENEPRED.",
+      "validacion_cruzada_cenepred": {
+        "cuenca": "Quebrada Crítica CENEPRED",
+        "zona_riesgo_cenepred": "ALTO",
+        "distancia_a_punto_critico_m": 350.0,
+        "declarado_ds124": true
+      },
+      "consenso_espacial": {
+        "total_reportes_cluster": 2,
+        "radio_metros": 600,
+        "nivel_consenso": "REPORTE_INDEPENDIENTE"
+      }
+    },
+    "estado_operativo": "VALIDADO_OPERACIONES_C2",
+    "vista_publica": {
+      "mostrar_en_mapa": true,
+      "tipo_pin": "SENAL_TACTICA_EN_VIVO",
+      "nivel_resumen": "CINTURA_100CM",
+      "etiqueta_publica": "Señal Táctica Calibrada - Lurigancho"
+    }
+  },
+  {
     "id": "REP-2017-0841",
     "fecha_registro": "2017-03-27T08:35:00",
     "tipo_registro": "MEMORIA_HISTORICA",
@@ -24,7 +300,7 @@
       "exif_metadata": {
         "dispositivo": "Samsung Galaxy S7 Edge (SM-G935F)",
         "timestamp_captura": "2017-03-27T08:14:22",
-        "geotag_lat": -5.2650,
+        "geotag_lat": -5.265,
         "geotag_lng": -80.6781,
         "consistencia_gps": "GPS_COINCIDE_CON_DISTRITO"
       }
@@ -79,7 +355,7 @@
         "dispositivo": "Motorola Moto G4 Plus",
         "timestamp_captura": "2017-03-16T15:02:19",
         "geotag_lat": -11.9385,
-        "geotag_lng": -76.7020,
+        "geotag_lng": -76.702,
         "consistencia_gps": "GPS_COINCIDE_CON_DISTRITO"
       }
     },
@@ -132,8 +408,8 @@
       "exif_metadata": {
         "dispositivo": "Xiaomi Redmi Note 11",
         "timestamp_captura": "2023-03-10T11:32:05",
-        "geotag_lat": -6.5120,
-        "geotag_lng": -79.8560,
+        "geotag_lat": -6.512,
+        "geotag_lng": -79.856,
         "consistencia_gps": "GPS_COINCIDE_CON_DISTRITO"
       }
     },
@@ -173,8 +449,8 @@
     "departamento": "LA LIBERTAD",
     "lugar_especifico": "Prolongación Av. Miraflores / Quebrada San Ildefonso",
     "coordenadas": {
-      "lat": -8.1120,
-      "lng": -79.0180
+      "lat": -8.112,
+      "lng": -79.018
     },
     "nivel_afectacion": "RODILLA_50CM",
     "calle_inundada": true,
@@ -227,8 +503,8 @@
     "departamento": "LIMA",
     "lugar_especifico": "Puente Los Ángeles",
     "coordenadas": {
-      "lat": -11.9540,
-      "lng": -76.7150
+      "lat": -11.954,
+      "lng": -76.715
     },
     "nivel_afectacion": "TECHO_CATASTROFICO_200CM",
     "calle_inundada": true,

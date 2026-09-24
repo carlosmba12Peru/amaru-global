@@ -8,3 +8,8 @@ google-generativeai==0.5.2
 # For GCS / BigQuery if needed later
 google-cloud-storage==2.17.0
 google-cloud-bigquery==3.21.0
+# Document generation & cryptographic QR
+reportlab==4.2.2
+qrcode==7.4.2
+pypdf==6.18.1
+xlrd==2.0.2

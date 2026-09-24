@@ -142,6 +142,22 @@ class SentinelAgent:
                 nivel = "AMARILLO"
                 criterio = f"Aviso preventivo por descenso térmico ({telemetry.min_temp}°C)."
 
+        # 5. Consulta y enriquecimiento con el Motor Predictivo de Análogos FEN (CAF / SENAMHI)
+        try:
+            from services.historical_analog_engine import analog_engine
+            analog_eval = await analog_engine.evaluate_district_analog(ubigeo)
+            dia_crit = analog_eval.get("dia_maximo_riesgo", {})
+            if dia_crit and dia_crit.get("similitud_analoga_pct", 0) >= 65.0:
+                criterio += (
+                    f" | [ANÁLOGO FEN D+{dia_crit.get('dia_numero')} ({dia_crit.get('horas_anticipacion')}h)]: "
+                    f"Coincidencia {dia_crit.get('similitud_analoga_pct')}% con {dia_crit.get('evento_analogo_referencia')} "
+                    f"(Factor {dia_crit.get('factor_amplificacion_fen')}x)."
+                )
+                if dia_crit.get("nivel_alerta_anticipada") in ["ROJA", "NARANJA"] and nivel == "AMARILLO":
+                    nivel = "NARANJA"
+        except Exception as e:
+            print(f"[SentinelAgent Analog Warning] {e}")
+
         return TriageResult(
             ubigeo=ubigeo,
             distrito=geo["nombre"],

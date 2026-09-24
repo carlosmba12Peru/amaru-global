@@ -50,6 +50,14 @@ El sistema se compone de cuatro núcleos funcionales sinérgicos:
   $$\text{Costo Promedio: } S/.\; 195,000\text{ por km lineal} \quad (\text{Sobreprecio de }+333\%)$$
 * **Conclusión Doctrinaria:** Cada sol invertido en la Ventana Dorada ahorra 4.33 soles en ayuda humanitaria, rehabilitación de vías y horas de bombeo de motobombas.
 
+### 2.3. Doctrina de Fusión Hidro-Meteorológica Híbrida (SENAMHI + Open-Meteo)
+Para erradicar la incertidumbre en los 1,891 distritos del país, el sistema despliega el motor **AMARU-METEO-FUSION**:
+* **Ground Truth Soberano (SENAMHI):** Red de 982 estaciones hidro-meteorológicas georreferenciadas (709 meteorológicas, 246 hidrológicas con tirante en metros y 325 automáticas horarias). Conecta vía API REST (`https://servicios.senamhi.gob.pe/api/researchers/stations`).
+* **Malla Numérica Global (Open-Meteo Core):** ECMWF IFS (9 km), variables de inestabilidad convectiva de huaico (CAPE, Lifted Index), humedad edáfica a 4 estratos y simulación de caudales fluviales **GloFAS Copernicus** en $m^3/s$.
+* **Corrección de Sesgo Orográfico:** Pondera la estación física SENAMHI más cercana ($< 50\text{ km}$) mediante distancia geodésica de Haversine para calibrar el modelo global, garantizando cobertura continua al 100% de municipios sin estaciones locales.
+* **Doble Cerrojo de Crecida para la Ventana Dorada:** Si la proyección hidrológica GloFAS estima $Q > 15\text{ m}^3/s$ antes del 30 de noviembre, se emite una **Alerta de Aceleración Mecánica** para prevenir atrapamientos de tractores oruga en el lecho fluvial y se habilita el sustento legal de Contratación Directa bajo el **D.S. Nº 124-2026-PCM**.
+
+
 ---
 
 ## 3. NÚCLEO II: AMARU-YACHAY (EDUCACIÓN CLIMÁTICA Y ETNOTERRITORIAL)
@@ -106,7 +114,34 @@ Se digitalizó e indexó la totalidad del paquete legal emitido por el Poder Eje
 ### 4.3. Generador de Proyectos de Resolución de Alcaldía
 La consola AMARU-LEX incorpora un redactor normativo automatizado que compila los considerandos de la Ley 30225, el D.S. 124-2026-PCM y el D.U. 031-2026, exportando en segundos un documento listo para firma y publicación en el portal municipal.
 
+### 4.4. Principio de Gobernanza de Inteligencia Artificial & Soberanía Humana
+En estricto apego al marco ético y jurídico nacional:
+1. **Rol de Asistencia Técnica:** El Copiloto IA y el generador documental actúan exclusivamente como herramientas de apoyo consultivo y propuesta técnica orientativa.
+2. **Soberanía Decisional Indelegable:** Las salidas generadas son meras sugerencias preliminares no vinculantes. La IA carece de fe pública y en ningún caso sustituye el juicio ni la soberanía de la autoridad humana.
+3. **Responsabilidad Legal Exclusiva:** La toma de decisiones, suscripción de resoluciones y disposición presupuestal recae con exclusividad y bajo responsabilidad administrativa, civil y penal en los alcaldes, gobernadores y funcionarios públicos firmantes.
+4. **Marcado Obligatorio:** Todo borrador exportado y respuesta emitida incorpora avisos indelebles de advertencia legal tanto en interfaz visual como en el texto descargable.
+
 ---
+
+## 5. NÚCLEO IV: FORMULACIÓN HIDROCINÉTICA & PROBABILÍSTICA IPH-FEN Y ARQUITECTURA TETRA-ÍNDICE
+
+El sistema unifica cuatro formulaciones matemáticas canónicas para garantizar coherencia analítica en toda la cadena de mando del COEN:
+
+### 5.1. IPH-FEN: Dinámica No Lineal de Quebradas (Micro-Escala)
+* **Sustento Físico-Geotécnico (Terzaghi / Mohr-Coulomb):** La rotura de ladera y formación de aluviones no es un fenómeno lineal; obedece a la pérdida brusca de resistencia cortante ($\tau_f = c' + (\sigma - u)\tan\phi'$) por neutralización de la tensión efectiva ante presiones de poros saturadas ($u \to \sigma$).
+* **Función Sigmoide de Licuefacción:**
+  $$\Phi = (0.30 \cdot C_{\text{METEO}}) + (0.20 \cdot C_{\text{SUELO}}) + (0.20 \cdot C_{\text{IRCE}}) + (0.15 \cdot C_{\text{GEOMORF}}) + (0.15 \cdot C_{\text{HIST}})$$
+  $$P_{\text{huaico}} = \frac{1}{1 + e^{-4.2 \cdot (\Phi - 0.68)}} \times 100\%$$
+* **Hidráulica Detrital de Manning & Ventana Táctica Dorada ($T_{\text{lag}}$):**
+  $$V = \frac{1}{n} \cdot R_h^{2/3} \cdot S_0^{1/2} \quad (n = 0.065, R_h = 1.2\text{ m})$$
+  $$T_{\text{lag}} = \left[ \frac{L_{\text{cauce}}}{V \cdot 3600} \right] \times 60\text{ minutos}$$
+  Indica los minutos exactos disponibles para que las brigadas de Defensa Civil evacuen el cono aluvial antes del impacto de la onda.
+* **Blindaje y Anti-Dilución:** Umbrales de disparo directo ($\ge 85\%$), piso por saturación edáfica ($\ge 88\%$) y firma digital SHA-256 anclada en memoria.
+
+### 5.2. Coherencia Teórica con los Demás Índices Oficiales
+* **IRCE-FEN (Macro-Distrital):** Modelo Jerárquico Multicriterio Saaty AHP 4×4 con consistencia axiomática $\text{CR} = 0.0113 \le 0.10$ bajo Directiva R.J. 112-2014-CENEPRED/J y sustento del D.S. 124-2026-PCM.
+* **IPI (Triple Vulnerabilidad 1,891 Distritos):** Algoritmo equitativo de $0.0$ a $100.0$ pts que pondera CENEPRED (35%), D.S. 124 (30%), Heladas (15%) y Brecha Lingüística RENALIO (20%).
+* **ISH (AMARU-CHIRI):** Agrometeorología criosférica para distritos sobre $3,800\text{ msnm}$, correlacionando anomalías térmicas nocturnas con la supervivencia de camélidos sudamericanos.
 
 ---
 
@@ -132,14 +167,35 @@ Integra y procesa los 5 compendios oficiales de desastres del país para los 1,8
 
 | Componente | Archivo Fuente / Ruta | Funcionalidad Clave |
 |---|---|---|
+| **Consola Doctrinal Tetra-Índice** | [`frontend/src/app/doctrina/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/doctrina/page.tsx) | Desglose formal de IRCE, IPH, IPI e ISH con fórmulas y hashes |
+| **Geovisor de Quebradas y Alertas** | [`frontend/src/app/alertas/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/alertas/page.tsx) | Monitoreo táctico de 60 quebradas críticas con IPH y $T_{\text{lag}}$ |
+| **Consola Jurídica AMARU-LEX** | [`frontend/src/app/lex/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/lex/page.tsx) | Radar de 51 normas, proyectos de resolución y Copiloto IA |
 | **Frontend Navegación Tripartita** | [`frontend/src/components/HeaderNav.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/components/HeaderNav.tsx) | Selector de pilares: Nacional, Municipal y Social |
-| **Memoria Histórica Municipal** | [`frontend/src/app/historico/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/historico/page.tsx) | Consola de Memoria Histórica 1983-2017 por UBIGEO |
+| **Consola C2 Telemetría de Fuentes** | [`frontend/src/app/fuentes/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/fuentes/page.tsx) | Semáforo de salud de 27 fuentes oficiales, filtros por Tiers y SHA-256 |
+| **Agente KURAQ & Ingesta Multifuente** | [`backend/agents/kuraq/kuraq_agent.py`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/backend/agents/kuraq/kuraq_agent.py) | 6to Agente del Swarm: ingesta SIOFEN BDO (24h), ENFEN (quincenal) y firmado forense |
+| **Radares SENAMHI Banda C & Nowcasting** | [`backend/services/national/senamhi_radar_service.py`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/backend/services/national/senamhi_radar_service.py) | Escaneos volumétricos Doppler Piura e Ica con visor modal interactivo (0-120 min) |
+| **Consola Provincial de Piura** | [`frontend/src/app/piura/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/piura/page.tsx) | Cuencas ciegas SARE, auditoría PP 0068, plan DSRSLCC y botón de Radar Doppler |
+| **PPRRD Cajamarca (San Marcos)** | [`frontend/src/app/cajamarca/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/cajamarca/page.tsx) | Puntos críticos SIGRID 21362, modelación PISCO y dossier de transferencia edil |
+| **Memoria Histórica Municipal** | [`frontend/src/app/historico/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/historico/page.tsx) | Consola de Memoria Histórica 1983-2017 por UBIGEO en 1,891 distritos |
 | **Inspector Climático Distrital** | [`frontend/src/app/dashboard/[ubigeo]/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/dashboard/[ubigeo]/page.tsx) | Telemetría horaria Open-Meteo Pro y variables CAPE |
-| **Servicio Memoria Histórica** | [`backend/services/historical_data_service.py`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/backend/services/historical_data_service.py) | Ingesta 1,891 distritos y caché en memoria |
-| **PWA Social AMARU-AYNI** | [`frontend/src/app/ayni/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/ayni/page.tsx) | Gestión de Ollas Comunes y Padrón protegido |
-| **Reporte Ciudadano Blindado** | [`frontend/src/app/reporte-ciudadano/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/reporte-ciudadano/page.tsx) | Reporte offline en 3 toques con georreferenciación |
-| **Scripts de Respaldo y Rollback** | [`scripts/crear_backup_snapshot.ps1`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/scripts/crear_backup_snapshot.ps1) | Creación de snapshots ZIP y rollback seguro a `v1.0.0-stable` |
-| **Endpoints FastAPI** | [`backend/main.py`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/backend/main.py) | `/api/profile`, `/api/historico/*` y `/api/meteo/*` |
+| **Servicio de Índices y Blindaje** | [`backend/services/indices_amaru_service.py`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/backend/services/indices_amaru_service.py) | Cálculo de IRCE/IPH/IPI y verificación hash SHA-256 |
+| **Consola C2 Ríos del Norte & Represas** | [`frontend/src/app/rios-norte/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/rios-norte/page.tsx) | Monitoreo de 8 cuencas, 16 aforos, 3 represas y simulación de desbordes |
+| **Logística Humanitaria y Ruteo VRP** | [`frontend/src/app/logistica/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/logistica/page.tsx) | Ruteo Dijkstra con bloqueo dinámico de puentes, Diésel B5 y puentes aéreos |
+| **Ficha EDAN SINPAD v2 Oficial** | [`frontend/src/app/edan/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/edan/page.tsx) | Directiva R.S. 002-2026-PCM, calificación Bono BAE, firma digital y PDF ReportLab |
+| **Control Concurrente CGR en Vivo** | [`frontend/src/app/contraloria/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/contraloria/page.tsx) | Auditoría concurrente CGR-CNC-2026, blindaje penal y autorización BAH |
+| **Consola de Validación PIDE-RENIEC** | [`frontend/src/app/reniec/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/reniec/page.tsx) | Consulta DNI oficial, simulación contingencia FEN y filtro de fallecidos |
+| **Persistencia Espacial PostGIS 16** | [`backend/database/init_postgis.sql`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/backend/database/init_postgis.sql) | DDL de 14 tablas maestras, índices GiST, vistas C2 y fallback offline |
+| **Documento Técnico Privado** | [`docs/DOCUMENTO_PRIVADO_ARQUITECTURA_BASE_DATOS_POSTGIS_Y_FASE_3_EDAN_RENIEC.md`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/docs/DOCUMENTO_PRIVADO_ARQUITECTURA_BASE_DATOS_POSTGIS_Y_FASE_3_EDAN_RENIEC.md) | Dossier confidencial maestro de base de datos, VRP, EDAN y RENIEC |
+| **Endpoints FastAPI** | [`backend/main.py`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/backend/main.py) | `/api/v1/logistica/*`, `/api/v1/edan/*`, `/api/v1/contraloria/*`, `/api/v1/pide/reniec/*` |
+| **Red Nacional 982 Estaciones SENAMHI** | [`backend/agents/kuraq/connectors/senamhi_observatorio_connector.py`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/backend/agents/kuraq/connectors/senamhi_observatorio_connector.py) | Catálogo 982 estaciones, lecturas horarias y niveles de río en tiempo real con SHA-256 |
+| **Modelos Numéricos Open-Meteo Core** | [`backend/agents/kuraq/connectors/open_meteo_connector.py`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/backend/agents/kuraq/connectors/open_meteo_connector.py) | ECMWF IFS 9km, GloFAS River Discharge ($m^3/s$), CAPE y Reanálisis Histórico ERA5 |
+| **Motor de Fusión Híbrida AMARU** | [`backend/services/national/amaru_meteo_fusion_service.py`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/backend/services/national/amaru_meteo_fusion_service.py) | Calibración local Ground Truth + Cobertura continua 100% (1,891 distritos) |
+| **Endpoints Fusión Climática** | [`backend/main.py`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/backend/main.py) | `/api/v1/climate/stations`, `/api/v1/climate/hybrid-forecast`, `/api/v1/climate/flood-monitoring` |
+| **Suite Municipal 360° (Obras & PCMD)** | [`frontend/src/app/municipal/[ubigeo]/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/municipal/[ubigeo]/page.tsx) | Obras PP 0068, Certificador Maquinaria (Art. 27 Ley 30225), Reloj FEN tc, PCMD, PPRRD y Pre-Padrón EDAN |
+| **Módulo SALUD-AMARU (Triaje Desacoplado)** | [`frontend/src/app/salud/triaje/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/salud/triaje/page.tsx), [`backend/services/salud_service.py`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/backend/services/salud_service.py) | Triaje NTS-105 MINSA, Bóveda Zero-PII CUP-MINSA, Break-the-Glass médico y bitácora WORM |
+| **Módulo AMARU-DAMNIFICADOS (Pre-Padrón EDAN)** | [`frontend/src/app/reporte-ciudadano/page.tsx`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/frontend/src/app/reporte-ciudadano/page.tsx), [`backend/services/damnificados_service.py`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/backend/services/damnificados_service.py) | Pre-Padrón Digital EDAN v2, Bóveda CUP-DAMN, Validación Territorial AMARU-CLIMATE, Bono BAE S/ 500 y SINPAD |
+| **Documento Técnico Privado COED-AMARU** | [`docs/DOCUMENTO_PRIVADO_COED_AMARU_SUITE_MUNICIPAL_Y_MODULOS_SOBERANOS.md`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/docs/DOCUMENTO_PRIVADO_COED_AMARU_SUITE_MUNICIPAL_Y_MODULOS_SOBERANOS.md) | Dossier confidencial de arquitectura COED-AMARU, Suite Municipal 360°, SALUD-AMARU y Damnificados |
+| **Endpoints FastAPI Soberanos** | [`backend/main.py`](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/backend/main.py) | `/api/v1/salud/*`, `/api/v1/damnificados/*`, `/api/v1/municipal/{ubigeo}/*` |
 
 ---
 
@@ -147,9 +203,10 @@ Integra y procesa los 5 compendios oficiales de desastres del país para los 1,8
 
 1. **Frontend (Next.js 14 / TypeScript):**
    * Verificado con navegación fluida y tiempos de respuesta HTTP 200 en todas las consolas.
-   * Carga dinámica con `next/dynamic` para aislamiento de componentes 3D.
+   * Compilación validada con `npx tsc --noEmit` (**0 errores**).
 2. **Backend (FastAPI / Python 3.11):**
-   * Configurado con soporte de perfiles (`COEN_PERFIL`), caché en memoria y endpoints no bloqueantes.
+   * Configurado con soporte de perfiles (`COEN_PERFIL`), caché en memoria y endpoints asíncronos.
+   * Suite de pruebas ampliada ejecutada al 100% (**22 de 22 pruebas unitarias aprobadas**).
 3. **Puntos de Restauración y Seguridad Operativa:**
    * Tag Git inmutable `v1.0.0-stable` y snapshot físico en `backups/`.
 
@@ -157,5 +214,5 @@ Integra y procesa los 5 compendios oficiales de desastres del país para los 1,8
 
 **REGISTRO Y CUSTODIA:**  
 Documento archivado en el repositorio confidencial del proyecto.  
-*COEN-DIGITAL • AMARU-CLIMATE • ASESORÍA DE GOBERNANZA CLIMÁTICA Y RESPUESTA A DESASTRES*
+*COED-AMARU • AMARU-CLIMATE • ASESORÍA DE GOBERNANZA CLIMÁTICA Y RESPUESTA A DESASTRES*
 

@@ -176,22 +176,33 @@ Lab4/
 
 ---
 
-## 7. DOCTRINA ÉTICO-LEGAL: PRINCIPIO DE NO SUSTITUCIÓN DEL CRITERIO HUMANO (HUMAN-IN-THE-LOOP)
+## 7. DOCTRINA ÉTICO-LEGAL: PRINCIPIO DE NO SUSTITUCIÓN DEL CRITERIO HUMANO & SOBERANÍA FUNCIONAL (HUMAN-IN-THE-LOOP)
 
-En cumplimiento de los estándares de gobernanza pública, la Ley de Gobierno Digital y las recomendaciones de la OCDE y Contraloría General de la República sobre el uso de Inteligencia Artificial en el Estado:
+En cumplimiento de los estándares de gobernanza pública, la Ley de Gobierno Digital (D. Leg. Nº 1412), los principios éticos de la OCDE y las directrices de la Contraloría General de la República sobre el uso de Inteligencia Artificial en la administración pública:
 
 ### 7.1. Naturaleza Jurídica del Copiloto IA (AMARU-LEX)
-1. **No es Abogado ni Asesor Legal Colegiado:** El Copiloto IA es estrictamente un **sistema computacional de procesamiento de lenguaje natural, indexación documental y asistencia técnica**.
-2. **Carácter Referencial y de Apoyo:** Todas las respuestas, análisis de plazos, citas normativas y minutas de resoluciones generadas constituyen **sugerencias y recomendaciones analíticas preliminares**.
-3. **Principio de Reserva Funcional e Indelegabilidad:** La inteligencia artificial no emite actos administrativos ni tiene fe pública. **Toda decisión de gestión, suscripción de resoluciones de alcaldía, visación de informes técnico-legales y ejecución presupuestal es de exclusiva, indelegable y personal responsabilidad del Alcalde, de sus funcionarios y de sus respectivas oficinas colegiadas de Asesoría Jurídica y Planeamiento.**
+1. **No es Abogado ni Asesor Legal Colegiado:** El Copiloto IA es estrictamente un **sistema computacional de procesamiento de lenguaje natural, indexación vectorial y asistencia técnica analítica**.
+2. **Carácter Estrictamente Sugestivo y No Vinculante:** Todas las respuestas, análisis de plazos, cómputo de prórrogas, citas de decretos y proyectos de resolución generados constituyen **sugerencias técnicas orientativas y recomendaciones preliminares**. En ningún supuesto reemplazan el análisis ni la soberanía de la autoridad humana.
+3. **Principio de Soberanía Humana e Indelegabilidad Funcional:** La inteligencia artificial no emite actos administrativos, no goza de fe pública ni puede suplir el juicio discrecional reglado del funcionario. **Toda decisión de gestión, adjudicación directa, suscripción de resoluciones de alcaldía, visación de informes técnico-legales y ejecución presupuestal recae con exclusividad, de manera indelegable y bajo estricta responsabilidad personal, civil, penal y administrativa en el Alcalde, Gobernador, Gerente Municipal y los jefes de las Oficinas de Asesoría Jurídica y Logística.**
 
-### 7.2. Protocolo de Visación Obligatoria (Filtro Humano)
+### 7.2. Mecanismos Técnicos de Blindaje y Advertencia en Código Fuente
+Para evitar cualquier equívoco procesal, el sistema implementa un cuádruple cerrojo de advertencia:
+1. **Cabecera y Pie de Página en Resoluciones Generadas (`backend/services/legal_framework_service.py`):**
+   Todo borrador exportado contiene una marca indeleble en la parte superior e inferior certificando que el texto es una sugerencia preliminar generada por IA que debe ser visada por la Asesoría Jurídica municipal antes de su firma.
+2. **Metadatos de Gobernanza en Payload JSON (`advertencia_gobernanza_ia`):**
+   Los endpoints `/api/marco-legal/generate-resolution` y `/api/marco-legal/chat` devuelven obligatoriamente el objeto `advertencia_gobernanza_ia` con la declaración expresa de no vinculatoriedad.
+3. **Distintivos Visuales en Frontend (`frontend/src/app/lex/page.tsx`):**
+   El chat de AMARU-LEX y el modal de proyectos de resolución exhiben un cintillo dorado y rojo de advertencia legal que recuerda al operador que interactúa con un modelo asistencial que no toma decisiones.
+4. **Mensaje de Apertura Mandatorio:**
+   Al iniciar la conversación, el agente saluda presentándose como asistente técnico de consulta y recuerda de forma explícita que la soberanía de decisión reside únicamente en las autoridades públicas.
+
+### 7.3. Protocolo de Visación Obligatoria (Filtro Humano Institucional)
 Antes de promulgar cualquier acto administrativo sugerido por la plataforma:
-1. El proyecto de resolución debe ser revisado y visado por la Oficina de Asesoría Jurídica (OAJ).
-2. La Subgerencia de Gestión del Riesgo de Desastres / Defensa Civil debe emitir el Informe Técnico de Sustento Fáctico (Peligro Inminente en campo).
-3. La Oficina de Abastecimiento / Logística debe verificar el estudio de mercado o disponibilidad de maquinaria en la zona.
+1. El proyecto de resolución debe ser revisado, ajustado y visado por la Oficina de Asesoría Jurídica (OAJ).
+2. La Subgerencia de Gestión del Riesgo de Desastres / Defensa Civil debe emitir el Informe Técnico de Sustento Fáctico (Peligro Inminente verificado en campo).
+3. La Oficina de Abastecimiento / Logística debe adjuntar las cotizaciones y constatar la capacidad inmediata de la maquinaria pesada en la zona.
 
 ---
 
 *Fin del Documento Confidencial.*  
-*COEN-DIGITAL • ASESORÍA JURÍDICA DE CRISIS Y GOBERNANZA CLIMÁTICA • REPÚBLICA DEL PERÚ*
+*COEN-DIGITAL • AMARU-CLIMATE • ASESORÍA JURÍDICA DE CRISIS Y GOBERNANZA CLIMÁTICA • REPÚBLICA DEL PERÚ*

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
     Activity,
@@ -20,7 +20,8 @@ import {
     Compass,
     Waves,
     LineChart as LineChartIcon,
-    LayoutGrid
+    LayoutGrid,
+    Upload
 } from "lucide-react";
 import {
     ResponsiveContainer,
@@ -43,6 +44,8 @@ export default function EnfenConsolePage() {
     const [syncing, setSyncing] = useState<boolean>(false);
     const [syncResult, setSyncResult] = useState<string | null>(null);
     const [chartMode, setChartMode] = useState<"linear" | "cards" | "both">("linear");
+    const [uploadingPdf, setUploadingPdf] = useState<boolean>(false);
+    const enfenFileInputRef = useRef<HTMLInputElement>(null);
 
     const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -91,6 +94,35 @@ export default function EnfenConsolePage() {
         }
     };
 
+    const handleUploadPdf = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setUploadingPdf(true);
+        setSyncResult(`Procesando Comunicado Oficial ENFEN: ${file.name}...`);
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            const res = await fetch(`${apiBase}/api/enfen/upload-pdf`, {
+                method: "POST",
+                body: formData,
+            });
+            if (res.ok) {
+                const json = await res.json();
+                setSyncResult(`¡Éxito! Comunicado Oficial N° ${json.numero || file.name} procesado (${json.fecha || "Oficial"}). SHA: ${json.hash_sha256?.substring(0, 10)}...`);
+                await fetchData();
+            } else {
+                const err = await res.json();
+                setSyncResult(`Error procesando Comunicado ENFEN: ${err.detail || "Fallo en servidor"}`);
+            }
+        } catch (err: any) {
+            setSyncResult(`Error de conexión al subir PDF: ${err.message}`);
+        } finally {
+            setUploadingPdf(false);
+            if (enfenFileInputRef.current) enfenFileInputRef.current.value = "";
+            setTimeout(() => setSyncResult(null), 8000);
+        }
+    };
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -129,8 +161,25 @@ export default function EnfenConsolePage() {
                         </div>
                     </div>
 
-                    {/* Acciones: Botón de Re-escaneo de PDFs */}
-                    <div className="flex items-center gap-3">
+                    {/* Acciones: Botón de Re-escaneo de PDFs y Carga Manual Forense */}
+                    <div className="flex items-center gap-2.5">
+                        <input
+                            type="file"
+                            ref={enfenFileInputRef}
+                            accept=".pdf"
+                            className="hidden"
+                            onChange={handleUploadPdf}
+                        />
+                        <button
+                            onClick={() => enfenFileInputRef.current?.click()}
+                            disabled={uploadingPdf}
+                            className="flex items-center gap-2 px-3.5 py-2 rounded-xl font-bold text-xs bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-red-300 border border-red-800/60 transition shadow-md disabled:opacity-50"
+                            title="Depositar y procesar manualmente un Comunicado Oficial ENFEN en formato PDF"
+                        >
+                            <Upload className={`w-3.5 h-3.5 ${uploadingPdf ? "animate-bounce" : ""}`} />
+                            <span>{uploadingPdf ? "Indexando PDF..." : "Depositar Comunicado (PDF)"}</span>
+                        </button>
+
                         <button
                             onClick={handleSync}
                             disabled={syncing}

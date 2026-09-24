@@ -1,0 +1,38 @@
+# Docker Compose para Instancia Ligera de PostgreSQL 16 + PostGIS
+# AMARU-CLIMATE (COEN-Digital) - Lab4
+# Despliegue Local Ligero: 512 MB RAM / 1.0 vCPU
+
+version: '3.8'
+
+services:
+  amaru-postgis:
+    image: postgis/postgis:16-3.4
+    container_name: amaru-climate-postgis
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-amaru_climate_db}
+      POSTGRES_USER: ${POSTGRES_USER:-amaru_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-AmaruSecure2026!}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+      - ./backend/database/init_postgis.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-amaru_admin} -d ${POSTGRES_DB:-amaru_climate_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgis_data:
+    name: amaru_postgis_volume

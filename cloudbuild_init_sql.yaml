@@ -1,0 +1,10 @@
+steps:
+  - name: 'postgres:16'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        echo "Iniciando inyeccion de esquema DDL en Cloud SQL amaru-c2-db..."
+        PGPASSWORD=AmaruSecureCloud2026! psql -h 34.176.254.17 -U amaru_admin -d amaru_climate_db -f backend/database/init_postgis.sql
+        echo "Esquema DDL inyectado con exito. Verificando extensiones PostGIS..."
+        PGPASSWORD=AmaruSecureCloud2026! psql -h 34.176.254.17 -U amaru_admin -d amaru_climate_db -c "SELECT postgis_full_version();"

@@ -1,14 +1,17 @@
 # backend/agents/dispatcher_agent.py
 """
 Agente 4: Agente Despachador y Auditor de Canales (Notification & Feedback Agent) V2.5
-- Despacho segmentado a DOS CANALES (Autoridades COER y Vecinal Comunitario).
-- Generador de Alerta bajo el Estándar Internacional CAP v1.2 (ITU-T X.1303 / OASIS) para SISMATE.
+- Despacho técnico a las plataformas institucionales del COEN, INDECI, COER y canales comunitarios.
+- Generador de Alerta bajo el Estándar Internacional OASIS CAP v1.2 (ITU-T X.1303) para entrega oficial a INDECI.
+  NOTA DE DOCTRINA OPERATIVA: AMARU-CLIMATE NO conecta ni activa SISMATE de forma autónoma.
+  AMARU-CLIMATE finaliza su misión técnica remitiendo el paquete pericial y la alerta CAP v1.2 a INDECI,
+  quienes son la autoridad estatal exclusiva con competencia legal para evaluar y activar SISMATE.
 - Registro inmutable de auditoría con latencia punta a punta.
 """
 import os
 import time
 import httpx
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Dict, Any
 from agents.schemas import (
     TriageResult,
@@ -60,9 +63,9 @@ class DispatcherAgent:
     ) -> CAPAlertPayload:
         """
         Genera el payload de alerta bajo el estándar internacional Common Alerting Protocol (CAP v1.2 / ITU-T X.1303).
-        Compatible con el protocolo de difusión celular estatal SISMATE.
+        Diseñado para la ingesta directa por el COEN / INDECI para su posterior evaluación de difusión celular (SISMATE).
         """
-        now_iso = datetime.utcnow().isoformat() + "Z"
+        now_iso = datetime.now(timezone.utc).isoformat()
         v = triage.validacion_nacional
 
         info_es = CAPAlertInfo(
@@ -205,7 +208,7 @@ class DispatcherAgent:
         latencia = round((time.time() * 1000) - start_time_ms, 2)
         audit_record = DispatchAudit(
             incident_id=incident_id,
-            timestamp_utc=datetime.utcnow().isoformat() + "Z",
+            timestamp_utc=datetime.now(timezone.utc).isoformat(),
             ubigeo=triage.ubigeo,
             distrito=triage.distrito,
             nivel_alerta=triage.nivel_alerta,

@@ -295,6 +295,113 @@
       "regla_de_seguridad": "Requiere triple coincidencia geográfica independiente en ventana de 30 minutos para elevar pre-alerta a consola. Nunca gatilla cálculos numéricos directos ni modifica el IRCE.",
       "gatilla_calculo_directo": false,
       "estado": "ACTIVO_AUDITADO"
+    },
+    {
+      "id": "SRC-INGEMMET-DGAR-2017",
+      "nombre": "INGEMMET - Evaluación Geológica de las Zonas Afectadas por el Niño Costero 2017 en las Regiones La Libertad y Cajamarca",
+      "ente": "INGEMMET (Dirección de Geología Ambiental y Riesgo Geológico)",
+      "tier": "TIER_1_OFICIAL_ESTATAL",
+      "dominio_autorizado": "https://repositorio.ingemmet.gob.pe",
+      "endpoint_especifico": "https://repositorio.ingemmet.gob.pe/handle/20.500.12544/InformeTecnicoNiñoCostero2017",
+      "categoria": "GEODINAMICA_ZONAS_CRITICAS",
+      "metodo_extraccion": "REPOSITORIO_PERICIAL_INGEMMET",
+      "frecuencia_minutos": 1440,
+      "variables_clave": [
+        "zonas_criticas_movimientos_en_masa",
+        "flujos_detritos_huaicos_manning",
+        "deslizamientos_rotacionales_escarpa_terzaghi",
+        "erosion_fluvial_socavacion_estribos",
+        "vulnerabilidad_infraestructura_vial_puentes"
+      ],
+      "gatilla_calculo_directo": true,
+      "estado": "ACTIVO_AUDITADO"
+    },
+    {
+      "id": "SRC-INDECI-COMPENDIO-2017",
+      "nombre": "INDECI - Compendio Estadístico del INDECI 2017: Gestión Reactiva (Niño Costero Enero-Mayo 2017)",
+      "ente": "INDECI (Dirección de Políticas, Planes y Evaluación)",
+      "tier": "TIER_1_OFICIAL_ESTATAL",
+      "dominio_autorizado": "https://www.indeci.gob.pe",
+      "endpoint_especifico": "https://www.indeci.gob.pe/compendio-estadistico-2017/",
+      "categoria": "REGISTRO_OFICIAL_DANOS_SINPAD",
+      "metodo_extraccion": "COMPENDIO_ESTADISTICO_PROCESADO_95.5PCT",
+      "frecuencia_minutos": 1440,
+      "variables_clave": [
+        "damnificados_validados_95.5pct",
+        "viviendas_colapsadas_inhabitables",
+        "carreteras_puentes_destruidos",
+        "hectareas_agricolas_perdidas",
+        "albergues_familias_instaladas"
+      ],
+      "gatilla_calculo_directo": true,
+      "estado": "ACTIVO_AUDITADO"
+    },
+    {
+      "id": "SRC-PNP-MININTER-COMISARIAS-2026",
+      "nombre": "PNP / MININTER - Línea Base de Información Georreferenciada de Comisarías Básicas a Nivel Nacional",
+      "ente": "Policía Nacional del Perú (PNP) / Ministerio del Interior (MININTER)",
+      "tier": "TIER_1_OFICIAL_ESTATAL",
+      "dominio_autorizado": "https://www.gob.pe/mininter",
+      "endpoint_especifico": "https://www.gob.pe/institucion/mininter/informes-publicaciones/comisarias-operativas-nacional",
+      "categoria": "SEGURIDAD_ORDEN_PUBLICO_SINAGERD",
+      "metodo_extraccion": "LINEA_BASE_PP0030_1332_CPNP",
+      "frecuencia_minutos": 1440,
+      "variables_clave": [
+        "cod_cpnp_oficial",
+        "cod_uni",
+        "nombre_comisaria",
+        "tipo_comisaria_categoria",
+        "sectores_patrullaje_cuadrante",
+        "region_policial",
+        "ubigeo_jurisdiccion"
+      ],
+      "gatilla_calculo_directo": true,
+      "estado": "ACTIVO_AUDITADO"
+    },
+    {
+      "id": "SRC-MINEDU-ESCALE-SIGMED-2026",
+      "nombre": "MINEDU / ESCALE - Padrón Georreferenciado de Instituciones y Servicios Educativos (SIGMED)",
+      "ente": "Ministerio de Educación (MINEDU) - Unidad de Estadística Educativa (ESCALE)",
+      "tier": "TIER_1_OFICIAL_ESTATAL",
+      "dominio_autorizado": "https://sigmed.minedu.gob.pe",
+      "endpoint_especifico": "https://sigmed.minedu.gob.pe/mapaeducativo/mapassee.aspx",
+      "categoria": "ALBERGUES_REFUGIOS_INFRAESTRUCTURA_ESCOLAR",
+      "metodo_extraccion": "REST_SVC_PADRON_UBIGEO",
+      "frecuencia_minutos": 1440,
+      "variables_clave": [
+        "codigo_modular",
+        "codigo_local_oficial",
+        "nombre_escuela",
+        "nivel_modalidad",
+        "gestion_dependencia_publica_privada",
+        "coordenadas_gps_lat_lon_altitud",
+        "codigo_ugel",
+        "aptitud_albergue_temporal_indeci"
+      ],
+      "gatilla_calculo_directo": true,
+      "estado": "ACTIVO_AUDITADO"
+    },
+    {
+      "id": "SRC-INEI-DIRECTORIO-MUNIS-2026",
+      "nombre": "INEI - Directorio Nacional de Municipalidades Provinciales y Distritales 2026",
+      "ente": "Instituto Nacional de Estadística e Informática (INEI)",
+      "tier": "TIER_1_OFICIAL_ESTATAL",
+      "dominio_autorizado": "https://www.gob.pe/inei",
+      "endpoint_especifico": "https://www.gob.pe/institucion/inei/informes-publicaciones/3908763-directorio-nacional-de-municipalidades-provinciales-y-distritales-agosto-2026",
+      "categoria": "AUTORIDADES_LOCALES_DEFENSA_CIVIL_SINAGERD",
+      "metodo_extraccion": "DIRECTORIO_OFICIAL_INEI_SETIEMBRE_2026",
+      "frecuencia_minutos": 1440,
+      "variables_clave": [
+        "ubigeo",
+        "alcalde_presidente_gt_grd",
+        "cargo_alcalde_distrital_provincial",
+        "telefonos_contacto_alcaldia",
+        "correo_electronico_mesa_partes",
+        "direccion_sede_palacio_municipal_coed"
+      ],
+      "gatilla_calculo_directo": true,
+      "estado": "ACTIVO_AUDITADO"
     }
   ]
 }
+

@@ -10,6 +10,8 @@ from typing import Dict, Any
 from services.national.dhn_buoy_service import get_dhn_buoy_status
 from services.national.enfen_service import get_enfen_official_status
 from services.national.imarpe_service import imarpe_service
+from services.mef_obras_service import mef_obras_service
+
 
 def calculate_chronological_angle(d: datetime) -> float:
     """
@@ -283,6 +285,7 @@ async def get_tactical_clocks_telemetry() -> Dict[str, Any]:
                 "badge": "NOV★ DEADLINE",
                 "dias_restantes": days_to_golden_fen,
                 "estado_urgencia": "CRITICO_VENTANA_CERRANDOSE" if days_to_golden_fen < 60 else "EN_EJECUCION",
+                "cartera_obras_pp0068": mef_obras_service.get_resumen_obras_por_grupo_logistico(),
                 "doctrina_logistica": [
                     {
                         "hitos": "Descolmatación intensiva de cauces fluviales",
@@ -310,6 +313,7 @@ async def get_tactical_clocks_telemetry() -> Dict[str, Any]:
                     }
                 ]
             },
+            "doctrina_logistica_obras_pp0068": mef_obras_service.get_resumen_obras_por_grupo_logistico(),
             "probabilidad_fen_2026_2027": {
                 "temporada": "Ciclo Interanual 2026 - 2027 (Hasta Julio 2027)",
                 "probabilidad_global_pct": 84,

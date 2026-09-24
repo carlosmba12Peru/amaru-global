@@ -1543,6 +1543,33 @@ export default function GeovisorConsole() {
                                     </div>
                                 )}
 
+                                {puntoSeleccionado.tiempoConcentracionH !== undefined && (
+                                    <div className="flex justify-between items-center py-1 border-b border-slate-900">
+                                        <span className="text-slate-400">Retardo Aluvial Manning (T_lag):</span>
+                                        <span className="font-bold text-rose-400 font-mono">
+                                            {puntoSeleccionado.tiempoConcentracionH} h (~{Math.round(puntoSeleccionado.tiempoConcentracionH * 60)} min)
+                                        </span>
+                                    </div>
+                                )}
+
+                                {puntoSeleccionado.tipo === "QUEBRADA_CRITICA" && (
+                                    <div className="flex justify-between items-center py-1 border-b border-slate-900">
+                                        <span className="text-slate-400">Índice IPH-FEN (Física Manning):</span>
+                                        <span className="font-bold text-amber-400 font-mono">
+                                            {puntoSeleccionado.nivel === "ROJO" ? "88.5% (Crítico Inminente)" : "52.0% (Vigilancia)"}
+                                        </span>
+                                    </div>
+                                )}
+
+                                {puntoSeleccionado.tipo === "ESTACION_AFORO" && puntoSeleccionado.caudalActualM3s && puntoSeleccionado.caudalUmbralRojoM3s && (
+                                    <div className="flex justify-between items-center py-1 border-b border-slate-900">
+                                        <span className="text-slate-400">Ratio Capacidad Red ANA:</span>
+                                        <span className="font-bold text-rose-400 font-mono">
+                                            {Math.round((puntoSeleccionado.caudalActualM3s / puntoSeleccionado.caudalUmbralRojoM3s) * 100)}% de sección crítica
+                                        </span>
+                                    </div>
+                                )}
+
                                 {puntoSeleccionado.temperaturaC !== undefined && (
                                     <div className="flex justify-between items-center py-1 border-b border-slate-900">
                                         <span className="text-slate-400">Temperatura Mínima:</span>

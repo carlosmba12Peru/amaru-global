@@ -41,6 +41,7 @@ export default function AyniCommunityPage() {
     const [salud, setSalud] = useState<any>(null);
     const [difusionHistory, setDifusionHistory] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [idioma, setIdioma] = useState<"es" | "qu" | "ay">("es");
 
     // Formulario de Despacho Rápido (Telegram / Correo)
     const [broadcastCanal, setBroadcastCanal] = useState<"TELEGRAM" | "CORREO" | "AMBOS">("AMBOS");
@@ -204,7 +205,7 @@ export default function AyniCommunityPage() {
                         <div className="flex flex-wrap items-center gap-2">
                             <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 flex items-center gap-1.5">
                                 <Users className="w-3.5 h-3.5" />
-                                GOBERNANZA COMUNITARIA C2
+                                COED SOCIAL AMARU • GOBERNANZA COMUNITARIA C2
                             </span>
                             <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-950 text-blue-300 border border-blue-800 font-bold flex items-center gap-1">
                                 <Send className="w-3 h-3 text-sky-400" />
@@ -223,25 +224,63 @@ export default function AyniCommunityPage() {
                             </span>
                         </h1>
                         <p className="text-xs md:text-sm text-slate-300 max-w-3xl leading-relaxed">
-                            Organización comunitaria territorial en 3 tiempos (Prevención, Acción y Apoyo Familiar): Articulación directa entre Juntas Vecinales (JUVESC), Red de Ollas Comunes, Agentes Comunitarios de Salud (ACS) y brigadistas para la protección de vidas durante el Fenómeno El Niño 2026-2027.
+                            {idioma === "qu"
+                                ? "Ayllukunap amachakuynin: Huñunakuy Juntas Vecinales (JUVESC), Ollas Comunes, Agentes Comunitarios de Salud (ACS) hinallataq brigadistakuna El Niño 2026-2027 llakipi kawsaykunata amachanapaq."
+                                : idioma === "ay"
+                                ? "Ayllu qhanañchawi: Jaqi tamachawi JUVESC, Ollas Comunes, Agentes de Salud brigadanakampi jakawi qhanstayañataki El Niño 2026-2027 taypina."
+                                : "Organización comunitaria territorial en 3 tiempos (Prevención, Acción y Apoyo Familiar): Articulación directa entre Juntas Vecinales (JUVESC), Red de Ollas Comunes, Agentes Comunitarios de Salud (ACS) y brigadistas para la protección de vidas durante el Fenómeno El Niño 2026-2027."
+                            }
                         </p>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2">
-                        <Link
-                            href="/lex"
-                            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-amber-950/60 hover:bg-amber-900 text-amber-200 border border-amber-700/50 transition flex items-center gap-1.5 shadow"
-                        >
-                            <span>Ir a AMARU-LEX (Leyes)</span>
-                            <ChevronRight className="w-3.5 h-3.5" />
-                        </Link>
-                        <Link
-                            href="/yachay"
-                            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-emerald-950/60 hover:bg-emerald-900 text-emerald-200 border border-emerald-700/50 transition flex items-center gap-1.5 shadow"
-                        >
-                            <span>Ir a AMARU-YACHAY (Saberes)</span>
-                            <ChevronRight className="w-3.5 h-3.5" />
-                        </Link>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                        {/* Selector Lingüístico de Interfaz */}
+                        <div className="flex items-center gap-1 bg-slate-950/90 p-1 rounded-xl border border-slate-800 text-xs shadow-inner">
+                            <button
+                                onClick={() => setIdioma("es")}
+                                className={`px-2 py-1 rounded-lg transition font-medium ${
+                                    idioma === "es" ? "bg-rose-600 text-white font-bold shadow" : "text-slate-400 hover:text-white"
+                                }`}
+                                title="Castellano Llano"
+                            >
+                                🇵🇪 Castellano
+                            </button>
+                            <button
+                                onClick={() => setIdioma("qu")}
+                                className={`px-2 py-1 rounded-lg transition font-medium ${
+                                    idioma === "qu" ? "bg-amber-600 text-white font-bold shadow" : "text-slate-400 hover:text-white"
+                                }`}
+                                title="Runasimi (Quechua)"
+                            >
+                                🦙 Runasimi
+                            </button>
+                            <button
+                                onClick={() => setIdioma("ay")}
+                                className={`px-2 py-1 rounded-lg transition font-medium ${
+                                    idioma === "ay" ? "bg-cyan-600 text-white font-bold shadow" : "text-slate-400 hover:text-white"
+                                }`}
+                                title="Aymara"
+                            >
+                                🌾 Aymara
+                            </button>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                            <Link
+                                href="/lex"
+                                className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-amber-950/60 hover:bg-amber-900 text-amber-200 border border-amber-700/50 transition flex items-center gap-1.5 shadow"
+                            >
+                                <span>AMARU-LEX</span>
+                                <ChevronRight className="w-3.5 h-3.5" />
+                            </Link>
+                            <Link
+                                href="/yachay"
+                                className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-emerald-950/60 hover:bg-emerald-900 text-emerald-200 border border-emerald-700/50 transition flex items-center gap-1.5 shadow"
+                            >
+                                <span>AMARU-YACHAY</span>
+                                <ChevronRight className="w-3.5 h-3.5" />
+                            </Link>
+                        </div>
                     </div>
                 </div>
 

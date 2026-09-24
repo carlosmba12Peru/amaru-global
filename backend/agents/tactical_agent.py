@@ -7,30 +7,24 @@ Genera el Boletín Situacional Técnico Oficial del COEN.
 """
 import os
 import json
-from typing import Dict, Any
-import google.generativeai as genai
-
-from agents.schemas import TriageResult, TacticalAssessment, CriticalResource
+from typing import Dict, Any, Optional, List
+from agents.schemas import TriageResult, TacticalAssessment, CriticalResource, HistoricalAnalogueResult
 from services.tools.territorial_tools import (
     query_exposed_population,
     check_critical_infrastructure,
     locate_emergency_machinery
 )
-
-# Configuración con Google AI Studio
-API_KEY = os.getenv("GOOGLE_GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY")
-if API_KEY:
-    try:
-        genai.configure(api_key=API_KEY)
-    except Exception:
-        pass
+from services.model_adapter import model_adapter
 
 class TacticalAgent:
     def __init__(self):
         self.name = "Agente de Evaluación Táctica y Logística"
-        self.model_name = "gemini-1.5-flash"
 
-    async def assess(self, triage: TriageResult) -> TacticalAssessment:
+    async def assess(
+        self,
+        triage: TriageResult,
+        historical: Optional[HistoricalAnalogueResult] = None
+    ) -> TacticalAssessment:
         ubigeo = triage.ubigeo
         
         # 1. Ejecución de herramientas (Tools/Function Calling) territoriales
@@ -38,7 +32,17 @@ class TacticalAgent:
         infra_info = check_critical_infrastructure(ubigeo)
         machinery_info = locate_emergency_machinery(pop_info.get("departamento", "Lima"))
 
-        # 2. Generación o razonamiento con Gemini 1.5
+        # 2. Generación táctica con enjaulamiento cognitivo (ModelAdapter)
+        # Contexto de memoria histórica si el Agente YACHAY proveyó evaluación
+        hist_context = ""
+        if historical:
+            hist_context = f"""
+        - Evento Análogo Histórico: {historical.evento_analogo_nombre} (Similitud: {historical.similitud_porcentaje}%)
+        - Lección Doctrinal Previa: {historical.leccion_historica_clave}
+        - Nodos de Falla y Puentes Críticos: {json.dumps(historical.memoria_infraestructura_fallas)}
+        - Advertencia de Albergues Inundables: {json.dumps(historical.memoria_social_albergues)}
+            """
+
         prompt = f"""
         Eres el Oficial Superior de Operaciones Tácticas del COEN (Centro de Operaciones de Emergencia Nacional del Perú).
         Genera una evaluación técnica estructurada y boletín oficial con los siguientes datos del incidente:
@@ -52,6 +56,7 @@ class TacticalAgent:
         - Población expuesta en faja marginal (INEI): {pop_info.get('poblacion_expuesta_estimada')} habitantes ({pop_info.get('familias_en_faja_marginal')} familias)
         - Vías de comunicación en riesgo: {json.dumps(infra_info.get('vias_comprometidas'))}
         - Maquinaria disponible COER: {json.dumps(machinery_info)}
+        {hist_context}
 
         Responde en formato JSON estricto con las siguientes claves:
         {{
@@ -60,7 +65,21 @@ class TacticalAgent:
         }}
         """
 
-        accion_inmediata = f"Cierre preventivo de tránsito en {infra_info.get('vias_comprometidas', ['vías'])[0]} y despliegue de maquinaria pesada a puntos críticos de la cuenca {triage.cuenca}."
+        advertencia_historica = ""
+        if historical and historical.memoria_infraestructura_fallas:
+            primer_nodo = historical.memoria_infraestructura_fallas[0]
+            advertencia_historica = f" ALERTA HISTÓRICA: Monitorear {primer_nodo.get('nombre', 'puente crítico')} por antecedente de colapso en {historical.evento_analogo_nombre}."
+
+        accion_inmediata = f"Cierre preventivo de tránsito en {infra_info.get('vias_comprometidas', ['vías'])[0]} y despliegue de maquinaria pesada a puntos críticos de la cuenca {triage.cuenca}.{advertencia_historica}"
+        
+        hist_boletin_extra = ""
+        if historical:
+            hist_boletin_extra = (
+                f"\nPRECEDENTE HISTÓRICO Y DOCTRINA (AGENTE YACHAY): "
+                f"Firma análoga a {historical.evento_analogo_nombre} ({historical.similitud_porcentaje}% similitud). "
+                f"{historical.recomendacion_doctrinal}"
+            )
+
         boletin = (
             f"BOLETÍN SITUACIONAL COEN-OFICIAL N° 048-2026/COEN-INDECI.\n"
             f"ZONA: {triage.distrito.upper()} - {triage.cuenca.upper()}.\n"
@@ -68,23 +87,17 @@ class TacticalAgent:
             f"Se registra precipitación acumulada de {triage.telemetria.precipitation_24h} mm y saturación edáfica al {triage.telemetria.soil_moisture}%.\n"
             f"IMPACTO ESTIMADO: {pop_info.get('poblacion_expuesta_estimada')} personas en faja marginal. Riesgo inminente de huaicos e interrupción vial.\n"
             f"DISPOSICIÓN: Activar de inmediato Centro de Operaciones de Emergencia Local (COEL), evacuar a los albergues habilitados y movilizar maquinaria pesada."
+            f"{hist_boletin_extra}"
         )
 
-        if API_KEY:
-            try:
-                model = genai.GenerativeModel(self.model_name)
-                response = model.generate_content(
-                    prompt,
-                    generation_config={"response_mime_type": "application/json"}
-                )
-                res_json = json.loads(response.text)
-                if "accion_operativa_inmediata" in res_json:
-                    accion_inmediata = res_json["accion_operativa_inmediata"]
-                if "boletin_tecnico_oficial" in res_json:
-                    boletin = res_json["boletin_tecnico_oficial"]
-            except Exception as e:
-                # Log de fallback sin interrumpir el flujo del pipeline
-                print(f"[{self.name}] Utilizando generador táctico base estructurado: {e}")
+        try:
+            res_json = await model_adapter.generate_json(prompt)
+            if "accion_operativa_inmediata" in res_json:
+                accion_inmediata = res_json["accion_operativa_inmediata"]
+            if "boletin_tecnico_oficial" in res_json:
+                boletin = res_json["boletin_tecnico_oficial"]
+        except Exception as e:
+            print(f"[{self.name}] Utilizando generador táctico base estructurado: {e}")
 
         # Construcción de recursos críticos formateados
         recursos = [

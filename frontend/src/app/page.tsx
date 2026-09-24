@@ -25,7 +25,15 @@ import {
     Satellite,
     ExternalLink,
     Scale,
-    BookOpen
+    BookOpen,
+    Mountain,
+    Search,
+    Sliders,
+    ChevronRight,
+    RefreshCw,
+    Globe,
+    Building2,
+    Users
 } from "lucide-react";
 
 const MapViewer = dynamic(() => import("@/components/MapViewer"), {
@@ -62,9 +70,327 @@ export interface CuencaCritica {
     aviso_originaria?: string;
 }
 
+export interface QuebradaTactical {
+    id: string;
+    nombre: string;
+    distrito: string;
+    ubigeo: string;
+    departamento: string;
+    pendiente: string;
+    tlagMinutos: number;
+    iphBasal: number;
+    iphActivo: number;
+    caudalEstimado: number;
+    mallasGeodinamicas: boolean;
+    leccionHistorica: string;
+}
+
+export const QUEBRADAS_TACTICAS: QuebradaTactical[] = [
+    {
+        id: "q-quirio",
+        nombre: "Quebrada Quirio",
+        distrito: "Lurigancho-Chosica",
+        ubigeo: "150118",
+        departamento: "Lima",
+        pendiente: "14% (Manning n=0.055)",
+        tlagMinutos: 24,
+        iphBasal: 14.5,
+        iphActivo: 93.8,
+        caudalEstimado: 48.5,
+        mallasGeodinamicas: true,
+        leccionHistorica: "Colmatación de barreras dinámicas en 2017. Tiempo de evacuación vecinal: 20 min."
+    },
+    {
+        id: "q-carossio",
+        nombre: "Quebrada Carossio",
+        distrito: "Lurigancho-Chosica",
+        ubigeo: "150118",
+        departamento: "Lima",
+        pendiente: "18% (Manning n=0.060)",
+        tlagMinutos: 38,
+        iphBasal: 16.2,
+        iphActivo: 91.4,
+        caudalEstimado: 36.2,
+        mallasGeodinamicas: true,
+        leccionHistorica: "Impacto directo a Carretera Central y Losas Altas en 1987, 2015 y 2017."
+    },
+    {
+        id: "q-pedregal",
+        nombre: "Quebrada Pedregal",
+        distrito: "Lurigancho-Chosica",
+        ubigeo: "150118",
+        departamento: "Lima",
+        pendiente: "16% (Manning n=0.050)",
+        tlagMinutos: 42,
+        iphBasal: 12.0,
+        iphActivo: 88.5,
+        caudalEstimado: 29.8,
+        mallasGeodinamicas: true,
+        leccionHistorica: "Arrastre masivo de bloques rocosos hacia el Río Rímac."
+    },
+    {
+        id: "q-huaycoloro",
+        nombre: "Quebrada Huaycoloro",
+        distrito: "San Antonio / SJL",
+        ubigeo: "150132",
+        departamento: "Lima",
+        pendiente: "8% (Manning n=0.045)",
+        tlagMinutos: 75,
+        iphBasal: 11.8,
+        iphActivo: 87.2,
+        caudalEstimado: 65.0,
+        mallasGeodinamicas: false,
+        leccionHistorica: "Colapso de puente Huachipa y anegamiento de la autopista Ramiro Prialé en 2017."
+    },
+    {
+        id: "q-san-ildefonso",
+        nombre: "Quebrada San Ildefonso",
+        distrito: "El Porvenir / Trujillo",
+        ubigeo: "130101",
+        departamento: "La Libertad",
+        pendiente: "6% (Manning n=0.040)",
+        tlagMinutos: 52,
+        iphBasal: 9.4,
+        iphActivo: 94.2,
+        caudalEstimado: 82.0,
+        mallasGeodinamicas: false,
+        leccionHistorica: "7 desbordes continuos en 2017 sepultaron el Cementerio Mampuesto y la Plaza Mayor."
+    },
+    {
+        id: "q-el-leon",
+        nombre: "Quebrada El León",
+        distrito: "Huanchaco / La Esperanza",
+        ubigeo: "130104",
+        departamento: "La Libertad",
+        pendiente: "5% (Manning n=0.038)",
+        tlagMinutos: 65,
+        iphBasal: 8.5,
+        iphActivo: 86.4,
+        caudalEstimado: 54.0,
+        mallasGeodinamicas: false,
+        leccionHistorica: "Inundación masiva del Balneario de Huanchaco y corte de Carretera Panamericana Norte."
+    }
+];
+
+export interface DistritoFEN {
+    ubigeo: string;
+    nombre: string;
+    departamento: string;
+    provincia: string;
+    cuenca: string;
+    lluviaActual: number;
+    lluviaHistoricaPico: number;
+    eventosFEN: string;
+    impactoHistorico: string;
+    estadoLluvia: "ROJO" | "AMARILLO" | "VERDE";
+    cape: number;
+    suelo: number;
+    caudal: number;
+    ds124: boolean;
+}
+
+export const DISTRITOS_FEN_CATALOGO: DistritoFEN[] = [
+    {
+        ubigeo: "200105",
+        nombre: "Catacaos",
+        departamento: "Piura",
+        provincia: "Piura",
+        cuenca: "Río Piura / Bajo Piura",
+        lluviaActual: 52.4,
+        lluviaHistoricaPico: 115.0,
+        eventosFEN: "FEN 1983, 1998, 2017, 2023",
+        impactoHistorico: "35,000 damnificados en 2017 por rotura de dique Viduque / Pedregal (caudal 2,300 m³/s).",
+        estadoLluvia: "ROJO",
+        cape: 1890,
+        suelo: 94.0,
+        caudal: 1420.0,
+        ds124: true
+    },
+    {
+        ubigeo: "150118",
+        nombre: "Lurigancho-Chosica",
+        departamento: "Lima",
+        provincia: "Lima",
+        cuenca: "Río Rímac / Quebradas Quirio-Carossio",
+        lluviaActual: 41.2,
+        lluviaHistoricaPico: 68.0,
+        eventosFEN: "FEN 1987, 1997, 2015, 2017, 2023",
+        impactoHistorico: "Activación masiva de 14 quebradas simultáneas. Bloqueo de Carretera Central.",
+        estadoLluvia: "ROJO",
+        cape: 1620,
+        suelo: 88.0,
+        caudal: 118.5,
+        ds124: true
+    },
+    {
+        ubigeo: "140304",
+        nombre: "Íllimo",
+        departamento: "Lambayeque",
+        provincia: "Lambayeque",
+        cuenca: "Río La Leche",
+        lluviaActual: 38.0,
+        lluviaHistoricaPico: 98.0,
+        eventosFEN: "FEN 1998, 2017, Ciclón Yaku 2023",
+        impactoHistorico: "Incomunicación total por caída de puente La Leche; casco urbano inundado bajo 1.5m.",
+        estadoLluvia: "ROJO",
+        cape: 1450,
+        suelo: 85.0,
+        caudal: 480.0,
+        ds124: true
+    },
+    {
+        ubigeo: "200114",
+        nombre: "Tambogrande",
+        departamento: "Piura",
+        provincia: "Piura",
+        cuenca: "Río Piura / Quebrada San Francisco",
+        lluviaActual: 46.5,
+        lluviaHistoricaPico: 145.0,
+        eventosFEN: "FEN 1983, 1998, 2017",
+        impactoHistorico: "Aislamiento de decenas de caseríos por crecida de Quebrada San Francisco.",
+        estadoLluvia: "ROJO",
+        cape: 1720,
+        suelo: 91.0,
+        caudal: 850.0,
+        ds124: true
+    },
+    {
+        ubigeo: "240101",
+        nombre: "Tumbes",
+        departamento: "Tumbes",
+        provincia: "Tumbes",
+        cuenca: "Río Tumbes / Puyango",
+        lluviaActual: 36.2,
+        lluviaHistoricaPico: 160.0,
+        eventosFEN: "FEN 1983, 1998, 2023",
+        impactoHistorico: "Desborde de Río Tumbes inundando Bellavista, El Tablazo y cultivos de plátano.",
+        estadoLluvia: "ROJO",
+        cape: 1680,
+        suelo: 87.0,
+        caudal: 1100.0,
+        ds124: true
+    },
+    {
+        ubigeo: "130101",
+        nombre: "Trujillo / El Porvenir",
+        departamento: "La Libertad",
+        provincia: "Trujillo",
+        cuenca: "Quebrada San Ildefonso / Moche",
+        lluviaActual: 32.5,
+        lluviaHistoricaPico: 85.0,
+        eventosFEN: "FEN 1998, 2017, 2023",
+        impactoHistorico: "Huaicos de lodo atravesaron Av. España e inundaron el centro histórico de Trujillo.",
+        estadoLluvia: "ROJO",
+        cape: 1380,
+        suelo: 82.0,
+        caudal: 95.0,
+        ds124: true
+    },
+    {
+        ubigeo: "200601",
+        nombre: "Sullana",
+        departamento: "Piura",
+        provincia: "Sullana",
+        cuenca: "Río Chira / Represa Poechos",
+        lluviaActual: 28.0,
+        lluviaHistoricaPico: 120.0,
+        eventosFEN: "FEN 1983, 1998, 2017",
+        impactoHistorico: "Aliviadero de Poechos a 3,800 m³/s. Inundación de Salitral y Marcavelica.",
+        estadoLluvia: "AMARILLO",
+        cape: 1120,
+        suelo: 72.0,
+        caudal: 620.0,
+        ds124: true
+    },
+    {
+        ubigeo: "020101",
+        nombre: "Huaraz",
+        departamento: "Áncash",
+        provincia: "Huaraz",
+        cuenca: "Río Santa / Callejón de Huaylas",
+        lluviaActual: 38.5,
+        lluviaHistoricaPico: 72.0,
+        eventosFEN: "Aluvión 1941, FEN 1998, 2017",
+        impactoHistorico: "Desborde de lagunas glaciares y ríos Quilcay y Santa.",
+        estadoLluvia: "ROJO",
+        cape: 1350,
+        suelo: 86.0,
+        caudal: 142.0,
+        ds124: true
+    },
+    {
+        ubigeo: "120601",
+        nombre: "Satipo",
+        departamento: "Junín",
+        provincia: "Satipo",
+        cuenca: "Río Satipo / Selva Central",
+        lluviaActual: 62.0,
+        lluviaHistoricaPico: 130.0,
+        eventosFEN: "Inundaciones 2015, 2017, 2023",
+        impactoHistorico: "Desborde violento de ríos Mazamari y Satipo cortando accesos viales.",
+        estadoLluvia: "ROJO",
+        cape: 1750,
+        suelo: 94.0,
+        caudal: 420.0,
+        ds124: true
+    },
+    {
+        ubigeo: "010401",
+        nombre: "Nieva / Condorcanqui",
+        departamento: "Amazonas",
+        provincia: "Condorcanqui",
+        cuenca: "Río Marañón / Nieva",
+        lluviaActual: 75.0,
+        lluviaHistoricaPico: 140.0,
+        eventosFEN: "Crecientes extraordinarias de Selva Alta",
+        impactoHistorico: "Anegamiento masivo de comunidades ribereñas Awajún y Wampis.",
+        estadoLluvia: "ROJO",
+        cape: 1910,
+        suelo: 96.0,
+        caudal: 1650.0,
+        ds124: true
+    },
+    {
+        ubigeo: "081301",
+        nombre: "Urubamba",
+        departamento: "Cusco",
+        provincia: "Urubamba",
+        cuenca: "Río Vilcanota / Valle Sagrado",
+        lluviaActual: 44.0,
+        lluviaHistoricaPico: 85.0,
+        eventosFEN: "Aluvión Machu Picchu 2010, 2023",
+        impactoHistorico: "Destrucción de vía férrea y sectores ribereños del Valle Sagrado.",
+        estadoLluvia: "ROJO",
+        cape: 1280,
+        suelo: 89.0,
+        caudal: 310.0,
+        ds124: true
+    },
+    {
+        ubigeo: "210505",
+        nombre: "Santa Rosa / Mazocruz",
+        departamento: "Puno",
+        provincia: "El Collao",
+        cuenca: "Río Ilave / Altiplano Sur",
+        lluviaActual: 1.8,
+        lluviaHistoricaPico: 25.0,
+        eventosFEN: "Heladas extremas concomitantes FEN",
+        impactoHistorico: "Temperaturas de -20°C con mortandad de camélidos sudamericanos.",
+        estadoLluvia: "VERDE",
+        cape: 210,
+        suelo: 45.0,
+        caudal: 14.2,
+        ds124: false
+    }
+];
+
 export default function NationalDashboard() {
     const [verModalCap, setVerModalCap] = useState<boolean>(false);
     const [cuencaSeleccionada, setCuencaSeleccionada] = useState<string>("150118");
+    const [modoLluviaTorrencial, setModoLluviaTorrencial] = useState<boolean>(true);
+    const [quebradasAlertaRoja, setQuebradasAlertaRoja] = useState<boolean>(false);
+    const [searchDistrito, setSearchDistrito] = useState<string>("");
+    const [modoWarRoom, setModoWarRoom] = useState<boolean>(false);
 
     // Catálogo representativo de cuencas críticas con clasificación etnoterritorial RENALIO
     const CUENCAS_CRITICAS: CuencaCritica[] = [
@@ -235,11 +561,118 @@ export default function NationalDashboard() {
             ds124_pcm: true,
             aviso_castellano: "⚠️ ALERTA EN ÍLLIMO: Río La Leche en vigilancia crítica por saturación de cuenca media (68%). Monitoreo 24/7 en diques y defensas ribereñas. Mantenerse atentos a reportes del COEL.",
             aviso_originaria: undefined
+        },
+        {
+            ubigeo: "200105",
+            nombre: "Catacaos",
+            departamento: "Piura",
+            provincia: "Piura",
+            cuenca: "Río Piura / Viduque-Pedregal",
+            nivel: "ROJO",
+            lluvia: 52.4,
+            cape: 1890,
+            suelo: 94.0,
+            caudal: 1420.0,
+            estado: "Desborde inminente Bajo Piura",
+            tipo: "MONOLINGÜE",
+            lengua_nombre: "Castellano Comunitario",
+            familia: "Indoeuropea (Romance)",
+            iso_code: "es-PE",
+            cenepred_riesgo: "MUY ALTO",
+            ds124_pcm: true,
+            aviso_castellano: "🚨 ALERTA MÁXIMA EN CATACAOS: Caudal del Río Piura en 1,420 m³/s con riesgo de rotura de dique Pedregal y Viduque. Evacuación inmediata a zonas altas.",
+            aviso_originaria: undefined
+        },
+        {
+            ubigeo: "200114",
+            nombre: "Tambogrande",
+            departamento: "Piura",
+            provincia: "Piura",
+            cuenca: "Río Piura / Quebrada San Francisco",
+            nivel: "ROJO",
+            lluvia: 46.5,
+            cape: 1720,
+            suelo: 91.0,
+            caudal: 850.0,
+            estado: "Aislamiento por Quebrada San Francisco",
+            tipo: "MONOLINGÜE",
+            lengua_nombre: "Castellano Comunitario",
+            familia: "Indoeuropea (Romance)",
+            iso_code: "es-PE",
+            cenepred_riesgo: "MUY ALTO",
+            ds124_pcm: true,
+            aviso_castellano: "🚨 ALERTA EN TAMBOGRANDE: Crecida violenta de Quebrada San Francisco. Riesgo de corte de vías hacia Piura y caseríos rurales.",
+            aviso_originaria: undefined
+        },
+        {
+            ubigeo: "240101",
+            nombre: "Tumbes",
+            departamento: "Tumbes",
+            provincia: "Tumbes",
+            cuenca: "Río Tumbes / Puyango",
+            nivel: "ROJO",
+            lluvia: 36.2,
+            cape: 1680,
+            suelo: 87.0,
+            caudal: 1100.0,
+            estado: "Desborde fluvial Río Tumbes",
+            tipo: "MONOLINGÜE",
+            lengua_nombre: "Castellano Comunitario",
+            familia: "Indoeuropea (Romance)",
+            iso_code: "es-PE",
+            cenepred_riesgo: "MUY ALTO",
+            ds124_pcm: true,
+            aviso_castellano: "🚨 ALERTA ROJA EN TUMBES: Río Tumbes supera umbral de inundación en Bellavista y El Tablazo. Resguardar ganado y evacuar viviendas ribereñas.",
+            aviso_originaria: undefined
+        },
+        {
+            ubigeo: "130101",
+            nombre: "Trujillo / El Porvenir",
+            departamento: "La Libertad",
+            provincia: "Trujillo",
+            cuenca: "Quebrada San Ildefonso / Moche",
+            nivel: "ROJO",
+            lluvia: 32.5,
+            cape: 1380,
+            suelo: 82.0,
+            caudal: 95.0,
+            estado: "Activación Quebrada San Ildefonso",
+            tipo: "MONOLINGÜE",
+            lengua_nombre: "Castellano Comunitario",
+            familia: "Indoeuropea (Romance)",
+            iso_code: "es-PE",
+            cenepred_riesgo: "MUY ALTO",
+            ds124_pcm: true,
+            aviso_castellano: "🚨 ALERTA EN TRUJILLO: Lluvias torrenciales activan Quebrada San Ildefonso en El Porvenir. Desvío de caudal hacia dique y quebrada El León.",
+            aviso_originaria: undefined
         }
     ];
 
     const cActual = CUENCAS_CRITICAS.find(c => c.ubigeo === cuencaSeleccionada) || CUENCAS_CRITICAS[0];
     const isBilingue = cActual.tipo === "BILINGÜE";
+
+    // Ordenamiento dinámico para Bloque 1:
+    // Si modoLluviaTorrencial está activo: distritos con lluvia >= 30mm o ROJO van en cabecera ordenados desc.
+    // Si modoLluviaTorrencial es falso (normal): distritos ordenados por daño histórico pico FEN desc.
+    const distritosOrdenadosBloque1 = [...DISTRITOS_FEN_CATALOGO].sort((a, b) => {
+        if (modoLluviaTorrencial) {
+            const aEsRojo = a.estadoLluvia === "ROJO" || a.lluviaActual >= 30;
+            const bEsRojo = b.estadoLluvia === "ROJO" || b.lluviaActual >= 30;
+            if (aEsRojo && !bEsRojo) return -1;
+            if (!aEsRojo && bEsRojo) return 1;
+            return b.lluviaActual - a.lluviaActual;
+        } else {
+            return b.lluviaHistoricaPico - a.lluviaHistoricaPico;
+        }
+    });
+
+    // Filtro para Buscador de Distritos en Bloque 2
+    const distritosFiltradosBusqueda = DISTRITOS_FEN_CATALOGO.filter(d => 
+        d.nombre.toLowerCase().includes(searchDistrito.toLowerCase()) ||
+        d.departamento.toLowerCase().includes(searchDistrito.toLowerCase()) ||
+        d.provincia.toLowerCase().includes(searchDistrito.toLowerCase()) ||
+        d.ubigeo.includes(searchDistrito)
+    );
 
     // Generación dinámica de payload ITU-T X.1303 / OASIS CAP v1.2 para SISMATE
     // Si es bilingüe: 2 bloques <info> (es-PE y lengua originaria)
@@ -300,7 +733,7 @@ export default function NationalDashboard() {
                         EN VIVO • 24/7
                     </span>
                     <span className="font-bold text-white text-sm tracking-wide">
-                        COEN-DIGITAL: TABLERO DE MANDO NACIONAL
+                        COED NACIONAL AMARU: TABLERO DE MANDO DIGITAL
                     </span>
                 </div>
 
@@ -326,6 +759,124 @@ export default function NationalDashboard() {
                             SENAMHI: <b>WFS EMA Validado</b>
                         </span>
                     </div>
+
+                    <button
+                        type="button"
+                        onClick={() => setModoWarRoom(!modoWarRoom)}
+                        className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-bold transition border cursor-pointer ${
+                            modoWarRoom
+                                ? "bg-amber-500 text-slate-950 border-amber-400 shadow-lg shadow-amber-500/30"
+                                : "bg-slate-950/80 border-slate-700 text-slate-300 hover:text-white hover:border-slate-500"
+                        }`}
+                        title="Modo War Room: maximiza el Geovisor 3D y Reloj Táctico para pantallas de crisis"
+                    >
+                        <Maximize2 className="w-3.5 h-3.5" />
+                        <span>{modoWarRoom ? "Salir de War Room" : "🖥️ Modo War Room"}</span>
+                    </button>
+                </div>
+            </div>
+
+            {/* ========================================================================= */}
+            {/* [SUITE TRIPARTITA & SUBSERVICIOS] AMARU-CLIMATE SOBERANO                */}
+            {/* ========================================================================= */}
+            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+                    <div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs font-mono font-black px-2 py-0.5 rounded bg-gradient-to-r from-amber-500 to-sky-500 text-slate-950">
+                                SISTEMA TRIPARTITO
+                            </span>
+                            <h2 className="text-base font-black text-white tracking-wide">
+                                AMARU-CLIMATE • Suite Tripartita Soberana
+                            </h2>
+                        </div>
+                        <p className="text-xs text-slate-400 mt-0.5">
+                            Plataforma integral de comando, inteligencia territorial y respuesta comunitaria ante el FEN 2026-2027
+                        </p>
+                    </div>
+                    <span className="text-[10px] font-mono text-slate-400 bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800 self-start md:self-auto">
+                        Ley N.º 29664 • SINAGERD • D.S. 124-2026-PCM
+                    </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {/* Subservicio 1: COED Nacional AMARU */}
+                    <div className="bg-slate-950/60 border border-sky-800/60 hover:border-sky-500/80 rounded-xl p-3 flex flex-col justify-between transition group">
+                        <div className="space-y-1.5">
+                            <div className="flex items-center justify-between">
+                                <span className="flex items-center gap-1.5 text-xs font-bold text-sky-300">
+                                    <Globe className="w-3.5 h-3.5 text-sky-400" />
+                                    COED Nacional AMARU
+                                </span>
+                                <span className="text-[9px] font-bold bg-sky-950 text-sky-300 px-1.5 py-0.5 rounded border border-sky-800">
+                                    NIVEL C2 MACRO
+                                </span>
+                            </div>
+                            <p className="text-[11px] text-slate-400 leading-snug">
+                                Comando estratégico, 159 cuencas ANA, radares Banda C, ENFEN Niño 1+2 y despacho celular CAP v1.2 / SISMATE.
+                            </p>
+                        </div>
+                        <div className="pt-2.5 mt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
+                            <span className="text-slate-500">Salas de Crisis & INDECI</span>
+                            <span className="text-sky-400 font-bold group-hover:translate-x-1 transition flex items-center gap-0.5">
+                                Activo en pantalla <ChevronRight className="w-3 h-3" />
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Subservicio 2: COED Municipal AMARU */}
+                    <Link
+                        href="/municipal/150118"
+                        className="bg-slate-950/60 border border-amber-800/60 hover:border-amber-500/80 rounded-xl p-3 flex flex-col justify-between transition group cursor-pointer"
+                    >
+                        <div className="space-y-1.5">
+                            <div className="flex items-center justify-between">
+                                <span className="flex items-center gap-1.5 text-xs font-bold text-amber-300">
+                                    <Building2 className="w-3.5 h-3.5 text-amber-400" />
+                                    COED Municipal AMARU
+                                </span>
+                                <span className="text-[9px] font-bold bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-800">
+                                    1,891 ALCALDÍAS
+                                </span>
+                            </div>
+                            <p className="text-[11px] text-slate-400 leading-snug">
+                                Obras PP 0068, certificación de maquinaria (Ley 30225), Ficha EDAN preliminar, Planes PCMD y PPRRD CENEPRED.
+                            </p>
+                        </div>
+                        <div className="pt-2.5 mt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
+                            <span className="text-slate-500">Suite Municipal 360°</span>
+                            <span className="text-amber-400 font-bold group-hover:translate-x-1 transition flex items-center gap-0.5">
+                                Abrir Consola <ChevronRight className="w-3 h-3" />
+                            </span>
+                        </div>
+                    </Link>
+
+                    {/* Subservicio 3: COED Social AMARU */}
+                    <Link
+                        href="/reporte-ciudadano"
+                        className="bg-slate-950/60 border border-rose-800/60 hover:border-rose-500/80 rounded-xl p-3 flex flex-col justify-between transition group cursor-pointer"
+                    >
+                        <div className="space-y-1.5">
+                            <div className="flex items-center justify-between">
+                                <span className="flex items-center gap-1.5 text-xs font-bold text-rose-300">
+                                    <Users className="w-3.5 h-3.5 text-rose-400" />
+                                    COED Social AMARU
+                                </span>
+                                <span className="text-[9px] font-bold bg-rose-950 text-rose-300 px-1.5 py-0.5 rounded border border-rose-800">
+                                    COMUNIDAD & AYNI
+                                </span>
+                            </div>
+                            <p className="text-[11px] text-slate-400 leading-snug">
+                                Pre-Padrón EDAN bilingüe (Quechua/Aymara/Castellano), grabación oral con SHA-256, Bono BAE y alertas Telegram.
+                            </p>
+                        </div>
+                        <div className="pt-2.5 mt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
+                            <span className="text-slate-500">Ground-Truth Comunitario</span>
+                            <span className="text-rose-400 font-bold group-hover:translate-x-1 transition flex items-center gap-0.5">
+                                Participar <ChevronRight className="w-3 h-3" />
+                            </span>
+                        </div>
+                    </Link>
                 </div>
             </div>
 
@@ -358,343 +909,435 @@ export default function NationalDashboard() {
             </div>
 
             {/* ========================================================================= */}
-            {/* [ZONA 2, 3, 4] GRID CENTRAL: TELEMETRÍA (IZQ) + GEOVISOR AL MEDIO + SWARM (DER)  */}
+            {/* [ZONA 2, 3, 4] GRID CENTRAL C2: BLOQUE 1 (LLUVIAS/HISTÓRICO) + BLOQUE 2 (GEOVISOR & BUSCADOR) + BLOQUE 3 (QUEBRADAS IPH-FEN) */}
             {/* ========================================================================= */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
                 
-                {/* [ZONA 3] COLUMNA IZQUIERDA: TELEMETRÍA OPEN-METEO PRO FULL STACK (3 Columnas) */}
-                <div className="lg:col-span-3 bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-4 shadow-xl flex flex-col justify-between order-1">
-                    <div className="flex justify-between items-center pb-2 border-b border-slate-800">
-                        <div className="flex items-center gap-1.5">
-                            <Zap className="w-4 h-4 text-amber-400" />
-                            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-200">
-                                Open-Meteo Pro
-                            </h2>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                            <span className="text-[10px] font-mono text-blue-400 bg-blue-950 px-1.5 py-0.5 rounded">
-                                ECMWF IFS 9km
-                            </span>
-                            <Link
-                                href="/meteo"
-                                className="text-[10px] font-bold text-amber-300 bg-amber-950/80 hover:bg-amber-900 px-2 py-0.5 rounded border border-amber-500/50 flex items-center gap-1 transition shadow-sm"
-                                title="Abrir Consola de 893 Distritos en Emergencia FEN"
-                            >
-                                <span>893 D.S. 124</span>
-                                <ExternalLink className="w-3 h-3 text-amber-400" />
-                            </Link>
-                        </div>
-                    </div>
-
-                    {/* Botón de Acceso Táctico a Consola de Emergencia FEN (893 Distritos) */}
-                    <Link
-                        href="/meteo"
-                        className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-gradient-to-r from-amber-950/40 via-orange-950/40 to-red-950/40 hover:from-amber-900/50 hover:via-orange-900/50 hover:to-red-900/50 border border-amber-500/50 text-white transition shadow-lg group"
-                        title="Abrir Consola Meteorológica FEN: 893 Distritos del D.S. 124-2026-PCM"
-                    >
-                        <div className="flex items-center gap-2">
-                            <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/40 group-hover:scale-105 transition">
+                {/* [BLOQUE 1] COLUMNA IZQUIERDA: OPEN-METEO PRO & DISTRITOS PRIORIZADOS */}
+                <div className={`${modoWarRoom ? "hidden" : "lg:col-span-3"} bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3.5 shadow-xl flex flex-col justify-between order-1`}>
+                    <div className="space-y-3">
+                        <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+                            <div className="flex items-center gap-1.5">
                                 <Zap className="w-4 h-4 text-amber-400" />
+                                <h2 className="text-xs font-bold uppercase tracking-wider text-slate-200">
+                                    Open-Meteo Pro
+                                </h2>
                             </div>
-                            <div className="text-left">
-                                <div className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
-                                    <span>CONSOLA FEN: 893 DISTRITOS</span>
-                                    <span className="text-[8px] px-1 py-0.2 rounded bg-red-950 text-red-400 border border-red-800 font-mono">
-                                        D.S. 124
-                                    </span>
-                                </div>
-                                <div className="text-[10px] text-slate-400">
-                                    Semáforo 🟢 🟡 🟠 🔴 Lluvias &amp; CAPE
-                                </div>
-                            </div>
-                        </div>
-                        <ArrowRight className="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition" />
-                    </Link>
-
-                    {/* Círculo Radial / Gauge de CAPE Convectivo */}
-                    <div className="bg-slate-950 border border-amber-900/40 p-3.5 rounded-xl text-center space-y-2">
-                        <span className="text-[10px] uppercase font-bold text-amber-400 tracking-wider">
-                            Energía Convectiva CAPE
-                        </span>
-                        <div className="flex justify-center items-center">
-                            <div className="relative w-24 h-24 rounded-full border-4 border-amber-600/30 flex items-center justify-center bg-amber-950/20 shadow-inner">
-                                <div className="text-center">
-                                    <span className="text-xl font-black text-amber-400 leading-none block">
-                                        {cActual.cape}
-                                    </span>
-                                    <span className="text-[9px] font-mono text-slate-400 block">J/kg</span>
-                                </div>
+                            <div className="flex items-center gap-1.5">
+                                <span className="text-[10px] font-mono text-blue-400 bg-blue-950 px-1.5 py-0.5 rounded">
+                                    ECMWF IFS 9km
+                                </span>
+                                <Link
+                                    href="/meteo"
+                                    className="text-[10px] font-bold text-amber-300 bg-amber-950/80 hover:bg-amber-900 px-2 py-0.5 rounded border border-amber-500/50 flex items-center gap-1 transition shadow-sm"
+                                    title="Abrir Consola de 893 Distritos en Emergencia FEN"
+                                >
+                                    <span>893 D.S. 124</span>
+                                    <ExternalLink className="w-3 h-3 text-amber-400" />
+                                </Link>
                             </div>
                         </div>
-                        <p className="text-[10px] text-red-400 font-semibold leading-tight">
-                            {cActual.cape > 1400 ? "⚠️ Inestabilidad Extrema (Gatillo Huaico)" : "Vigilancia Moderada"}
-                        </p>
-                    </div>
 
-                    {/* Perfil de Suelo en 4 Capas */}
-                    <div className="bg-slate-950 border border-slate-800 p-3 rounded-xl space-y-2 text-xs">
-                        <div className="flex justify-between items-center text-[10px] font-semibold text-slate-400 uppercase">
-                            <span>Suelo en 4 Estratos</span>
-                            <span className="text-amber-400 font-mono">Infiltración</span>
-                        </div>
-                        
-                        <div className="space-y-1.5 text-[10px]">
-                            <div>
-                                <div className="flex justify-between text-slate-400 mb-0.5">
-                                    <span>0–7 cm (Superficial):</span>
-                                    <span className="font-mono text-slate-200">42%</span>
-                                </div>
-                                <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
-                                    <div className="h-full bg-blue-500 rounded-full" style={{ width: "42%" }}></div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <div className="flex justify-between text-slate-400 mb-0.5">
-                                    <span>7–28 cm (Radicular):</span>
-                                    <span className="font-mono text-slate-200">40%</span>
-                                </div>
-                                <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
-                                    <div className="h-full bg-blue-400 rounded-full" style={{ width: "40%" }}></div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <div className="flex justify-between text-slate-400 mb-0.5">
-                                    <span className="text-red-300 font-bold">28–100 cm (Talud Crítico):</span>
-                                    <span className="font-mono font-bold text-red-400">{cActual.suelo}%</span>
-                                </div>
-                                <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden border border-red-900">
-                                    <div className="h-full bg-red-500 rounded-full animate-pulse" style={{ width: `${cActual.suelo}%` }}></div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <div className="flex justify-between text-slate-400 mb-0.5">
-                                    <span>100–255 cm (Freático):</span>
-                                    <span className="font-mono text-slate-200">35%</span>
-                                </div>
-                                <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
-                                    <div className="h-full bg-slate-600 rounded-full" style={{ width: "35%" }}></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Hidrograma Fluvial GloFAS */}
-                    <div className="bg-slate-950 border border-slate-800 p-3 rounded-xl space-y-1 text-xs">
-                        <div className="flex justify-between items-center text-[10px] font-semibold text-slate-400 uppercase">
-                            <span>Descarga GloFAS</span>
-                            <span className="text-sky-400 font-mono">{cActual.caudal} m³/s</span>
-                        </div>
-                        <div className="pt-1 flex items-baseline justify-between">
-                            <span className="text-lg font-bold text-white">{cActual.caudal}</span>
-                            <span className="text-[10px] text-red-400 font-mono">Umbral crítico: 100 m³/s</span>
-                        </div>
-                        <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
-                            <div className="h-full bg-sky-400 rounded-full" style={{ width: "85%" }}></div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* [ZONA 2] COLUMNA CENTRAL: GEOVISOR 3D & CUENCAS AL MEDIO (6 Columnas) */}
-                <div className="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between space-y-4 shadow-xl order-2">
-                    <div className="flex justify-between items-center pb-2 border-b border-slate-800">
-                        <div className="flex items-center gap-2">
-                            <MapPin className="w-4 h-4 text-sky-400" />
-                            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-200">
-                                Geovisor 3D Nacional &amp; Nodos de Amenaza
-                            </h2>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="text-[10px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
-                                159 Cuencas Activas
-                            </span>
-                            <Link
-                                href="/geovisor"
-                                className="inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-sky-600 hover:bg-sky-500 border border-sky-400/40 px-3 py-1 rounded-lg transition shadow-md shadow-sky-600/30"
-                                title="Abrir Consola de Visor de Mapas C2 a Pantalla Completa"
-                            >
-                                <Satellite className="w-3.5 h-3.5 text-sky-200" />
-                                <span>Abrir Consola Geovisor C2</span>
-                                <ExternalLink className="w-3 h-3" />
-                            </Link>
-                        </div>
-                    </div>
-
-                    {/* Ventana de Mapa 3D ampliada al centro */}
-                    <div className="h-[360px] rounded-xl overflow-hidden border border-slate-800/80 relative">
-                        <MapViewer mode="national" />
-                        <div className="absolute top-2 left-2 bg-slate-950/90 border border-slate-800 p-2 rounded text-[10px] space-y-1 backdrop-blur pointer-events-none">
-                            <div className="flex items-center gap-1.5 text-red-400">
-                                <span className="h-2 w-2 rounded-full bg-red-500 animate-ping"></span>
-                                <b>((◎)) Punto Caliente:</b> {cActual.nombre}
-                            </div>
-                            <div className="text-slate-400">
-                                Caudal: {cActual.caudal} m³/s • Lluvia: {cActual.lluvia} mm
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Selector Rápido de Cuencas Críticas y Monitoreo Etnoterritorial */}
-                    <div className="space-y-1.5">
-                        <div className="flex justify-between items-center">
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
-                                Nodos Críticos RENALIO en Observación (8 Distritos Clave):
-                            </span>
-                            <span className="text-[9px] font-mono text-slate-500">
-                                D.S. 009-2021-MC
-                            </span>
-                        </div>
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-[170px] overflow-y-auto pr-1">
-                            {CUENCAS_CRITICAS.map((c) => (
+                        {/* Selector Operativo: Simulación Lluvias Críticas vs Tiempo Real / Histórico */}
+                        <div className="bg-slate-950 border border-slate-800 rounded-xl p-2.5 space-y-2">
+                            <div className="flex justify-between items-center text-[10px]">
+                                <span className="font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1">
+                                    <Sliders className="w-3 h-3 text-sky-400" /> Modo Hidrometeo:
+                                </span>
                                 <button
-                                    key={c.ubigeo}
-                                    onClick={() => setCuencaSeleccionada(c.ubigeo)}
-                                    className={`p-2 rounded-lg border text-left text-xs transition flex flex-col justify-between gap-1 ${
-                                        cuencaSeleccionada === c.ubigeo
-                                            ? "bg-slate-800 border-sky-500 text-white shadow-md ring-1 ring-sky-500/40"
-                                            : "bg-slate-950 border-slate-800 text-slate-400 hover:bg-slate-850"
+                                    onClick={() => setModoLluviaTorrencial(!modoLluviaTorrencial)}
+                                    className={`px-2 py-0.5 rounded-full text-[9px] font-bold font-mono transition flex items-center gap-1 ${
+                                        modoLluviaTorrencial
+                                            ? "bg-red-950 text-red-400 border border-red-800 animate-pulse"
+                                            : "bg-emerald-950 text-emerald-400 border border-emerald-800"
                                     }`}
                                 >
-                                    <div className="flex justify-between items-start w-full">
-                                        <div>
-                                            <div className="font-semibold text-slate-200 leading-tight">{c.nombre}</div>
-                                            <div className="text-[10px] text-slate-500 truncate max-w-[110px]">{c.departamento}</div>
-                                        </div>
-                                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
-                                            c.nivel === "ROJO" ? "bg-red-950 text-red-400 border border-red-800" : "bg-amber-950 text-amber-400 border border-amber-800"
-                                        }`}>
-                                            {c.nivel}
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center gap-1 w-full pt-0.5 border-t border-slate-800/60">
-                                        <span className={`text-[9px] font-mono px-1 py-0.2 rounded ${
-                                            c.tipo === "BILINGÜE"
-                                                ? "bg-amber-950/80 text-amber-300 border border-amber-800/80"
-                                                : "bg-blue-950/80 text-blue-300 border border-blue-800/80"
-                                        }`}>
-                                            {c.tipo === "BILINGÜE" ? `🇵🇪 (${c.iso_code})` : "🏢 ES"}
-                                        </span>
-                                        {c.ds124_pcm && (
-                                            <span className="text-[8px] font-mono text-red-400 bg-red-950/40 px-1 rounded border border-red-900/60">
-                                                D.S. 124
-                                            </span>
-                                        )}
-                                    </div>
+                                    {modoLluviaTorrencial ? "🔴 LLUVIA CRÍTICA (ROJO)" : "🟢 CALMA (HISTÓRICO FEN)"}
                                 </button>
-                            ))}
+                            </div>
+                            <p className="text-[10px] text-slate-400 leading-snug">
+                                {modoLluviaTorrencial
+                                    ? "🚨 Priorización: Distritos con lluvias torrenciales (>30 mm/24h) en cabecera en rojo."
+                                    : "ℹ️ Estado normal: Se listan los distritos más castigados de la historia republicana por FEN."}
+                            </p>
+                        </div>
+
+                        {/* Relación de Distritos */}
+                        <div className="space-y-1.5">
+                            <div className="flex justify-between items-center text-[10px] font-semibold text-slate-400 px-1">
+                                <span>{modoLluviaTorrencial ? "🚨 DISTRITOS CON LLUVIA ROJA" : "🏛️ DISTRITOS CASTIGADOS HISTÓRICAMENTE"}</span>
+                                <span className="font-mono text-amber-400">{distritosOrdenadosBloque1.length} Nodos</span>
+                            </div>
+
+                            <div className="space-y-1.5 max-h-[300px] overflow-y-auto pr-1">
+                                {distritosOrdenadosBloque1.map((d) => {
+                                    const esRojo = d.estadoLluvia === "ROJO" && modoLluviaTorrencial;
+                                    const isSelected = cuencaSeleccionada === d.ubigeo;
+                                    return (
+                                        <div
+                                            key={d.ubigeo}
+                                            onClick={() => {
+                                                setCuencaSeleccionada(d.ubigeo);
+                                                setSearchDistrito(d.nombre);
+                                            }}
+                                            className={`p-2.5 rounded-xl border text-xs cursor-pointer transition flex flex-col gap-1.5 ${
+                                                isSelected
+                                                    ? "bg-slate-800/90 border-sky-500 shadow-md ring-1 ring-sky-500/40"
+                                                    : esRojo
+                                                    ? "bg-red-950/30 hover:bg-red-950/50 border-red-900/80 text-slate-200"
+                                                    : "bg-slate-950/70 hover:bg-slate-850 border-slate-800 text-slate-300"
+                                            }`}
+                                        >
+                                            <div className="flex justify-between items-start">
+                                                <div>
+                                                    <div className="font-bold text-white flex items-center gap-1.5">
+                                                        <span>{d.nombre}</span>
+                                                        <span className="text-[9px] font-mono text-slate-500">[{d.ubigeo}]</span>
+                                                    </div>
+                                                    <div className="text-[10px] text-slate-400 truncate max-w-[150px]">
+                                                        {d.departamento} • {d.cuenca}
+                                                    </div>
+                                                </div>
+                                                <div className="text-right">
+                                                    {modoLluviaTorrencial ? (
+                                                        <span className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded ${
+                                                            esRojo
+                                                                ? "bg-red-950 text-red-300 border border-red-800 animate-pulse"
+                                                                : "bg-amber-950 text-amber-400 border border-amber-800"
+                                                        }`}>
+                                                            {d.lluviaActual} mm
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-[10px] font-mono bg-blue-950 text-blue-300 border border-blue-800 px-1.5 py-0.5 rounded" title="Lluvia histórica pico registrada en eventos FEN">
+                                                            Pico: {d.lluviaHistoricaPico} mm
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            <div className="flex justify-between items-center text-[10px] pt-1 border-t border-slate-800/60">
+                                                <span className="text-slate-400 text-[9px] truncate max-w-[160px]" title={d.impactoHistorico}>
+                                                    {modoLluviaTorrencial ? (esRojo ? "⚠️ Riesgo activación de quebradas" : "Vigilancia preventiva") : d.eventosFEN}
+                                                </span>
+                                                <Link
+                                                    href={`/dashboard/${d.ubigeo}`}
+                                                    onClick={(e) => e.stopPropagation()}
+                                                    className="text-[9px] font-bold text-sky-400 hover:text-sky-300 flex items-center gap-0.5"
+                                                >
+                                                    <span>C2</span>
+                                                    <ChevronRight className="w-3 h-3" />
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Resumen Telemetría Distrito Focalizado */}
+                    <div className="bg-slate-950 border border-slate-800 p-2.5 rounded-xl space-y-1.5 text-xs mt-2">
+                        <div className="flex justify-between items-center text-[10px] font-semibold text-slate-400 uppercase">
+                            <span>Foco: <b className="text-white">{cActual.nombre}</b></span>
+                            <span className="text-amber-400 font-mono">CAPE: {cActual.cape} J/kg</span>
+                        </div>
+                        <div className="flex items-center justify-between text-[10px] text-slate-400 pt-0.5">
+                            <span>Suelo Crítico: <b className="text-red-400">{cActual.suelo}%</b></span>
+                            <span>GloFAS: <b className="text-sky-400">{cActual.caudal} m³/s</b></span>
+                        </div>
+                        <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                            <div
+                                className="h-full bg-gradient-to-r from-emerald-500 via-amber-500 to-red-500 rounded-full"
+                                style={{ width: `${Math.min(cActual.suelo, 100)}%` }}
+                            ></div>
                         </div>
                     </div>
                 </div>
 
-                {/* [ZONA 4] COLUMNA DERECHA: SWARM MULTI-AGENTE COMPACTADO (3 Columnas) */}
-                <div className="lg:col-span-3 bg-slate-900 border border-purple-900/50 rounded-2xl p-4 space-y-3 shadow-xl flex flex-col justify-between order-3">
-                    <div className="flex justify-between items-center pb-2 border-b border-slate-800">
-                        <div className="flex items-center gap-1.5">
-                            <Cpu className="w-4 h-4 text-purple-400" />
-                            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-200">
-                                Swarm Agentes 24/7
-                            </h2>
+                {/* [BLOQUE 2] COLUMNA CENTRAL: GEOVISOR 3D & BUSCADOR DE DISTRITOS */}
+                <div className={`${modoWarRoom ? "lg:col-span-12" : "lg:col-span-6"} bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between space-y-3.5 shadow-xl order-2 transition-all duration-300`}>
+                    <div>
+                        <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+                            <div className="flex items-center gap-2">
+                                <MapPin className="w-4 h-4 text-sky-400" />
+                                <h2 className="text-xs font-bold uppercase tracking-wider text-slate-200">
+                                    Geovisor 3D Nacional &amp; Nodos de Amenaza {modoWarRoom && "• MODO WAR ROOM VIDEOWALL"}
+                                </h2>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                                    159 Cuencas Activas
+                                </span>
+                                <Link
+                                    href="/geovisor"
+                                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-sky-600 hover:bg-sky-500 border border-sky-400/40 px-3 py-1 rounded-lg transition shadow-md shadow-sky-600/30"
+                                    title="Abrir Consola de Visor de Mapas C2 a Pantalla Completa"
+                                >
+                                    <Satellite className="w-3.5 h-3.5 text-sky-200" />
+                                    <span>Abrir Consola Geovisor C2</span>
+                                    <ExternalLink className="w-3 h-3" />
+                                </Link>
+                            </div>
                         </div>
-                        <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950 border border-emerald-800 px-2 py-0.5 rounded-full flex items-center gap-1">
-                            <CheckCircle2 className="w-2.5 h-2.5" /> 4/4 Activos
-                        </span>
+
+                        {/* Ventana de Mapa 3D */}
+                        <div className={`${modoWarRoom ? "h-[540px]" : "h-[330px]"} rounded-xl overflow-hidden border border-slate-800/80 relative mt-2 transition-all duration-300`}>
+                            <MapViewer mode="national" />
+                            <div className="absolute top-2 left-2 bg-slate-950/90 border border-slate-800 p-2 rounded text-[10px] space-y-1 backdrop-blur pointer-events-none">
+                                <div className="flex items-center gap-1.5 text-red-400">
+                                    <span className="h-2 w-2 rounded-full bg-red-500 animate-ping"></span>
+                                    <b>((◎)) Punto Caliente:</b> {cActual.nombre}
+                                </div>
+                                <div className="text-slate-400">
+                                    Caudal: {cActual.caudal} m³/s • Lluvia: {cActual.lluvia} mm
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* BUSCADOR DE DISTRITO EN LA PARTE DE ABAJO DEL BLOQUE 2 (Requerimiento Usuario) */}
+                        <div className="mt-3 bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-2.5 shadow-inner">
+                            <div className="flex justify-between items-center">
+                                <label className="text-[11px] font-bold text-slate-200 uppercase tracking-wide flex items-center gap-1.5">
+                                    <Search className="w-3.5 h-3.5 text-sky-400" />
+                                    <span>Buscador de Distritos (D.S. 124 / FONDES 1,891)</span>
+                                </label>
+                                <span className="text-[9px] font-mono text-slate-500">
+                                    Filtro por Nombre o UBIGEO
+                                </span>
+                            </div>
+
+                            <div className="relative">
+                                <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
+                                <input
+                                    type="text"
+                                    value={searchDistrito}
+                                    onChange={(e) => setSearchDistrito(e.target.value)}
+                                    placeholder="Buscar distrito (ej. Catacaos, Chosica, Íllimo, Tambogrande, 200105, 150118)..."
+                                    className="w-full bg-slate-900 border border-slate-700 rounded-lg pl-9 pr-8 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition"
+                                />
+                                {searchDistrito && (
+                                    <button
+                                        onClick={() => setSearchDistrito("")}
+                                        className="absolute right-2.5 top-2.5 text-slate-500 hover:text-white text-xs font-bold"
+                                    >
+                                        ✕
+                                    </button>
+                                )}
+                            </div>
+
+                            {/* Chips de Acceso Directo */}
+                            <div className="flex items-center gap-1.5 flex-wrap pt-0.5">
+                                <span className="text-[9px] text-slate-500 font-mono">Frecuentes:</span>
+                                {[
+                                    { ubigeo: "200105", nombre: "Catacaos" },
+                                    { ubigeo: "150118", nombre: "Chosica" },
+                                    { ubigeo: "140304", nombre: "Íllimo" },
+                                    { ubigeo: "200114", nombre: "Tambogrande" },
+                                    { ubigeo: "130101", nombre: "Trujillo" },
+                                    { ubigeo: "020101", nombre: "Huaraz" }
+                                ].map((chip) => (
+                                    <button
+                                        key={chip.ubigeo}
+                                        onClick={() => {
+                                            setCuencaSeleccionada(chip.ubigeo);
+                                            setSearchDistrito(chip.nombre);
+                                        }}
+                                        className={`text-[10px] px-2 py-0.5 rounded-md border font-medium transition ${
+                                            cuencaSeleccionada === chip.ubigeo
+                                                ? "bg-sky-950 text-sky-300 border-sky-600"
+                                                : "bg-slate-900 hover:bg-slate-800 text-slate-400 border-slate-800"
+                                        }`}
+                                    >
+                                        {chip.nombre}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Resultados de Búsqueda si hay texto */}
+                            {searchDistrito.trim().length > 0 && (
+                                <div className="max-h-36 overflow-y-auto space-y-1 pt-1 border-t border-slate-800">
+                                    {distritosFiltradosBusqueda.length === 0 ? (
+                                        <div className="text-[11px] text-slate-500 py-1 text-center font-mono">
+                                            No se encontraron distritos para "{searchDistrito}".
+                                        </div>
+                                    ) : (
+                                        distritosFiltradosBusqueda.map((d) => (
+                                            <div
+                                                key={d.ubigeo}
+                                                onClick={() => setCuencaSeleccionada(d.ubigeo)}
+                                                className="flex items-center justify-between p-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 cursor-pointer transition text-xs"
+                                            >
+                                                <div>
+                                                    <span className="font-bold text-white">{d.nombre}</span>
+                                                    <span className="text-[10px] text-slate-400 ml-2">
+                                                        ({d.departamento} • UBIGEO {d.ubigeo})
+                                                    </span>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
+                                                        d.estadoLluvia === "ROJO" ? "bg-red-950 text-red-400 border border-red-800" : "bg-emerald-950 text-emerald-400 border border-emerald-800"
+                                                    }`}>
+                                                        {d.estadoLluvia}
+                                                    </span>
+                                                    <Link
+                                                        href={`/dashboard/${d.ubigeo}`}
+                                                        className="text-[10px] font-bold text-sky-400 hover:text-white px-2 py-0.5 rounded bg-sky-950/80 border border-sky-700"
+                                                        onClick={(e) => e.stopPropagation()}
+                                                    >
+                                                        Ir al C2
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* [BLOQUE 3] COLUMNA DERECHA: RADAR QUEBRADAS & IPH-FEN */}
+                <div className={`${modoWarRoom ? "hidden" : "lg:col-span-3"} bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-xl flex flex-col justify-between order-3`}>
+                    <div className="space-y-3">
+                        <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+                            <div className="flex items-center gap-1.5">
+                                <Mountain className={`w-4 h-4 ${quebradasAlertaRoja ? "text-red-400 animate-pulse" : "text-emerald-400"}`} />
+                                <h2 className="text-xs font-bold uppercase tracking-wider text-slate-200">
+                                    Radar Quebradas &amp; IPH-FEN
+                                </h2>
+                            </div>
+                            <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full flex items-center gap-1 font-bold ${
+                                quebradasAlertaRoja
+                                    ? "text-red-400 bg-red-950 border border-red-800 animate-pulse"
+                                    : "text-emerald-400 bg-emerald-950 border border-emerald-800"
+                            }`}>
+                                {quebradasAlertaRoja ? "🚨 ALERTA ROJA ACTIVA" : "🟢 VERDE / INACTIVA"}
+                            </span>
+                        </div>
+
+                        {/* Control Operativo de Activación de Quebradas */}
+                        <div className="bg-slate-950 border border-slate-800 rounded-xl p-2.5 space-y-2">
+                            <div className="flex justify-between items-center text-[10px]">
+                                <span className="font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1">
+                                    <Activity className="w-3 h-3 text-amber-400" /> Manning &amp; T-lag:
+                                </span>
+                                <button
+                                    onClick={() => setQuebradasAlertaRoja(!quebradasAlertaRoja)}
+                                    className={`px-2 py-0.5 rounded-md text-[9px] font-bold font-mono transition flex items-center gap-1 ${
+                                        quebradasAlertaRoja
+                                            ? "bg-emerald-900/60 hover:bg-emerald-800 text-emerald-300 border border-emerald-700"
+                                            : "bg-red-950/80 hover:bg-red-900 text-red-300 border border-red-800"
+                                    }`}
+                                >
+                                    {quebradasAlertaRoja ? "🟢 Restablecer a Verde" : "⚡ Simular Activación Tormenta"}
+                                </button>
+                            </div>
+                            <p className="text-[10px] text-slate-400 leading-snug">
+                                {quebradasAlertaRoja
+                                    ? "⚠️ Alerta activada: Flujo hiperconcentrado en cuenca alta. IPH crítico y cuenta regresiva T-lag en marcha."
+                                    : "🟢 Las quebradas están en estado VERDE (inactivas). Si se detecta precipitación torrencial, conmutan a ROJO con cuenta regresiva."}
+                            </p>
+                        </div>
+
+                        {/* Lista de Quebradas Tácticas Críticas */}
+                        <div className="space-y-2">
+                            <div className="flex justify-between items-center text-[10px] font-semibold text-slate-400 px-1">
+                                <span>QUEBRADA CRÍTICA</span>
+                                <span className="font-mono">IPH PREVISTO • T-LAG</span>
+                            </div>
+
+                            <div className="space-y-2 max-h-[290px] overflow-y-auto pr-1">
+                                {QUEBRADAS_TACTICAS.map((q) => {
+                                    const iphActual = quebradasAlertaRoja ? q.iphActivo : q.iphBasal;
+                                    return (
+                                        <div
+                                            key={q.id}
+                                            className={`p-2.5 rounded-xl border text-xs transition flex flex-col gap-1.5 ${
+                                                quebradasAlertaRoja
+                                                    ? "bg-red-950/30 border-red-900/80 text-red-100"
+                                                    : "bg-slate-950/80 border-slate-800 text-slate-300"
+                                            }`}
+                                        >
+                                            <div className="flex justify-between items-start">
+                                                <div>
+                                                    <div className="font-bold text-white flex items-center gap-1.5">
+                                                        <span>{q.nombre}</span>
+                                                        {q.mallasGeodinamicas && (
+                                                            <span className="text-[8px] font-mono bg-blue-950 text-blue-300 border border-blue-800 px-1 rounded" title="Protegida por barreras dinámicas geomecánicas">
+                                                                Mallas
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <div className="text-[10px] text-slate-400">
+                                                        {q.distrito} ({q.departamento})
+                                                    </div>
+                                                </div>
+                                                <div className="text-right">
+                                                    <span className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded ${
+                                                        quebradasAlertaRoja
+                                                            ? "bg-red-950 text-red-300 border border-red-800 animate-pulse"
+                                                            : "bg-emerald-950 text-emerald-400 border border-emerald-800"
+                                                    }`}>
+                                                        IPH {iphActual}%
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            {/* Barra de Progreso IPH */}
+                                            <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                                                <div
+                                                    className={`h-full transition-all duration-500 ${
+                                                        quebradasAlertaRoja ? "bg-red-500 animate-pulse" : "bg-emerald-500"
+                                                    }`}
+                                                    style={{ width: `${iphActual}%` }}
+                                                ></div>
+                                            </div>
+
+                                            {/* Métricas Manning y Tiempo de Llegada (Tlag) */}
+                                            <div className="flex justify-between items-center text-[10px] text-slate-400 pt-0.5 font-mono">
+                                                <span>{q.pendiente}</span>
+                                                <span className={quebradasAlertaRoja ? "text-red-400 font-bold" : "text-slate-400"}>
+                                                    {quebradasAlertaRoja
+                                                        ? `⏱️ T-lag: ${q.tlagMinutos} min impacto`
+                                                        : `T-lag: ${q.tlagMinutos} min nominal`}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
                     </div>
 
-                    {/* Diagrama de Nodos Circulares y Líneas de Flujo */}
-                    <div className="space-y-1.5">
-                        {/* Agente 1 */}
-                        <div className="bg-slate-950 p-2 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
-                            <div className="flex items-center gap-2">
-                                <div className="w-5 h-5 rounded-full bg-blue-950 border border-blue-600 text-blue-300 font-bold flex items-center justify-center text-[10px]">
-                                    ①
-                                </div>
-                                <div>
-                                    <div className="font-bold text-slate-200 text-[11px]">Centinela Hidrometeo</div>
-                                    <div className="text-[9px] text-slate-500">Open-Meteo Pro + Bias WFS</div>
-                                </div>
-                            </div>
-                            <span className="text-[9px] font-mono text-emerald-400 bg-emerald-950/60 px-1 py-0.5 rounded">
-                                38 ms
-                            </span>
-                        </div>
-
-                        {/* Línea conectora */}
-                        <div className="h-1.5 w-0.5 bg-purple-700 ml-4.5"></div>
-
-                        {/* Agente 2 */}
-                        <div className="bg-slate-950 p-2 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
-                            <div className="flex items-center gap-2">
-                                <div className="w-5 h-5 rounded-full bg-amber-950 border border-amber-600 text-amber-300 font-bold flex items-center justify-center text-[10px]">
-                                    ②
-                                </div>
-                                <div>
-                                    <div className="font-bold text-slate-200 text-[11px]">Evaluador Táctico</div>
-                                    <div className="text-[9px] text-slate-500">INEI + Vías MTC + INDECI</div>
-                                </div>
-                            </div>
-                            <span className="text-[9px] font-mono text-emerald-400 bg-emerald-950/60 px-1 py-0.5 rounded">
-                                112 ms
-                            </span>
-                        </div>
-
-                        {/* Línea conectora */}
-                        <div className="h-1.5 w-0.5 bg-purple-700 ml-4.5"></div>
-
-                        {/* Agente 3 */}
-                        <div className="bg-slate-950 p-2 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
-                            <div className="flex items-center gap-2">
-                                <div className="w-5 h-5 rounded-full bg-emerald-950 border border-emerald-600 text-emerald-300 font-bold flex items-center justify-center text-[10px]">
-                                    ③
-                                </div>
-                                <div>
-                                    <div className="font-bold text-slate-200 text-[11px]">Lingüístico Cultural</div>
-                                    <div className="text-[9px] text-slate-500">Gemini 1.5 • Quechua/Aymara</div>
-                                </div>
-                            </div>
-                            <span className="text-[9px] font-mono text-emerald-400 bg-emerald-950/60 px-1 py-0.5 rounded">
-                                78 ms
-                            </span>
-                        </div>
-
-                        {/* Línea conectora */}
-                        <div className="h-1.5 w-0.5 bg-purple-700 ml-4.5"></div>
-
-                        {/* Agente 4 */}
-                        <div className="bg-slate-950 p-2 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
-                            <div className="flex items-center gap-2">
-                                <div className="w-5 h-5 rounded-full bg-purple-950 border border-purple-600 text-purple-300 font-bold flex items-center justify-center text-[10px]">
-                                    ④
-                                </div>
-                                <div>
-                                    <div className="font-bold text-slate-200 text-[11px]">Despachador &amp; Auditor</div>
-                                    <div className="text-[9px] text-slate-500">Norma CAP v1.2 (SISMATE)</div>
-                                </div>
-                            </div>
-                            <span className="text-[9px] font-mono text-emerald-400 bg-emerald-950/60 px-1 py-0.5 rounded">
-                                66 ms
-                            </span>
-                        </div>
-                    </div>
-
-                    {/* Botones de Acción: Modal CAP v1.2 y Consola Distrital */}
-                    <div className="space-y-1.5 pt-1">
-                        <button
-                            onClick={() => setVerModalCap(!verModalCap)}
-                            className="w-full bg-blue-950 hover:bg-blue-900 border border-blue-700 text-blue-200 text-[11px] font-bold py-1.5 px-2.5 rounded-xl flex items-center justify-center gap-1.5 transition"
-                        >
-                            <FileCode2 className="w-3 h-3" />
-                            {verModalCap ? "Ocultar CAP v1.2" : "Ver CAP v1.2 (SISMATE)"}
-                        </button>
-
+                    {/* BOTÓN PROMINENTE A CONSOLA DE ANÁLISIS DE HUAICOS & GEOVISOR C2 (Requerimiento Usuario) */}
+                    <div className="pt-2 space-y-2">
                         <Link
-                            href={`/dashboard/${cuencaSeleccionada}`}
-                            className="w-full bg-gradient-to-r from-red-700 to-rose-700 hover:from-red-600 hover:to-rose-600 text-white text-[11px] font-bold py-2 px-2.5 rounded-xl flex items-center justify-center gap-1.5 transition shadow-lg"
+                            href="/geovisor"
+                            className="w-full bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 hover:from-red-500 hover:via-rose-500 hover:to-amber-500 text-white font-bold py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 transition shadow-xl shadow-red-900/40 border border-red-500/50 text-xs text-center"
+                            title="Abrir Consola de Análisis de Huaycos y Geovisor C2"
                         >
-                            <Eye className="w-3 h-3" />
-                            CONSOLA: {cActual.nombre.toUpperCase()}
+                            <Mountain className="w-4 h-4 text-amber-300 shrink-0" />
+                            <span>CONSOLA ANÁLISIS HUAICOS &amp; GEOVISOR C2</span>
+                            <ExternalLink className="w-3.5 h-3.5 shrink-0" />
                         </Link>
+
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setVerModalCap(!verModalCap)}
+                                className="w-1/2 bg-blue-950 hover:bg-blue-900 border border-blue-700 text-blue-200 text-[10px] font-bold py-1.5 px-2 rounded-lg flex items-center justify-center gap-1 transition"
+                            >
+                                <FileCode2 className="w-3 h-3" />
+                                {verModalCap ? "Ocultar CAP" : "Ver CAP v1.2"}
+                            </button>
+
+                            <Link
+                                href={`/dashboard/${cuencaSeleccionada}`}
+                                className="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-[10px] font-bold py-1.5 px-2 rounded-lg flex items-center justify-center gap-1 transition border border-slate-700 truncate"
+                            >
+                                <Eye className="w-3 h-3 text-sky-400 shrink-0" />
+                                <span className="truncate">C2: {cActual.nombre}</span>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -839,6 +1482,18 @@ export default function NationalDashboard() {
                     </div>
                 </div>
             </div>
+
+            {/* Aviso Institucional & Transparencia AMARU-CLIMATE */}
+            <footer className="mt-8 pt-4 border-t border-slate-800/80 text-center text-slate-500 text-xs space-y-1">
+                <p className="font-semibold text-slate-300">
+                    AMARU-CLIMATE • Suite Tripartita Soberana (COED Nacional • COED Municipal • COED Social)
+                </p>
+                <p className="text-[11px] max-w-3xl mx-auto leading-relaxed text-slate-400">
+                    Plataforma cívica y tecnológica independiente de analítica predictiva, memoria histórica (1983–2017)
+                    y comando digital basada en inteligencia artificial (Agentes Soberanos AMARU). Diseñada para articular
+                    y fortalecer técnicamente las capacidades de las municipalidades, comunidades y autoridades del SINAGERD.
+                </p>
+            </footer>
         </section>
     );
 }

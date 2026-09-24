@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import {
     Clock,
     Maximize2,
@@ -21,7 +22,17 @@ import {
     Play,
     Pause,
     GraduationCap,
-    BookOpen
+    BookOpen,
+    Landmark,
+    ShieldAlert,
+    CloudRain,
+    Truck,
+    Building2,
+    ExternalLink,
+    Mountain,
+    Milestone,
+    ChevronDown,
+    ChevronUp
 } from "lucide-react";
 
 export interface TacticalPolarClockProps {
@@ -43,6 +54,8 @@ export default function TacticalPolarClock({
     const [yachayMode, setYachayMode] = useState<boolean>(true); // Activo por defecto para educación climática
     const [playingSpeech, setPlayingSpeech] = useState<string | null>(null);
     const [speechLang, setSpeechLang] = useState<"quechua" | "aymara" | "castellano">("quechua");
+    const [expandedObrasGroup, setExpandedObrasGroup] = useState<string | null>("G1_DEFENSAS_RIBERENAS");
+
 
     const speakText = (text: string, id: string) => {
         if (!("speechSynthesis" in window)) {
@@ -110,11 +123,153 @@ export default function TacticalPolarClock({
             badge: "NOV★ DEADLINE",
             dias_restantes: 47,
             estado_urgencia: "CRITICO_VENTANA_CERRANDOSE",
+            cartera_obras_pp0068: {
+                programa_presupuestal: "0068: REDUCCION DE VULNERABILIDAD Y ATENCION DE EMERGENCIAS POR DESASTRES",
+                fuente_oficial: "Consulta Amigable MEF - Datos Abiertos SIAF 2026",
+                fecha_corte: "2026-09-20",
+                total_obras_auditadas: 643,
+                pim_total_soles: 1443477787.0,
+                devengado_total_soles: 803290927.0,
+                promedio_simple_avance_global: 44.3,
+                avance_ponderado_pim_global: 55.6,
+                obras_en_alarma_critica_total: 177,
+                alerta_doctrina_ventana_dorada: "DESCALCE HIDROLÓGICO CRÍTICO: Las defensas ribereñas registran apenas 37.7% de avance ponderado con 146 obras en riesgo de abandono (<20%), mientras que la aguja de amenaza FEN se aproxima a Diciembre 2026. Se requiere habilitar turnos 24/7 y Contratación Directa de Emergencia (Art. 27 Ley N.º 30225).",
+                grupos_estrategicos: [
+                    {
+                        id: "G5_CAPACIDAD_OPERATIVA",
+                        nombre: "Capacidad Operativa, Maquinaria y Logística de Emergencia",
+                        descripcion: "Pool de maquinaria pesada, combustible para motobombas, almacenes de ayuda humanitaria y COEN/COER.",
+                        icono: "Truck",
+                        color_alerta: "#10b981",
+                        diagnostico_doctrina: "Alto nivel de devengado central (Acciones Comunes INDECI / FFAA), requiriendo preposicionamiento territorial acelerado en almacenes adelantados.",
+                        total_obras: 16,
+                        pim_soles: 595507845.0,
+                        devengado_soles: 437981980.0,
+                        promedio_simple_avance: 41.6,
+                        avance_ponderado_pim: 73.5,
+                        obras_criticas_menor_20: 3,
+                        obras_avanzadas_mayor_70: 5,
+                        porcentaje_obras_criticas: 18.8,
+                        ejemplos_principales: [
+                            { cui: "3000001", nombre: "ACCIONES COMUNES", pim_soles: 452202449.0, devengado_soles: 341517448.0, porcentaje_ejecucion: 75.5, departamento: "MULTIDEPARTAMENTAL", semaforo: "VERDE_CONFORME" },
+                            { cui: "3000734", nombre: "CAPACIDAD INSTALADA PARA LA PREPARACION Y RESPUESTA FRENTE A EMERGENCIAS", pim_soles: 95887850.0, devengado_soles: 63172813.0, porcentaje_ejecucion: 65.9, departamento: "LIMA", semaforo: "VERDE_CONFORME" },
+                            { cui: "2663867", nombre: "MEJORAMIENTO Y AMPLIACION DEL SERVICIO DE ALERTA TEMPRANA EN LA CUENCA", pim_soles: 25187499.0, devengado_soles: 24982100.0, porcentaje_ejecucion: 99.2, departamento: "PIURA", semaforo: "VERDE_CONFORME" }
+                        ]
+                    },
+                    {
+                        id: "G1_DEFENSAS_RIBERENAS",
+                        nombre: "Defensas Ribereñas y Control de Inundaciones",
+                        descripcion: "Enrocado riprap, diques longitudinales, muros de contención y encauzamiento en fajas marginales fluviales.",
+                        icono: "ShieldAlert",
+                        color_alerta: "#ef4444",
+                        diagnostico_doctrina: "Cuello de botella más severo: 146 obras en zona roja (<20% de avance). Riesgo inminente de desborde si la crecida de diciembre arriba con obras inconclusas.",
+                        total_obras: 502,
+                        pim_soles: 568285789.0,
+                        devengado_soles: 214474853.0,
+                        promedio_simple_avance: 40.8,
+                        avance_ponderado_pim: 37.7,
+                        obras_criticas_menor_20: 146,
+                        obras_avanzadas_mayor_70: 174,
+                        porcentaje_obras_criticas: 29.1,
+                        ejemplos_principales: [
+                            { cui: "3000735", nombre: "DESARROLLO DE MEDIDAS DE INTERVENCION PARA LA PROTECCION FISICA FRENTE A PELIGROS", pim_soles: 101412732.0, devengado_soles: 45432904.0, porcentaje_ejecucion: 44.8, departamento: "MULTIDEPARTAMENTAL", semaforo: "AMARILLO_RIESGO" },
+                            { cui: "2571084", nombre: "AMPLIACION DEL SERVICIO DE PROTECCION EN RIBERAS DEL RIO MOQUEGUA", pim_soles: 16498722.0, devengado_soles: 11234900.0, porcentaje_ejecucion: 68.1, departamento: "MOQUEGUA", semaforo: "VERDE_CONFORME" },
+                            { cui: "2669349", nombre: "CREACION DE LOS SERVICIOS DE PROTECCION EN RIBERAS DE RIO VULNERABLES", pim_soles: 15357443.0, devengado_soles: 9598400.0, porcentaje_ejecucion: 62.5, departamento: "ANCASH", semaforo: "VERDE_CONFORME" }
+                        ]
+                    },
+                    {
+                        id: "G6_LOCALES_ESENCIALES_MITIGACION",
+                        nombre: "Locales Esenciales (Colegios IRI) y Mitigación Complementaria",
+                        descripcion: "Intervenciones de Reconstrucción mediante Inversiones (IRI) en colegios y centros de salud, además de obras complementarias.",
+                        icono: "Building2",
+                        color_alerta: "#10b981",
+                        diagnostico_doctrina: "Avance favorable superior al 54%, focalizado en protección perimétrica de locales educativos y postas médicas de primera línea.",
+                        total_obras: 80,
+                        pim_soles: 187858764.0,
+                        devengado_soles: 102033710.0,
+                        promedio_simple_avance: 63.5,
+                        avance_ponderado_pim: 54.3,
+                        obras_criticas_menor_20: 17,
+                        obras_avanzadas_mayor_70: 44,
+                        porcentaje_obras_criticas: 21.2,
+                        ejemplos_principales: [
+                            { cui: "3000736", nombre: "EDIFICACIONES SEGURAS ANTE EL RIESGO DE DESASTRES", pim_soles: 38098617.0, devengado_soles: 23659241.0, porcentaje_ejecucion: 62.1, departamento: "LIMA", semaforo: "VERDE_CONFORME" },
+                            { cui: "3000738", nombre: "PERSONAS CON FORMACION Y CONOCIMIENTO EN GESTION DEL RIESGO", pim_soles: 17307916.0, devengado_soles: 10713600.0, porcentaje_ejecucion: 61.9, departamento: "LIMA", semaforo: "VERDE_CONFORME" },
+                            { cui: "2458555", nombre: "MEJORAMIENTO Y AMPLIACION SERVICIO DE PROTECCION ANTE INUNDACIONES", pim_soles: 16781503.0, devengado_soles: 9078793.0, porcentaje_ejecucion: 54.1, departamento: "LA LIBERTAD", semaforo: "AMARILLO_RIESGO" }
+                        ]
+                    },
+                    {
+                        id: "G3_CONTROL_QUEBRADAS",
+                        nombre: "Control de Torrenteras, Quebradas y Huaycos",
+                        descripcion: "Diques transversales, barreras dinámicas y estabilización de laderas en cauces torrenciales secos.",
+                        icono: "Mountain",
+                        color_alerta: "#38bdf8",
+                        diagnostico_doctrina: "Avance sostenido en descolmatación de torrenteras (Ica, Chosica), pero con retrasos puntuales en adquisición de geomallas y gaviones.",
+                        total_obras: 16,
+                        pim_soles: 58572396.0,
+                        devengado_soles: 35362724.0,
+                        promedio_simple_avance: 50.1,
+                        avance_ponderado_pim: 60.4,
+                        obras_criticas_menor_20: 4,
+                        obras_avanzadas_mayor_70: 7,
+                        porcentaje_obras_criticas: 25.0,
+                        ejemplos_principales: [
+                            { cui: "2228738", nombre: "CONTROL DE DESBORDES E INUNDACIONES EN EL RIO ICA Y QUEBRADA CANSAS", pim_soles: 51955115.0, devengado_soles: 34654061.0, porcentaje_ejecucion: 66.7, departamento: "ICA", semaforo: "VERDE_CONFORME" },
+                            { cui: "2494716", nombre: "CREACION DEL SERVICIO DE PROTECCION DEL CAUCE DE TORRENTERA", pim_soles: 4147610.0, devengado_soles: 24885.0, porcentaje_ejecucion: 0.6, departamento: "AREQUIPA", semaforo: "ROJO_INACCION_CRITICA" },
+                            { cui: "2414409", nombre: "CREACION DE LOS SERVICIOS DE PROTECCION FRENTE A LOS DESLIZAMIENTOS", pim_soles: 1181111.0, devengado_soles: 42520.0, porcentaje_ejecucion: 3.6, departamento: "LIMA", semaforo: "ROJO_INACCION_CRITICA" }
+                        ]
+                    },
+                    {
+                        id: "G2_DRENAJE_PLUVIAL",
+                        nombre: "Drenaje Pluvial y Colectores Urbanos",
+                        descripcion: "Sistemas de evacuación de aguas de lluvia, cunetas, alcantarillas y colectores contra cuencas ciegas.",
+                        icono: "CloudRain",
+                        color_alerta: "#f59e0b",
+                        diagnostico_doctrina: "Riesgo crítico de anegamiento en ciudades costeras (Piura, Chiclayo, Tumbes). Descalce en el avance frente a lluvias torrenciales tempranas.",
+                        total_obras: 22,
+                        pim_soles: 27791948.0,
+                        devengado_soles: 11633765.0,
+                        promedio_simple_avance: 46.4,
+                        avance_ponderado_pim: 41.9,
+                        obras_criticas_menor_20: 6,
+                        obras_avanzadas_mayor_70: 8,
+                        porcentaje_obras_criticas: 27.3,
+                        ejemplos_principales: [
+                            { cui: "2309153", nombre: "INSTALACION DEL SISTEMA DE EVACUACION DE AGUAS PLUVIALES DE LA CIUDAD", pim_soles: 16775610.0, devengado_soles: 5385000.0, porcentaje_ejecucion: 32.1, departamento: "PIURA", semaforo: "AMARILLO_RIESGO" },
+                            { cui: "2644305", nombre: "CREACION DEL SERVICIO DE DRENAJE PLUVIAL EN LA ZONA URBANA", pim_soles: 5356463.0, devengado_soles: 5094000.0, porcentaje_ejecucion: 95.1, departamento: "TUMBES", semaforo: "VERDE_CONFORME" },
+                            { cui: "2725724", nombre: "CONSTRUCCION DE DRENAJE TRANSVERSAL Y COLECTOR", pim_soles: 2065371.0, devengado_soles: 0.0, porcentaje_ejecucion: 0.0, departamento: "LAMBAYEQUE", semaforo: "ROJO_INACCION_CRITICA" }
+                        ]
+                    },
+                    {
+                        id: "G4_INFRAESTRUCTURA_VIAL",
+                        nombre: "Infraestructura Vial, Puentes y Transitabilidad",
+                        descripcion: "Rehabilitación de puentes vehiculares/peatonales, badenes, pontones y obras de arte viales de evacuación.",
+                        icono: "Milestone",
+                        color_alerta: "#ef4444",
+                        diagnostico_doctrina: "Riesgo de corte de rutas y aislamiento territorial: El 67% del presupuesto asignado aún no ha sido devengado.",
+                        total_obras: 7,
+                        pim_soles: 5447045.0,
+                        devengado_soles: 1789897.0,
+                        promedio_simple_avance: 64.3,
+                        avance_ponderado_pim: 32.9,
+                        obras_criticas_menor_20: 1,
+                        obras_avanzadas_mayor_70: 4,
+                        porcentaje_obras_criticas: 14.3,
+                        ejemplos_principales: [
+                            { cui: "2737745", nombre: "REPARACION DE SUPERFICIE DE RODADURA Y OBRAS DE ARTE", pim_soles: 3199535.0, devengado_soles: 0.0, porcentaje_ejecucion: 0.0, departamento: "PIURA", semaforo: "ROJO_INACCION_CRITICA" },
+                            { cui: "2690144", nombre: "REPARACION DE PUENTE PEATONAL Y SERVICIO DE TRANSITABILIDAD", pim_soles: 1109615.0, devengado_soles: 700166.0, porcentaje_ejecucion: 63.1, departamento: "ANCASH", semaforo: "VERDE_CONFORME" },
+                            { cui: "2255797", nombre: "CREACION DEL SERVICIO DE LA CAPACIDAD OPERATIVA DEL POOL DE MAQUINARIA", pim_soles: 673990.0, devengado_soles: 673990.0, porcentaje_ejecucion: 100.0, departamento: "LIMA", semaforo: "VERDE_CONFORME" }
+                        ]
+                    }
+                ]
+            },
             doctrina_logistica: [
-                { hitos: "Descolmatación intensiva de cauces fluviales (Rímac/Piura)", progreso_nacional: 68, critico: true },
-                { hitos: "Enrocado riprap en fajas marginales urbanas", progreso_nacional: 52, critico: true },
-                { hitos: "Defensas ribereñas y desvío de bocatomas rústicas", progreso_nacional: 45, critico: false },
-                { hitos: "Preposicionamiento de convoyes de maquinaria INDECI/MTC", progreso_nacional: 74, critico: true }
+                { hitos: "G1: Defensas Ribereñas y Descolmatación Fluvial", progreso_nacional: 38, critico: true },
+                { hitos: "G5: Capacidad Operativa y Pool Maquinaria MTC/INDECI", progreso_nacional: 74, critico: false },
+                { hitos: "G3: Control de Quebradas y Mallas Dinámicas", progreso_nacional: 60, critico: false },
+                { hitos: "G2: Drenaje Pluvial y Mitigación Cuencas Ciegas", progreso_nacional: 42, critico: true },
+                { hitos: "G4: Infraestructura Vial y Puentes de Evacuación", progreso_nacional: 33, critico: true },
+                { hitos: "G6: Protección Población y Bienes Críticos", progreso_nacional: 54, critico: false }
             ]
         },
         analogos_historicos: [
@@ -152,6 +307,7 @@ export default function TacticalPolarClock({
     };
 
     const activeClock = clockType === "AMARU-FEN" ? fen : chiri;
+    const carteraObras = clockType === "AMARU-FEN" ? (fen?.ventana_dorada?.cartera_obras_pp0068 || fen?.doctrina_logistica_obras_pp0068) : null;
 
     // 12 Marcas Horarias del Dial Polar (Cada 30° = 1 hora / 1 mes)
     // CÚSPIDE (0° / 360° = Las 12:00): 1 de Enero de 2027
@@ -896,6 +1052,42 @@ export default function TacticalPolarClock({
                                     Quedan solo <b>{activeClock.ventana_dorada.dias_restantes} días</b> (hasta el 30 de Noviembre) antes del inicio del Fenómeno El Niño 2026-2027 para culminar descolmataciones y defensas ribereñas.
                                 </span>
                             </div>
+
+                            {/* Resumen Cartera Obras PP 0068 en widget */}
+                            {carteraObras && (
+                                <div className="bg-slate-900/90 border border-amber-900/50 rounded-lg p-2.5 space-y-1.5 text-[10.5px]">
+                                    <div className="flex justify-between items-center">
+                                        <span className="font-bold text-amber-300 flex items-center gap-1.5">
+                                            <Landmark className="w-3.5 h-3.5 text-amber-400" />
+                                            Obras PP 0068 vs. Ventana Dorada:
+                                        </span>
+                                        <span className="text-[9.5px] font-mono text-emerald-400 bg-emerald-950 px-1.5 py-0.5 rounded border border-emerald-800">
+                                            PIM S/ {(carteraObras.pim_total_soles / 1e6).toFixed(0)}M
+                                        </span>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <div className="flex justify-between text-[10px] text-slate-300">
+                                            <span>Avance Ponderado Global (643 obras):</span>
+                                            <span className="font-bold text-white font-mono">{carteraObras.avance_ponderado_pim_global}% (Prom. simple: {carteraObras.promedio_simple_avance_global}%)</span>
+                                        </div>
+                                        <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden border border-slate-800">
+                                            <div 
+                                                className="h-full bg-gradient-to-r from-amber-500 to-emerald-500 rounded-full transition-all duration-500" 
+                                                style={{ width: `${Math.min(100, carteraObras.avance_ponderado_pim_global)}%` }}
+                                            />
+                                        </div>
+                                        <div className="flex justify-between items-center text-[9.5px] text-slate-400 pt-0.5">
+                                            <span className="text-red-300">🚨 Defensas ribereñas: <b>37.7%</b> (146 obras en &lt;20%)</span>
+                                            <button
+                                                onClick={() => setIsFullscreen(true)}
+                                                className="text-sky-400 hover:text-sky-300 font-bold underline"
+                                            >
+                                                Ver 6 grupos C2 ►
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     ) : (
                         <div className="space-y-1.5 text-[11px] text-slate-300">
@@ -1491,20 +1683,36 @@ export default function TacticalPolarClock({
                                     </div>
                                     
                                     <div className="space-y-2 text-xs">
-                                        {activeClock.ventana_dorada.doctrina_logistica.map((item: any, i: number) => (
-                                            <div key={i} className="space-y-1">
-                                                <div className="flex justify-between text-[11px] text-slate-300">
-                                                    <span className="line-clamp-1">{item.hitos}</span>
-                                                    <span className="font-mono text-amber-400 font-bold">{item.progreso_nacional}%</span>
+                                        {(clockType === "AMARU-FEN" && carteraObras?.grupos_estrategicos?.length
+                                            ? carteraObras.grupos_estrategicos.map((g: any) => ({
+                                                hitos: `${g.id.replace(/G\d+_/, '')}: ${g.nombre}`,
+                                                progreso_nacional: Math.round(g.avance_ponderado_pim),
+                                                critico: g.avance_ponderado_pim < 40.0,
+                                                obras: g.total_obras
+                                            }))
+                                            : activeClock.ventana_dorada.doctrina_logistica
+                                        ).map((item: any, i: number) => {
+                                            const isCrit = item.critico || item.progreso_nacional < 40;
+                                            const isGood = item.progreso_nacional >= 70;
+                                            return (
+                                                <div key={i} className="space-y-1">
+                                                    <div className="flex justify-between text-[11px] text-slate-300">
+                                                        <span className="line-clamp-1" title={item.hitos}>{item.hitos}</span>
+                                                        <span className={`font-mono font-bold ${isCrit ? "text-red-400" : isGood ? "text-emerald-400" : "text-amber-400"}`}>
+                                                            {item.progreso_nacional}%
+                                                        </span>
+                                                    </div>
+                                                    <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                                                        <div
+                                                            className={`h-full rounded-full transition-all duration-500 ${
+                                                                isCrit ? "bg-red-500" : isGood ? "bg-emerald-500" : "bg-amber-500"
+                                                            }`}
+                                                            style={{ width: `${Math.min(100, item.progreso_nacional)}%` }}
+                                                        ></div>
+                                                    </div>
                                                 </div>
-                                                <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
-                                                    <div
-                                                        className={`h-full rounded-full ${item.progreso_nacional > 70 ? "bg-emerald-500" : "bg-amber-500"}`}
-                                                        style={{ width: `${item.progreso_nacional}%` }}
-                                                    ></div>
-                                                </div>
-                                            </div>
-                                        ))}
+                                            );
+                                        })}
                                     </div>
                                 </div>
 
@@ -1907,6 +2115,236 @@ export default function TacticalPolarClock({
                                 </div>
                             </div>
                         </div>
+
+                        {/* ========================================================================= */}
+                        {/* CARTERA DE OBRAS PP 0068 (DOCTRINA LOGÍSTICA & PROMEDIOS DE AVANCE)        */}
+                        {/* ========================================================================= */}
+                        {clockType === "AMARU-FEN" && carteraObras && (
+                            <div className="bg-slate-950/90 border border-amber-900/40 rounded-2xl p-5 space-y-4 shadow-2xl">
+                                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-850 pb-3">
+                                    <div className="flex items-center gap-2.5">
+                                        <span className="p-2 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                                            <Landmark className="w-5 h-5" />
+                                        </span>
+                                        <div>
+                                            <div className="flex items-center gap-2">
+                                                <h3 className="text-sm font-bold text-white">
+                                                    Doctrina Logística C2: Estado de Obras de Prevención (PP 0068)
+                                                </h3>
+                                                <span className="text-[10px] text-amber-300 bg-amber-950/80 border border-amber-800 px-2 py-0.5 rounded-full font-mono font-bold">
+                                                    643 OBRAS AUDITADAS
+                                                </span>
+                                            </div>
+                                            <p className="text-slate-400 text-xs mt-0.5">
+                                                Monitoreo de 6 macro-familias de ingeniería frente a la Ventana Dorada (Noviembre / Diciembre 2026) • Datos Abiertos MEF / SIAF
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
+                                        <Link
+                                            href="/fiscal"
+                                            className="text-xs font-bold text-sky-400 hover:text-sky-300 bg-sky-950/60 border border-sky-800/80 px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 shadow"
+                                        >
+                                            <span>Agente FISCALIZADOR</span>
+                                            <ExternalLink className="w-3.5 h-3.5" />
+                                        </Link>
+                                        <Link
+                                            href="/contraloria"
+                                            className="text-xs font-bold text-amber-400 hover:text-amber-300 bg-amber-950/60 border border-amber-800/80 px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 shadow"
+                                        >
+                                            <span>Bandeja CGR / OCI</span>
+                                            <ExternalLink className="w-3.5 h-3.5" />
+                                        </Link>
+                                    </div>
+                                </div>
+
+                                {/* Resumen Consolidado Nacional (KPIs) */}
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                                    <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-xl">
+                                        <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-bold">Presupuesto PIM Total:</span>
+                                        <span className="text-base font-black text-white font-mono mt-0.5 block">
+                                            S/ {(carteraObras.pim_total_soles / 1e6).toFixed(1)} M
+                                        </span>
+                                        <span className="text-[10px] text-slate-500 font-mono">643 intervenciones</span>
+                                    </div>
+
+                                    <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-xl">
+                                        <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-bold">Devengado Ejecutado:</span>
+                                        <span className="text-base font-black text-emerald-400 font-mono mt-0.5 block">
+                                            S/ {(carteraObras.devengado_total_soles / 1e6).toFixed(1)} M
+                                        </span>
+                                        <span className="text-[10px] text-slate-500 font-mono">Gasto devengado SIAF</span>
+                                    </div>
+
+                                    <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-xl">
+                                        <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-bold">Avance Ponderado Global:</span>
+                                        <span className="text-base font-black text-amber-400 font-mono mt-0.5 block">
+                                            {carteraObras.avance_ponderado_pim_global}%
+                                        </span>
+                                        <span className="text-[10px] text-slate-400 font-mono">
+                                            Prom. simple: <b>{carteraObras.promedio_simple_avance_global}%</b>
+                                        </span>
+                                    </div>
+
+                                    <div className="bg-slate-900/80 border border-red-900/40 p-3 rounded-xl">
+                                        <span className="text-[10px] text-red-300 uppercase tracking-wider block font-bold">Obras Críticas (&lt;20%):</span>
+                                        <span className="text-base font-black text-red-400 font-mono mt-0.5 block">
+                                            {carteraObras.obras_en_alarma_critica_total} proyectos
+                                        </span>
+                                        <span className="text-[10px] text-red-400/80 font-mono">
+                                            Riesgo inminente de colapso
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Cartela de Alerta Doctrinal */}
+                                <div className="bg-red-950/30 border border-red-800/60 rounded-xl p-3 text-xs text-red-200/95 leading-relaxed flex items-start gap-2.5">
+                                    <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                                    <div>
+                                        <b className="text-red-300 font-mono text-xs block mb-0.5 uppercase tracking-wide">
+                                            Alerta Doctrinal de Descalce Hidrológico (Art. 67 Ley N.º 29664):
+                                        </b>
+                                        {carteraObras.alerta_doctrina_ventana_dorada}
+                                    </div>
+                                </div>
+
+                                {/* Grid de los 6 Grupos Estratégicos */}
+                                <div className="space-y-3 pt-1">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                                            Desglose por Familias de Ingeniería y Promedios de Avance:
+                                        </span>
+                                        <span className="text-[10.5px] text-slate-400 font-mono">
+                                            Ordenado por volumen presupuestal PIM
+                                        </span>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5">
+                                        {(carteraObras.grupos_estrategicos || []).map((g: any) => {
+                                            const isExpanded = expandedObrasGroup === g.id;
+                                            const isLow = g.avance_ponderado_pim < 40.0;
+                                            const isMed = g.avance_ponderado_pim >= 40.0 && g.avance_ponderado_pim < 60.0;
+                                            const colorCls = isLow ? "text-red-400" : isMed ? "text-amber-400" : "text-emerald-400";
+                                            const barGradient = isLow ? "bg-red-500" : isMed ? "bg-amber-500" : "bg-emerald-500";
+
+                                            return (
+                                                <div
+                                                    key={g.id}
+                                                    className="bg-slate-900/80 border border-slate-800 hover:border-slate-700 rounded-xl p-3.5 space-y-2.5 transition"
+                                                >
+                                                    {/* Header Grupo */}
+                                                    <div className="flex items-start justify-between gap-2">
+                                                        <div className="flex items-start gap-2">
+                                                            <div className="p-1.5 rounded-lg bg-slate-950 border border-slate-800 mt-0.5 shrink-0">
+                                                                {g.id === "G1_DEFENSAS_RIBERENAS" ? <ShieldAlert className="w-4 h-4 text-red-400" /> :
+                                                                 g.id === "G2_DRENAJE_PLUVIAL" ? <CloudRain className="w-4 h-4 text-amber-400" /> :
+                                                                 g.id === "G3_CONTROL_QUEBRADAS" ? <Mountain className="w-4 h-4 text-sky-400" /> :
+                                                                 g.id === "G4_INFRAESTRUCTURA_VIAL" ? <Milestone className="w-4 h-4 text-rose-400" /> :
+                                                                 g.id === "G5_CAPACIDAD_OPERATIVA" ? <Truck className="w-4 h-4 text-emerald-400" /> :
+                                                                 <Building2 className="w-4 h-4 text-teal-400" />}
+                                                            </div>
+                                                            <div>
+                                                                <h4 className="text-xs font-bold text-white leading-tight">
+                                                                    {g.nombre}
+                                                                </h4>
+                                                                <span className="text-[10px] text-slate-400 block mt-0.5">
+                                                                    <b>{g.total_obras} proyectos</b> • PIM: <b>S/ {(g.pim_soles / 1e6).toFixed(1)}M</b> • Devengado: S/ {(g.devengado_soles / 1e6).toFixed(1)}M
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+                                                        <span className={`text-xs font-black font-mono px-2 py-0.5 rounded-lg border ${
+                                                            isLow ? "bg-red-950/80 text-red-400 border-red-800" :
+                                                            isMed ? "bg-amber-950/80 text-amber-400 border-amber-800" :
+                                                            "bg-emerald-950/80 text-emerald-400 border-emerald-800"
+                                                        }`}>
+                                                            {g.avance_ponderado_pim}% Pond.
+                                                        </span>
+                                                    </div>
+
+                                                    {/* Barras de Progreso Duales */}
+                                                    <div className="space-y-1">
+                                                        <div className="flex justify-between text-[10px]">
+                                                            <span className="text-slate-300">Avance Financiero Ponderado:</span>
+                                                            <span className={`font-bold font-mono ${colorCls}`}>{g.avance_ponderado_pim}%</span>
+                                                        </div>
+                                                        <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
+                                                            <div
+                                                                className={`h-full ${barGradient} rounded-full transition-all duration-500`}
+                                                                style={{ width: `${Math.min(100, g.avance_ponderado_pim)}%` }}
+                                                            />
+                                                        </div>
+                                                        <div className="flex justify-between text-[10px] text-slate-400 pt-0.5">
+                                                            <span>Promedio Simple de Avance Físico:</span>
+                                                            <span className="font-mono text-slate-200 font-semibold">{g.promedio_simple_avance}%</span>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Alarma de Obras Críticas */}
+                                                    <div className="flex flex-wrap items-center justify-between text-[10px] pt-1 border-t border-slate-800/80">
+                                                        <span className={`${g.obras_criticas_menor_20 > 0 ? "text-red-400 font-bold" : "text-slate-400"}`}>
+                                                            🚨 <b>{g.obras_criticas_menor_20}</b> obras en riesgo crítico (&lt;20%)
+                                                        </span>
+                                                        <span className="text-emerald-400">
+                                                            ✓ <b>{g.obras_avanzadas_mayor_70}</b> obras avanzadas (&ge;70%)
+                                                        </span>
+                                                    </div>
+
+                                                    {/* Diagnóstico Doctrinal */}
+                                                    <p className="text-[10px] text-slate-400 leading-relaxed bg-slate-950/60 p-2 rounded-lg border border-slate-850">
+                                                        {g.diagnostico_doctrina}
+                                                    </p>
+
+                                                    {/* Toggle Proyectos Emblemáticos */}
+                                                    <div>
+                                                        <button
+                                                            onClick={() => setExpandedObrasGroup(isExpanded ? null : g.id)}
+                                                            className="text-[10px] text-sky-400 hover:text-sky-300 font-bold flex items-center gap-1 transition"
+                                                        >
+                                                            <span>{isExpanded ? "Ocultar proyectos emblemáticos" : `Ver proyectos principales (${g.ejemplos_principales?.length || 3})`}</span>
+                                                            {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                                                        </button>
+
+                                                        {isExpanded && g.ejemplos_principales && (
+                                                            <div className="mt-2 space-y-1.5 animate-fade-in">
+                                                                {g.ejemplos_principales.map((ej: any) => (
+                                                                    <div
+                                                                        key={ej.cui}
+                                                                        className="bg-slate-950/90 border border-slate-800/80 p-2 rounded-lg text-[10px] flex items-center justify-between gap-2"
+                                                                    >
+                                                                        <div className="min-w-0">
+                                                                            <div className="flex items-center gap-1.5">
+                                                                                <span className="font-mono font-bold text-amber-400">CUI {ej.cui}:</span>
+                                                                                <span className="text-slate-300 truncate max-w-[220px]" title={ej.nombre}>
+                                                                                    {ej.nombre}
+                                                                                </span>
+                                                                            </div>
+                                                                            <span className="text-[9px] text-slate-500 font-mono">
+                                                                                Región: {ej.departamento} • PIM: S/ {ej.pim_soles.toLocaleString()}
+                                                                            </span>
+                                                                        </div>
+                                                                        <div className="text-right shrink-0">
+                                                                            <span className={`font-mono font-bold text-[10.5px] ${
+                                                                                ej.porcentaje_ejecucion < 20 ? "text-red-400" :
+                                                                                ej.porcentaje_ejecucion < 60 ? "text-amber-400" :
+                                                                                "text-emerald-400"
+                                                                            }`}>
+                                                                                {ej.porcentaje_ejecucion}%
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Footer del Modal */}
                         <div className="pt-3 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">

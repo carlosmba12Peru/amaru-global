@@ -2,7 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import RadiosAndTriagePanel from "@/components/RadiosAndTriagePanel";
+import VoiceStoryRecorder from "@/components/VoiceStoryRecorder";
+import { IdiomaCodigo, IDIOMAS_SOPORTADOS, DICCIONARIO_EDAN } from "@/locales/edan_i18n";
 import {
+    LifeBuoy,
     ShieldCheck,
     ShieldAlert,
     AlertTriangle,
@@ -31,8 +35,12 @@ import {
     Database,
     Compass,
     SlidersHorizontal,
-    Maximize2
+    Maximize2,
+    Building,
+    HeartPulse,
+    ExternalLink
 } from "lucide-react";
+import { API_BASE } from "@/config/api";
 
 interface ReportePublico {
     id: string;
@@ -136,7 +144,7 @@ interface TransmisionVivo {
 
 export default function ReporteCiudadanoPage() {
     // Pestaña activa
-    const [activeTab, setActiveTab] = useState<"formulario" | "senales" | "doctrina_live">("formulario");
+    const [activeTab, setActiveTab] = useState<"formulario" | "senales" | "doctrina_live" | "radios_triage">("formulario");
 
     // Modo de vista en la pestaña de señales: Pública (Blindada) vs Militar C2 (Auditoría Forense)
     const [c2ViewMode, setC2ViewMode] = useState<"publica" | "militar_c2">("publica");
@@ -160,6 +168,32 @@ export default function ReporteCiudadanoPage() {
     const [formSubmitting, setFormSubmitting] = useState<boolean>(false);
     const [receiptModal, setReceiptModal] = useState<any | null>(null);
 
+    // AMARU-DAMNIFICADOS (Pre-Padrón EDAN / Bono BAE S/ 500)
+    const [esDamnificadoEdan, setEsDamnificadoEdan] = useState<boolean>(false);
+    const [edanIdioma, setEdanIdioma] = useState<IdiomaCodigo>("es");
+    const [edanRequiereBilingue, setEdanRequiereBilingue] = useState<boolean>(false);
+    const [audioGrabadoBase64, setAudioGrabadoBase64] = useState<string | null>(null);
+    const [audioSha256, setAudioSha256] = useState<string | null>(null);
+
+    const [edanDni, setEdanDni] = useState<string>("");
+    const [edanNombres, setEdanNombres] = useState<string>("");
+    const [edanApellidos, setEdanApellidos] = useState<string>("");
+    const [edanTelefono, setEdanTelefono] = useState<string>("");
+    const [edanCondicion, setEdanCondicion] = useState<string>("PROPIETARIO");
+    const [edanMaterialMuros, setEdanMaterialMuros] = useState<string>("ADOBE_QUINCHA");
+    const [edanMaterialTecho, setEdanMaterialTecho] = useState<string>("CALAMINA");
+    const [edanEstadoVivienda, setEdanEstadoVivienda] = useState<string>("INHABITABLE");
+    const [edanAguaEnCasa, setEdanAguaEnCasa] = useState<boolean>(true);
+    const [edanTotalFam, setEdanTotalFam] = useState<number>(4);
+    const [edanNinos5, setEdanNinos5] = useState<number>(0);
+    const [edanAdultos65, setEdanAdultos65] = useState<number>(0);
+    const [edanDiscapacidad, setEdanDiscapacidad] = useState<number>(0);
+    const [edanGestantes, setEdanGestantes] = useState<number>(0);
+    const [damnReceiptModal, setDamnReceiptModal] = useState<any | null>(null);
+
+    // Diccionario i18n reactivo para el pre-padrón
+    const tEdan = DICCIONARIO_EDAN[edanIdioma] || DICCIONARIO_EDAN.es;
+
     // Filtros de listado
     const [filtroTipo, setFiltroTipo] = useState<string>("TODOS");
     const [searchUbigeo, setSearchUbigeo] = useState<string>("");
@@ -169,10 +203,10 @@ export default function ReporteCiudadanoPage() {
         try {
             setLoading(true);
             const [resPub, resC2, resStats, resLive] = await Promise.all([
-                fetch("http://localhost:8000/api/ciudadano/reportes?vista=publica").then(r => r.json()).catch(() => []),
-                fetch("http://localhost:8000/api/ciudadano/reportes?vista=militar_c2").then(r => r.json()).catch(() => []),
-                fetch("http://localhost:8000/api/ciudadano/estadisticas").then(r => r.json()).catch(() => null),
-                fetch("http://localhost:8000/api/ciudadano/transmisiones-en-vivo").then(r => r.json()).catch(() => [])
+                fetch(`${API_BASE}/api/ciudadano/reportes?vista=publica`).then(r => r.json()).catch(() => []),
+                fetch(`${API_BASE}/api/ciudadano/reportes?vista=militar_c2`).then(r => r.json()).catch(() => []),
+                fetch(`${API_BASE}/api/ciudadano/estadisticas`).then(r => r.json()).catch(() => null),
+                fetch(`${API_BASE}/api/ciudadano/transmisiones-en-vivo`).then(r => r.json()).catch(() => [])
             ]);
             setReportesPublicos(resPub);
             setReportesC2(resC2);
@@ -197,11 +231,72 @@ export default function ReporteCiudadanoPage() {
             return;
         }
 
+        if (esDamnificadoEdan) {
+            if (!edanDni.trim() || edanDni.trim().length !== 8 || !/^\d+$/.test(edanDni.trim())) {
+                alert("Para el Pre-Padrón de Damnificados (Ficha EDAN), debe ingresar un DNI válido de 8 dígitos.");
+                return;
+            }
+            if (!edanNombres.trim() || !edanApellidos.trim() || !edanTelefono.trim()) {
+                alert("Por favor complete nombres, apellidos y teléfono del Jefe de Hogar.");
+                return;
+            }
+        }
+
         setFormSubmitting(true);
         try {
+            // Si marcó Pre-Padrón EDAN / Bono BAE, registrar primero en el servicio desacoplado
+            if (esDamnificadoEdan) {
+                const edanPayload = {
+                    dni_jefe_hogar: edanDni.trim(),
+                    nombres: edanNombres.trim(),
+                    apellidos: edanApellidos.trim(),
+                    telefono: edanTelefono.trim(),
+                    ubigeo: formUbigeo,
+                    direccion_exacta: formLugar.trim(),
+                    referencia_catastral: "Reporte Georreferenciado COED Social",
+                    lat: formUbigeo === "200105" ? -5.265 : formUbigeo === "140301" ? -6.512 : formUbigeo === "130101" ? -8.112 : -11.938,
+                    lng: formUbigeo === "200105" ? -80.678 : formUbigeo === "140301" ? -79.856 : formUbigeo === "130101" ? -79.018 : -76.702,
+                    condicion_tenencia: edanCondicion,
+                    material_muros: edanMaterialMuros,
+                    material_techo: edanMaterialTecho,
+                    tirante_agua: formNivel,
+                    agua_dentro_vivienda: edanAguaEnCasa,
+                    estado_vivienda_declarado: edanEstadoVivienda,
+                    total_integrantes: Number(edanTotalFam) || 1,
+                    ninos_menores_5: Number(edanNinos5) || 0,
+                    adultos_mayores_65: Number(edanAdultos65) || 0,
+                    personas_discapacidad: Number(edanDiscapacidad) || 0,
+                    mujeres_gestantes: Number(edanGestantes) || 0,
+                    servicios_afectados: ["AGUA_POTABLE", "DESAGUE"],
+                    relato_danos: formTestimonio.trim(),
+                    foto_evidencia_url: formFileSelected ? `/uploads/${formFileSelected}` : "/img/edan/sample_flood_house.jpg",
+                    
+                    // Metadatos Etnolingüísticos RENALIO & Testimonio de Voz
+                    lengua_materna: edanIdioma,
+                    variante_renalio: IDIOMAS_SOPORTADOS[edanIdioma]?.variante || "CASTELLANO",
+                    requiere_asistencia_bilingue: edanRequiereBilingue,
+                    audio_testimonio_sha256: audioSha256,
+                    tiene_audio_adjunto: Boolean(audioSha256)
+                };
+
+                const resDamn = await fetch(`${API_BASE}/api/v1/damnificados/registrar`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(edanPayload)
+                });
+
+                if (resDamn.ok) {
+                    const damnData = await resDamn.json();
+                    setDamnReceiptModal(damnData);
+                } else {
+                    const errData = await resDamn.json();
+                    alert(`Error en Pre-Padrón EDAN: ${errData.error || "No se pudo registrar"}`);
+                }
+            }
+
             const payload = {
-                tipo_registro: formTipoRegistro,
-                evento_historico_referencia: formTipoRegistro === "MEMORIA_HISTORICA" ? formEventoHistorico : "FEN_2026_2027_LIVE",
+                tipo_registro: "EN_VIVO_2026_2027",
+                evento_historico_referencia: "FEN_2026_2027_LIVE",
                 tipo_evento: formTipoEvento,
                 ubigeo: formUbigeo,
                 lugar_especifico: formLugar,
@@ -215,14 +310,16 @@ export default function ReporteCiudadanoPage() {
                 dispositivo_exif: "Terminal Móvil Ciudadano (Geotag Automático Activo)"
             };
 
-            const res = await fetch("http://localhost:8000/api/ciudadano/reportar", {
+            const res = await fetch(`${API_BASE}/api/ciudadano/reportar`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
             });
 
             const data = await res.json();
-            setReceiptModal(data);
+            if (!esDamnificadoEdan) {
+                setReceiptModal(data);
+            }
             // Limpiar campos principales
             setFormLugar("");
             setFormTestimonio("");
@@ -230,7 +327,7 @@ export default function ReporteCiudadanoPage() {
             // Refrescar feeds
             fetchData();
         } catch (err) {
-            alert("Error al enviar el reporte. Verifique la conexión con el servidor COEN.");
+            alert("Error al enviar el reporte. Verifique la conexión con el servidor COED.");
         } finally {
             setFormSubmitting(false);
         }
@@ -256,10 +353,10 @@ export default function ReporteCiudadanoPage() {
                                 <ShieldCheck className="w-5 h-5" />
                             </div>
                             <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                                Consola de Reporte Ciudadano Seguro &amp; Integridad Anti-Fake
+                                COED SOCIAL AMARU • Consola de Reporte Ciudadano Blindado
                             </h1>
                             <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 uppercase tracking-wider">
-                                Soberanía C2
+                                COED Social C2
                             </span>
                         </div>
                         <p className="text-xs text-slate-400 max-w-3xl leading-relaxed">
@@ -306,6 +403,17 @@ export default function ReporteCiudadanoPage() {
                         >
                             <Tv className="w-3.5 h-3.5 text-purple-300" />
                             <span>3. Transmisiones en Vivo &amp; Doctrina</span>
+                        </button>
+                        <button
+                            onClick={() => setActiveTab("radios_triage")}
+                            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+                                activeTab === "radios_triage"
+                                    ? "bg-rose-600 text-white shadow-md shadow-rose-600/30"
+                                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+                            }`}
+                        >
+                            <LifeBuoy className="w-3.5 h-3.5 text-rose-300 animate-pulse" />
+                            <span>4. Radios Rurales &amp; Triaje NLP</span>
                         </button>
                     </div>
                 </div>
@@ -392,70 +500,79 @@ export default function ReporteCiudadanoPage() {
                                 </div>
                             </div>
 
-                            <form onSubmit={handleSubmitReport} className="space-y-5">
-                                {/* 1. Selector Temporal: En Vivo vs Memoria Histórica */}
-                                <div>
-                                    <label className="block text-xs font-semibold text-slate-300 mb-2 uppercase tracking-wider">
-                                        1. Régimen del Reporte:
-                                    </label>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        <button
-                                            type="button"
-                                            onClick={() => setFormTipoRegistro("EN_VIVO_2026_2027")}
-                                            className={`p-3 rounded-xl border text-left flex items-start gap-3 transition ${
-                                                formTipoRegistro === "EN_VIVO_2026_2027"
-                                                    ? "bg-blue-950/80 border-blue-500 text-white shadow-md shadow-blue-500/20"
-                                                    : "bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700"
-                                            }`}
-                                        >
-                                            <div className={`p-2 rounded-lg ${formTipoRegistro === "EN_VIVO_2026_2027" ? "bg-blue-600 text-white" : "bg-slate-800 text-slate-400"}`}>
-                                                <Radio className="w-4 h-4" />
-                                            </div>
-                                            <div>
-                                                <div className="font-bold text-xs text-white">Tiempo Real: FEN 2026 - 2027</div>
-                                                <div className="text-[11px] text-slate-400 mt-0.5">Reportar un suceso que está ocurriendo hoy en mi zona.</div>
-                                            </div>
-                                        </button>
-
-                                        <button
-                                            type="button"
-                                            onClick={() => setFormTipoRegistro("MEMORIA_HISTORICA")}
-                                            className={`p-3 rounded-xl border text-left flex items-start gap-3 transition ${
-                                                formTipoRegistro === "MEMORIA_HISTORICA"
-                                                    ? "bg-amber-950/80 border-amber-500 text-white shadow-md shadow-amber-500/20"
-                                                    : "bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700"
-                                            }`}
-                                        >
-                                            <div className={`p-2 rounded-lg ${formTipoRegistro === "MEMORIA_HISTORICA" ? "bg-amber-600 text-white" : "bg-slate-800 text-slate-400"}`}>
-                                                <Database className="w-4 h-4" />
-                                            </div>
-                                            <div>
-                                                <div className="font-bold text-xs text-white">Memoria Histórica de Inundación</div>
-                                                <div className="text-[11px] text-slate-400 mt-0.5">Registrar hasta dónde llegó el agua o huaico en desastres pasados.</div>
-                                            </div>
-                                        </button>
+                            {/* BANNER BIMODAL DOCTRINAL: HÁBITAT (VIVIENDA / CUP-DAMN) VS SALUD (MINSA / CUP-MINSA) */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                                <div className="bg-slate-950/90 border-2 border-emerald-500/70 rounded-xl p-3.5 shadow-md flex items-start gap-3">
+                                    <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-400 shrink-0 mt-0.5 border border-emerald-500/30">
+                                        <Building className="w-5 h-5" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <div className="flex items-center justify-between">
+                                            <h4 className="font-bold text-xs text-emerald-300 uppercase tracking-wide">
+                                                🏠 Damnificado Hábitat / Vivienda
+                                            </h4>
+                                            <span className="text-[9px] bg-emerald-950 text-emerald-300 border border-emerald-700 px-1.5 py-0.5 rounded font-mono font-bold">
+                                                ACTIVO AQUÍ
+                                            </span>
+                                        </div>
+                                        <p className="text-[11px] text-slate-300 mt-1 leading-snug">
+                                            Pérdida de techo, colapso de muros, cuencas ciegas y solicitud del <strong>Bono BAE (S/ 500)</strong> con código criptográfico <code>CUP-DAMN</code>.
+                                        </p>
                                     </div>
                                 </div>
 
-                                {/* Selección de Evento Histórico si aplica */}
-                                {formTipoRegistro === "MEMORIA_HISTORICA" && (
-                                    <div className="p-3 bg-slate-950 rounded-xl border border-amber-500/30">
-                                        <label className="block text-xs font-semibold text-amber-300 mb-1.5">
-                                            Evento Histórico de Referencia:
-                                        </label>
-                                        <select
-                                            value={formEventoHistorico}
-                                            onChange={(e) => setFormEventoHistorico(e.target.value)}
-                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500"
-                                        >
-                                            <option value="FEN_2017">El Niño Costero 2017 (Marzo 2017)</option>
-                                            <option value="CICLON_YAKU_2023">Ciclón Yaku 2023 (Marzo 2023)</option>
-                                            <option value="FEN_1997_1998">Mega Fenómeno El Niño 1997-1998</option>
-                                            <option value="FEN_1982_1983">Mega Fenómeno El Niño 1982-1983</option>
-                                            <option value="OTRO_HISTORICO">Otro evento aluvial o inundación anterior</option>
-                                        </select>
+                                <div className="bg-slate-950/90 border border-rose-600/70 hover:border-rose-400 rounded-xl p-3.5 shadow-md flex items-start gap-3 transition group">
+                                    <div className="p-2 rounded-lg bg-rose-500/20 text-rose-400 shrink-0 mt-0.5 border border-rose-500/30">
+                                        <HeartPulse className="w-5 h-5" />
                                     </div>
-                                )}
+                                    <div className="flex-1">
+                                        <div className="flex items-center justify-between">
+                                            <h4 className="font-bold text-xs text-rose-300 uppercase tracking-wide">
+                                                🚑 ¿Afectación Médica / Heridos?
+                                            </h4>
+                                            <Link
+                                                href="/salud/triaje"
+                                                className="text-[10px] font-bold text-white bg-rose-600 hover:bg-rose-500 px-2 py-0.5 rounded transition flex items-center gap-1 shadow"
+                                            >
+                                                <span>Ir a Triaje</span>
+                                                <ExternalLink className="w-3 h-3" />
+                                            </Link>
+                                        </div>
+                                        <p className="text-[11px] text-slate-300 mt-1 leading-snug">
+                                            Si hay heridos o cuadros clínicos graves, active el <strong>Triaje Digital Desacoplado NTS-105</strong> para prioridad médica inmediata (<code>CUP-MINSA</code>).
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <form onSubmit={handleSubmitReport} className="space-y-5">
+                                {/* 1. Régimen Operativo del Formulario: Exclusivamente Tiempo Real */}
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-300 mb-2 uppercase tracking-wider">
+                                        1. Régimen Operativo del Formulario:
+                                    </label>
+                                    <div className="p-3.5 rounded-xl border bg-blue-950/40 border-blue-500/50 flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 rounded-lg bg-blue-600 text-white shrink-0">
+                                                <Radio className="w-4 h-4 animate-pulse" />
+                                            </div>
+                                            <div>
+                                                <div className="font-bold text-xs text-white flex items-center gap-2">
+                                                    <span>Tiempo Real: Afectación en Curso FEN 2026 - 2027</span>
+                                                    <span className="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.5 rounded font-mono font-bold">EN VIVO</span>
+                                                </div>
+                                                <div className="text-[11px] text-slate-300 mt-0.5">
+                                                    Reporte ciudadano directo para empadronamiento digital de vivienda, daños de infraestructura y BAE S/ 500.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="hidden sm:block text-right">
+                                            <span className="text-[10px] font-mono text-blue-300 bg-blue-900/50 px-2 py-1 rounded border border-blue-700/50 font-bold">
+                                                CUP-DAMN EN VIVO
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 {/* 2. Distrito / UBIGEO */}
                                 <div>
@@ -493,8 +610,8 @@ export default function ReporteCiudadanoPage() {
                                     </div>
                                 </div>
 
-                                {/* 4. Tipo de Fenómeno y Altura del Agua */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {/* 4. Tipo de Fenómeno y 5. Altura del Agua (Ergonómico Táctico) */}
+                                <div className="space-y-4">
                                     <div>
                                         <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">
                                             4. Tipo de Fenómeno:
@@ -513,13 +630,40 @@ export default function ReporteCiudadanoPage() {
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">
-                                            5. Nivel de Agua o Lodo:
+                                        <label className="block text-xs font-semibold text-slate-300 mb-2 uppercase tracking-wider">
+                                            5. Nivel de Agua o Lodo (Selección Rápida con 1 Toque):
                                         </label>
+                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
+                                            {[
+                                                { id: "TOBILLO_15CM", icon: "🦶", label: "Tobillo", altura: "~15 cm", desc: "Anegamiento ligero", color: "border-cyan-500 bg-cyan-950/50 text-cyan-300" },
+                                                { id: "RODILLA_50CM", icon: "🦵", label: "Rodilla", altura: "~50 cm", desc: "Tránsito detenido", color: "border-blue-500 bg-blue-950/50 text-blue-300" },
+                                                { id: "CINTURA_100CM", icon: "🧍", label: "Cintura", altura: "~1.00 m", desc: "Ingreso a casas", color: "border-amber-500 bg-amber-950/50 text-amber-300" },
+                                                { id: "TECHO_CATASTROFICO_200CM", icon: "🏠", label: "Techo", altura: ">2.00 m", desc: "Riesgo de vida", color: "border-rose-500 bg-rose-950/50 text-rose-300" }
+                                            ].map((lvl) => {
+                                                const isSelected = formNivel === lvl.id;
+                                                return (
+                                                    <button
+                                                        key={lvl.id}
+                                                        type="button"
+                                                        onClick={() => setFormNivel(lvl.id)}
+                                                        className={`p-2.5 rounded-xl border text-center transition flex flex-col items-center justify-center gap-1 cursor-pointer ${
+                                                            isSelected
+                                                                ? `${lvl.color} shadow-lg ring-2 ring-white/30 font-bold scale-[1.02]`
+                                                                : "bg-slate-950/80 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-300"
+                                                        }`}
+                                                    >
+                                                        <span className="text-2xl">{lvl.icon}</span>
+                                                        <span className="text-xs font-bold text-white">{lvl.label}</span>
+                                                        <span className="text-[10px] text-slate-400 font-mono">{lvl.altura}</span>
+                                                        <span className="text-[9px] text-slate-400 leading-tight">{lvl.desc}</span>
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
                                         <select
                                             value={formNivel}
                                             onChange={(e) => setFormNivel(e.target.value)}
-                                            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500"
+                                            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-400 focus:outline-none focus:border-blue-500"
                                         >
                                             <option value="TOBILLO_15CM">🦶 Tobillo (~15 cm - Anegamiento ligero)</option>
                                             <option value="RODILLA_50CM">🦵 Rodilla (~50 cm - Dificulta vehículos)</option>
@@ -558,16 +702,280 @@ export default function ReporteCiudadanoPage() {
                                     </div>
                                 </div>
 
-                                {/* 7. Testimonio Detallado */}
-                                <div>
-                                    <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">
-                                        7. Descripción de lo ocurrido:
-                                    </label>
+                                {/* ========================================================= */}
+                                {/* SECCIÓN AMARU-DAMNIFICADOS: PRE-PADRÓN EDAN & BONO BAE   */}
+                                {/* Ley N.° 29664, Ley N.° 31526, D.S. N.° 008-2022-VIVIENDA */}
+                                {/* Ley N.° 29735 (Lenguas Originarias) & RENALIO D.S. 009-2021 */}
+                                {/* ========================================================= */}
+                                <div className="p-4 rounded-xl border border-amber-500/40 bg-gradient-to-br from-amber-950/40 via-slate-900 to-amber-950/20 shadow-md space-y-3">
+                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-amber-500/20 pb-2.5">
+                                        <label className="flex items-start gap-3 cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                checked={esDamnificadoEdan}
+                                                onChange={(e) => setEsDamnificadoEdan(e.target.checked)}
+                                                className="w-5 h-5 mt-0.5 rounded border-slate-700 text-amber-500 focus:ring-amber-500/30 accent-amber-500"
+                                            />
+                                            <div>
+                                                <div className="text-xs font-bold text-amber-300 flex items-center gap-2">
+                                                    <span>{tEdan.tituloSeccion}</span>
+                                                    <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-[10px] text-amber-400 font-semibold border border-amber-500/40">
+                                                        {tEdan.etiquetaBonoBae}
+                                                    </span>
+                                                </div>
+                                                <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                                                    {tEdan.descripcionLey}
+                                                </p>
+                                            </div>
+                                        </label>
+
+                                        {/* Selector de Lengua Originaria RENALIO */}
+                                        {esDamnificadoEdan && (
+                                            <div className="flex items-center gap-1 bg-slate-950/90 p-1.5 rounded-xl border border-amber-500/30 self-start sm:self-center shrink-0">
+                                                {(Object.keys(IDIOMAS_SOPORTADOS) as IdiomaCodigo[]).map((cod) => {
+                                                    const info = IDIOMAS_SOPORTADOS[cod];
+                                                    const isSelected = edanIdioma === cod;
+                                                    return (
+                                                        <button
+                                                            key={cod}
+                                                            type="button"
+                                                            onClick={() => setEdanIdioma(cod)}
+                                                            title={`${info.nombre} (${info.regionPredominante})`}
+                                                            className={`px-2 py-1 rounded-lg text-[10px] font-bold transition flex items-center gap-1 cursor-pointer ${
+                                                                isSelected
+                                                                    ? "bg-amber-600 text-white shadow-sm"
+                                                                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+                                                            }`}
+                                                        >
+                                                            <span>{info.banderaIcono}</span>
+                                                            <span>{info.nombreNativo.split(" ")[0]}</span>
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {esDamnificadoEdan && (
+                                        <div className="space-y-4 animate-fadeIn">
+                                            {/* Datos del Jefe de Hogar */}
+                                            <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                                                <div>
+                                                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                                                        {tEdan.dniLabel}
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        maxLength={8}
+                                                        value={edanDni}
+                                                        onChange={(e) => setEdanDni(e.target.value.replace(/\D/g, ""))}
+                                                        placeholder={tEdan.dniPlaceholder}
+                                                        className="w-full bg-slate-950 border border-amber-500/40 rounded-lg px-3 py-2 text-xs text-white font-mono placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                                                        required={esDamnificadoEdan}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                                                        {tEdan.nombresLabel}
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        value={edanNombres}
+                                                        onChange={(e) => setEdanNombres(e.target.value)}
+                                                        placeholder={tEdan.nombresPlaceholder}
+                                                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                                                        required={esDamnificadoEdan}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                                                        {tEdan.apellidosLabel}
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        value={edanApellidos}
+                                                        onChange={(e) => setEdanApellidos(e.target.value)}
+                                                        placeholder={tEdan.apellidosPlaceholder}
+                                                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                                                        required={esDamnificadoEdan}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                                                        {tEdan.telefonoLabel}
+                                                    </label>
+                                                    <input
+                                                        type="tel"
+                                                        value={edanTelefono}
+                                                        onChange={(e) => setEdanTelefono(e.target.value)}
+                                                        placeholder={tEdan.telefonoPlaceholder}
+                                                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white font-mono placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                                                        required={esDamnificadoEdan}
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            {/* Preferencia de Lengua Originaria & Solicitud de Evaluador Bilingüe */}
+                                            <div className="p-2.5 rounded-lg bg-slate-950/80 border border-amber-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                                <div className="text-[11px] text-slate-300">
+                                                    <span className="text-amber-400 font-bold block">
+                                                        🌐 {tEdan.lenguaMaternaLabel}:
+                                                    </span>
+                                                    <span className="text-slate-400">
+                                                        {IDIOMAS_SOPORTADOS[edanIdioma].nombreNativo} ({IDIOMAS_SOPORTADOS[edanIdioma].variante})
+                                                    </span>
+                                                </div>
+                                                <label className="flex items-center gap-2 cursor-pointer text-[11px] text-amber-200">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={edanRequiereBilingue}
+                                                        onChange={(e) => setEdanRequiereBilingue(e.target.checked)}
+                                                        className="w-4 h-4 rounded text-amber-500 accent-amber-500"
+                                                    />
+                                                    <span>{tEdan.requiereAsistenciaBilingueLabel}</span>
+                                                </label>
+                                            </div>
+
+                                            {/* Características de la Vivienda */}
+                                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                                <div>
+                                                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                                                        {tEdan.materialMurosLabel}
+                                                    </label>
+                                                    <select
+                                                        value={edanMaterialMuros}
+                                                        onChange={(e) => setEdanMaterialMuros(e.target.value)}
+                                                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
+                                                    >
+                                                        <option value="ADOBE_QUINCHA">{tEdan.opcionMurosAdobe}</option>
+                                                        <option value="LADRILLO_CONCRETO">{tEdan.opcionMurosLadrillo}</option>
+                                                        <option value="MADERA_TRIPLAY">{tEdan.opcionMurosMadera}</option>
+                                                        <option value="ESTERA_PLASTICO">{tEdan.opcionMurosEstera}</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                                                        {tEdan.materialTechoLabel}
+                                                    </label>
+                                                    <select
+                                                        value={edanMaterialTecho}
+                                                        onChange={(e) => setEdanMaterialTecho(e.target.value)}
+                                                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
+                                                    >
+                                                        <option value="CALAMINA">{tEdan.opcionTechoCalamina}</option>
+                                                        <option value="CONCRETO_ARMADO">{tEdan.opcionTechoConcreto}</option>
+                                                        <option value="ESTERAS_PLASTICO">{tEdan.opcionTechoEsteras}</option>
+                                                        <option value="TEJAS">{tEdan.opcionTechoTejas}</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                                                        {tEdan.estadoDanoLabel}
+                                                    </label>
+                                                    <select
+                                                        value={edanEstadoVivienda}
+                                                        onChange={(e) => setEdanEstadoVivienda(e.target.value)}
+                                                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
+                                                    >
+                                                        <option value="INHABITABLE">{tEdan.opcionDanoInhabitable}</option>
+                                                        <option value="COLAPSADA_DESTRUIDA">{tEdan.opcionDanoColapsada}</option>
+                                                        <option value="AFECTADA">{tEdan.opcionDanoAfectada}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            {/* Composición Familiar y Vulnerabilidad */}
+                                            <div>
+                                                <label className="block text-[11px] font-semibold text-slate-300 mb-1.5">
+                                                    {tEdan.composicionFamiliarLabel}
+                                                </label>
+                                                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                                                    <div className="p-2 bg-slate-950 rounded-lg border border-slate-800 text-center">
+                                                        <span className="text-[10px] text-slate-400 block">{tEdan.totalMiembros}</span>
+                                                        <input
+                                                            type="number"
+                                                            min={1}
+                                                            max={25}
+                                                            value={edanTotalFam}
+                                                            onChange={(e) => setEdanTotalFam(Math.max(1, parseInt(e.target.value) || 1))}
+                                                            className="w-full bg-transparent text-center font-bold text-sm text-white focus:outline-none"
+                                                        />
+                                                    </div>
+                                                    <div className="p-2 bg-slate-950 rounded-lg border border-slate-800 text-center">
+                                                        <span className="text-[10px] text-cyan-400 block">{tEdan.ninos5}</span>
+                                                        <input
+                                                            type="number"
+                                                            min={0}
+                                                            max={15}
+                                                            value={edanNinos5}
+                                                            onChange={(e) => setEdanNinos5(Math.max(0, parseInt(e.target.value) || 0))}
+                                                            className="w-full bg-transparent text-center font-bold text-sm text-cyan-300 focus:outline-none"
+                                                        />
+                                                    </div>
+                                                    <div className="p-2 bg-slate-950 rounded-lg border border-slate-800 text-center">
+                                                        <span className="text-[10px] text-amber-400 block">{tEdan.adultos65}</span>
+                                                        <input
+                                                            type="number"
+                                                            min={0}
+                                                            max={10}
+                                                            value={edanAdultos65}
+                                                            onChange={(e) => setEdanAdultos65(Math.max(0, parseInt(e.target.value) || 0))}
+                                                            className="w-full bg-transparent text-center font-bold text-sm text-amber-300 focus:outline-none"
+                                                        />
+                                                    </div>
+                                                    <div className="p-2 bg-slate-950 rounded-lg border border-slate-800 text-center">
+                                                        <span className="text-[10px] text-rose-400 block">{tEdan.gestantes}</span>
+                                                        <input
+                                                            type="number"
+                                                            min={0}
+                                                            max={5}
+                                                            value={edanGestantes}
+                                                            onChange={(e) => setEdanGestantes(Math.max(0, parseInt(e.target.value) || 0))}
+                                                            className="w-full bg-transparent text-center font-bold text-sm text-rose-300 focus:outline-none"
+                                                        />
+                                                    </div>
+                                                    <div className="p-2 bg-slate-950 rounded-lg border border-slate-800 text-center">
+                                                        <span className="text-[10px] text-purple-400 block">{tEdan.discapacidad}</span>
+                                                        <input
+                                                            type="number"
+                                                            min={0}
+                                                            max={10}
+                                                            value={edanDiscapacidad}
+                                                            onChange={(e) => setEdanDiscapacidad(Math.max(0, parseInt(e.target.value) || 0))}
+                                                            className="w-full bg-transparent text-center font-bold text-sm text-purple-300 focus:outline-none"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* 7. Testimonio Detallado & Entrada Oral por Voz */}
+                                <div className="space-y-2">
+                                    <div className="flex items-center justify-between">
+                                        <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                                            7. {esDamnificadoEdan ? tEdan.descripcionTestimonioLabel : "Descripción de lo ocurrido:"}
+                                        </label>
+                                    </div>
+
+                                    {/* Componente de Audio Soberano (Voz) */}
+                                    {esDamnificadoEdan && (
+                                        <VoiceStoryRecorder
+                                            traduccion={tEdan}
+                                            onAudioCaptured={(blob, base64, hash) => {
+                                                setAudioGrabadoBase64(base64);
+                                                setAudioSha256(hash);
+                                            }}
+                                            disabled={formSubmitting}
+                                        />
+                                    )}
+
                                     <textarea
                                         rows={3}
                                         value={formTestimonio}
                                         onChange={(e) => setFormTestimonio(e.target.value)}
-                                        placeholder="Describa cómo subió el agua, qué quebrada se activó o qué daños sufrieron las viviendas..."
+                                        placeholder={esDamnificadoEdan ? tEdan.testimonioPlaceholder : "Describa cómo subió el agua, qué quebrada se activó o qué daños sufrieron las viviendas..."}
                                         className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 leading-relaxed"
                                         required
                                     />
@@ -588,7 +996,7 @@ export default function ReporteCiudadanoPage() {
                                         ) : (
                                             <>
                                                 <Lock className="w-4 h-4" />
-                                                <span>Enviar Reporte Bajo Custodia Segura COEN</span>
+                                                <span>Enviar Reporte Bajo Custodia Segura COED-AMARU</span>
                                             </>
                                         )}
                                     </button>
@@ -1133,6 +1541,13 @@ export default function ReporteCiudadanoPage() {
                         </div>
                     </div>
                 )}
+
+                {/* ========================================================= */}
+                {/* PESTAÑA 4: RADIOS RURALES EN VIVO Y TRIAJE NLP             */}
+                {/* ========================================================= */}
+                {activeTab === "radios_triage" && (
+                    <RadiosAndTriagePanel />
+                )}
             </div>
 
             {/* MODAL DE CONSTANCIA DE REPORTE RECIBIDO (BLINDAJE SEGURO) */}
@@ -1176,7 +1591,25 @@ export default function ReporteCiudadanoPage() {
                             {receiptModal.mensaje_al_ciudadano}
                         </p>
 
-                        <div className="flex justify-end gap-2 pt-2">
+                        <div className="flex flex-wrap justify-end gap-2 pt-2">
+                            <button
+                                onClick={() => {
+                                    const text = encodeURIComponent(
+                                        `🚨 *ALERTA COED SOCIAL AMARU* 🚨\n` +
+                                        `Se registró un reporte ciudadano verificado:\n` +
+                                        `📍 Lugar: ${receiptModal.lugar_especifico || formLugar || 'Zona de Emergencia'}\n` +
+                                        `🌊 Nivel de agua: ${formNivel}\n` +
+                                        `🛡️ Estado C2: ${receiptModal.estado_validacion}\n` +
+                                        `📋 Código de Custodia: ${receiptModal.reporte_id}\n` +
+                                        `_Enviado a través de COED-AMARU_`
+                                    );
+                                    window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+                                }}
+                                className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shadow-md shadow-emerald-600/30"
+                            >
+                                <Share2 className="w-3.5 h-3.5" />
+                                <span>Compartir Alerta Vecinal WhatsApp</span>
+                            </button>
                             <button
                                 onClick={() => {
                                     setReceiptModal(null);
@@ -1191,6 +1624,188 @@ export default function ReporteCiudadanoPage() {
                                 className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition cursor-pointer"
                             >
                                 Cerrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* MODAL DE CONSTANCIA OFICIAL: PRE-PADRÓN EDAN & BONO BAE (AMARU-DAMNIFICADOS) */}
+            {damnReceiptModal && (
+                <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+                    <div className="bg-slate-900 border border-amber-500/50 rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-4 animate-scaleUp">
+                        <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
+                            <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                                <ShieldCheck className="w-7 h-7" />
+                            </div>
+                            <div className="flex-1">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-base font-bold text-white">
+                                        {tEdan.comprobanteTitulo}
+                                    </h3>
+                                    <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold border border-amber-500/30">
+                                        {IDIOMAS_SOPORTADOS[edanIdioma]?.banderaIcono} {IDIOMAS_SOPORTADOS[edanIdioma]?.nombreNativo}
+                                    </span>
+                                </div>
+                                <p className="text-xs text-slate-400">
+                                    {tEdan.comprobanteSubtitulo}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Código CUP-DAMN Destacado */}
+                        <div className="p-3.5 bg-gradient-to-r from-amber-950/60 via-slate-950 to-amber-950/40 rounded-xl border border-amber-500/40 text-center">
+                            <span className="text-[10px] text-amber-300 uppercase tracking-widest font-bold block mb-1">
+                                {tEdan.cupLabel}
+                            </span>
+                            <span className="text-xl font-mono font-extrabold text-amber-400 tracking-wider">
+                                {damnReceiptModal.cup}
+                            </span>
+                            <span className="text-[10px] text-slate-400 block mt-1">
+                                {tEdan.cupLeyenda}
+                            </span>
+                        </div>
+
+                        {/* Dictamen Preliminar IA */}
+                        <div className="grid grid-cols-2 gap-3 text-xs">
+                            <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                                <span className="text-[10px] text-slate-400 block uppercase font-semibold">
+                                    {tEdan.preClasificacionLabel}
+                                </span>
+                                <span className="font-bold text-sm text-white mt-1 block">
+                                    {damnReceiptModal.pre_clasificacion === "DAMNIFICADO_VIVIENDA_COLAPSADA" ? "🔴 " + tEdan.opcionDanoColapsada.split("(")[0] :
+                                     damnReceiptModal.pre_clasificacion === "DAMNIFICADO_VIVIENDA_INHABITABLE" ? "🟠 " + tEdan.opcionDanoInhabitable.split("(")[0] :
+                                     "🔵 " + tEdan.opcionDanoAfectada.split("(")[0]}
+                                </span>
+                            </div>
+                            <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                                <span className="text-[10px] text-slate-400 block uppercase font-semibold">
+                                    {tEdan.scoreTerritorialLabel}
+                                </span>
+                                <span className="font-bold text-sm text-emerald-400 mt-1 block">
+                                    {damnReceiptModal.score_consistencia}% (AMARU-CLIMATE)
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Indicador de Audio Testimonio Oral Adjunto */}
+                        {damnReceiptModal.tiene_audio_testimonio && (
+                            <div className="p-2.5 rounded-lg bg-emerald-950/30 border border-emerald-500/40 flex items-center justify-between text-xs">
+                                <span className="text-emerald-300 font-semibold flex items-center gap-1.5">
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                                    <span>🎤 Testimonio Oral Protegido en Bóveda Zero-PII</span>
+                                </span>
+                                {damnReceiptModal.audio_sha256 && (
+                                    <span className="text-[9px] font-mono text-emerald-400/80 bg-slate-950 px-2 py-0.5 rounded border border-emerald-500/30">
+                                        SHA-256: {damnReceiptModal.audio_sha256.slice(0, 12)}...
+                                    </span>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Elegibilidad Bono BAE */}
+                        <div className={`p-3 rounded-xl border flex items-center gap-3 ${
+                            damnReceiptModal.elegible_bono_bae
+                                ? "bg-emerald-950/40 border-emerald-500/40 text-emerald-200"
+                                : "bg-slate-950 border-slate-800 text-slate-300"
+                        }`}>
+                            <div className="text-2xl">{damnReceiptModal.elegible_bono_bae ? "🏠" : "ℹ️"}</div>
+                            <div className="text-xs">
+                                <div className="font-bold">
+                                    {damnReceiptModal.elegible_bono_bae
+                                        ? tEdan.bonoBaeElegibleTitulo
+                                        : tEdan.bonoBaeNoElegibleTitulo}
+                                </div>
+                                <div className="text-[11px] text-slate-400 mt-0.5">
+                                    {damnReceiptModal.elegible_bono_bae
+                                        ? tEdan.bonoBaeElegibleDesc
+                                        : tEdan.bonoBaeNoElegibleDesc}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Asistencia Humanitaria Inmediata */}
+                        {damnReceiptModal.asistencia_humanitaria_sugerida?.length > 0 && (
+                            <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                                <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-1.5">
+                                    {tEdan.asistenciaHumanitariaTitulo}
+                                </span>
+                                <div className="flex flex-wrap gap-1.5">
+                                    {damnReceiptModal.asistencia_humanitaria_sugerida.map((item: string, idx: number) => (
+                                        <span key={idx} className="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-700 text-[11px] text-amber-200 font-medium">
+                                            ✓ {item}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Mensaje Ciudadano y Aviso de Soberanía */}
+                        <div className="space-y-1.5 text-[11px] bg-slate-950 p-2.5 rounded-lg border border-slate-800 leading-relaxed text-slate-300">
+                            <p className="font-semibold text-amber-300">
+                                {damnReceiptModal.mensaje_ciudadano}
+                            </p>
+                            <p className="text-slate-400">
+                                {damnReceiptModal.aviso_importante || tEdan.avisoDefensaCivil}
+                            </p>
+                        </div>
+
+                        {/* Botones de Acción */}
+                        <div className="flex flex-wrap justify-end gap-2 pt-2">
+                            <button
+                                onClick={() => {
+                                    const langLabel = IDIOMAS_SOPORTADOS[edanIdioma]?.nombreNativo || 'Castellano';
+                                    const text = encodeURIComponent(
+                                        `📋 *${tEdan.comprobanteTitulo.toUpperCase()}*\n` +
+                                        `🌐 Lengua / Simi: ${langLabel}\n` +
+                                        `🔑 *CÓDIGO CUP-DAMN:* ${damnReceiptModal.cup}\n` +
+                                        `🏷️ Condición: ${damnReceiptModal.pre_clasificacion}\n` +
+                                        `🎯 Consistencia: ${damnReceiptModal.score_consistencia}%\n` +
+                                        `🏠 Bono BAE (S/ 500): ${damnReceiptModal.elegible_bono_bae ? 'ELEGIBLE / LLALLIQ' : 'NO ELEGIBLE'}\n` +
+                                        (damnReceiptModal.tiene_audio_testimonio ? `🎤 Audio Testimonio: ADJUNTO EN BÓVEDA ZERO-PII\n` : '') +
+                                        `_AMARU COED Soberanía Territorial_`
+                                    );
+                                    window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+                                }}
+                                className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shadow-md shadow-emerald-600/30"
+                            >
+                                <Share2 className="w-3.5 h-3.5" />
+                                <span>{tEdan.compartirWhatsapp}</span>
+                            </button>
+                            <button
+                                onClick={() => {
+                                    const langLabel = IDIOMAS_SOPORTADOS[edanIdioma]?.nombreNativo || 'Castellano';
+                                    const text = encodeURIComponent(
+                                        `📋 *${tEdan.comprobanteTitulo.toUpperCase()}*\n` +
+                                        `🌐 Lengua / Simi: ${langLabel}\n` +
+                                        `🔑 *CÓDIGO CUP-DAMN:* ${damnReceiptModal.cup}\n` +
+                                        `🏷️ Condición: ${damnReceiptModal.pre_clasificacion}\n` +
+                                        `🎯 Consistencia: ${damnReceiptModal.score_consistencia}%\n` +
+                                        `🏠 Bono BAE (S/ 500): ${damnReceiptModal.elegible_bono_bae ? 'ELEGIBLE / LLALLIQ' : 'NO ELEGIBLE'}\n` +
+                                        (damnReceiptModal.tiene_audio_testimonio ? `🎤 Audio Testimonio: ADJUNTO EN BÓVEDA ZERO-PII\n` : '') +
+                                        `_AMARU COED Soberanía Territorial_`
+                                    );
+                                    window.open(`https://t.me/share/url?url=${encodeURIComponent('https://amaru.gob.pe')}&text=${text}`, '_blank');
+                                }}
+                                className="px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shadow-md shadow-sky-600/30"
+                            >
+                                <Send className="w-3.5 h-3.5" />
+                                <span>{tEdan.compartirTelegram}</span>
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setDamnReceiptModal(null);
+                                    setActiveTab("senales");
+                                }}
+                                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition cursor-pointer"
+                            >
+                                Ver en Matriz de Señales
+                            </button>
+                            <button
+                                onClick={() => setDamnReceiptModal(null)}
+                                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition cursor-pointer"
+                            >
+                                {tEdan.cerrarBoton}
                             </button>
                         </div>
                     </div>

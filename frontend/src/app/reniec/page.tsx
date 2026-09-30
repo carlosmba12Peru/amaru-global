@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { API_BASE } from "@/config/api";
 import {
     UserCheck,
     Shield,
@@ -95,7 +96,7 @@ export default function ReniecValidacionPage() {
 
     const cargarCasos = async () => {
         try {
-            const res = await fetch("http://127.0.0.1:8000/api/v1/pide/reniec/casos-simulacion");
+            const res = await fetch(`${API_BASE}/api/v1/pide/reniec/casos-simulacion`);
             if (res.ok) {
                 const data = await res.json();
                 setCasosSimulacion(data);
@@ -107,7 +108,7 @@ export default function ReniecValidacionPage() {
 
     const cargarEstado = async () => {
         try {
-            const res = await fetch("http://127.0.0.1:8000/api/v1/pide/reniec/estado-conexion");
+            const res = await fetch(`${API_BASE}/api/v1/pide/reniec/estado-conexion`);
             if (res.ok) {
                 const data = await res.json();
                 setEstadoConexion(data);
@@ -121,12 +122,12 @@ export default function ReniecValidacionPage() {
         if (!dni || dni.length !== 8) return;
         setCargando(true);
         try {
-            const res = await fetch(`http://127.0.0.1:8000/api/v1/pide/reniec/consultar/${dni}`);
+            const res = await fetch(`${API_BASE}/api/v1/pide/reniec/consultar/${dni}`);
             if (res.ok) {
                 const data: PersonaReniec = await res.json();
                 setPersona(data);
                 // Actualizar bitácora
-                const resBit = await fetch("http://127.0.0.1:8000/api/v1/pide/reniec/bitacora");
+                const resBit = await fetch(`${API_BASE}/api/v1/pide/reniec/bitacora`);
                 if (resBit.ok) {
                     const dataBit = await resBit.json();
                     setBitacora(dataBit.consultas || []);

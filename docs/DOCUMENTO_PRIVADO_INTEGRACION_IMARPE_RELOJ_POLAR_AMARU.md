@@ -160,36 +160,50 @@ Ambas figuras cuentan con:
 
 ---
 
-## 6. PROTOCOLO OPERATIVO ESTÁNDAR (SOP) PARA LA ACTUALIZACIÓN DIARIA
+## 6. TELEMETRÍA OFICIAL DEL BDO N° 268 (25 DE SEPTIEMBRE DE 2026)
+
+Con la ingesta del **Boletín Diario Oceanográfico N° 268** emitido por el IMARPE el 25 de septiembre de 2026:
+1. **Foco Térmico en Chicama:** Registra una anomalía térmica extrema de **$+7.6^\circ\text{C}$**, confirmando el acoplamiento oceánico de gran magnitud en La Libertad.
+2. **Estación Paita:** Mantiene niveles anómalos de hasta **$+8.0^\circ\text{C}$** en el núcleo de la masa cálida Niño 1+2.
+3. **Cartas Satelitales Oficiales Extraídas:**
+   - **Figura 1:** Extensión macroescala en el Pacífico Tropical (Niño 1+2 / Niño 3.4) de $180^\circ - 70^\circ\text{W}$ / $30^\circ\text{N} - 30^\circ\text{S}$, mostrando la lengua cálida anómala acoplada a la costa peruana.
+   - **Figura 3:** Anomalías térmicas de alta resolución en el dominio costero de las 200 millas, evidenciando el repliegue del afloramiento costero de Humboldt.
+4. **Almacenamiento y Entrega CDN en la Nube:**
+   - Ambas figuras se procesan automáticamente mediante `pypdf` + `Pillow` y se exponen en la ruta `/imarpe_images/` del frontend para el visor C2 en pantalla completa.
+
+---
+
+## 7. PROTOCOLO OPERATIVO ESTÁNDAR (SOP) PARA LA ACTUALIZACIÓN DIARIA
 
 Para mantener la vigencia del sistema cuando el IMARPE publique los nuevos boletines diarios:
 
 1. **Depósito de Archivo:**
-   Guardar el archivo PDF oficial (ejemplo: `bdo-2026-09-15.pdf`) en la carpeta correspondiente:
-   `Lab4/data/Reporte de Imarpe diario/meses/septiembre/`
+   Guardar el archivo PDF oficial (ejemplo: `bdo-2026-09-25.pdf`) en la carpeta correspondiente:
+   `Lab4/data/Reporte de Imarpe diario/Set-2026/` (o en `Lab4/backend/data/Reporte de Imarpe diario/Set-2026/`)
 
 2. **Disparo de Sincronización:**
-   * **Vía Interfaz Gráfica:** En `http://localhost:3000/imarpe`, pulsar el botón interactivo **"Sincronizar Boletines"**.
-   * **Vía API REST:** Ejecutar una petición POST:
-     ```bash
-     curl -X POST http://localhost:8000/api/imarpe/sync
-     ```
+   * **Vía Interfaz Gráfica:** En `/imarpe`, pulsar el botón interactivo **"Sincronizar Boletines"**.
+   * **Vía API REST Local:** `POST http://localhost:8000/api/imarpe/sync`
+   * **Vía API REST Cloud Run:** `POST https://coen-backend-289004262994.us-central1.run.app/api/imarpe/sync`
 
 3. **Efectos Automáticos del Pipeline:**
-   * Parseo de la Tabla 1 del nuevo boletín.
+   * Parseo de la Tabla 1 del nuevo boletín con telemetría de las 12 estaciones costeras fijas.
    * Extracción de las Figuras Satelitales 1 y 3 hacia la carpeta pública del frontend.
-   * Actualización del histórico multitemporal.
+   * Actualización del histórico multitemporal en `imarpe_boletines_cache.json`.
    * Recálculo instantáneo de la cinemática de la aguja del reloj AMARU-FEN.
-   * Transmisión al componente `TacticalPolarClock.tsx` mediante el ciclo de polling de 15 segundos.
+   * Transmisión al componente `TacticalPolarClock.tsx` mediante el ciclo reactivo de polling.
 
 ---
 
-## 7. CONTROL DE VERSIONES Y FIRMAS DE SEGURIDAD
+## 8. CONTROL DE VERSIONES Y DESPLIEGUE EN PRODUCCIÓN
 
-* **Código de Documento:** `DOC-PRIV-C2-IMARPE-2026-001`
-* **Versión de Software:** Antigravity C2 Lab4 v2.4 (IMARPE-Synced)
-* **Arquitectura:** FastAPI Backend (Puerto 8000) • Next.js 14 Frontend (Puerto 3000) • Open-Meteo • Copernicus OSTIA
-* **Auditoría:** Conforme a las directivas del Sistema Nacional de Gestión del Riesgo de Desastres (SINAGERD - Ley N° 29664).
+* **Código de Documento:** `DOC-PRIV-C2-IMARPE-2026-002`
+* **Versión de Software:** Antigravity C2 Lab4 v3.6 (IMARPE-Synced & Multi-Region Cloud)
+* **Entorno de Producción Cloud Run:**
+  - **Consola Oceanográfica en Vivo:** [https://coen-frontend-289004262994.us-central1.run.app/imarpe](https://coen-frontend-289004262994.us-central1.run.app/imarpe)
+  - **Backend API Telemetría:** [https://coen-backend-289004262994.us-central1.run.app/api/imarpe/resumen](https://coen-backend-289004262994.us-central1.run.app/api/imarpe/resumen)
+* **Arquitectura:** FastAPI Backend (Puerto 8080 en Cloud Run) • Next.js 14 Frontend (Puerto 8080 en Cloud Run) • Copernicus OSTIA / NOAA
+* **Auditoría:** Conforme a las directivas del Sistema Nacional de Gestión del Riesgo de Desastres (SINAGERD - Ley N° 29664) y normas CGR.
 
 ---
 *Fin del Documento Privado.*

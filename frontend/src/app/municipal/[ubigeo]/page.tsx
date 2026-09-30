@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { API_BASE } from "@/config/api";
 import {
     Building2,
     Clock,
@@ -32,11 +33,17 @@ import {
     AlertOctagon,
     X,
     Lock,
-    Unlock
+    Unlock,
+    Search,
+    HeartPulse,
+    Filter,
+    Info,
+    Waves
 } from "lucide-react";
 
 export default function MunicipalSuitePage() {
     const params = useParams();
+    const router = useRouter();
     const ubigeo = (params?.ubigeo as string) || "200101";
 
     const [activeTab, setActiveTab] = useState<"obras" | "reloj" | "contingencia" | "pprrd" | "damnificados">("obras");
@@ -46,8 +53,15 @@ export default function MunicipalSuitePage() {
     const [relojData, setRelojData] = useState<any>(null);
     const [planData, setPlanData] = useState<any>(null);
     const [pprrdData, setPprrdData] = useState<any>(null);
+    const [redesSaludData, setRedesSaludData] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+    // Universal Distritos Selector States (1,891 distritos)
+    const [catalogoDistritos, setCatalogoDistritos] = useState<any[]>([]);
+    const [busquedaDistrito, setBusquedaDistrito] = useState<string>("");
+    const [selectorOpen, setSelectorOpen] = useState<boolean>(false);
+    const [filtroFamilia, setFiltroFamilia] = useState<string>("TODAS");
 
     // AMARU-DAMNIFICADOS States
     const [padronData, setPadronData] = useState<any[]>([]);
@@ -84,10 +98,34 @@ export default function MunicipalSuitePage() {
     const [certResult, setCertResult] = useState<any>(null);
     const [certifying, setCertifying] = useState<boolean>(false);
 
-    // Filtro de Obras
+    // Filtro de Obras PP 0068 & ANA FTR (Alcance, Fuente y Distrito)
     const [filtroSiaf, setFiltroSiaf] = useState<string>("TODAS");
+    const [filtroFuenteObras, setFiltroFuenteObras] = useState<"TODAS" | "MEF" | "ANA">("TODAS");
+    const [filtroAlcanceObras, setFiltroAlcanceObras] = useState<"AUTO" | "DISTRITAL" | "PROVINCIAL" | "REGIONAL">("AUTO");
+    const [distritoFiltroObras, setDistritoFiltroObras] = useState<string>("");
+    const [loadingObrasOnly, setLoadingObrasOnly] = useState<boolean>(false);
 
-    const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const apiBase = API_BASE;
+
+    const refetchObrasOnly = async (alcanceParam?: string, ubigeoFiltroParam?: string) => {
+        setLoadingObrasOnly(true);
+        try {
+            const alc = alcanceParam !== undefined ? alcanceParam : filtroAlcanceObras;
+            const uFiltro = ubigeoFiltroParam !== undefined ? ubigeoFiltroParam : (distritoFiltroObras || ubigeo);
+            const q = new URLSearchParams();
+            if (alc && alc !== "AUTO") q.append("alcance", alc);
+            if (uFiltro) q.append("ubigeo_filtro", uFiltro);
+            const res = await fetch(`${apiBase}/api/v1/municipal/${ubigeo}/obras-pp0068?${q.toString()}`);
+            if (res.ok) {
+                const data = await res.json();
+                setObrasData(data);
+            }
+        } catch (e) {
+            console.error("Error recargando obras con filtro:", e);
+        } finally {
+            setLoadingObrasOnly(false);
+        }
+    };
 
     const fetchPadronData = async () => {
         try {
@@ -110,17 +148,19 @@ export default function MunicipalSuitePage() {
         setLoading(true);
         setErrorMsg(null);
         try {
-            const [resObras, resReloj, resPlan, resPprrd] = await Promise.all([
+            const [resObras, resReloj, resPlan, resPprrd, resSalud] = await Promise.all([
                 fetch(`${apiBase}/api/v1/municipal/${ubigeo}/obras-pp0068`),
                 fetch(`${apiBase}/api/v1/municipal/${ubigeo}/reloj-fen`),
                 fetch(`${apiBase}/api/v1/municipal/${ubigeo}/plan-contingencia-digital`),
-                fetch(`${apiBase}/api/v1/municipal/${ubigeo}/pprrd-digital`)
+                fetch(`${apiBase}/api/v1/municipal/${ubigeo}/pprrd-digital`),
+                fetch(`${apiBase}/api/v1/municipal/${ubigeo}/redes-salud`)
             ]);
 
             if (resObras.ok) setObrasData(await resObras.json());
             if (resReloj.ok) setRelojData(await resReloj.json());
             if (resPlan.ok) setPlanData(await resPlan.json());
             if (resPprrd.ok) setPprrdData(await resPprrd.json());
+            if (resSalud.ok) setRedesSaludData(await resSalud.json());
             await fetchPadronData();
         } catch (err: any) {
             console.error("Error fetching municipal suite data:", err);
@@ -131,7 +171,24 @@ export default function MunicipalSuitePage() {
     };
 
     useEffect(() => {
+        const fetchCatalogo = async () => {
+            try {
+                const res = await fetch(`${apiBase}/api/v1/municipal/catalogo-distritos`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setCatalogoDistritos(data);
+                }
+            } catch (e) {
+                console.error("Error cargando catálogo de 1,891 distritos:", e);
+            }
+        };
+        fetchCatalogo();
+    }, []);
+
+    useEffect(() => {
         if (ubigeo) {
+            setDistritoFiltroObras(ubigeo);
+            setFiltroAlcanceObras("AUTO");
             fetchAllData();
         }
     }, [ubigeo]);
@@ -265,6 +322,9 @@ export default function MunicipalSuitePage() {
     };
 
     const obrasFiltradas = obrasData?.obras_prioritarias?.filter((o: any) => {
+        if (filtroFuenteObras === "MEF" && o.fuente === "ANA_FTR") return false;
+        if (filtroFuenteObras === "ANA" && o.fuente !== "ANA_FTR") return false;
+        if (filtroFamilia !== "TODAS" && o.familia_ingenieria?.id !== filtroFamilia) return false;
         if (filtroSiaf === "CRITICAS") return o.semaforo_inaccion === "ROJO_INACCION_CRITICA";
         if (filtroSiaf === "SIN_CERTIFICAR") return o.cuello_botella_siaf === "SIN_CERTIFICAR";
         if (filtroSiaf === "LICITACION_TRABADA") return o.cuello_botella_siaf === "LICITACION_TRABADA";
@@ -314,6 +374,14 @@ export default function MunicipalSuitePage() {
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2">
+                        <button
+                            onClick={() => setSelectorOpen(true)}
+                            className="flex items-center gap-1.5 px-3 py-2 bg-cyan-950 hover:bg-cyan-900 border border-cyan-600 rounded-lg text-xs font-bold text-cyan-200 shadow-md shadow-cyan-950/60 transition-all"
+                            title="Cambiar UBIGEO o Distrito (1,891 distritos del Perú)"
+                        >
+                            <Compass className="w-3.5 h-3.5 text-cyan-400" />
+                            <span>📍 Cambiar Distrito ({catalogoDistritos.length > 0 ? catalogoDistritos.length : "1,891"})</span>
+                        </button>
                         <button
                             onClick={() => setShowPanicModal(true)}
                             className="flex items-center gap-1.5 px-3 py-2 bg-rose-950/90 hover:bg-rose-900 border border-rose-600 rounded-lg text-xs font-bold text-rose-200 shadow-md shadow-rose-950/60 transition-all animate-pulse"
@@ -366,7 +434,7 @@ export default function MunicipalSuitePage() {
                         }`}
                     >
                         <Building2 className="w-4 h-4 text-cyan-400" />
-                        <span>1. Obras PP 0068</span>
+                        <span>1. Obras PP 0068 & Defensas ANA</span>
                     </button>
 
                     <button
@@ -440,37 +508,55 @@ export default function MunicipalSuitePage() {
                         )}
 
                         {/* Tarjetas KPI Presupuestal */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div className="p-4 bg-slate-900/80 border border-slate-800 rounded-xl">
-                                <span className="text-[11px] font-mono text-slate-400 uppercase">Cartera Obras PP 0068</span>
-                                <div className="text-2xl font-black text-cyan-400 mt-1">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                            <div className="p-3.5 bg-slate-900/80 border border-slate-800 rounded-xl">
+                                <span className="text-[10px] font-mono text-slate-400 uppercase">Cartera Total</span>
+                                <div className="text-xl font-black text-cyan-400 mt-0.5">
                                     {obrasData?.total_obras_cartera || 0}
                                 </div>
-                                <span className="text-[10px] text-slate-500">Proyectos / Intervenciones</span>
+                                <span className="text-[10px] text-slate-500">
+                                    {obrasData?.total_obras_mef || 0} MEF • {obrasData?.total_intervenciones_ana || 0} ANA
+                                </span>
                             </div>
 
-                            <div className="p-4 bg-slate-900/80 border border-slate-800 rounded-xl">
-                                <span className="text-[11px] font-mono text-slate-400 uppercase">PIM Total Asignado</span>
-                                <div className="text-2xl font-black text-white mt-1">
+                            <div className="p-3.5 bg-slate-900/80 border border-slate-800 rounded-xl">
+                                <span className="text-[10px] font-mono text-slate-400 uppercase">PIM Total Asignado</span>
+                                <div className="text-xl font-black text-white mt-0.5">
                                     S/ {((obrasData?.pim_total_soles || 0) / 1e6).toFixed(2)}M
                                 </div>
-                                <span className="text-[10px] text-slate-500">Saldo Disp: S/ {((obrasData?.saldo_disponible_soles || 0) / 1e6).toFixed(2)}M</span>
+                                <span className="text-[10px] text-slate-500">Saldo: S/ {((obrasData?.saldo_disponible_soles || 0) / 1e6).toFixed(2)}M</span>
                             </div>
 
-                            <div className="p-4 bg-slate-900/80 border border-slate-800 rounded-xl">
-                                <span className="text-[11px] font-mono text-slate-400 uppercase">Devengado Acumulado</span>
-                                <div className="text-2xl font-black text-emerald-400 mt-1">
+                            <div className="p-3.5 bg-slate-900/80 border border-emerald-900/50 rounded-xl">
+                                <span className="text-[10px] font-mono text-emerald-400 uppercase font-bold">Defensas ANA</span>
+                                <div className="text-xl font-black text-emerald-400 mt-0.5">
+                                    S/ {((obrasData?.inversion_ana_soles || 0) / 1e6).toFixed(2)}M
+                                </div>
+                                <span className="text-[10px] text-emerald-400/80 font-bold">{obrasData?.total_intervenciones_ana || 0} FTRs en Cauces</span>
+                            </div>
+
+                            <div className="p-3.5 bg-slate-900/80 border border-slate-800 rounded-xl">
+                                <span className="text-[10px] font-mono text-slate-400 uppercase">Devengado Real</span>
+                                <div className="text-xl font-black text-emerald-400 mt-0.5">
                                     S/ {((obrasData?.devengado_total_soles || 0) / 1e6).toFixed(2)}M
                                 </div>
-                                <span className="text-[10px] text-slate-500">Avance Ponderado: {obrasData?.avance_ponderado_pim || 0}%</span>
+                                <span className="text-[10px] text-slate-500">Avance: {obrasData?.avance_ponderado_pim || 0}%</span>
                             </div>
 
-                            <div className="p-4 bg-slate-900/80 border border-slate-800 rounded-xl">
-                                <span className="text-[11px] font-mono text-slate-400 uppercase">Inacción Crítica Roja</span>
-                                <div className="text-2xl font-black text-rose-400 mt-1">
+                            <div className="p-3.5 bg-slate-900/80 border border-rose-900/50 rounded-xl">
+                                <span className="text-[10px] font-mono text-rose-300 uppercase font-bold">Inacción Crítica</span>
+                                <div className="text-xl font-black text-rose-400 mt-0.5">
                                     {obrasData?.diagnostico_cuellos_botella?.obras_inaccion_critica_rojo || 0}
                                 </div>
-                                <span className="text-[10px] text-rose-300/80">Proyectos con &lt;15% de avance</span>
+                                <span className="text-[10px] text-rose-300/80">&lt;15% avance (Art. 377)</span>
+                            </div>
+
+                            <div className="p-3.5 bg-slate-900/80 border border-amber-900/50 rounded-xl">
+                                <span className="text-[10px] font-mono text-amber-300 uppercase font-bold">Valle Protegido</span>
+                                <div className="text-xl font-black text-amber-400 mt-0.5">
+                                    {(obrasData?.hectareas_cultivo_total || 0).toLocaleString()} Ha
+                                </div>
+                                <span className="text-[10px] text-amber-300/80">Cultivos en Cuenca</span>
                             </div>
                         </div>
 
@@ -624,26 +710,294 @@ export default function MunicipalSuitePage() {
                             )}
                         </div>
 
-                        {/* Tabla de Obras Distritales con Filtro */}
+                        {/* DESGLOSE POR FAMILIAS DE INGENIERÍA Y PROMEDIOS DE AVANCE */}
                         <div className="p-5 bg-slate-900/80 border border-slate-800 rounded-xl space-y-4">
-                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-slate-800 pb-3">
                                 <div>
-                                    <h3 className="text-sm font-bold text-white uppercase tracking-wider">
-                                        Cartera Detallada de Obras e Intervenciones PP 0068
+                                    <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                                        <Wrench className="w-4 h-4 text-cyan-400" />
+                                        Desglose por Familias de Ingeniería y Promedios de Avance (PP 0068)
                                     </h3>
                                     <p className="text-xs text-slate-400">
-                                        Mostrando {obrasFiltradas.length} de {obrasData?.total_obras_cartera || 0} proyectos en la jurisdicción
+                                        Clasificación técnica de intervenciones en {distNombre} (UBIGEO {ubigeo}) para control de ejecución física y financiera
+                                    </p>
+                                </div>
+                                {filtroFamilia !== "TODAS" && (
+                                    <button
+                                        onClick={() => setFiltroFamilia("TODAS")}
+                                        className="text-xs text-cyan-400 hover:text-cyan-300 font-mono underline"
+                                    >
+                                        Limpiar filtro de familia (Ver todas)
+                                    </button>
+                                )}
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                                {(obrasData?.familias_ingenieria || []).map((fam: any) => {
+                                    const isSelected = filtroFamilia === fam.id;
+                                    const avanceColor =
+                                        fam.avance_promedio_pct >= 60
+                                            ? "bg-emerald-500"
+                                            : fam.avance_promedio_pct >= 30
+                                            ? "bg-amber-500"
+                                            : "bg-rose-500";
+                                    return (
+                                        <div
+                                            key={fam.id}
+                                            onClick={() => setFiltroFamilia(isSelected ? "TODAS" : fam.id)}
+                                            className={`p-4 rounded-xl border transition-all cursor-pointer ${
+                                                isSelected
+                                                    ? "bg-cyan-950/70 border-cyan-400 shadow-md shadow-cyan-950/50 ring-1 ring-cyan-400"
+                                                    : "bg-slate-950/70 border-slate-800 hover:border-slate-700 hover:bg-slate-900/60"
+                                            }`}
+                                        >
+                                            <div className="flex items-start justify-between gap-2">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-xl">{fam.icono}</span>
+                                                    <div>
+                                                        <span className="text-[10px] font-mono font-bold text-slate-400 block uppercase">
+                                                            {fam.id}
+                                                        </span>
+                                                        <h4 className="text-xs font-bold text-slate-100 leading-tight">
+                                                            {fam.nombre}
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                                <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
+                                                    fam.total_obras > 0
+                                                        ? "bg-cyan-950 text-cyan-300 border border-cyan-800"
+                                                        : "bg-slate-900 text-slate-500 border border-slate-800"
+                                                }`}>
+                                                    {fam.total_obras} {fam.total_obras === 1 ? "obra" : "obras"}
+                                                </span>
+                                            </div>
+
+                                            <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] font-mono">
+                                                <div>
+                                                    <span className="text-slate-500 block text-[9px] uppercase">PIM Total</span>
+                                                    <span className="text-slate-200 font-bold">
+                                                        S/ {(fam.pim_soles || 0).toLocaleString("es-PE", { maximumFractionDigits: 0 })}
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <span className="text-slate-500 block text-[9px] uppercase">Devengado</span>
+                                                    <span className="text-emerald-400 font-bold">
+                                                        S/ {(fam.devengado_soles || 0).toLocaleString("es-PE", { maximumFractionDigits: 0 })}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div className="mt-2.5">
+                                                <div className="flex justify-between text-[10px] font-mono mb-1">
+                                                    <span className="text-slate-400">Avance Promedio:</span>
+                                                    <span className="font-bold text-white">{fam.avance_promedio_pct}%</span>
+                                                </div>
+                                                <div className="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden border border-slate-800">
+                                                    <div
+                                                        className={`h-full ${avanceColor} transition-all duration-500`}
+                                                        style={{ width: `${Math.min(100, fam.avance_promedio_pct)}%` }}
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            {fam.obras_criticas_rojo > 0 && (
+                                                <div className="mt-2.5 flex items-center gap-1.5 px-2 py-1 rounded bg-rose-950/60 border border-rose-800/80 text-[10px] text-rose-300 font-bold">
+                                                    <AlertTriangle className="w-3 h-3 text-rose-400 shrink-0" />
+                                                    <span>{fam.obras_criticas_rojo} en riesgo crítico (&lt;15%)</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* Tabla de Obras Distritales con Filtro */}
+                        <div className="p-5 bg-slate-900/80 border border-slate-800 rounded-xl space-y-4">
+                            {/* Barra Superior con Selector de Distrito sincronizado con cabecera */}
+                            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+                                <div>
+                                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                                        <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                                            <Building2 className="w-4 h-4 text-cyan-400" />
+                                            Cartera Detallada de Obras e Intervenciones PP 0068
+                                        </h3>
+                                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-cyan-950 text-cyan-300 border border-cyan-800 font-bold">
+                                            {filtroAlcanceObras === "AUTO" ? "Sincronizado con Cabecera" : `Ámbito: ${filtroAlcanceObras}`}
+                                        </span>
+                                        {loadingObrasOnly && (
+                                            <span className="text-[10px] font-mono text-cyan-400 animate-pulse flex items-center gap-1">
+                                                <RefreshCw className="w-3 h-3 animate-spin" /> Actualizando filtro...
+                                            </span>
+                                        )}
+                                    </div>
+                                    <p className="text-xs text-slate-400">
+                                        Mostrando {obrasFiltradas.length} proyectos • Jurisdicción activa: <strong className="text-white">{obrasData?.distrito || distNombre}</strong> ({obrasData?.provincia || provNombre}, {obrasData?.departamento || depNombre})
                                     </p>
                                 </div>
 
+                                {/* Selector de Distritos dentro de la Cartera */}
+                                <div className="flex items-center gap-2 flex-wrap">
+                                    <div className="flex items-center gap-1.5 bg-slate-950 border border-slate-700/80 rounded-lg px-2.5 py-1.5 text-xs">
+                                        <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                                        <span className="text-slate-400 text-[11px] font-medium hidden sm:inline">Distrito:</span>
+                                        <select
+                                            value={distritoFiltroObras || ubigeo}
+                                            onChange={(e) => {
+                                                const val = e.target.value;
+                                                setDistritoFiltroObras(val);
+                                                refetchObrasOnly(filtroAlcanceObras, val);
+                                            }}
+                                            className="bg-transparent text-cyan-300 font-mono text-xs font-semibold focus:outline-none cursor-pointer pr-1"
+                                            title="Cambiar distrito analizado dentro de la cartera de obras"
+                                        >
+                                            <option value={ubigeo} className="bg-slate-900 text-cyan-200">
+                                                📍 {distNombre} (Cabecera - {ubigeo})
+                                            </option>
+                                            {obrasData?.distritos_con_obras_departamento && obrasData.distritos_con_obras_departamento.length > 0 && (
+                                                <optgroup label={`Otros distritos en ${depNombre} con obras registradas:`} className="bg-slate-900 text-slate-300">
+                                                    {obrasData.distritos_con_obras_departamento
+                                                        .filter((d: any) => d.ubigeo !== ubigeo)
+                                                        .map((d: any) => (
+                                                            <option key={d.ubigeo} value={d.ubigeo} className="bg-slate-900 text-slate-200">
+                                                                {d.distrito} ({d.provincia}) — {d.cantidad_obras} {d.cantidad_obras === 1 ? "obra" : "obras"}
+                                                            </option>
+                                                        ))}
+                                                </optgroup>
+                                            )}
+                                        </select>
+                                    </div>
+
+                                    {distritoFiltroObras && distritoFiltroObras !== ubigeo && (
+                                        <button
+                                            onClick={() => {
+                                                setDistritoFiltroObras(ubigeo);
+                                                refetchObrasOnly(filtroAlcanceObras, ubigeo);
+                                            }}
+                                            className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-[11px] text-cyan-300 font-mono flex items-center gap-1 transition-colors"
+                                            title="Restablecer al distrito de la cabecera"
+                                        >
+                                            <X className="w-3 h-3 text-slate-400" />
+                                            Reset Cabecera
+                                        </button>
+                                    )}
+
+                                    <button
+                                        onClick={() => setSelectorOpen(true)}
+                                        className="px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-[11px] text-slate-300 font-medium flex items-center gap-1 transition-colors"
+                                        title="Abrir catálogo nacional de 1,891 distritos"
+                                    >
+                                        <Search className="w-3 h-3 text-cyan-400" />
+                                        <span className="hidden sm:inline">1,891</span> Distritos
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Controles de Ámbito Territorial, Fuente y Filtros SIAF */}
+                            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pt-1">
+                                {/* Selector de Ámbito Territorial */}
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                    <span className="text-[11px] text-slate-400 font-mono mr-1">Ámbito:</span>
+                                    <button
+                                        onClick={() => {
+                                            setFiltroAlcanceObras("DISTRITAL");
+                                            refetchObrasOnly("DISTRITAL", undefined);
+                                        }}
+                                        className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-all flex items-center gap-1 ${
+                                            filtroAlcanceObras === "DISTRITAL"
+                                                ? "bg-cyan-500 text-slate-950 font-bold shadow-sm shadow-cyan-500/40"
+                                                : "bg-slate-800/90 text-slate-300 hover:bg-slate-700 border border-slate-700"
+                                        }`}
+                                    >
+                                        🎯 Solo Distrito ({obrasData?.total_obras_distrito || 0})
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setFiltroAlcanceObras("PROVINCIAL");
+                                            refetchObrasOnly("PROVINCIAL", undefined);
+                                        }}
+                                        className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-all flex items-center gap-1 ${
+                                            filtroAlcanceObras === "PROVINCIAL"
+                                                ? "bg-amber-500 text-slate-950 font-bold shadow-sm shadow-amber-500/40"
+                                                : "bg-slate-800/90 text-slate-300 hover:bg-slate-700 border border-slate-700"
+                                        }`}
+                                    >
+                                        🏛️ Provincial ({obrasData?.total_obras_provincia || 0})
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setFiltroAlcanceObras("REGIONAL");
+                                            refetchObrasOnly("REGIONAL", undefined);
+                                        }}
+                                        className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-all flex items-center gap-1 ${
+                                            filtroAlcanceObras === "REGIONAL"
+                                                ? "bg-blue-600 text-white font-bold shadow-sm shadow-blue-500/40"
+                                                : "bg-slate-800/90 text-slate-300 hover:bg-slate-700 border border-slate-700"
+                                        }`}
+                                    >
+                                        🗺️ Regional ({obrasData?.total_obras_region || 0})
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setFiltroAlcanceObras("AUTO");
+                                            refetchObrasOnly("AUTO", undefined);
+                                        }}
+                                        className={`px-2 py-1 rounded-lg text-xs font-mono transition-all ${
+                                            filtroAlcanceObras === "AUTO"
+                                                ? "bg-slate-200 text-slate-950 font-bold"
+                                                : "bg-slate-800/60 text-slate-400 hover:bg-slate-700 border border-slate-700"
+                                        }`}
+                                        title="Filtro inteligente automático: muestra obras distritales si existen, o provincial si no hay locales"
+                                    >
+                                        ⚡ Auto
+                                    </button>
+                                </div>
+
+                                {/* Filtro por Fuente: MEF vs ANA */}
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                    <span className="text-[11px] text-slate-400 font-mono mr-1">Fuente:</span>
+                                    <button
+                                        onClick={() => setFiltroFuenteObras("TODAS")}
+                                        className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-all flex items-center gap-1 ${
+                                            filtroFuenteObras === "TODAS"
+                                                ? "bg-cyan-500 text-slate-950 font-bold shadow-sm"
+                                                : "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700"
+                                        }`}
+                                    >
+                                        Todas ({obrasData?.total_obras_cartera || 0})
+                                    </button>
+                                    <button
+                                        onClick={() => setFiltroFuenteObras("MEF")}
+                                        className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-all flex items-center gap-1 ${
+                                            filtroFuenteObras === "MEF"
+                                                ? "bg-blue-600 text-white font-bold shadow-sm"
+                                                : "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700"
+                                        }`}
+                                    >
+                                        🏛️ MEF PP 0068 ({obrasData?.total_obras_mef || 0})
+                                    </button>
+                                    <button
+                                        onClick={() => setFiltroFuenteObras("ANA")}
+                                        className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-all flex items-center gap-1 ${
+                                            filtroFuenteObras === "ANA"
+                                                ? "bg-teal-500 text-slate-950 font-bold shadow-sm shadow-teal-500/40"
+                                                : "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700"
+                                        }`}
+                                    >
+                                        <Waves className="w-3 h-3 text-teal-400" />
+                                        Defensas ANA ({obrasData?.total_intervenciones_ana || 0})
+                                    </button>
+                                </div>
+
+                                {/* Filtros de Ejecución / Cuellos de Botella */}
                                 <div className="flex items-center gap-1.5 flex-wrap">
                                     <button
                                         onClick={() => setFiltroSiaf("TODAS")}
                                         className={`px-2.5 py-1 rounded text-xs font-mono transition-colors ${
-                                            filtroSiaf === "TODAS" ? "bg-cyan-600 text-slate-950 font-bold" : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                                            filtroSiaf === "TODAS" ? "bg-slate-200 text-slate-950 font-bold" : "bg-slate-800 text-slate-300 hover:bg-slate-700"
                                         }`}
                                     >
-                                        Todas ({obrasData?.total_obras_cartera || 0})
+                                        Todos
                                     </button>
                                     <button
                                         onClick={() => setFiltroSiaf("CRITICAS")}
@@ -672,56 +1026,155 @@ export default function MunicipalSuitePage() {
                                 </div>
                             </div>
 
+                            {/* Alerta Informativa de Defensas Fluviales ANA */}
+                            {(obrasData?.total_intervenciones_ana || 0) > 0 && (
+                                <div className="flex items-start gap-2.5 p-3 rounded-lg bg-teal-950/40 border border-teal-800/80 text-xs text-teal-200">
+                                    <Waves className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+                                    <div>
+                                        <span className="font-bold text-teal-300">Intervenciones Fluviales ANA / MIDAGRI en Cuenca: </span>
+                                        Se integraron <strong>{obrasData?.total_intervenciones_ana} intervenciones oficiales de la ANA</strong> en este distrito por un total de <strong>S/ {(obrasData?.inversion_ana_soles || 0).toLocaleString()}</strong>.
+                                        {(obrasData?.hectareas_cultivo_total || 0) > 0 && (
+                                            <span> Protegiendo <strong>{(obrasData?.hectareas_cultivo_total || 0).toLocaleString()} Ha de cultivo</strong> y <strong>{(obrasData?.poblacion_protegida_total || 0).toLocaleString()} habitantes</strong> ribereños frente a crecidas del Niño.</span>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Alerta de Cobertura Fallback si el distrito no tiene obras exclusivas en el dataset */}
+                            {obrasData?.es_fallback_provincial && (
+                                <div className="flex items-start gap-2.5 p-3 rounded-lg bg-amber-950/40 border border-amber-800/80 text-xs text-amber-200">
+                                    <Info className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                                    <div>
+                                        <span className="font-bold text-amber-300">Cobertura de Cartera: </span>
+                                        El distrito de <strong>{obrasData?.distrito || distNombre}</strong> no cuenta con proyectos exclusivos etiquetados directamente bajo su nombre municipal en el corte MEF PP 0068 (2026).
+                                        Se despliegan automáticamente los <strong>{obrasData?.total_obras_provincia || 0} proyectos de alcance provincial en {obrasData?.provincia || provNombre}</strong> que impactan y protegen la infraestructura de su cuenca.
+                                    </div>
+                                </div>
+                            )}
+
                             <div className="overflow-x-auto">
                                 <table className="w-full text-left text-xs border-collapse">
                                     <thead>
                                         <tr className="border-b border-slate-800 text-slate-400 font-mono text-[11px]">
-                                            <th className="py-2.5 px-3">CUI</th>
-                                            <th className="py-2.5 px-3">Nombre del Proyecto</th>
-                                            <th className="py-2.5 px-3 text-right">PIM (S/)</th>
+                                            <th className="py-2.5 px-3">CUI / Código</th>
+                                            <th className="py-2.5 px-3">Fuente &amp; Ámbito</th>
+                                            <th className="py-2.5 px-3">Proyecto / Intervención Fluvial</th>
+                                            <th className="py-2.5 px-3 text-right">PIM / Inversión (S/)</th>
                                             <th className="py-2.5 px-3 text-right">Devengado (S/)</th>
                                             <th className="py-2.5 px-3 text-center">Avance</th>
-                                            <th className="py-2.5 px-3">Cuello Botella</th>
+                                            <th className="py-2.5 px-3">Cuello Botella / Estado</th>
                                             <th className="py-2.5 px-3 text-center">Semáforo</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-slate-800/60 font-sans">
-                                        {obrasFiltradas.map((obra: any, idx: number) => (
-                                            <tr key={obra.cui || idx} className="hover:bg-slate-800/40 transition-colors">
-                                                <td className="py-2.5 px-3 font-mono font-bold text-cyan-400">{obra.cui}</td>
-                                                <td className="py-2.5 px-3 text-slate-200 max-w-md truncate" title={obra.nombre_proyecto}>
-                                                    {obra.nombre_proyecto}
-                                                    {obra.nivel_coincidencia && (
-                                                        <span className="ml-2 text-[10px] font-mono text-slate-500">[{obra.nivel_coincidencia}]</span>
-                                                    )}
-                                                </td>
-                                                <td className="py-2.5 px-3 text-right font-mono text-slate-200">
-                                                    S/ {obra.pim_soles?.toLocaleString()}
-                                                </td>
-                                                <td className="py-2.5 px-3 text-right font-mono text-emerald-400">
-                                                    S/ {obra.devengado_soles?.toLocaleString()}
-                                                </td>
-                                                <td className="py-2.5 px-3 text-center font-mono">
-                                                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                                                        obra.porcentaje_ejecucion >= 60 ? "bg-emerald-950 text-emerald-300" :
-                                                        obra.porcentaje_ejecucion >= 20 ? "bg-amber-950 text-amber-300" :
-                                                        "bg-rose-950 text-rose-300"
-                                                    }`}>
-                                                        {obra.porcentaje_ejecucion}%
-                                                    </span>
-                                                </td>
-                                                <td className="py-2.5 px-3 font-mono text-[11px] text-slate-400">
-                                                    {obra.cuello_botella_siaf}
-                                                </td>
-                                                <td className="py-2.5 px-3 text-center">
-                                                    <span className={`inline-block w-2.5 h-2.5 rounded-full ${
-                                                        obra.semaforo_inaccion === "VERDE_CONFORME" ? "bg-emerald-500 shadow-emerald-500/50 shadow-sm" :
-                                                        obra.semaforo_inaccion === "AMARILLO_RIESGO" ? "bg-amber-500 shadow-amber-500/50 shadow-sm" :
-                                                        "bg-rose-500 shadow-rose-500/50 shadow-sm animate-pulse"
-                                                    }`} title={obra.semaforo_inaccion} />
+                                        {obrasFiltradas.length === 0 ? (
+                                            <tr>
+                                                <td colSpan={8} className="py-8 text-center text-slate-400 font-mono">
+                                                    No se encontraron obras con los criterios de filtro seleccionados.
                                                 </td>
                                             </tr>
-                                        ))}
+                                        ) : (
+                                            obrasFiltradas.map((obra: any, idx: number) => {
+                                                const esAna = obra.fuente === "ANA_FTR";
+                                                const esDirecta = obra.nivel_coincidencia === "DISTRITAL_DIRECTA";
+                                                const esProv = obra.nivel_coincidencia === "PROVINCIAL";
+                                                const distItem = obra.distrito_detectado || (esDirecta ? (obrasData?.distrito || distNombre) : obra.provincia_detectada || "Ámbito Provincial");
+
+                                                return (
+                                                    <tr key={obra.cui || idx} className="hover:bg-slate-800/40 transition-colors">
+                                                        <td className="py-2.5 px-3 font-mono font-bold whitespace-nowrap">
+                                                            {esAna ? (
+                                                                <span className="text-teal-400 font-semibold">{obra.cui}</span>
+                                                            ) : (
+                                                                <span className="text-cyan-400">{obra.cui}</span>
+                                                            )}
+                                                        </td>
+                                                        <td className="py-2.5 px-3 whitespace-nowrap">
+                                                            <div className="flex flex-col gap-1">
+                                                                <span className="font-semibold text-slate-200 text-xs">
+                                                                    {distItem}
+                                                                </span>
+                                                                <div>
+                                                                    {esAna ? (
+                                                                        <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-teal-950 text-teal-300 border border-teal-800 font-bold inline-flex items-center gap-1">
+                                                                            <Waves className="w-2.5 h-2.5" /> Def. Fluvial ANA
+                                                                        </span>
+                                                                    ) : esDirecta ? (
+                                                                        <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold">
+                                                                            🎯 Distrital Directo
+                                                                        </span>
+                                                                    ) : esProv ? (
+                                                                        <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-amber-950 text-amber-300 border border-amber-800 font-bold">
+                                                                            🏛️ Provincial
+                                                                        </span>
+                                                                    ) : (
+                                                                        <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-blue-950 text-blue-300 border border-blue-800 font-bold">
+                                                                            🗺️ Regional
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td className="py-2.5 px-3 text-slate-200 max-w-md" title={obra.nombre_proyecto}>
+                                                            <div className="font-medium text-xs line-clamp-2">
+                                                                {obra.nombre_proyecto}
+                                                            </div>
+                                                            <div className="flex items-center gap-2 mt-1 flex-wrap">
+                                                                {obra.cauce && (
+                                                                    <span className="text-[10px] font-mono text-cyan-300 bg-cyan-950/70 px-1.5 py-0.5 rounded border border-cyan-800/70">
+                                                                        🌊 {obra.cauce} {obra.sector ? `• ${obra.sector}` : ""}
+                                                                    </span>
+                                                                )}
+                                                                {obra.familia_ingenieria?.nombre && (
+                                                                    <span className="text-[10px] font-mono text-slate-400">
+                                                                        [{obra.familia_ingenieria.nombre}]
+                                                                    </span>
+                                                                )}
+                                                                {(obra.poblacion_protegida || 0) > 0 && (
+                                                                    <span className="text-[10px] font-mono text-teal-300 bg-teal-950/60 px-1.5 py-0.5 rounded border border-teal-800/60">
+                                                                        👥 {obra.poblacion_protegida.toLocaleString()} hab.
+                                                                    </span>
+                                                                )}
+                                                                {(obra.hectareas_cultivo || 0) > 0 && (
+                                                                    <span className="text-[10px] font-mono text-amber-300 bg-amber-950/60 px-1.5 py-0.5 rounded border border-amber-800/60">
+                                                                        🌾 {obra.hectareas_cultivo.toLocaleString()} Ha
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                        <td className="py-2.5 px-3 text-right font-mono text-slate-200 whitespace-nowrap">
+                                                            S/ {obra.pim_soles?.toLocaleString()}
+                                                        </td>
+                                                        <td className="py-2.5 px-3 text-right font-mono text-emerald-400 whitespace-nowrap">
+                                                            {esAna && (obra.devengado_soles === 0 || !obra.devengado_soles) ? (
+                                                                <span className="text-slate-500 italic text-[11px]">Sectorial ANA</span>
+                                                            ) : (
+                                                                `S/ ${obra.devengado_soles?.toLocaleString()}`
+                                                            )}
+                                                        </td>
+                                                        <td className="py-2.5 px-3 text-center font-mono whitespace-nowrap">
+                                                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                                                obra.porcentaje_ejecucion >= 60 ? "bg-emerald-950 text-emerald-300" :
+                                                                obra.porcentaje_ejecucion >= 20 ? "bg-amber-950 text-amber-300" :
+                                                                "bg-rose-950 text-rose-300"
+                                                            }`}>
+                                                                {obra.porcentaje_ejecucion}%
+                                                            </span>
+                                                        </td>
+                                                        <td className="py-2.5 px-3 font-mono text-[11px] text-slate-300 whitespace-nowrap">
+                                                            {obra.cuello_botella_siaf}
+                                                        </td>
+                                                        <td className="py-2.5 px-3 text-center whitespace-nowrap">
+                                                            <span className={`inline-block w-2.5 h-2.5 rounded-full ${
+                                                                obra.semaforo_inaccion === "VERDE_CONFORME" ? "bg-emerald-500 shadow-emerald-500/50 shadow-sm" :
+                                                                obra.semaforo_inaccion === "AMARILLO_RIESGO" ? "bg-amber-500 shadow-amber-500/50 shadow-sm" :
+                                                                "bg-rose-500 shadow-rose-500/50 shadow-sm animate-pulse"
+                                                            }`} title={obra.semaforo_inaccion} />
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
@@ -876,6 +1329,189 @@ export default function MunicipalSuitePage() {
                                 ))}
                             </div>
                         </div>
+                        {/* TARJETA EMPÍRICA: MEMORIA HISTÓRICA OFICIAL FEN (1982-1983, 1997-1998, 2017) */}
+                        <div className="p-5 bg-slate-900/80 border border-slate-800 rounded-xl space-y-4">
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                                <div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-950 text-amber-300 border border-amber-800 font-bold uppercase">
+                                            FUENTE OFICIAL DOCUMENTADA
+                                        </span>
+                                        <span className="text-[11px] font-mono text-slate-400">
+                                            MINAGRI • INDECI • CAF • CENEPRED
+                                        </span>
+                                    </div>
+                                    <h3 className="text-base font-bold text-white mt-1 flex items-center gap-2">
+                                        <Clock className="w-4 h-4 text-amber-400" />
+                                        Memoria Histórica de Impactos FEN (1982–1983, 1997–1998 y 2017)
+                                    </h3>
+                                    <p className="text-xs text-slate-400">
+                                        Registro empírico oficial de daños agropecuarios, viales, escolares y de salud en {distNombre} (UBIGEO {ubigeo})
+                                    </p>
+                                </div>
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                    {relojData?.memoria_historica_fen?.eventos_historicos?.map((ev: string, idx: number) => (
+                                        <span key={idx} className="px-2.5 py-1 rounded bg-amber-950/80 border border-amber-700 text-amber-200 text-xs font-mono font-bold">
+                                            FEN {ev}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {relojData?.memoria_historica_fen ? (
+                                <div className="space-y-4">
+                                    {/* Resumen Histórico Oficial */}
+                                    <div className="p-3.5 bg-slate-950/80 border border-slate-800 rounded-lg text-xs leading-relaxed text-slate-200">
+                                        <span className="text-amber-400 font-bold block mb-1 uppercase tracking-wide text-[10px] font-mono">
+                                            Resumen Documental del Distrito
+                                        </span>
+                                        <p>{relojData.memoria_historica_fen.resumen_historico}</p>
+                                    </div>
+
+                                    {/* Grid Multidimensional de Daños Reales */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {/* Impacto Agropecuario MINAG */}
+                                        <div className="p-4 bg-slate-950/70 border border-slate-800 rounded-lg space-y-2">
+                                            <div className="flex items-center justify-between">
+                                                <h4 className="text-xs font-bold text-emerald-400 uppercase flex items-center gap-1.5">
+                                                    <span>🌾</span> Impacto Agropecuario (MINAGRI - OIA)
+                                                </h4>
+                                                <span className="text-[10px] font-mono text-slate-500">Campañas 83 & 98</span>
+                                            </div>
+                                            {relojData.memoria_historica_fen.impacto_agropecuario_minag && Object.keys(relojData.memoria_historica_fen.impacto_agropecuario_minag).length > 0 ? (
+                                                <div className="space-y-2 text-xs text-slate-300">
+                                                    {Object.entries(relojData.memoria_historica_fen.impacto_agropecuario_minag).map(([anio, datos]: [string, any]) => (
+                                                        <div key={anio} className="p-2 bg-slate-900/60 rounded border border-slate-800/80 text-[11px]">
+                                                            <div className="font-bold text-amber-300">Campaña {anio}:</div>
+                                                            <div className="text-slate-300 mt-0.5">
+                                                                Pérdida agrícola: <strong className="text-white font-mono">{datos.hectareas_perdidas ?? datos.ha_perdidas ?? "--"} ha</strong> | Afectadas: <strong className="text-white font-mono">{datos.hectareas_afectadas ?? datos.ha_afectadas ?? "--"} ha</strong>
+                                                            </div>
+                                                            {datos.cultivo_principal && <div className="text-slate-400 text-[10px]">Cultivo principal: {datos.cultivo_principal}</div>}
+                                                            {datos.observacion && <div className="text-slate-400 text-[10px] italic mt-0.5">{datos.observacion}</div>}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <p className="text-xs text-slate-400 italic">No registra pérdidas agrícolas catastróficas documentadas en el compendio OIA.</p>
+                                            )}
+                                        </div>
+
+                                        {/* Impacto Educativo MINEDU */}
+                                        <div className="p-4 bg-slate-950/70 border border-slate-800 rounded-lg space-y-2">
+                                            <div className="flex items-center justify-between">
+                                                <h4 className="text-xs font-bold text-sky-400 uppercase flex items-center gap-1.5">
+                                                    <span>🏫</span> Impacto Educativo y Albergues (MINEDU)
+                                                </h4>
+                                                <span className="text-[10px] font-mono text-slate-500">ESCALE / CISE</span>
+                                            </div>
+                                            {relojData.memoria_historica_fen.impacto_educativo && Object.keys(relojData.memoria_historica_fen.impacto_educativo).length > 0 ? (
+                                                <div className="space-y-2 text-xs text-slate-300">
+                                                    {Object.entries(relojData.memoria_historica_fen.impacto_educativo).map(([anio, datos]: [string, any]) => (
+                                                        <div key={anio} className="p-2 bg-slate-900/60 rounded border border-slate-800/80 text-[11px]">
+                                                            <div className="font-bold text-sky-300">Evento {anio}:</div>
+                                                            <div className="text-slate-300 mt-0.5">
+                                                                Colegios afectados: <strong className="text-white font-mono">{datos.colegios_afectados ?? "--"}</strong> | Inhabitables: <strong className="text-rose-400 font-mono">{datos.colegios_inhabitables ?? "--"}</strong> | Semanas perdidas: <strong className="text-amber-300 font-mono">{datos.semanas_perdidas ?? "--"}</strong>
+                                                            </div>
+                                                            {datos.observacion && <div className="text-slate-400 text-[10px] italic mt-0.5">{datos.observacion}</div>}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <p className="text-xs text-slate-400 italic">No se documentan suspensiones prolongadas de clases en el registro.</p>
+                                            )}
+                                        </div>
+
+                                        {/* Impacto Sanitario & Epidemiológico */}
+                                        <div className="p-4 bg-slate-950/70 border border-slate-800 rounded-lg space-y-2">
+                                            <div className="flex items-center justify-between">
+                                                <h4 className="text-xs font-bold text-rose-400 uppercase flex items-center gap-1.5">
+                                                    <span>🏥</span> Impacto Sanitario & Epidemiológico (OPS/OMS)
+                                                </h4>
+                                                <span className="text-[10px] font-mono text-slate-500">Brotes FEN</span>
+                                            </div>
+                                            {relojData.memoria_historica_fen.impacto_sanitario_epidemiologico && Object.keys(relojData.memoria_historica_fen.impacto_sanitario_epidemiologico).length > 0 ? (
+                                                <div className="space-y-2 text-xs text-slate-300">
+                                                    {Object.entries(relojData.memoria_historica_fen.impacto_sanitario_epidemiologico).map(([k, v]: [string, any]) => {
+                                                        if (typeof v === "object" && v !== null) {
+                                                            return (
+                                                                <div key={k} className="p-2 bg-slate-900/60 rounded border border-slate-800/80 text-[11px]">
+                                                                    <div className="font-bold text-rose-300">Brotes {k}:</div>
+                                                                    <div className="text-slate-300 mt-0.5">
+                                                                        Patologías: <strong className="text-white font-mono">{Array.isArray(v.brotes) ? v.brotes.join(", ") : (v.brotes || "--")}</strong>
+                                                                    </div>
+                                                                    {v.postas_afectadas && <div className="text-slate-400 text-[10px] mt-0.5">Postas: {v.postas_afectadas}</div>}
+                                                                </div>
+                                                            );
+                                                        }
+                                                        return null;
+                                                    })}
+                                                </div>
+                                            ) : (
+                                                <p className="text-xs text-slate-400 italic">Sin antecedentes de brotes epidémicos severos en la base histórica.</p>
+                                            )}
+                                        </div>
+
+                                        {/* Impacto Físico & Hidrológico */}
+                                        <div className="p-4 bg-slate-950/70 border border-slate-800 rounded-lg space-y-2">
+                                            <div className="flex items-center justify-between">
+                                                <h4 className="text-xs font-bold text-cyan-400 uppercase flex items-center gap-1.5">
+                                                    <span>🌉</span> Infraestructura y Aislamiento Vial (CAF/INDECI)
+                                                </h4>
+                                                <span className="text-[10px] font-mono text-slate-500">Vías y Puentes</span>
+                                            </div>
+                                            {relojData.memoria_historica_fen.impacto_fisico_hidrologico && Object.keys(relojData.memoria_historica_fen.impacto_fisico_hidrologico).length > 0 ? (
+                                                <div className="space-y-1.5 text-xs text-slate-300">
+                                                    {relojData.memoria_historica_fen.impacto_fisico_hidrologico.dias_aislamiento_promedio && (
+                                                        <div className="text-slate-300 text-[11px]">
+                                                            Días promedio de aislamiento vial: <strong className="text-amber-400 font-mono">{relojData.memoria_historica_fen.impacto_fisico_hidrologico.dias_aislamiento_promedio} días</strong>
+                                                        </div>
+                                                    )}
+                                                    {relojData.memoria_historica_fen.impacto_fisico_hidrologico.vias_aislamiento && (
+                                                        <div className="text-[10px] text-slate-400">
+                                                            Vías críticas: {relojData.memoria_historica_fen.impacto_fisico_hidrologico.vias_aislamiento.join(", ")}
+                                                        </div>
+                                                    )}
+                                                    {relojData.memoria_historica_fen.impacto_fisico_hidrologico.puntos_criticos && (
+                                                        <div className="text-[10px] text-slate-400">
+                                                            Puntos críticos de desborde: {relojData.memoria_historica_fen.impacto_fisico_hidrologico.puntos_criticos.join(", ")}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <p className="text-xs text-slate-400 italic">No registra colapso de puentes o corte de vías principales en el histórico.</p>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Lecciones Aprendidas */}
+                                    {relojData.memoria_historica_fen.lecciones_aprendidas_caf_indeci?.length > 0 && (
+                                        <div className="p-3 bg-amber-950/30 border border-amber-900/60 rounded-lg text-xs space-y-1">
+                                            <span className="font-bold text-amber-300 text-[11px] uppercase tracking-wide block">
+                                                Lecciones Aprendidas Recomendadas (CAF / INDECI)
+                                            </span>
+                                            <ul className="list-disc list-inside space-y-1 text-slate-300 text-[11px]">
+                                                {relojData.memoria_historica_fen.lecciones_aprendidas_caf_indeci.map((lec: string, idx: number) => (
+                                                    <li key={idx}>{lec}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+
+                                    <div className="text-[10px] text-slate-500 font-mono pt-1 text-right">
+                                        Fuente documental: {relojData.memoria_historica_fen.fuente_documental || "Catálogo Histórico FEN Nacional (MINAGRI/INDECI/CAF/CENEPRED)"}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="p-6 bg-slate-950/60 border border-slate-800 rounded-lg text-center space-y-2">
+                                    <div className="text-sm font-semibold text-slate-300">
+                                        No hay información disponible para este distrito en el Catálogo Histórico FEN oficial.
+                                    </div>
+                                    <p className="text-xs text-slate-500 max-w-xl mx-auto">
+                                        Este distrito no registra expedientes de daño catastrófico en los compendios empíricos históricos FEN (1982–1983, 1997–1998, 2017) o se encuentra en zona de vigilancia preventiva estándar.
+                                    </p>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 )}
 
@@ -1018,6 +1654,82 @@ export default function MunicipalSuitePage() {
                                     <div>Bidones Agua: <strong className="text-white font-mono">{planData?.capitulo3_procedimientos_respuesta?.bienes_ayuda_humanitaria?.bidones_agua_131l_unidades} unid.</strong></div>
                                 </div>
                             </div>
+                        </div>
+
+                        {/* RED ASISTENCIAL DE SALUD Y RUTAS DE EVACUACIÓN */}
+                        <div className="p-5 bg-slate-900/80 border border-slate-800 rounded-xl space-y-4">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+                                <div>
+                                    <h4 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                                        <HeartPulse className="w-4 h-4 text-rose-400" />
+                                        Red de Salud, Postas Médicas I-1 a I-4 & Camas UVICLIN de Contingencia
+                                    </h4>
+                                    <p className="text-xs text-slate-400">
+                                        Infraestructura asistencial de primer nivel y capacidad de internamiento para epidemias (Dengue, EDA, Leptospirosis)
+                                    </p>
+                                </div>
+                                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-bold">
+                                    DIRESA / DSRSLCC / MINSA
+                                </span>
+                            </div>
+
+                            {redesSaludData?.establecimientos_contingencia?.length > 0 ? (
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-left text-xs border-collapse">
+                                        <thead>
+                                            <tr className="border-b border-slate-800 text-slate-400 font-mono">
+                                                <th className="py-2 px-3">Establecimiento / Categoría</th>
+                                                <th className="py-2 px-3">Camas UVICLIN</th>
+                                                <th className="py-2 px-3">Cadena de Frío / Respaldo</th>
+                                                <th className="py-2 px-3">Vulnerabilidad Hídrica</th>
+                                                <th className="py-2 px-3">Ruta Evacuación Referencia</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-slate-800/60">
+                                            {redesSaludData.establecimientos_contingencia.map((es: any, idx: number) => (
+                                                <tr key={idx} className="hover:bg-slate-800/40">
+                                                    <td className="py-2.5 px-3">
+                                                        <div className="font-bold text-white">{es.nombre}</div>
+                                                        <div className="text-[10px] font-mono text-cyan-400">{es.categoria || "I-3"}</div>
+                                                    </td>
+                                                    <td className="py-2.5 px-3 font-mono font-bold text-emerald-400">
+                                                        {es.capacidad_uviclin ? `${es.capacidad_uviclin} camas` : "5 camas"}
+                                                    </td>
+                                                    <td className="py-2.5 px-3 text-slate-300 text-[11px]">
+                                                        {es.cadena_frio_respaldo || "Grupo electrógeno auxiliar"}
+                                                    </td>
+                                                    <td className="py-2.5 px-3 text-amber-300 text-[11px] max-w-xs">
+                                                        {es.vulnerabilidad_hidrica || "Zona de amortiguamiento"}
+                                                    </td>
+                                                    <td className="py-2.5 px-3 text-slate-300 font-mono text-[11px]">
+                                                        {es.ruta_referencia_evacuacion || "Hospital de Apoyo Provincial"}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            ) : (
+                                <div className="p-4 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-400">
+                                    Los puestos de salud del distrito coordinan la derivación de pacientes al Hospital de Referencia Provincial y Centros de Salud I-4 de la red integrada.
+                                </div>
+                            )}
+
+                            {/* Hospitales Electrodependientes de Referencia */}
+                            {redesSaludData?.hospitales_referencia_electrodependientes?.length > 0 && (
+                                <div className="p-3.5 bg-slate-950 border border-slate-800 rounded-lg text-xs space-y-1">
+                                    <span className="text-[11px] font-bold text-sky-400 uppercase tracking-wide block">
+                                        Hospitales de Referencia Departamental con Respaldo de Subestación Eléctrica:
+                                    </span>
+                                    <div className="flex flex-wrap gap-2 pt-1">
+                                        {redesSaludData.hospitales_referencia_electrodependientes.map((h: string, idx: number) => (
+                                            <span key={idx} className="px-2.5 py-1 rounded bg-slate-900 border border-slate-700 text-slate-200 font-mono text-[11px]">
+                                                🏥 {h}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         {/* Proyecto de Resolución de Alcaldía */}
@@ -1722,6 +2434,112 @@ export default function MunicipalSuitePage() {
                                 </div>
                             </div>
                         )}
+                    </div>
+                </div>
+            )}
+
+            {/* MODAL DE SELECTOR UNIVERSAL DE DISTRITOS (1,891 DISTRITOS DEL PERÚ) */}
+            {selectorOpen && (
+                <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-slate-900 border border-cyan-800/80 rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl shadow-cyan-950/80">
+                        <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <Compass className="w-5 h-5 text-cyan-400" />
+                                <div>
+                                    <h3 className="text-sm font-bold text-white">
+                                        Selector Universal de Jurisdicción Municipal
+                                    </h3>
+                                    <p className="text-[11px] text-slate-400">
+                                        Catálogo Oficial de 1,891 Distritos del Perú (893 priorizados D.S. 124-2026-PCM)
+                                    </p>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => {
+                                    setSelectorOpen(false);
+                                    setBusquedaDistrito("");
+                                }}
+                                className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        {/* Barra de Búsqueda */}
+                        <div className="p-4 border-b border-slate-800/80 bg-slate-950/60">
+                            <div className="relative">
+                                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                                <input
+                                    type="text"
+                                    placeholder="Buscar por distrito, provincia, departamento o UBIGEO (ej. Piura, Catacaos, 200101)..."
+                                    value={busquedaDistrito}
+                                    onChange={(e) => setBusquedaDistrito(e.target.value)}
+                                    autoFocus
+                                    className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Lista de Resultados */}
+                        <div className="p-2 overflow-y-auto flex-1 divide-y divide-slate-800/60 space-y-0.5">
+                            {catalogoDistritos
+                                .filter((d: any) => {
+                                    if (!busquedaDistrito.trim()) return true;
+                                    const q = busquedaDistrito.toLowerCase().trim();
+                                    return (
+                                        d.distrito?.toLowerCase().includes(q) ||
+                                        d.provincia?.toLowerCase().includes(q) ||
+                                        d.departamento?.toLowerCase().includes(q) ||
+                                        d.ubigeo?.includes(q)
+                                    );
+                                })
+                                .slice(0, 100)
+                                .map((d: any) => {
+                                    const isCurrent = d.ubigeo === ubigeo;
+                                    return (
+                                        <button
+                                            key={d.ubigeo}
+                                            onClick={() => {
+                                                setSelectorOpen(false);
+                                                setBusquedaDistrito("");
+                                                router.push(`/municipal/${d.ubigeo}`);
+                                            }}
+                                            className={`w-full text-left p-3 rounded-xl flex items-center justify-between transition-all ${
+                                                isCurrent
+                                                    ? "bg-cyan-950/80 border border-cyan-500/80 text-white font-bold"
+                                                    : "hover:bg-slate-800/60 text-slate-300"
+                                            }`}
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <div className="font-mono text-xs px-2 py-0.5 rounded bg-slate-950 border border-slate-800 text-cyan-400 font-bold">
+                                                    {d.ubigeo}
+                                                </div>
+                                                <div>
+                                                    <div className="text-xs font-bold text-white flex items-center gap-2">
+                                                        <span>{d.distrito}</span>
+                                                        {d.declarado_ds124 && (
+                                                            <span className="px-1.5 py-0.2 rounded text-[9px] font-mono bg-rose-950 text-rose-300 border border-rose-800 font-bold">
+                                                                D.S. 124
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <div className="text-[10px] text-slate-400">
+                                                        {d.provincia}, {d.departamento} • Riesgo: {d.nivel_riesgo}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="text-right text-[11px] font-mono text-cyan-400">
+                                                {isCurrent ? "✓ Actual" : "Seleccionar →"}
+                                            </div>
+                                        </button>
+                                    );
+                                })}
+                        </div>
+
+                        <div className="p-3 border-t border-slate-800 bg-slate-950/80 text-center text-[10px] text-slate-500">
+                            Mostrando hasta 100 resultados coincidentes del padrón nacional INEI/CENEPRED ({catalogoDistritos.length} distritos cargados).
+                        </div>
                     </div>
                 </div>
             )}

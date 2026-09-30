@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from typing import Optional, List, Dict, Any
-from fastapi import FastAPI, BackgroundTasks, Query, Response, Header, UploadFile, File
+from fastapi import FastAPI, BackgroundTasks, Query, Response, Header, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -27,6 +27,7 @@ from services.legal_framework_service import legal_service
 from services.ayni_service import ayni_service
 from services.secure_vault import secure_vault
 from services.historical_analog_engine import analog_engine
+from services.predictive_eap_service import predictive_eap_service, EAPDetonacionRequest
 from services.dossier_pdf_service import dossier_service
 from services.auth_service import auth_service
 from services.indices_amaru_service import indices_amaru_service
@@ -41,6 +42,7 @@ from services.fluvial_monitoring_service import fluvial_monitoring_service
 from services.road_infrastructure_service import road_infrastructure_service
 from services.ana_geosnirh_client import AnaGeosnirhClient
 from services.piura_contingency_service import piura_contingency_service
+from services.vertex_tactical_copilot_service import vertex_tactical_copilot_service
 from services.cajamarca_contingency_service import cajamarca_contingency_service
 from services.national.senamhi_radar_service import senamhi_radar_service, RADARES_CATALOGO
 from agents.kuraq.kuraq_agent import kuraq_agent
@@ -71,7 +73,7 @@ from agents.satelital_agent import agente_satelital
 from agents.schemas import RazonabilidadPrecioRequest, CitizenReportInput
 from services.salud_service import SaludAmaruService
 from services.damnificados_service import damnificados_service
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, FileResponse
 import io
 
 class QuebradaAlertaQilqayRequest(BaseModel):
@@ -219,12 +221,13 @@ async def get_polar_clocks():
 # ============================================================================
 
 @app.get("/api/meteo/ds124-matrix")
-async def get_meteo_ds124_matrix():
+async def get_meteo_ds124_matrix(mode: str = "LIVE"):
     """
     Retorna la matriz integral y semáforo de precipitación Open-Meteo para los
     893 distritos declarados en el Decreto de Emergencia D.S. Nº 124-2026-PCM ante el FEN 2026-2027.
+    Soporta mode='LIVE' (telemetría real en vivo de hoy) y mode='SIMULACION' (escenario de contingencia pico FEN).
     """
-    return MeteoServicePro.get_ds124_matrix()
+    return MeteoServicePro.get_ds124_matrix(mode=mode)
 
 @app.get("/api/meteo/ds124-district/{ubigeo}")
 async def get_meteo_ds124_district(ubigeo: str):
@@ -246,6 +249,62 @@ async def search_districts_endpoint(q: str = Query(..., min_length=1), limit: in
     Buscador omnicanal de los 1,891 distritos del Perú (autocompletado por nombre, provincia, departamento o UBIGEO).
     """
     return historical_service.search_districts(q, limit=limit)
+
+# ============================================================================
+# ENDPOINTS MÓDULO PREDICTIVO MULTIDÍA (7 DÍAS) & PROTOCOLOS EAP (D.S. 124-2026-PCM)
+# ============================================================================
+
+@app.get("/api/predictivo/matriz-7dias")
+async def get_predictivo_matriz_7dias_endpoint(
+    days: int = Query(7, ge=1, le=7),
+    mode: str = Query("LIVE", regex="^(LIVE|SIMULACION)$"),
+    departamento: Optional[str] = None,
+    nivel: Optional[str] = None,
+    cuenca_id: Optional[str] = None,
+    limit: int = Query(50, ge=1, le=893),
+    offset: int = Query(0, ge=0)
+):
+    """
+    Matriz de Pronóstico Consolidada de Precipitaciones a 7 Días para las ciudades
+    y cuencas vulnerables declaradas en el D.S. Nº 124-2026-PCM, articulada con
+    los Protocolos de Acción Temprana (EAP) para detonar alertas escalonadas en T-144h, T-72h y T-24h.
+    """
+    return predictive_eap_service.get_multiday_forecast_matrix(
+        days=days,
+        mode=mode,
+        departamento=departamento,
+        nivel_filtro=nivel,
+        cuenca_id=cuenca_id,
+        limit=limit,
+        offset=offset
+    )
+
+@app.get("/api/predictivo/distrito/{ubigeo}/eap")
+async def get_predictivo_distrito_eap_endpoint(ubigeo: str, mode: str = Query("LIVE", regex="^(LIVE|SIMULACION)$")):
+    """
+    Expediente predictivo multidía a 7 días y Protocolos de Acción Temprana (EAP)
+    con cubicaje logístico paramétrico y sustento legal bajo D.S. 124-2026-PCM.
+    """
+    res = predictive_eap_service.get_district_eap_detail(ubigeo, mode=mode)
+    if "error" in res:
+        raise HTTPException(status_code=404, detail=res["error"])
+    return res
+
+@app.get("/api/predictivo/cuencas-eap-resumen")
+async def get_predictivo_cuencas_resumen_endpoint(mode: str = Query("LIVE", regex="^(LIVE|SIMULACION)$")):
+    """
+    Resumen ejecutivo nacional de las 17 cuencas estratégicas y conteo de alertas EAP
+    activas en T-144h, T-72h y T-24h.
+    """
+    return predictive_eap_service.get_cuencas_eap_summary(mode=mode)
+
+@app.post("/api/predictivo/detonar-eap")
+async def post_detonar_eap_endpoint(request: EAPDetonacionRequest):
+    """
+    Detonación C2 formal del Protocolo de Acción Temprana (EAP) en T-144h, T-72h o T-24h
+    con sellado SHA-256 de cadena de custodia y sustento en D.S. 124-2026-PCM y TUO Ley 30225.
+    """
+    return predictive_eap_service.detonar_alerta_eap(request)
 
 # ============================================================================
 # ENDPOINTS MEMORIA HISTÓRICA MUNICIPAL DE DESASTRES (CAF, INDECI, OPS, MINEDU)
@@ -775,7 +834,7 @@ async def get_renitli_tickets():
     """
     return {
         "total_tickets": len(ReNITLIAgent.get_all_tickets()),
-        "normativa": "Ley N.º 29735 / Art. 220 CPP / Estándar SAGF-MC Módulo 5",
+        "normativa": "Ley N.º 29735 / Art. 220 CPP / NTP-ISO/IEC 27037:2012",
         "tickets": ReNITLIAgent.get_all_tickets()
     }
 
@@ -1690,9 +1749,9 @@ async def get_ana_prioritized_critical_points_2026(
         solo_muy_alto_riesgo=solo_muy_alto_riesgo,
         forzar_recarga=forzar_recarga
     )
-    total_presupuesto = sum(p.get("costo_total_soles", 0.0) for p in puntos)
-    total_poblacion = sum(p.get("poblacion_protegida", 0) for p in puntos)
-    total_hectareas = sum(p.get("hectareas_cultivo", 0.0) for p in puntos)
+    total_presupuesto = sum((p.get("costo_total_soles") or 0.0) for p in puntos)
+    total_poblacion = sum((p.get("poblacion_protegida") or 0) for p in puntos)
+    total_hectareas = sum((p.get("hectareas_cultivo") or 0.0) for p in puntos)
     
     por_ejecutar = sum(1 for p in puntos if "POR EJECUTAR" in (p.get("estado") or "").upper())
     en_ejecucion = sum(1 for p in puntos if "EJECUCI" in (p.get("estado") or "").upper())
@@ -1827,6 +1886,20 @@ async def get_piura_cuenca_simulacion(
 ):
     """Simula el volumen embalsado y las horas de motobombeo SARE necesarias."""
     return piura_contingency_service.simular_evacuacion_cuenca_ciega(cuenca_id, milimetros_lluvia)
+
+
+class ConsultaTacticaRequest(BaseModel):
+    pregunta: str
+    ubigeo: Optional[str] = "200101"
+
+@app.post("/api/v1/piura/asistente-ia")
+async def post_piura_asistente_ia(payload: ConsultaTacticaRequest):
+    """Consulta al Copiloto Táctico FEN (Vertex AI Search Híbrido + Telemetría Viva de las 3 Consolas)."""
+    return await vertex_tactical_copilot_service.responder_consulta(
+        pregunta=payload.pregunta,
+        ubigeo=payload.ubigeo or "200101"
+    )
+
 
 
 # ==============================================================================
@@ -2024,7 +2097,7 @@ class SyncSourceRequest(BaseModel):
 async def sync_kuraq_sources(payload: Optional[SyncSourceRequest] = None):
     """
     Ejecuta la sincronización forzada o programada de una fuente o de todo el catálogo.
-    Genera y almacena la firma SHA-256 para trazabilidad conforme al estándar SAGF-MC.
+    Genera y almacena la firma SHA-256 para trazabilidad conforme a la NTP-ISO/IEC 27037:2012.
     """
     sid = payload.source_id if payload else None
     if sid:
@@ -2235,6 +2308,37 @@ class ContraloriaVistoBuenoRequest(BaseModel):
     edan_id: str
     auditor_cgr: str
     observaciones: Optional[str] = None
+
+
+@app.get("/api/v1/edan/casos-modelo")
+async def get_edan_casos_modelo():
+    """
+    Retorna la lista de Casos de Modelo Oficiales pre-configurados para llenado rápido
+    en emergencias (1 clic), con escenarios reales de eventos extremos.
+    """
+    return edan_sinpad_service.obtener_casos_modelo()
+
+
+@app.get("/api/v1/edan/cargar-caso-modelo/{caso_id}")
+async def get_edan_cargar_caso_modelo(caso_id: str):
+    """
+    Carga la Ficha EDAN completa para un caso modelo predeterminado,
+    listo para edición, previsualización o emisión oficial instantánea.
+    """
+    return edan_sinpad_service.cargar_caso_modelo(caso_id)
+
+
+class EdanCalcularPlanillaBahRequest(BaseModel):
+    ficha: Dict[str, Any]
+
+
+@app.post("/api/v1/edan/calcular-planilla-bah")
+async def post_edan_calcular_planilla_bah(req: EdanCalcularPlanillaBahRequest):
+    """
+    Calcula la Planilla Oficial de Entrega de Bienes de Ayuda Humanitaria (ANEXO N° 02)
+    conforme a los criterios normativos y baremos calóricos del ANEXO N° 06 (INDECI).
+    """
+    return edan_sinpad_service.calcular_planilla_bah(req.ficha)
 
 
 @app.get("/api/v1/edan/plantilla/{ubigeo}")
@@ -2613,23 +2717,106 @@ async def get_inei_edan_asistencia(ubigeo: str):
     return inei_vulnerability_service.precalculate_edan_demographics(ubigeo)
 
 
+@app.get("/api/v1/inei/fajas-marginales/manzanas-geojson")
+async def get_inei_fajas_marginales_geojson(
+    ubigeo: Optional[str] = Query(None, description="Filtrar por UBIGEO de 6 dígitos"),
+    departamento: Optional[str] = Query(None, description="Filtrar por Departamento (ej. PIURA, LIMA)")
+):
+    """Retorna la capa vectorial GeoJSON de manzanas censales INEI que intersectan fajas marginales de la ANA."""
+    return inei_vulnerability_service.get_manzanas_faja_marginal_geojson(ubigeo=ubigeo, departamento=departamento)
+
+
+@app.get("/api/v1/inei/fajas-marginales/manzanas/{ubigeo}")
+async def get_inei_fajas_marginales_distrito(ubigeo: str):
+    """Retorna las métricas y listado de manzanas censales atrapadas en faja marginal de la ANA para un distrito."""
+    return inei_vulnerability_service.get_manzanas_faja_marginal_distrito(ubigeo)
+
+
+@app.get("/api/v1/inei/microdatos/ranking-adobe")
+async def get_inei_ranking_adobe(
+    limit: int = Query(25, ge=1, le=200),
+    departamento: Optional[str] = Query(None, description="Filtrar ranking por departamento")
+):
+    """Retorna el ranking nacional o departamental de distritos con mayor vulnerabilidad por adobe/quincha."""
+    return inei_vulnerability_service.get_ranking_vulnerabilidad_adobe(limit=limit, departamento=departamento)
+
+
+@app.get("/api/v1/inei/microdatos/distritos")
+async def get_inei_microdatos_distritos(
+    q: Optional[str] = Query(None, description="Término de búsqueda: nombre distrito, provincia o ubigeo"),
+    departamento: Optional[str] = Query(None, description="Filtrar por departamento"),
+    categoria: Optional[str] = Query(None, description="Filtrar por categoría (MUY_ALTA, ALTA, MEDIA, BAJA)"),
+    limit: int = Query(50, ge=1, le=500)
+):
+    """Buscador y catálogo de microdatos censales 2017-2026 de los 1,891 distritos del Perú."""
+    distritos = list(inei_vulnerability_service.distritos_censo.values())
+    
+    if departamento:
+        dep_norm = departamento.upper().strip()
+        distritos = [d for d in distritos if d.get("departamento", "").upper() == dep_norm]
+        
+    if categoria:
+        cat_norm = categoria.upper().strip()
+        distritos = [d for d in distritos if d.get("evaluacion_vulnerabilidad_fen", {}).get("categoria_vulnerabilidad") == cat_norm]
+        
+    if q and q.strip():
+        term = q.lower().strip()
+        distritos = [
+            d for d in distritos
+            if term in d.get("distrito", "").lower()
+            or term in d.get("provincia", "").lower()
+            or term in d.get("ubigeo", "")
+        ]
+        
+    return {
+        "total_coincidentes": len(distritos),
+        "limite_mostrado": limit,
+        "distritos": distritos[:limit]
+    }
+
+
+
 # =====================================================================
-# CATÁLOGO DE PLANES DE CONTINGENCIA FEN (GOB.PE / INDECI)
+# CATÁLOGO DE PLANES DE CONTINGENCIA FEN (GOB.PE / INDECI / AMARU C2)
 # =====================================================================
 
 @app.get("/api/v1/planes/catalogo")
 async def get_planes_catalogo(
+    tipo_entidad: Optional[str] = Query(None),
+    anio: Optional[int] = Query(None),
+    departamento: Optional[str] = Query(None),
+    busqueda: Optional[str] = Query(None),
     sector: Optional[str] = Query(None),
     nivel: Optional[str] = Query(None),
     search: Optional[str] = Query(None)
 ):
-    """Lista y filtra los 39 planes de contingencia oficiales catalogados."""
-    return contingency_plans_service.list_all_plans(sector=sector, nivel=nivel, search=search)
+    """Lista y filtra los planes de contingencia oficiales del catálogo unificado AMARU."""
+    return contingency_plans_service.list_all_plans(
+        sector=sector,
+        nivel=nivel,
+        search=search,
+        tipo_entidad=tipo_entidad,
+        anio=anio,
+        departamento=departamento,
+        busqueda=busqueda
+    )
+
+
+@app.get("/api/v1/planes/estadisticas")
+async def get_planes_estadisticas():
+    """Retorna estadísticas consolidadas del catálogo de planes por entidad, año y departamento."""
+    return contingency_plans_service.obtener_estadisticas()
+
+
+@app.get("/api/v1/planes/piura/distritales")
+async def get_planes_distritales_piura():
+    """Retorna específicamente los planes de contingencia y prevención de la Región Piura."""
+    return contingency_plans_service.obtener_planes_distritales_piura()
 
 
 @app.get("/api/v1/planes/{plan_id}")
 async def get_plan_detalle(plan_id: str):
-    """Retorna la ficha técnica y recursos declarados de un plan de contingencia."""
+    """Retorna la ficha técnica táctica y recursos declarados de un plan de contingencia."""
     res = contingency_plans_service.get_plan_by_id(plan_id)
     if not res:
         return {"error": f"Plan '{plan_id}' no encontrado"}
@@ -2640,6 +2827,30 @@ async def get_plan_detalle(plan_id: str):
 async def get_planes_distrito(ubigeo: str):
     """Retorna los planes sectoriales y locales aplicables a un Ubigeo."""
     return contingency_plans_service.get_plans_for_ubigeo(ubigeo)
+
+
+@app.get("/api/v1/planes/descargar/{plan_id}")
+async def descargar_plan_pdf(plan_id: str):
+    """Descarga el PDF original del plan desde las carpetas locales de data/."""
+    plan = contingency_plans_service.get_plan_by_id(plan_id)
+    if not plan or not plan.get("archivo_fuente_pdf"):
+        return {"error": "Archivo no encontrado para este plan"}
+    
+    filename = plan["archivo_fuente_pdf"]
+    carpeta = plan.get("carpeta_origen", "Planes de contingencia")
+    carpetas = [carpeta, "Planes de contingencia", "Planes de prevención", "SIGRID Sistema de información para la gestión del riesgos de desastres"]
+    
+    for c in carpetas:
+        target_path = os.path.join(contingency_plans_service.data_root, c, filename)
+        if os.path.exists(target_path):
+            return FileResponse(
+                path=target_path,
+                filename=filename,
+                media_type="application/pdf"
+            )
+            
+    return {"error": f"Archivo '{filename}' no existe en el disco local"}
+
 
 
 # =====================================================================
@@ -2722,6 +2933,59 @@ async def get_mef_obras_cuello_botella():
 async def get_mef_cgr_cruce():
     """Matriz de cruce entre gasto MEF y observaciones de campo de la Contraloría."""
     return cgr_auditoria_obras_service.get_cruce_mef_contraloria()
+
+
+@app.get("/api/v1/contraloria/obras-unificadas")
+async def get_contraloria_obras_unificadas(
+    ubigeo: Optional[str] = Query(None, description="Ubigeo distrital de 6 dígitos o prefijo provincial"),
+    departamento: Optional[str] = Query(None, description="Nombre de departamento"),
+    provincia: Optional[str] = Query(None, description="Nombre de provincia"),
+    distrito: Optional[str] = Query(None, description="Nombre de distrito"),
+    fuente: str = Query("TODAS", description="TODAS | MEF_PP0068 | ANA_FTR"),
+    nivel_gobierno: str = Query("TODOS", description="TODOS | GOBIERNO NACIONAL | GOBIERNO REGIONAL | GOBIERNO LOCAL"),
+    cuello_botella: str = Query("TODOS", description="TODOS | SIN_CERTIFICAR | LICITACION_TRABADA | CONTRATO_SIN_DEVENGAR | EN_EJECUCION_REGULAR | CULMINADO_O_AVANZADO"),
+    estado_ftr: str = Query("TODOS", description="TODOS | FTR_NO_RECEPCIONADA | FTR_RECIBIDA_SIN_ACCION | FTR_EN_GESTION_PRELIMINAR | OBRA_CON_CONTRATO_EN_CAMPO"),
+    semaforo: str = Query("TODOS", description="TODOS | ROJO_INACCION_CRITICA | AMARILLO_RIESGO | VERDE_CONFORME"),
+    busqueda: str = Query("", description="Búsqueda por texto (CUI, FTR, proyecto, cuenca, sector)"),
+    limite: int = Query(50, ge=1, le=500),
+    offset: int = Query(0, ge=0)
+):
+    """
+    Bandeja Central de Control Concurrente CGR:
+    Unifica las 652 obras del MEF (PP 0068) y las 536 intervenciones de la ANA (FTR D.S. 164-2026-EF)
+    cruzadas con los 1,891 Ubigeos nacionales y los criterios del Informe N° 10671-2026-CG/AGR-SOP.
+    """
+    return cgr_auditoria_obras_service.get_catalogo_unificado(
+        ubigeo=ubigeo,
+        departamento=departamento,
+        provincia=provincia,
+        distrito=distrito,
+        fuente=fuente,
+        nivel_gobierno=nivel_gobierno,
+        cuello_botella=cuello_botella,
+        estado_ftr=estado_ftr,
+        semaforo=semaforo,
+        busqueda=busqueda,
+        limite=limite,
+        offset=offset
+    )
+
+
+@app.get("/api/v1/contraloria/ubigeos-filtro")
+async def get_contraloria_ubigeos_filtro():
+    """Retorna el árbol jerárquico de departamentos, provincias y distritos para el selector de Ubigeo."""
+    return cgr_auditoria_obras_service.get_jerarquia_ubigeos()
+
+
+@app.get("/api/v1/contraloria/obra/{obra_id}")
+async def get_contraloria_obra_detalle(obra_id: str, response: Response):
+    """Retorna la ficha técnica y diagnóstico CGR de una obra unificada (MEF o ANA)."""
+    item = cgr_auditoria_obras_service.get_obra_por_id(obra_id)
+    if not item:
+        response.status_code = 404
+        return {"error": f"Intervención o FTR '{obra_id}' no encontrada en el catálogo unificado"}
+    return item
+
 
 
 # ===================================================================
@@ -3212,13 +3476,153 @@ async def post_satelital_activar_sac(
 # SUITE MUNICIPAL 360° (COEL C2 DISTRITAL & GESTIÓN PÚBLICA LOCAL)
 # ==============================================================================
 
+@app.get("/api/v1/municipal/catalogo-distritos")
+async def get_municipal_catalogo_distritos():
+    """
+    Catálogo Maestro de 1,891 Distritos del Perú con indicador de Declaratoria D.S. 124-2026-PCM
+    y Nivel de Peligro SIGRID FONDES CENEPRED.
+    """
+    catalogo = []
+    distritos_map = getattr(historical_service, "distritos_1891", {})
+    ds124_map = getattr(historical_service, "distritos_ds124", {})
+    for u, d in distritos_map.items():
+        catalogo.append({
+            "ubigeo": u,
+            "distrito": d.get("distrito", ""),
+            "provincia": d.get("provincia", ""),
+            "departamento": d.get("departamento", ""),
+            "declarado_ds124": u in ds124_map,
+            "nivel_riesgo": d.get("nivel_peligro_riesgo_sigrid", "Medio")
+        })
+    # Ordenar priorizando D.S. 124 y alfabéticamente
+    catalogo.sort(key=lambda x: (not x["declarado_ds124"], x["departamento"], x["distrito"]))
+    return catalogo
+
+
+@app.get("/api/v1/municipal/{ubigeo}/referencias-institucionales")
+async def get_municipal_referencias_institucionales(ubigeo: str):
+    """
+    Inventario pericial de dependencias institucionales de auxilio y referencia para el EDAN Digital:
+    1. Comisarías PNP Básicas Operativas (MININTER / PP 0030)
+    2. Centros Educativos MINEDU / ESCALE con indicador de Albergue Temporal Potencial
+    """
+    comisarias = historical_service.get_comisarias_por_ubigeo(ubigeo) or []
+    # Si no tiene comisarías directas en el distrito, buscar comisarías en la misma provincia
+    if not comisarias:
+        dist_info = historical_service.get_distrito_info(ubigeo) or {}
+        provincia_nom = dist_info.get("provincia", "").upper()
+        if provincia_nom:
+            for com_list in getattr(historical_service, "comisarias_por_ubigeo", {}).values():
+                for c in com_list:
+                    if c.get("provincia", "").upper() == provincia_nom and c not in comisarias:
+                        comisarias.append(c)
+                if len(comisarias) >= 6:
+                    break
+
+    colegios_info = historical_service.get_centros_educativos_por_ubigeo(ubigeo) or {}
+    escuelas = colegios_info.get("escuelas", []) if isinstance(colegios_info, dict) else []
+    albergues = colegios_info.get("albergues_recomendados", []) if isinstance(colegios_info, dict) else []
+
+    return {
+        "ubigeo": ubigeo,
+        "total_comisarias": len(comisarias),
+        "comisarias": [
+            {
+                "cod_cpnp": c.get("cod_cpnp", ""),
+                "nombre": c.get("nombre", ""),
+                "tipo_comisaria": c.get("tipo_comisaria", "Básica"),
+                "direccion": c.get("direccion", c.get("distrito", "")),
+                "distrito": c.get("distrito", ""),
+                "provincia": c.get("provincia", ""),
+                "departamento": c.get("departamento", ""),
+                "rol_en_contingencia": c.get("rol_en_contingencia", "Fuerza Pública y Seguridad Perimetral")
+            }
+            for c in comisarias
+        ],
+        "total_centros_educativos": len(escuelas),
+        "centros_educativos": [
+            {
+                "codigo_modular": e.get("codigo_modular", ""),
+                "nombre_ie": e.get("nombre_ie", ""),
+                "nivel_modalidad": e.get("nivel_modalidad", "Primaria / Secundaria"),
+                "gestion": e.get("gestion", "PUBLICA"),
+                "direccion": e.get("direccion", ""),
+                "es_albergue_potencial": bool(e.get("es_albergue_potencial", False)),
+                "capacidad_aulas": e.get("aulas_disponibles", 10),
+                "latitud": e.get("latitud"),
+                "longitud": e.get("longitud")
+            }
+            for e in escuelas
+        ],
+        "total_albergues": len(albergues),
+        "albergues_potenciales": albergues
+    }
+
+
+@app.get("/api/v1/municipal/{ubigeo}/redes-salud")
+async def get_municipal_redes_salud(ubigeo: str):
+    """
+    Catálogo de Redes de Salud, Centros de Salud I-1 a I-4, Hospitales de Referencia,
+    camas UVICLIN y vulnerabilidad hídrica distrital para evacuación médica.
+    """
+    # 1. Cargar DSRSLCC Piura si aplica
+    salud_dsrslcc = getattr(piura_contingency_service, "_salud_dsrslcc", {}) or {}
+    establecimientos = salud_dsrslcc.get("establecimientos_prioritarios_contingencia", [])
+    
+    # Filtrar por ubigeo o provincia si coincide
+    locales_salud = [e for e in establecimientos if e.get("ubigeo") == ubigeo]
+    if not locales_salud and ubigeo.startswith("20"):
+        # Misma región Piura
+        locales_salud = establecimientos[:8]
+
+    # 2. Infraestructura de hospitales electrodependientes
+    hosp_electro = []
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    servicios_path = os.path.join(base_dir, "data", "infraestructura_servicios_basicos.json")
+    if os.path.exists(servicios_path):
+        try:
+            with open(servicios_path, "r", encoding="utf-8") as f:
+                sb_data = json.load(f)
+                dist_prof = historical_service.get_distrito_info(ubigeo) or {}
+                depto_actual = dist_prof.get("departamento", "").upper()
+                for se in sb_data.get("subestaciones_electricas", []):
+                    if se.get("ubigeo") == ubigeo or se.get("departamento", "").upper() == depto_actual:
+                        for h in se.get("hospitales_electrodependientes", []):
+                            if h not in hosp_electro:
+                                hosp_electro.append(h)
+        except Exception:
+            pass
+
+    # 3. Datos epidemiológicos de la memoria histórica distrital
+    memoria = getattr(historical_service, "memoria_historica_distritos", {}).get(ubigeo, {})
+    impacto_sanitario = memoria.get("impacto_sanitario_epidemiologico", {})
+
+    return {
+        "ubigeo": ubigeo,
+        "establecimientos_contingencia": locales_salud,
+        "total_establecimientos_contingencia": len(locales_salud),
+        "hospitales_referencia_electrodependientes": hosp_electro,
+        "impacto_sanitario_historico": impacto_sanitario,
+        "fuente_oficial": "DIRESA / DSRSLCC / MINSA / COEN Salud"
+    }
+
+
 @app.get("/api/v1/municipal/{ubigeo}/obras-pp0068")
-async def get_municipal_obras_pp0068(ubigeo: str):
+async def get_municipal_obras_pp0068(
+    ubigeo: str,
+    alcance: Optional[str] = Query("AUTO"),
+    ubigeo_filtro: Optional[str] = Query(None)
+):
     """
     Consola Municipal de Obras Públicas FEN (PP 0068 & FONDES) con aislamiento por UBIGEO.
     Entrega cartera local, diagnóstico de cuellos de botella SIAF y alerta legal OCI/CGR (Art. 377 CP).
+    Soporta filtro de alcance: DISTRITAL, PROVINCIAL, REGIONAL, AUTO y selección de UBIGEO específico.
     """
-    return municipal_obras_service.get_obras_distritales(ubigeo)
+    return municipal_obras_service.get_obras_distritales(
+        ubigeo=ubigeo,
+        alcance=alcance,
+        ubigeo_filtro=ubigeo_filtro
+    )
 
 
 @app.post("/api/v1/municipal/{ubigeo}/certificar-maquinaria")
@@ -3546,20 +3950,168 @@ async def get_caso_damnificado_directo(cup: str):
     return caso
 
 
+# ==============================================================================
+# PIPELINE DE INGESTA AUTOMATIZADA SENAMHI -> BIGQUERY & CLOUD STORAGE
+# ==============================================================================
+from services.senamhi_ingestion_service import senamhi_ingestion_service
 
+@app.post("/api/v1/jobs/ingest-senamhi")
+async def trigger_senamhi_ingest_job():
+    """
+    Endpoint activador para Cloud Scheduler (cron cada 1 hora).
+    Descarga telemetría de las 973 estaciones del SENAMHI, normaliza con UBIGEO,
+    genera hash SHA-256 de custodia y almacena particionado en:
+      - Cloud Storage Data Lake: gs://{BUCKET}/raw/year=YYYY/month=MM/day=DD/
+      - BigQuery Data Warehouse: amaru_senamhi_dw.telemetria_estaciones
+    """
+    return await senamhi_ingestion_service.run_ingestion_pipeline()
 
+@app.get("/api/v1/jobs/ingest-senamhi/health")
+async def check_senamhi_job_health():
+    """Diagnóstico de conectividad con BigQuery y Cloud Storage."""
+    return {
+        "service": "senamhi_ingestion_service",
+        "project_id": senamhi_ingestion_service.project_id,
+        "gcs_bucket": senamhi_ingestion_service.bucket_name,
+        "bq_target": f"{senamhi_ingestion_service.project_id}.{senamhi_ingestion_service.dataset_id}.{senamhi_ingestion_service.table_id}",
+        "status": "READY"
+    }# =====================================================================
+# ENDPOINTS: PLANES DE CONTINGENCIA Y PREVENCIÓN DIGITAL NACIONAL 2026-27
+# =====================================================================
 
+@app.get("/api/v1/planes/catalogo")
+async def get_planes_catalogo(
+    tipo_entidad: Optional[str] = None,
+    anio: Optional[int] = None,
+    departamento: Optional[str] = None,
+    busqueda: Optional[str] = None
+):
+    """
+    Retorna el catálogo unificado de planes de contingencia y prevención digital 2026-2027.
+    """
+    return contingency_plans_service.listar_planes(
+        tipo_entidad=tipo_entidad,
+        anio=anio,
+        departamento=departamento,
+        busqueda=busqueda
+    )
 
+@app.get("/api/v1/planes/estadisticas")
+async def get_planes_estadisticas():
+    """
+    Retorna indicadores estadísticos de cobertura de planes a nivel nacional.
+    """
+    return contingency_plans_service.obtener_estadisticas_generales()
 
+@app.get("/api/v1/planes/piura/distritales")
+async def get_planes_distritales_piura():
+    """
+    Retorna los planes de contingencia distritales de Piura (Epicentro FEN).
+    """
+    return contingency_plans_service.obtener_planes_distritales_piura()
 
+@app.get("/api/v1/planes/{plan_id}")
+async def get_plan_detalle(plan_id: str):
+    """
+    Retorna la ficha táctica integral de 1 página de un plan de contingencia.
+    """
+    plan = contingency_plans_service.obtener_plan_por_id(plan_id)
+    if not plan:
+        raise HTTPException(status_code=404, detail=f"Plan con ID {plan_id} no encontrado")
+    return plan
 
+class CopilotoConsultaInput(BaseModel):
+    pregunta: str
+    ubigeo: Optional[str] = "200101"
 
+@app.post("/api/v1/piura/asistente-ia")
+async def consultar_copiloto_tactico_piura(payload: CopilotoConsultaInput):
+    """
+    Copiloto Táctico FEN Piura 2026-2027:
+    Fusiona el Cerebro Doctrinal (Planes y Marco Legal) con los Ojos y Oídos en Tiempo Real
+    (Radar Doppler SENAMHI, Caudales Río Piura, Cuencas Ciegas SARE y Reportes Ciudadanos).
+    """
+    return await vertex_tactical_copilot_service.responder_consulta(
+        pregunta=payload.pregunta,
+        ubigeo=payload.ubigeo or "200101"
+    )
 
+# -------------------------------------------------------------------
+# MOTOR DE SIMULACIÓN TÁCTICA MEGA-FEN 2026-2027 (C4ISR ESTRÉS)
+# -------------------------------------------------------------------
+from services.simulation_mega_fen_service import simulation_mega_fen_service
 
+@app.get("/api/v1/simulacion/mega-fen/resumen-nacional")
+async def get_simulacion_resumen_nacional(
+    severidad: Optional[str] = "EXTREMO",
+    tsm: Optional[float] = None,
+    avance_pp0068: Optional[float] = None
+):
+    """
+    Retorna el resumen macro nacional y regional (25 departamentos) de la
+    simulación El Niño 2026-2027 según el nivel de severidad (MODERADO, FUERTE, EXTREMO),
+    anomalía continua de TSM (+0.5 a +4.0°C) y avance de defensas PP 0068 (10 a 100%).
+    """
+    return simulation_mega_fen_service.ejecutar_simulacion_nacional(
+        nivel_severidad=severidad or "EXTREMO",
+        tsm_anomalia=tsm,
+        avance_obras_pp0068_pct=avance_pp0068
+    )
 
+@app.get("/api/v1/simulacion/mega-fen/distritos")
+async def get_simulacion_distritos(
+    severidad: Optional[str] = "EXTREMO",
+    tsm: Optional[float] = None,
+    avance_pp0068: Optional[float] = None,
+    departamento: Optional[str] = None,
+    nivel_amenaza: Optional[str] = None,
+    solo_fajas_ana: bool = False,
+    busqueda: Optional[str] = None,
+    limite: int = 100,
+    offset: int = 0
+):
+    """
+    Retorna los distritos simulados con filtros de severidad, TSM continuo, avance PP 0068, región, amenaza y fajas ANA.
+    """
+    return simulation_mega_fen_service.filtrar_distritos(
+        nivel_severidad=severidad or "EXTREMO",
+        tsm_anomalia=tsm,
+        avance_obras_pp0068_pct=avance_pp0068,
+        departamento=departamento,
+        nivel_amenaza=nivel_amenaza,
+        solo_fajas_ana=solo_fajas_ana,
+        busqueda=busqueda,
+        limite=limite,
+        offset=offset
+    )
 
+@app.get("/api/v1/simulacion/mega-fen/distrito/{ubigeo}")
+async def get_simulacion_distrito_detalle(
+    ubigeo: str,
+    severidad: Optional[str] = "EXTREMO",
+    tsm: Optional[float] = None,
+    avance_pp0068: Optional[float] = None
+):
+    """
+    Retorna la ficha de simulación detallada de un distrito específico para la severidad y parámetros dados.
+    """
+    sim = simulation_mega_fen_service.ejecutar_simulacion_nacional(
+        nivel_severidad=severidad or "EXTREMO",
+        tsm_anomalia=tsm,
+        avance_obras_pp0068_pct=avance_pp0068
+    )
+    for d in sim.get("distritos", []):
+        if d["ubigeo"] == ubigeo:
+            return d
+    raise HTTPException(status_code=404, detail=f"Distrito con ubigeo {ubigeo} no encontrado en la simulación")
 
-
-
+@app.get("/api/v1/simulacion/mega-fen/indeci-ground-truth")
+async def get_indeci_ground_truth():
+    """
+    Retorna los datos consolidados oficiales al 100% de liquidación SINPAD
+    de El Niño Costero 2017 y la Temporada Regular 2017-2018 para calibración pericial.
+    """
+    from services.indeci_ground_truth_service import indeci_ground_truth_service
+    return indeci_ground_truth_service.obtener_comparativa_indeci()
 
 

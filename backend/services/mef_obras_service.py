@@ -40,8 +40,14 @@ CUENCAS_RIOS_KEYWORDS = [
 class MefObrasService:
     def __init__(self, data_dir: Optional[str] = None):
         if not data_dir:
-            base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-            self.data_dir = os.path.join(base_dir, "data", "Consulta amigable mef 2026")
+            backend_data = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "Consulta amigable mef 2026")
+            lab4_data = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data", "Consulta amigable mef 2026")
+            if os.path.exists(backend_data):
+                self.data_dir = backend_data
+            elif os.path.exists(lab4_data):
+                self.data_dir = lab4_data
+            else:
+                self.data_dir = backend_data
         else:
             self.data_dir = data_dir
 

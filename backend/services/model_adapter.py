@@ -105,7 +105,7 @@ class LocalDeterministicAdapter(BaseModelAdapter):
     """
 
     def get_provider_name(self) -> str:
-        return "Motor Local Determinista SAGF-MC (Cero Alucinación / Offline-First)"
+        return "Motor Local Determinista (Cero Alucinación / Offline-First / ISO 27037)"
 
     async def generate_json(
         self,

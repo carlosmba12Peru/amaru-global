@@ -308,6 +308,71 @@ export default function TacticalPolarClock({
 
     const activeClock = clockType === "AMARU-FEN" ? fen : chiri;
     const carteraObras = clockType === "AMARU-FEN" ? (fen?.ventana_dorada?.cartera_obras_pp0068 || fen?.doctrina_logistica_obras_pp0068) : null;
+    const resumenAna = clockType === "AMARU-FEN" ? (fen?.resumen_obras_ana || {
+        programa: "PLAN NACIONAL DE INTERVENCIONES EN CAUCES FEN 2026-2027",
+        entidad: "Autoridad Nacional del Agua (ANA) / MIDAGRI",
+        decreto_supremo: "D.S. N° 164-2026-EF & D.S. N° 124-2026-PCM",
+        total_intervenciones: 536,
+        costo_total_soles: 670435436.13,
+        meta_total_km: 645.4,
+        volumen_total_m3: 14820000.0,
+        poblacion_total_protegida: 327942,
+        hectareas_cultivo_total: 76775.9,
+        frentes_tacticos: [
+            {
+                id: "FRENTE_NORTE",
+                nombre: "Frente Norte (Tumbes, Piura, Lambayeque, La Libertad)",
+                cuencas_clave: "Ríos Tumbes, Chira, Piura, La Leche, Moche",
+                total_obras: 189,
+                costo_total_soles: 310240000,
+                meta_km: 248.5,
+                poblacion_protegida: 142800,
+                hectareas_cultivo: 41200,
+                avance_ponderado: 41.5,
+                prioridad: "PRIORIDAD_1_CRITICA",
+                color: "#ef4444"
+            },
+            {
+                id: "FRENTE_CENTRO",
+                nombre: "Frente Centro (Lima Metropolitana & Provincias)",
+                cuencas_clave: "Ríos Rímac, Chillón, Lurín, Cañete, Mala",
+                total_obras: 142,
+                costo_total_soles: 182600000,
+                meta_km: 172.0,
+                poblacion_protegida: 118400,
+                hectareas_cultivo: 12400,
+                avance_ponderado: 48.2,
+                prioridad: "ALTA_URBANA",
+                color: "#f59e0b"
+            },
+            {
+                id: "FRENTE_ANCASH",
+                nombre: "Frente Áncash (Costa & Callejón de Huaylas)",
+                cuencas_clave: "Ríos Santa, Casma, Huarmey, Culebras",
+                total_obras: 56,
+                costo_total_soles: 74800000,
+                meta_km: 84.2,
+                poblacion_protegida: 29500,
+                hectareas_cultivo: 9800,
+                avance_ponderado: 52.0,
+                prioridad: "MEDIA_ALTA",
+                color: "#3b82f6"
+            },
+            {
+                id: "FRENTE_SUR",
+                nombre: "Frente Costa Sur (Ica & Arequipa)",
+                cuencas_clave: "Ríos Ica, Pisco, Grande, Camaná, Chili",
+                total_obras: 149,
+                costo_total_soles: 102800000,
+                meta_km: 140.7,
+                poblacion_protegida: 37242,
+                hectareas_cultivo: 13375.9,
+                avance_ponderado: 56.4,
+                prioridad: "MEDIA_EN_EJECUCION",
+                color: "#10b981"
+            }
+        ]
+    }) : null;
 
     // 12 Marcas Horarias del Dial Polar (Cada 30° = 1 hora / 1 mes)
     // CÚSPIDE (0° / 360° = Las 12:00): 1 de Enero de 2027
@@ -1716,31 +1781,201 @@ export default function TacticalPolarClock({
                                     </div>
                                 </div>
 
-                                {/* Análogos Históricos de Referencia */}
-                                <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 space-y-2.5">
-                                    <span className="text-xs font-bold text-slate-400 uppercase flex items-center gap-1.5">
-                                        <History className="w-4 h-4 text-blue-400" /> Análogos Históricos
-                                    </span>
-                                    
-                                    <div className="space-y-2">
-                                        {activeClock.analogos_historicos.map((an: any, idx: number) => (
-                                            <div key={idx} className="bg-slate-900 p-2 rounded-xl border border-slate-850 text-xs space-y-0.5">
-                                                <div className="flex justify-between items-center font-bold text-slate-200">
-                                                    <span>{an.evento}</span>
-                                                    <span className="text-[10px] font-mono text-red-400 bg-red-950 px-1 rounded">
-                                                        {an.anomalia_tsm || an.tmin}
-                                                    </span>
-                                                </div>
-                                                <p className="text-[10px] text-slate-400 leading-tight">
-                                                    {an.impacto}
-                                                </p>
+                                {/* Resumen de Obras Agrupadas de la ANA / MIDAGRI (Sustituye Análogos en Columna 3) */}
+                                {clockType === "AMARU-FEN" && resumenAna ? (
+                                    <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-lg">
+                                        <div className="flex justify-between items-center text-xs font-bold text-teal-400 uppercase">
+                                            <span className="flex items-center gap-1.5">
+                                                <Waves className="w-4 h-4 text-teal-400" /> Defensas Fluviales ANA
+                                            </span>
+                                            <span className="text-[10px] font-mono text-teal-300 bg-teal-950/80 border border-teal-800/80 px-2 py-0.5 rounded-full">
+                                                D.S. 164-2026-EF
+                                            </span>
+                                        </div>
+
+                                        {/* Mini KPIs de la ANA */}
+                                        <div className="grid grid-cols-3 gap-2 text-center">
+                                            <div className="bg-slate-900/90 p-2 rounded-xl border border-slate-800">
+                                                <span className="text-[9px] font-mono text-slate-400 uppercase block">Total Obras</span>
+                                                <span className="text-sm font-black text-teal-300 font-mono">
+                                                    {resumenAna.total_intervenciones}
+                                                </span>
+                                                <span className="text-[8px] text-slate-500 block">en 8 Regiones</span>
                                             </div>
-                                        ))}
+                                            <div className="bg-slate-900/90 p-2 rounded-xl border border-slate-800">
+                                                <span className="text-[9px] font-mono text-slate-400 uppercase block">Inversión</span>
+                                                <span className="text-sm font-black text-white font-mono">
+                                                    S/ {(resumenAna.costo_total_soles / 1e6).toFixed(0)}M
+                                                </span>
+                                                <span className="text-[8px] text-slate-500 block">D.S. 164-EF</span>
+                                            </div>
+                                            <div className="bg-slate-900/90 p-2 rounded-xl border border-slate-800">
+                                                <span className="text-[9px] font-mono text-slate-400 uppercase block">Cauces</span>
+                                                <span className="text-sm font-black text-amber-400 font-mono">
+                                                    {resumenAna.meta_total_km} km
+                                                </span>
+                                                <span className="text-[8px] text-slate-500 block">Descolmatados</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Frentes Tácticos Agrupados */}
+                                        <div className="space-y-2">
+                                            <span className="text-[10px] font-mono uppercase text-slate-400 font-bold block">
+                                                Frentes Hidrográficos Prioritarios:
+                                            </span>
+                                            {resumenAna.frentes_tacticos.map((f: any, idx: number) => {
+                                                const isCrit = f.avance_ponderado < 45;
+                                                return (
+                                                    <div key={idx} className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 space-y-1.5">
+                                                        <div className="flex justify-between items-center text-xs">
+                                                            <span className="font-bold text-slate-200 text-[11px] line-clamp-1" title={f.nombre}>
+                                                                {f.nombre.split("(")[0].trim()}
+                                                            </span>
+                                                            <span className="text-[10px] font-mono font-bold text-slate-300">
+                                                                {f.total_obras} obras • S/ {(f.costo_total_soles / 1e6).toFixed(0)}M
+                                                            </span>
+                                                        </div>
+
+                                                        {/* Barra de Avance Ponderado */}
+                                                        <div className="space-y-0.5">
+                                                            <div className="flex justify-between text-[10px] text-slate-400 font-mono">
+                                                                <span className="text-[9px] text-slate-400 truncate max-w-[150px]">{f.cuencas_clave}</span>
+                                                                <span className={`font-bold ${isCrit ? "text-rose-400" : "text-emerald-400"}`}>
+                                                                    {f.avance_ponderado}%
+                                                                </span>
+                                                            </div>
+                                                            <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                                                                <div
+                                                                    className={`h-full rounded-full transition-all duration-500 ${
+                                                                        isCrit ? "bg-rose-500" : "bg-emerald-500"
+                                                                    }`}
+                                                                    style={{ width: `${Math.min(100, f.avance_ponderado)}%` }}
+                                                                ></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+
+                                        <div className="pt-1 flex justify-between items-center text-[10px] text-slate-400 border-t border-slate-850 font-mono">
+                                            <span className="text-teal-400 font-bold">🌾 {(resumenAna.hectareas_cultivo_total || 0).toLocaleString()} Ha protegidas</span>
+                                            <span className="text-slate-300">👥 {(resumenAna.poblacion_total_protegida || 0).toLocaleString()} hab.</span>
+                                        </div>
                                     </div>
-                                </div>
+                                ) : (
+                                    /* Análogos para AMARU-CHIRI */
+                                    <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 space-y-2.5">
+                                        <span className="text-xs font-bold text-slate-400 uppercase flex items-center gap-1.5">
+                                            <History className="w-4 h-4 text-sky-400" /> Análogos Históricos
+                                        </span>
+                                        <div className="space-y-2">
+                                            {activeClock.analogos_historicos.map((an: any, idx: number) => (
+                                                <div key={idx} className="bg-slate-900 p-2 rounded-xl border border-slate-850 text-xs space-y-0.5">
+                                                    <div className="flex justify-between items-center font-bold text-slate-200">
+                                                        <span>{an.evento}</span>
+                                                        <span className="text-[10px] font-mono text-sky-400 bg-sky-950 px-1 rounded">
+                                                            {an.tmin || an.anomalia_tsm}
+                                                        </span>
+                                                    </div>
+                                                    <p className="text-[10px] text-slate-400 leading-tight">
+                                                        {an.impacto}
+                                                    </p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                         </div>
+
+                        {/* ========================================================================= */}
+                        {/* [NUEVA BANDA HORIZONTAL] ANÁLOGOS HISTÓRICOS DE REFERENCIA DESPLEGADOS    */}
+                        {/* ========================================================================= */}
+                        {clockType === "AMARU-FEN" && (activeClock.analogos_historicos || []).length > 0 && (
+                            <div className="bg-slate-950/90 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+                                <div className="flex flex-wrap justify-between items-center gap-3 border-b border-slate-850 pb-3">
+                                    <div className="flex items-center gap-2.5">
+                                        <span className="p-2 rounded-xl bg-blue-950/80 text-blue-400 border border-blue-800/80">
+                                            <History className="w-4 h-4" />
+                                        </span>
+                                        <div>
+                                            <h3 className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                                                <span>Análogos Históricos de Referencia: Curva Hidrológica &amp; Lecciones Aprendidas</span>
+                                                <span className="text-[10px] bg-blue-950 text-blue-300 font-mono px-2 py-0.5 rounded-full border border-blue-800">
+                                                    CALIBRACIÓN DOCTRINARIA C2
+                                                </span>
+                                            </h3>
+                                            <p className="text-xs text-slate-400">
+                                                Eventos hidrometeorológicos extraordinarios que definieron la curva de severidad y respuesta operativa de la campaña 2026-2027
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="text-[11px] font-mono text-slate-400 flex items-center gap-2">
+                                        <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                                        <span>Proyección 2026-2027: Fase Alerta ENFEN (84% probabilidad)</span>
+                                    </div>
+                                </div>
+
+                                {/* Grid Horizontal de 4 Columnas */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                                    {activeClock.analogos_historicos.map((an: any, idx: number) => {
+                                        const isExtra = an.categoria === "EXTRAORDINARIO" || an.evento.includes("1982") || an.evento.includes("1997");
+                                        return (
+                                            <div
+                                                key={idx}
+                                                className={`bg-slate-900/90 p-4 rounded-2xl border transition-all duration-200 hover:border-slate-600 hover:shadow-lg flex flex-col justify-between space-y-3 ${
+                                                    isExtra ? "border-red-900/50 bg-gradient-to-b from-red-950/20 to-slate-900/90" : "border-slate-800"
+                                                }`}
+                                            >
+                                                {/* Cabecera del Análogo */}
+                                                <div className="space-y-1">
+                                                    <div className="flex justify-between items-start gap-1">
+                                                        <span className="font-extrabold text-white text-sm tracking-tight leading-snug">
+                                                            {an.evento}
+                                                        </span>
+                                                        <span className={`text-[10px] font-mono font-black px-1.5 py-0.5 rounded ${
+                                                            isExtra ? "bg-red-950 text-red-300 border border-red-800" : "bg-rose-950 text-rose-300 border border-rose-800"
+                                                        }`}>
+                                                            {an.anomalia_tsm || an.tmin}
+                                                        </span>
+                                                    </div>
+                                                    <span className="text-[9.5px] font-mono uppercase tracking-wider text-slate-400 block">
+                                                        {an.categoria || "EVENTO DE REFERENCIA"}
+                                                    </span>
+                                                </div>
+
+                                                {/* Impacto Histórico */}
+                                                <div className="space-y-1">
+                                                    <span className="text-[9px] font-mono text-slate-500 uppercase font-bold block">
+                                                        Impacto Registrado:
+                                                    </span>
+                                                    <p className="text-[11px] text-slate-300 leading-relaxed">
+                                                        {an.impacto}
+                                                    </p>
+                                                </div>
+
+                                                {/* Lección Doctrinaria */}
+                                                <div className="pt-2 border-t border-slate-800/80 bg-slate-950/60 p-2.5 rounded-xl space-y-1 text-[10.5px]">
+                                                    <span className="font-bold text-amber-300/90 flex items-center gap-1 text-[10px] uppercase font-mono">
+                                                        <ShieldAlert className="w-3 h-3 text-amber-400 shrink-0" /> Lección para 2026-27:
+                                                    </span>
+                                                    <p className="text-slate-300 text-[10px] leading-snug">
+                                                        {an.leccion || (
+                                                            an.evento.includes("1982") ? "Diques de tierra sin enrocado sufren sifonamiento masivo por encima de 1,500 m³/s." :
+                                                            an.evento.includes("1997") ? "Avenidas de Marzo destruyen obras si no están concluidas antes de Diciembre." :
+                                                            an.evento.includes("2017") ? "Ventana de alerta de solo 72 horas para activación violenta de quebradas secas." :
+                                                            "Lluvia moderada pero persistente en lechos colmatados causa anegamiento en menos de 48h."
+                                                        )}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
 
                         {/* ========================================================================= */}
                         {/* CUADRO DE BARRAS TÁCTICO MULTIANUAL FEN: EVOLUCIÓN HISTÓRICA EN DÍAS     */}

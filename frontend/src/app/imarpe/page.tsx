@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import HeaderNav from "@/components/HeaderNav";
+import { API_BASE } from "@/config/api";
 import {
     Waves,
     Calendar,
@@ -137,8 +138,6 @@ export default function ConsolaImarpePage() {
     const [syncMessage, setSyncMessage] = useState<string | null>(null);
     const [uploadingPdf, setUploadingPdf] = useState<boolean>(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
     const formatearBoletinNro = (nro?: string) => {
         if (!nro) return "N° 260";

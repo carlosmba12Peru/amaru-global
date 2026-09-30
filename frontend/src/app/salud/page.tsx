@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { API_BASE } from "@/config/api";
 import {
     Activity,
     ShieldAlert,
@@ -111,7 +112,7 @@ export default function SaludDenguePage() {
     const [sincronizando, setSincronizando] = useState<boolean>(false);
     const [mensajeSync, setMensajeSync] = useState<string | null>(null);
 
-    const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const apiBase = API_BASE;
 
     const cargarDatos = async (ubigeo: string, lluvia: number = lluviaMm, empoce: number = diasEmpoce) => {
         setCargando(true);

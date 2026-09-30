@@ -35,6 +35,7 @@ import {
     ReferenceLine
 } from "recharts";
 import HeaderNav from "@/components/HeaderNav";
+import { API_BASE } from "@/config/api";
 
 export default function EnfenConsolePage() {
     const [historyData, setHistoryData] = useState<any>(null);
@@ -47,7 +48,7 @@ export default function EnfenConsolePage() {
     const [uploadingPdf, setUploadingPdf] = useState<boolean>(false);
     const enfenFileInputRef = useRef<HTMLInputElement>(null);
 
-    const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const apiBase = API_BASE;
 
     const fetchData = async () => {
         setLoading(true);

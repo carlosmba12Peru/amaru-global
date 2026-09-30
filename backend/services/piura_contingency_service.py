@@ -205,7 +205,7 @@ class PiuraContingencyService:
             "obras_prioritarias_declaradas": meta["obras"],
             "presupuesto_justificado_pen": meta["presupuesto_referencial_pen"],
             "sustento_tecnico": meta["justificacion_hidrologica"],
-            "garantia_control_concurrente": "Este reporte constituye evidencia pericial algorítmica objetiva bajo estándar SAGF-MC. Su uso en el expediente de contratación exime de dolo a la comisión evaluadora frente al OCI."
+            "garantia_control_concurrente": "Este reporte constituye sustento técnico objetivo con trazabilidad digital bajo NTP-ISO/IEC 27037:2012 y Ley N° 30225. Su incorporación en el expediente de contratación fundamenta la emergencia ante el Órgano de Control Institucional (OCI) conforme a la Directiva de la Contraloría."
         }
 
         firma_sha256 = hashlib.sha256(json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()
@@ -333,7 +333,7 @@ class PiuraContingencyService:
             "jurisdiccion": "Municipalidad Provincial de Piura (Gobierno Local)",
             "ambito_temporal": "FEN 2026-2027",
             "cobertura_global_plan_contingencia_pct": cobertura_global,
-            "estado_operativo": "OPERATIVO_ALTO_ESTANDAR_SAGF_MC",
+            "estado_operativo": "OPERATIVO_CONFORME_DIRECTIVA_CGR",
             "bloques_evaluados": bloques,
             "pilares_doctrinales_integrados": {
                 "doctrina_udep_prof_chang": {

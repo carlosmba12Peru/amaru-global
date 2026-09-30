@@ -14,6 +14,12 @@ import pypdf
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data")
 ENFEN_PDF_DIR = os.path.join(DATA_DIR, "Estudio Nacional del Fenómeno del Niño ENFEN")
+if not os.path.exists(ENFEN_PDF_DIR) or len(os.listdir(ENFEN_PDF_DIR)) == 0:
+    PARENT_DATA_DIR = os.path.join(os.path.dirname(DATA_DIR), "data")
+    parent_enfen = os.path.join(PARENT_DATA_DIR, "Estudio Nacional del Fenómeno del Niño ENFEN")
+    if os.path.exists(parent_enfen) and len(os.listdir(parent_enfen)) > 0:
+        ENFEN_PDF_DIR = parent_enfen
+
 CACHE_FILE = os.path.join(DATA_DIR, "enfen_comunicados_dataset.json")
 
 # Datos calibrados base por defecto (en caso de que la carpeta no contenga PDFs inicialmente)
@@ -153,7 +159,9 @@ class EnfenService:
         if not os.path.exists(ENFEN_PDF_DIR):
             os.makedirs(ENFEN_PDF_DIR, exist_ok=True)
 
-        pdf_files = sorted(glob.glob(os.path.join(ENFEN_PDF_DIR, "*.pdf")))
+        pdf_files = sorted(glob.glob(os.path.join(ENFEN_PDF_DIR, "**", "*.pdf"), recursive=True))
+        if not pdf_files:
+            pdf_files = sorted(glob.glob(os.path.join(ENFEN_PDF_DIR, "*.pdf")))
         scanned: List[Dict[str, Any]] = []
 
         for fpath in pdf_files:

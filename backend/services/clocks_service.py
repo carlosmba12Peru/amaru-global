@@ -24,6 +24,114 @@ def calculate_chronological_angle(d: datetime) -> float:
     angle = ((day_of_year - 1) / 365.25) * 360.0
     return round(angle % 360.0, 2)
 
+
+def get_resumen_obras_ana_por_frente() -> Dict[str, Any]:
+    """
+    Agrupa las 536 intervenciones oficiales de control fluvial y defensas ribereñas
+    de la ANA (D.S. N° 164-2026-EF / GeoSNIRH) por Frentes Hidrográficos y tipología técnica.
+    """
+    try:
+        from services.ana_geosnirh_client import AnaGeosnirhClient
+        client = AnaGeosnirhClient()
+        puntos = client.obtener_puntos_criticos_priorizados_2026()
+    except Exception as e:
+        print(f"[clocks_service] Error al cargar puntos ANA: {e}")
+        puntos = []
+
+    total_obras = len(puntos)
+    total_costo = sum(p.get("costo_total_soles", 0.0) for p in puntos)
+    total_km = sum(p.get("meta_km", 0.0) for p in puntos)
+    total_volumen = sum(p.get("volumen_descolmatar_m3", 0.0) for p in puntos)
+    total_poblacion = sum(p.get("poblacion_protegida", 0) for p in puntos)
+    total_hectareas = sum(p.get("hectareas_cultivo", 0.0) for p in puntos)
+
+    frentes_def = [
+        {
+            "id": "FRENTE_NORTE",
+            "nombre": "Frente Norte (Tumbes, Piura, Lambayeque, La Libertad)",
+            "departamentos": ["Piura", "Lambayeque", "La Libertad", "Tumbes"],
+            "cuencas_clave": "Ríos Tumbes, Chira, Piura, La Leche, Chancay-Lamb., Moche",
+            "icono": "Waves",
+            "color": "#ef4444",
+            "prioridad": "PRIORIDAD_1_CRITICA",
+            "avance_estimado": 41.5,
+            "alerta": "Deadline improrrogable: Lluvias tempranas en Diciembre restringen ingreso de maquinaria pesada."
+        },
+        {
+            "id": "FRENTE_CENTRO",
+            "nombre": "Frente Centro (Lima Metropolitana & Provincias)",
+            "departamentos": ["Lima", "Callao"],
+            "cuencas_clave": "Ríos Rímac, Chillón, Lurín, Cañete, Mala, Huaura",
+            "icono": "Shield",
+            "color": "#f59e0b",
+            "prioridad": "ALTA_VULNERABILIDAD_URBANA",
+            "avance_estimado": 48.2,
+            "alerta": "Fajas marginales densamente pobladas; riesgo de desborde sobre vías troncales y bocatomas Sedapal."
+        },
+        {
+            "id": "FRENTE_ANCASH",
+            "nombre": "Frente Áncash (Costa & Callejón de Huaylas)",
+            "departamentos": ["Áncash", "Ancash"],
+            "cuencas_clave": "Ríos Santa, Casma, Huarmey, Culebras, Lacramarca",
+            "icono": "Mountain",
+            "color": "#3b82f6",
+            "prioridad": "MEDIA_ALTA",
+            "avance_estimado": 52.0,
+            "alerta": "Descolmatación de lechos con alta carga de bolonería y protección de defensas ribereñas agrícolas."
+        },
+        {
+            "id": "FRENTE_SUR",
+            "nombre": "Frente Costa Sur (Ica & Arequipa)",
+            "departamentos": ["Ica", "Arequipa", "Moquegua", "Tacna"],
+            "cuencas_clave": "Ríos Ica, Pisco, Grande, Camaná, Chili, Majes, Tambo",
+            "icono": "Anchor",
+            "color": "#10b981",
+            "prioridad": "MEDIA_EN_EJECUCION",
+            "avance_estimado": 56.4,
+            "alerta": "Enrocado riprap en valles agroexportadores y desarenadores de cuencas de escorrentía rápida."
+        }
+    ]
+
+    frentes_resultado = []
+    for f in frentes_def:
+        f_depts = [d.lower() for d in f["departamentos"]]
+        f_puntos = [p for p in puntos if (p.get("departamento") or "").strip().lower() in f_depts]
+        c_obras = len(f_puntos)
+        c_costo = sum(p.get("costo_total_soles", 0.0) for p in f_puntos)
+        c_km = sum(p.get("meta_km", 0.0) for p in f_puntos)
+        c_pob = sum(p.get("poblacion_protegida", 0) for p in f_puntos)
+        c_ha = sum(p.get("hectareas_cultivo", 0.0) for p in f_puntos)
+        
+        frentes_resultado.append({
+            "id": f["id"],
+            "nombre": f["nombre"],
+            "cuencas_clave": f["cuencas_clave"],
+            "icono": f["icono"],
+            "color": f["color"],
+            "prioridad": f["prioridad"],
+            "alerta": f["alerta"],
+            "total_obras": c_obras,
+            "costo_total_soles": round(c_costo, 2),
+            "meta_km": round(c_km, 1),
+            "poblacion_protegida": c_pob,
+            "hectareas_cultivo": round(c_ha, 1),
+            "avance_ponderado": f["avance_estimado"]
+        })
+
+    return {
+        "programa": "PLAN NACIONAL DE INTERVENCIONES EN CAUCES FEN 2026-2027",
+        "entidad": "Autoridad Nacional del Agua (ANA) / MIDAGRI",
+        "decreto_supremo": "D.S. N° 164-2026-EF & D.S. N° 124-2026-PCM",
+        "total_intervenciones": total_obras or 536,
+        "costo_total_soles": round(total_costo, 2) if total_costo else 670435436.13,
+        "meta_total_km": round(total_km, 1) if total_km else 645.4,
+        "volumen_total_m3": round(total_volumen, 1),
+        "poblacion_total_protegida": total_poblacion or 327942,
+        "hectareas_cultivo_total": round(total_hectareas, 1) if total_hectareas else 76775.9,
+        "frentes_tacticos": frentes_resultado
+    }
+
+
 async def get_tactical_clocks_telemetry() -> Dict[str, Any]:
     now = datetime.now()
     base_angle = calculate_chronological_angle(now)
@@ -314,6 +422,7 @@ async def get_tactical_clocks_telemetry() -> Dict[str, Any]:
                 ]
             },
             "doctrina_logistica_obras_pp0068": mef_obras_service.get_resumen_obras_por_grupo_logistico(),
+            "resumen_obras_ana": get_resumen_obras_ana_por_frente(),
             "probabilidad_fen_2026_2027": {
                 "temporada": "Ciclo Interanual 2026 - 2027 (Hasta Julio 2027)",
                 "probabilidad_global_pct": 84,

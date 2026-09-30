@@ -21,7 +21,7 @@ class TestModelAdapterEnjailment(unittest.TestCase):
 
     def test_local_deterministic_adapter_execution(self):
         adapter = LocalDeterministicAdapter()
-        self.assertEqual(adapter.get_provider_name(), "Motor Local Determinista SAGF-MC (Cero Alucinación / Offline-First)")
+        self.assertEqual(adapter.get_provider_name(), "Motor Local Determinista (Cero Alucinación / Offline-First / ISO 27037)")
 
         prompt = "Evaluación técnica estructurada y boletín oficial para Lurigancho-Chosica"
         res = asyncio.run(adapter.generate_json(prompt))

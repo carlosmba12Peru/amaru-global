@@ -438,7 +438,7 @@ class QilqayAgent:
             "Que, el Artículo 27 literal b de la Ley N.º 30225 faculta a las entidades a contratar directamente ante situaciones de emergencia derivadas de catástrofes o situaciones que supongan grave peligro;",
             f"Que, el distrito de {distrito} se encuentra formalmente comprendido en el D.S. N.º 124-2026-PCM, existiendo nexo causal directo entre el pronóstico hidrológico crítico y la necesidad de ejecutar intervenciones inmediatas;",
             "Que, someter estas contrataciones a licitaciones o adjudicaciones simplificadas clásicas demoraría entre 45 y 60 días hábiles, tiempo durante el cual sobrevendrá el pico de precipitaciones pluviales con riesgo irremediable para la vida humana;",
-            f"Que, la presente justificación incorpora matrices objetivas Saaty AHP 4x4 y cuenta con trazabilidad inmutable bajo el estándar SAGF-MC.{extra_instruccion}"
+            f"Que, la presente justificación incorpora matrices objetivas Saaty AHP 4x4 y cuenta con trazabilidad inmutable y sellado de tiempo bajo NTP-ISO/IEC 27037:2012 y RFC 3161.{extra_instruccion}"
         ]
 
         articulos = [
@@ -663,7 +663,7 @@ class QilqayAgent:
             "Ley N.º 29735, Ley que regula el uso, preservación, desarrollo, recuperación, fomento y difusión de las lenguas originarias del Perú.",
             "Decreto Supremo N.º 004-2016-MC, Reglamento de la Ley N.º 29735.",
             "Artículo 220 del Código Procesal Penal (Prueba e informe pericial de traductores e intérpretes).",
-            "Estándar SAGF-MC Módulo 5 (Trazabilidad Forense Dual: Despacho Táctico y Respaldo Forense)."
+            "NTP-ISO/IEC 27037:2012 (Trazabilidad Forense Dual: Despacho Táctico Inmediato y Respaldo Pericial con Hash SHA-256)."
         ]
 
         extra_instruccion = f"\nParámetro pericial adicional: {req.instrucciones_adicionales}" if req.instrucciones_adicionales else ""

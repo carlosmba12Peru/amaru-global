@@ -12,5 +12,6 @@ google-cloud-bigquery==3.21.0
 reportlab==4.2.2
 qrcode==7.4.2
 pypdf==6.18.1
+Pillow>=10.0.0
 xlrd==2.0.2
 python-multipart>=0.0.9

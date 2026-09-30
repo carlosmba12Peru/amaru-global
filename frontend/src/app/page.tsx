@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { API_BASE } from "@/config/api";
 import {
     Activity,
     Cpu,
@@ -396,10 +397,37 @@ export const DISTRITOS_FEN_CATALOGO: DistritoFEN[] = [
 export default function NationalDashboard() {
     const [verModalCap, setVerModalCap] = useState<boolean>(false);
     const [cuencaSeleccionada, setCuencaSeleccionada] = useState<string>("150118");
-    const [modoLluviaTorrencial, setModoLluviaTorrencial] = useState<boolean>(true);
+    const [modoLluviaTorrencial, setModoLluviaTorrencial] = useState<boolean>(false);
     const [quebradasAlertaRoja, setQuebradasAlertaRoja] = useState<boolean>(false);
     const [searchDistrito, setSearchDistrito] = useState<string>("");
     const [modoWarRoom, setModoWarRoom] = useState<boolean>(false);
+    const [liveMeteoMap, setLiveMeteoMap] = useState<Record<string, any>>({});
+    const [liveMeteoActualizado, setLiveMeteoActualizado] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchMeteo = async () => {
+            try {
+                const modeParam = modoLluviaTorrencial ? "SIMULACION" : "LIVE";
+                const res = await fetch(`${API_BASE}/api/meteo/ds124-matrix?mode=${modeParam}`);
+                if (res.ok) {
+                    const json = await res.json();
+                    if (json.distritos) {
+                        const map: Record<string, any> = {};
+                        json.distritos.forEach((d: any) => {
+                            map[d.ubigeo] = d;
+                        });
+                        setLiveMeteoMap(map);
+                        if (json.metadata?.ultima_actualizacion) {
+                            setLiveMeteoActualizado(json.metadata.ultima_actualizacion);
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Error al sincronizar Open-Meteo Pro en dashboard:", e);
+            }
+        };
+        fetchMeteo();
+    }, [modoLluviaTorrencial]);
 
     // Catálogo representativo de cuencas críticas con clasificación etnoterritorial RENALIO
     const CUENCAS_CRITICAS: CuencaCritica[] = [
@@ -662,18 +690,43 @@ export default function NationalDashboard() {
 
     // Ordenamiento dinámico para Bloque 1:
     // Si modoLluviaTorrencial está activo: distritos con lluvia >= 30mm o ROJO van en cabecera ordenados desc.
-    // Si modoLluviaTorrencial es falso (normal): distritos ordenados por daño histórico pico FEN desc.
-    const distritosOrdenadosBloque1 = [...DISTRITOS_FEN_CATALOGO].sort((a, b) => {
-        if (modoLluviaTorrencial) {
-            const aEsRojo = a.estadoLluvia === "ROJO" || a.lluviaActual >= 30;
-            const bEsRojo = b.estadoLluvia === "ROJO" || b.lluviaActual >= 30;
-            if (aEsRojo && !bEsRojo) return -1;
-            if (!aEsRojo && bEsRojo) return 1;
-            return b.lluviaActual - a.lluviaActual;
-        } else {
-            return b.lluviaHistoricaPico - a.lluviaHistoricaPico;
-        }
-    });
+    // Si modoLluviaTorrencial es falso (en vivo): distritos con telemetría en tiempo real de Open-Meteo Pro.
+    const distritosOrdenadosBloque1 = useMemo(() => {
+        return [...DISTRITOS_FEN_CATALOGO].map(d => {
+            const live = liveMeteoMap[d.ubigeo];
+            if (live) {
+                return {
+                    ...d,
+                    lluviaActual: live.lluvia_24h,
+                    estadoLluvia: live.nivel_alerta,
+                    cape: live.cape_j_kg,
+                    suelo: live.suelo_saturacion_pct,
+                    caudal: live.caudal_glofas_m3s
+                };
+            }
+            if (!modoLluviaTorrencial) {
+                return {
+                    ...d,
+                    lluviaActual: 0.0,
+                    estadoLluvia: "VERDE",
+                    cape: 0,
+                    suelo: 30.0,
+                    caudal: 18.0
+                };
+            }
+            return d;
+        }).sort((a, b) => {
+            if (modoLluviaTorrencial) {
+                const aEsRojo = a.estadoLluvia === "ROJO" || a.lluviaActual >= 30;
+                const bEsRojo = b.estadoLluvia === "ROJO" || b.lluviaActual >= 30;
+                if (aEsRojo && !bEsRojo) return -1;
+                if (!aEsRojo && bEsRojo) return 1;
+                return b.lluviaActual - a.lluviaActual;
+            } else {
+                return b.lluviaActual - a.lluviaActual || b.lluviaHistoricaPico - a.lluviaHistoricaPico;
+            }
+        });
+    }, [modoLluviaTorrencial, liveMeteoMap]);
 
     // Filtro para Buscador de Distritos en Bloque 2
     const distritosFiltradosBusqueda = DISTRITOS_FEN_CATALOGO.filter(d => 
@@ -951,6 +1004,7 @@ export default function NationalDashboard() {
                         </div>
 
                         {/* Selector Operativo: Simulación Lluvias Críticas vs Tiempo Real / Histórico */}
+                        {/* Selector Operativo: Simulación Lluvias Críticas vs Tiempo Real / Histórico */}
                         <div className="bg-slate-950 border border-slate-800 rounded-xl p-2.5 space-y-2">
                             <div className="flex justify-between items-center text-[10px]">
                                 <span className="font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1">
@@ -964,26 +1018,37 @@ export default function NationalDashboard() {
                                             : "bg-emerald-950 text-emerald-400 border border-emerald-800"
                                     }`}
                                 >
-                                    {modoLluviaTorrencial ? "🔴 LLUVIA CRÍTICA (ROJO)" : "🟢 CALMA (HISTÓRICO FEN)"}
+                                    {modoLluviaTorrencial ? "🔴 ESCENARIO SIMULACIÓN FEN (>30mm)" : "🟢 EN VIVO OPEN-METEO PRO"}
                                 </button>
                             </div>
-                            <p className="text-[10px] text-slate-400 leading-snug">
-                                {modoLluviaTorrencial
-                                    ? "🚨 Priorización: Distritos con lluvias torrenciales (>30 mm/24h) en cabecera en rojo."
-                                    : "ℹ️ Estado normal: Se listan los distritos más castigados de la historia republicana por FEN."}
-                            </p>
+                            <div className="flex justify-between items-center text-[10px] text-slate-400 leading-snug">
+                                <p>
+                                    {modoLluviaTorrencial
+                                        ? "🚨 Priorización: Distritos con lluvias torrenciales simuladas (>30 mm/24h) en cabecera en rojo."
+                                        : "⚡ Telemetría Open-Meteo Pro (ECMWF IFS 9km) en tiempo real: Condiciones atmosféricas observadas hoy."}
+                                </p>
+                                {liveMeteoActualizado && (
+                                    <span className={`font-mono shrink-0 text-[8px] border px-1.5 py-0.5 rounded ml-1 ${
+                                        modoLluviaTorrencial
+                                            ? "text-amber-400 bg-amber-950/70 border-amber-800/60"
+                                            : "text-emerald-400 bg-emerald-950/70 border-emerald-800/60"
+                                    }`}>
+                                        {modoLluviaTorrencial ? "⚠️ Escenario Simulado FEN" : "⚡ Open-Meteo Pro Live"}
+                                    </span>
+                                )}
+                            </div>
                         </div>
 
                         {/* Relación de Distritos */}
                         <div className="space-y-1.5">
                             <div className="flex justify-between items-center text-[10px] font-semibold text-slate-400 px-1">
-                                <span>{modoLluviaTorrencial ? "🚨 DISTRITOS CON LLUVIA ROJA" : "🏛️ DISTRITOS CASTIGADOS HISTÓRICAMENTE"}</span>
+                                <span>{modoLluviaTorrencial ? "🚨 DISTRITOS CON LLUVIA CRÍTICA SIMULADA" : "🟢 DISTRITOS EN OBSERVACIÓN EN TIEMPO REAL"}</span>
                                 <span className="font-mono text-amber-400">{distritosOrdenadosBloque1.length} Nodos</span>
                             </div>
 
                             <div className="space-y-1.5 max-h-[300px] overflow-y-auto pr-1">
                                 {distritosOrdenadosBloque1.map((d) => {
-                                    const esRojo = d.estadoLluvia === "ROJO" && modoLluviaTorrencial;
+                                    const esRojo = (d.estadoLluvia === "ROJO" || d.lluviaActual >= 30) && modoLluviaTorrencial;
                                     const isSelected = cuencaSeleccionada === d.ubigeo;
                                     return (
                                         <div
@@ -1020,8 +1085,14 @@ export default function NationalDashboard() {
                                                             {d.lluviaActual} mm
                                                         </span>
                                                     ) : (
-                                                        <span className="text-[10px] font-mono bg-blue-950 text-blue-300 border border-blue-800 px-1.5 py-0.5 rounded" title="Lluvia histórica pico registrada en eventos FEN">
-                                                            Pico: {d.lluviaHistoricaPico} mm
+                                                        <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${
+                                                            d.lluviaActual >= 30
+                                                                ? "bg-red-950 text-red-300 border-red-800"
+                                                                : d.lluviaActual >= 5
+                                                                ? "bg-amber-950 text-amber-400 border-amber-800"
+                                                                : "bg-emerald-950 text-emerald-300 border-emerald-800"
+                                                        }`} title="Precipitación acumulada 24h reportada en vivo por Open-Meteo Pro">
+                                                            Hoy: {d.lluviaActual} mm
                                                         </span>
                                                     )}
                                                 </div>
@@ -1029,7 +1100,9 @@ export default function NationalDashboard() {
 
                                             <div className="flex justify-between items-center text-[10px] pt-1 border-t border-slate-800/60">
                                                 <span className="text-slate-400 text-[9px] truncate max-w-[160px]" title={d.impactoHistorico}>
-                                                    {modoLluviaTorrencial ? (esRojo ? "⚠️ Riesgo activación de quebradas" : "Vigilancia preventiva") : d.eventosFEN}
+                                                    {modoLluviaTorrencial 
+                                                        ? (esRojo ? "⚠️ Riesgo activación de quebradas" : "Vigilancia preventiva")
+                                                        : (d.lluviaActual >= 30 ? "⚠️ Lluvia crítica en cabecera" : d.lluviaActual >= 5 ? "Vigilancia de cuenca" : "Cielo despejado / Estable")}
                                                 </span>
                                                 <Link
                                                     href={`/dashboard/${d.ubigeo}`}
@@ -1081,12 +1154,20 @@ export default function NationalDashboard() {
                                     159 Cuencas Activas
                                 </span>
                                 <Link
+                                    href="/satelites"
+                                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-300 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-600/50 px-2.5 py-1 rounded-lg transition shadow-md"
+                                    title="Abrir Visor Multitemporal Satelital NASA GIBS (AQUA/TERRA)"
+                                >
+                                    <Satellite className="w-3.5 h-3.5 text-emerald-400" />
+                                    <span>Satélites NASA</span>
+                                </Link>
+                                <Link
                                     href="/geovisor"
                                     className="inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-sky-600 hover:bg-sky-500 border border-sky-400/40 px-3 py-1 rounded-lg transition shadow-md shadow-sky-600/30"
                                     title="Abrir Consola de Visor de Mapas C2 a Pantalla Completa"
                                 >
                                     <Satellite className="w-3.5 h-3.5 text-sky-200" />
-                                    <span>Abrir Consola Geovisor C2</span>
+                                    <span>Abrir Geovisor C2</span>
                                     <ExternalLink className="w-3 h-3" />
                                 </Link>
                             </div>

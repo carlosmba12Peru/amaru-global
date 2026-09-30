@@ -211,7 +211,7 @@ export default function DistrictWeatherInspector({
                         return {
                             index: idx,
                             date: dateStr,
-                            day_short: idx === 0 ? "Hoy" : idx === 1 ? "Mañana" : dayShort,
+                            day_short: idx === 0 ? "Hoy" : idx === 1 ? "Mañ" : dayShort,
                             date_formatted: `${dayShort} ${d.getUTCDate()}`,
                             temp_max: Math.round(om.daily.temperature_2m_max?.[idx] ?? 22),
                             temp_min: Math.round(om.daily.temperature_2m_min?.[idx] ?? 12),

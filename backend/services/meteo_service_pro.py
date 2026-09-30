@@ -145,7 +145,9 @@ class MeteoServicePro:
         lats_s = ",".join(str(c["lat"]) for c in centroides.values())
         lngs_s = ",".join(str(c["lng"]) for c in centroides.values())
 
-        url = f"https://api.open-meteo.com/v1/forecast?latitude={lats_s}&longitude={lngs_s}&daily=precipitation_sum,wind_gusts_10m_max,temperature_2m_max,temperature_2m_min,weather_code&timezone=America/Lima&forecast_days=1"
+        # Intentar primero con Customer API Professional si hay API_KEY, luego fallback a API estándar
+        base_endpoint = "https://customer-api.open-meteo.com/v1/forecast" if API_KEY else "https://api.open-meteo.com/v1/forecast"
+        url = f"{base_endpoint}?latitude={lats_s}&longitude={lngs_s}&daily=precipitation_sum,wind_gusts_10m_max,temperature_2m_max,temperature_2m_min,weather_code&hourly=precipitation,cape,soil_moisture_28_to_100cm&timezone=America/Lima&forecast_days=1&models=ecmwf_ifs025"
         if API_KEY:
             url += f"&apikey={API_KEY}"
 
@@ -156,32 +158,43 @@ class MeteoServicePro:
                 url,
                 headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"}
             )
-            with urllib.request.urlopen(req, timeout=12.0) as response:
-                if response.status == 200:
-                    res_list = json.loads(response.read().decode("utf-8"))
-                    if isinstance(res_list, list):
-                        for dep, item in zip(centroides.keys(), res_list):
-                            precip = (item.get("daily", {}).get("precipitation_sum", [0]) or [0])[0] or 0.0
-                            wind = (item.get("daily", {}).get("wind_gusts_10m_max", [15]) or [15])[0] or 15.0
-                            tmax = (item.get("daily", {}).get("temperature_2m_max", [24]) or [24])[0] or 24.0
-                            tmin = (item.get("daily", {}).get("temperature_2m_min", [15]) or [15])[0] or 15.0
-                            wcode = (item.get("daily", {}).get("weather_code", [1]) or [1])[0] or 1
+            try:
+                response = urllib.request.urlopen(req, timeout=12.0)
+            except Exception:
+                # Fallback a endpoint estándar sin modelo restrictivo si el customer/modelo falla
+                fallback_url = f"https://api.open-meteo.com/v1/forecast?latitude={lats_s}&longitude={lngs_s}&daily=precipitation_sum,wind_gusts_10m_max,temperature_2m_max,temperature_2m_min,weather_code&hourly=precipitation,cape,soil_moisture_28_to_100cm&timezone=America/Lima&forecast_days=1"
+                if API_KEY:
+                    fallback_url += f"&apikey={API_KEY}"
+                fallback_req = urllib.request.Request(fallback_url, headers={"User-Agent": "Mozilla/5.0"})
+                response = urllib.request.urlopen(fallback_req, timeout=12.0)
 
-                            # Valores físicos en estiaje / tiempo real
-                            cape = 80.0 if float(precip) < 1.0 else 450.0
-                            soil = 28.5 if float(precip) < 1.0 else 55.0
+            if response.status == 200:
+                res_list = json.loads(response.read().decode("utf-8"))
+                if isinstance(res_list, list):
+                    for dep, item in zip(centroides.keys(), res_list):
+                        precip = (item.get("daily", {}).get("precipitation_sum", [0]) or [0])[0] or 0.0
+                        wind = (item.get("daily", {}).get("wind_gusts_10m_max", [15]) or [15])[0] or 15.0
+                        tmax = (item.get("daily", {}).get("temperature_2m_max", [24]) or [24])[0] or 24.0
+                        tmin = (item.get("daily", {}).get("temperature_2m_min", [15]) or [15])[0] or 15.0
+                        wcode = (item.get("daily", {}).get("weather_code", [1]) or [1])[0] or 1
 
-                            result_map[dep] = {
-                                "precip_24h": round(float(precip), 1),
-                                "cape": round(float(cape), 0),
-                                "soil_moisture": soil,
-                                "wind_gusts": round(float(wind), 1),
-                                "tmax": round(float(tmax), 1),
-                                "tmin": round(float(tmin), 1),
-                                "weather_code": int(wcode)
-                            }
-                        cls._dept_live_cache = result_map
-                        cls._dept_cache_timestamp = now
+                        hourly_cape = item.get("hourly", {}).get("cape", [])
+                        cape_val = max(hourly_cape[:24]) if hourly_cape else (80.0 if float(precip) < 1.0 else 450.0)
+
+                        hourly_soil = item.get("hourly", {}).get("soil_moisture_28_to_100cm", [])
+                        soil_val = round(float((hourly_soil[0] if hourly_soil else 0.35) * 100), 1)
+
+                        result_map[dep] = {
+                            "precip_24h": round(float(precip), 1),
+                            "cape": round(float(cape_val), 0),
+                            "soil_moisture": soil_val,
+                            "wind_gusts": round(float(wind), 1),
+                            "tmax": round(float(tmax), 1),
+                            "tmin": round(float(tmin), 1),
+                            "weather_code": int(wcode)
+                        }
+                    cls._dept_live_cache = result_map
+                    cls._dept_cache_timestamp = now
         except Exception as e:
             print(f"[MeteoServicePro Warning] Falló consulta batch Open-Meteo: {e}")
 
@@ -321,75 +334,27 @@ class MeteoServicePro:
                 tmax = round(26.0 + (h * 0.08) if lat > -12 else 20.0 + (h * 0.07), 1)
                 tmin = round(18.0 + (h2 * 0.06) if lat > -12 else 11.0 + (h2 * 0.05), 1)
 
-            # Clasificación del Semáforo Estricto según Open-Meteo
-            if rain_24h >= 50.0:
+            # Clasificación del Semáforo Estricto según Open-Meteo y D.S. 124 (>30 mm/24h en cabecera en ROJO)
+            if rain_24h >= 30.0:
                 nivel = "ROJO"
-                desc_clima = "Lluvia Torrencial / Alarma Extrema"
+                wmo_code = 95 if cape > 1200 else 65
+                desc_clima = "Lluvia Torrencial Crítica / Alarma Extrema"
                 prob_lluvia = 95
-            elif rain_24h >= 25.0:
+            elif rain_24h >= 15.0:
                 nivel = "NARANJA"
+                wmo_code = 80 if cape > 800 else 63
                 desc_clima = "Lluvia Fuerte / Riesgo de Huaico"
                 prob_lluvia = 85
-            elif rain_24h >= 10.0:
-                nivel = "AMARILLO"
-                desc_clima = "Lluvia Moderada / Vigilancia"
-                prob_lluvia = 65
-            else:
-                nivel = "VERDE"
-                desc_clima = "Precipitación Ligera o Nula" if rain_24h < 2.0 else "Llovizna Débil"
-                prob_lluvia = 25
-
-            conteo_alertas[nivel] += 1
-            if nivel in ["ROJO", "NARANJA"]:
-                poblacion_riesgo_extremo += pob
-
-            elif dept in ["ICA", "HUANUCO", "PASCO", "JUNIN"]:
-                rain_24h = 10.0 + (h * 0.30)
-                cape = 650 + (h2 * 5.0)
-                soil_base = 55.0 + (h * 0.28)
-                wind = 20.0 + (h2 * 0.22)
-                glofas = 150.0 + (h * 3.0)
-            elif dept in ["HUANCAVELICA", "AYACUCHO", "CUSCO", "LORETO", "MADRE DE DIOS"]:
-                rain_24h = 6.0 + (h * 0.25)
-                cape = 500 + (h2 * 4.5)
-                soil_base = 45.0 + (h * 0.30)
-                wind = 18.0 + (h2 * 0.18)
-                glofas = 110.0 + (h * 2.5)
-            else: # AREQUIPA, MOQUEGUA, TACNA, PUNO
-                rain_24h = 2.0 + (h * 0.16)
-                cape = 350 + (h2 * 3.5)
-                soil_base = 35.0 + (h * 0.25)
-                wind = 15.0 + (h2 * 0.15)
-                glofas = 65.0 + (h * 1.5)
-
-            rain_24h = round(rain_24h, 1)
-            rain_72h = round(rain_24h * (1.9 + (h2 * 0.008)), 1)
-            cape = round(cape, 0)
-            soil_critico = min(98.0, round(soil_base, 1))
-            wind = round(wind, 1)
-            glofas = round(glofas, 1)
-
-            # Clasificación de color estricta según el requerimiento
-            if rain_24h >= 50.0:
-                nivel = "ROJO"
-                wmo_code = 95 if cape > 1400 else 65
-                desc_clima = "Lluvia Torrencial / Tormenta Severa"
-                prob_lluvia = 95
-            elif rain_24h >= 25.0:
-                nivel = "NARANJA"
-                wmo_code = 80 if cape > 1100 else 63
-                desc_clima = "Lluvia Fuerte / Riesgo de Huaico"
-                prob_lluvia = 85
-            elif rain_24h >= 10.0:
+            elif rain_24h >= 5.0:
                 nivel = "AMARILLO"
                 wmo_code = 61
                 desc_clima = "Lluvia Moderada / Vigilancia"
                 prob_lluvia = 65
             else:
                 nivel = "VERDE"
-                wmo_code = 51 if rain_24h > 3.0 else 3
-                desc_clima = "Precipitación Ligera / Normal"
-                prob_lluvia = 30
+                wmo_code = 51 if rain_24h > 1.0 else 3
+                desc_clima = "Precipitación Ligera o Nula" if rain_24h < 1.0 else "Llovizna Débil"
+                prob_lluvia = 25
 
             conteo_alertas[nivel] += 1
             if nivel in ["ROJO", "NARANJA"]:
@@ -430,6 +395,105 @@ class MeteoServicePro:
                 "temp_min": round(18.0 + (h2 * 0.06) if lat > -12 else 11.0 + (h2 * 0.05), 1)
             })
 
+        # Nodos auxiliares del Catálogo COEN (Nieva, Urubamba, SJL, Mazocruz)
+        nodos_auxiliares = [
+            {"ubigeo": "010401", "departamento": "AMAZONAS", "provincia": "CONDORCANQUI", "distrito": "NIEVA", "latitud": -4.59, "longitud": -77.86, "poblacion_estimada": 25000},
+            {"ubigeo": "081301", "departamento": "CUSCO", "provincia": "URUBAMBA", "distrito": "URUBAMBA", "latitud": -13.30, "longitud": -72.11, "poblacion_estimada": 22000},
+            {"ubigeo": "150132", "departamento": "LIMA", "provincia": "LIMA", "distrito": "SAN JUAN DE LURIGANCHO", "latitud": -11.98, "longitud": -76.99, "poblacion_estimada": 1100000},
+            {"ubigeo": "210505", "departamento": "PUNO", "provincia": "EL COLLAO", "distrito": "SANTA ROSA", "latitud": -16.98, "longitud": -69.67, "poblacion_estimada": 7000}
+        ]
+
+        total_ds124 = len(distritos_ds124)
+        for d_aux in nodos_auxiliares:
+            ubigeo = d_aux["ubigeo"]
+            dept = d_aux["departamento"]
+            prov = d_aux["provincia"]
+            dist = d_aux["distrito"]
+            lat = d_aux["latitud"]
+            lng = d_aux["longitud"]
+            pob = d_aux["poblacion_estimada"]
+            h = int(hashlib.md5(ubigeo.encode()).hexdigest()[:6], 16) % 100
+            h2 = int(hashlib.sha256(ubigeo.encode()).hexdigest()[:6], 16) % 100
+
+            if is_live_active and dept in live_dept_data:
+                tele = live_dept_data[dept]
+                base_rain = tele["precip_24h"]
+                rain_24h = max(0.0, round(base_rain + ((h - 50) * 0.005 * base_rain), 1))
+                rain_72h = round(rain_24h * 1.8, 1)
+                cape = max(0.0, round(tele["cape"] + ((h2 - 50) * 0.05 * tele["cape"]), 0))
+                soil_critico = min(99.0, max(15.0, round(tele["soil_moisture"] + ((h - 50) * 0.05), 1)))
+                wind = max(5.0, round(tele["wind_gusts"] + ((h2 - 50) * 0.05), 1))
+                glofas = max(10.0, round(45.0 + (rain_24h * 12.0) + (h * 0.2), 1))
+                wmo_code = tele["weather_code"]
+                tmax = tele["tmax"]
+                tmin = tele["tmin"]
+            else:
+                if mode == "SIMULACION":
+                    rain_24h = 45.0 + (h * 0.3) if dept in ["AMAZONAS", "CUSCO"] else 15.0
+                    cape = 1200 + (h2 * 7.0)
+                    soil_critico = 85.0
+                    wind = 25.0
+                    glofas = 350.0
+                    wmo_code = 95
+                    tmax = 30.0
+                    tmin = 20.0
+                else:
+                    rain_24h = 0.0
+                    cape = 0.0
+                    soil_critico = 25.0
+                    wind = 14.0
+                    glofas = 15.0
+                    wmo_code = 1
+                    tmax = 25.0
+                    tmin = 18.0
+                rain_72h = round(rain_24h * 1.5, 1)
+
+            if rain_24h >= 30.0:
+                nivel = "ROJO"
+                desc_clima = "Lluvia Torrencial Crítica / Alarma Extrema"
+                prob_lluvia = 95
+            elif rain_24h >= 15.0:
+                nivel = "NARANJA"
+                desc_clima = "Lluvia Fuerte / Riesgo de Huaico"
+                prob_lluvia = 85
+            elif rain_24h >= 5.0:
+                nivel = "AMARILLO"
+                desc_clima = "Lluvia Moderada / Vigilancia"
+                prob_lluvia = 65
+            else:
+                nivel = "VERDE"
+                desc_clima = "Precipitación Ligera o Nula" if rain_24h < 1.0 else "Llovizna Débil"
+                prob_lluvia = 20
+
+            items.append({
+                "ubigeo": ubigeo,
+                "departamento": dept,
+                "provincia": prov,
+                "distrito": dist,
+                "latitud": lat,
+                "longitud": lng,
+                "poblacion": pob,
+                "lluvia_24h": rain_24h,
+                "lluvia_72h": rain_72h,
+                "nivel_alerta": nivel,
+                "cape_j_kg": cape,
+                "suelo_saturacion_pct": soil_critico,
+                "suelo_4_capas": {
+                    "superficial_0_7cm": min(100.0, round(soil_critico * 1.05, 1)),
+                    "radicular_7_28cm": min(100.0, round(soil_critico * 1.02, 1)),
+                    "talud_28_100cm": soil_critico,
+                    "profunda_100_255cm": max(20.0, round(soil_critico * 0.88, 1))
+                },
+                "viento_rafagas_kmh": wind,
+                "probabilidad_lluvia_pct": prob_lluvia,
+                "caudal_glofas_m3s": glofas,
+                "weather_code": wmo_code,
+                "descripcion_clima": desc_clima,
+                "temp_max": tmax,
+                "temp_min": tmin,
+                "declarado_ds124": False
+            })
+
         # Top 10 distritos
         top_10 = sorted(items, key=lambda x: x["lluvia_24h"], reverse=True)[:10]
 
@@ -438,20 +502,20 @@ class MeteoServicePro:
             "metadata": {
                 "norma": "Decreto Supremo Nº 124-2026-PCM",
                 "asunto": "Declaratoria de Emergencia por peligro inminente ante intensas precipitaciones pluviales y Fenómeno El Niño 2026-2027",
-                "total_distritos_declarados": len(items),
+                "total_distritos_declarados": total_ds124,
                 "modo_operativo": "OPEN_METEO_LIVE" if is_live_active else "SIMULACION_CONTINGENCIA_FEN",
                 "conectado_open_meteo_live": is_live_active,
                 "fuente_meteorologica": "Open-Meteo Professional ECMWF IFS 9km en tiempo real" if is_live_active else "Open-Meteo / Modelo de Contingencia FEN (CENEPRED)",
                 "ultima_actualizacion": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "reglas_semaforo": {
-                    "ROJO": ">= 50 mm (Extrema / Torrencial)",
-                    "NARANJA": "25 - 50 mm (Fuerte / Riesgo Huaico)",
-                    "AMARILLO": "10 - 25 mm (Moderada / Vigilancia)",
-                    "VERDE": "< 10 mm (Ligera / Normal)"
+                    "ROJO": ">= 30 mm/24h (Lluvia Torrencial Crítica / Alarma Extrema)",
+                    "NARANJA": "15 - 30 mm/24h (Lluvia Fuerte / Riesgo Huaico)",
+                    "AMARILLO": "5 - 15 mm/24h (Lluvia Moderada / Vigilancia)",
+                    "VERDE": "< 5 mm/24h (Ligera o Normal)"
                 }
             },
             "estadisticas": {
-                "total_distritos": len(items),
+                "total_distritos": total_ds124,
                 "conteo_alertas": conteo_alertas,
                 "poblacion_total_expuesta": poblacion_total,
                 "poblacion_riesgo_extremo": poblacion_riesgo_extremo,
@@ -686,7 +750,7 @@ class MeteoServicePro:
         h_wcodes = hourly_data.get("weather_code", [])
         h_probs = hourly_data.get("precipitation_probability", [])
 
-        days_es = ["Hoy", "Mañ", "Sáb", "Dom", "Lun", "Mar", "Mié"]
+        dias_semana_es = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]
         months_es = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SET", "OCT", "NOV", "DIC"]
 
         num_days = min(7, len(d_times)) if d_times else 7
@@ -700,7 +764,8 @@ class MeteoServicePro:
                 except Exception:
                     pass
 
-            day_label = days_es[i] if i < len(days_es) else day_dt.strftime("%a")
+            weekday_name = dias_semana_es[day_dt.weekday()]
+            day_label = "Hoy" if i == 0 else "Mañ" if i == 1 else weekday_name
             date_formatted = f"{day_dt.day} {months_es[day_dt.month - 1]}"
 
             tmax_val = d_tmax[i] if i < len(d_tmax) and d_tmax[i] is not None else (10.0 + (i % 3))

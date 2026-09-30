@@ -50,7 +50,13 @@ class SenamhiObservatorioConnector(BaseSourceConnector):
         if os.path.exists(CACHE_FILE):
             try:
                 with open(CACHE_FILE, "r", encoding="utf-8") as f:
-                    self._estaciones_cache = json.load(f)
+                    content = json.load(f)
+                    if isinstance(content, dict) and "data" in content:
+                        self._estaciones_cache = content["data"]
+                    elif isinstance(content, list):
+                        self._estaciones_cache = content
+                    else:
+                        self._estaciones_cache = []
             except Exception:
                 self._estaciones_cache = []
 
@@ -195,7 +201,7 @@ class SenamhiObservatorioConnector(BaseSourceConnector):
         """
         Encuentra la estación SENAMHI más cercana usando la fórmula de Haversine.
         """
-        candidatas = self._estaciones_cache
+        candidatas = [e for e in self._estaciones_cache if isinstance(e, dict)]
         if tipo:
             candidatas = [e for e in candidatas if e.get("typeId") == tipo.upper()]
         if solo_automaticas:

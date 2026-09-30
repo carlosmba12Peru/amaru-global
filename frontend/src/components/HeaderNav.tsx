@@ -99,12 +99,28 @@ export default function HeaderNav() {
             badgeColor: ""
         },
         {
+            href: "/simulacion",
+            label: "Simulación Mega-FEN",
+            pillar: "NACIONAL",
+            icon: Zap,
+            badge: "ESTRÉS 26-27",
+            badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40 animate-pulse font-bold"
+        },
+        {
             href: "/geovisor",
             label: "Geovisor C2",
             pillar: "NACIONAL",
             icon: Satellite,
             badge: "3D",
             badgeColor: "bg-sky-500/20 text-sky-300 border-sky-500/40"
+        },
+        {
+            href: "/satelites",
+            label: "Satélites NASA",
+            pillar: "NACIONAL",
+            icon: Satellite,
+            badge: "AQUA/TERRA",
+            badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
         },
         {
             href: "/imarpe",
@@ -183,7 +199,7 @@ export default function HeaderNav() {
             label: "Auditoría Forense",
             pillar: "NACIONAL",
             icon: ShieldAlert,
-            badge: "SAGF-MC",
+            badge: "ISO 27037",
             badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
         },
         {
@@ -257,7 +273,7 @@ export default function HeaderNav() {
             label: "Plan Piura 2026-27",
             pillar: "MUNICIPAL",
             icon: Building2,
-            badge: "COEP FEN",
+            badge: "EPICENTRO FEN",
             badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
         },
         {
@@ -270,10 +286,10 @@ export default function HeaderNav() {
         },
         {
             href: "/planes",
-            label: "Planes FEN 2026-27",
+            label: "Planes de Contingencia C2",
             pillar: "MUNICIPAL",
             icon: FileText,
-            badge: "AMARU-PLAN",
+            badge: "NACIONAL 2026-27",
             badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
         },
         {
@@ -291,6 +307,14 @@ export default function HeaderNav() {
             icon: Zap,
             badge: "893 D.S. 124",
             badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40"
+        },
+        {
+            href: "/pronostico",
+            label: "Predictivo 7 Días & EAP",
+            pillar: "MUNICIPAL",
+            icon: Clock,
+            badge: "T-144h / 72h / 24h",
+            badgeColor: "bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold animate-pulse"
         },
 
         // ==================== PILAR 3: COEN SOCIAL DIGITAL ====================

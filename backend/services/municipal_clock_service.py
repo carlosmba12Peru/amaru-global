@@ -224,6 +224,36 @@ class MunicipalClockService:
                 f"con cargo al Programa Presupuestal 0068."
             )
 
+        # Memoria Histórica Oficial FEN (1982-1983, 1997-1998, 2017)
+        # REGLA ESTRICTA: Sin datos sintéticos ni mock. Si no existe en el catálogo oficial, null / mensaje explícito.
+        memoria_raw = getattr(historical_data_service, "memoria_historica_distritos", {}).get(ubigeo)
+        tiene_datos_reales = False
+        memoria_clean = None
+        
+        if memoria_raw and isinstance(memoria_raw, dict):
+            # Se valida existencia de contenido empírico documentado
+            if (memoria_raw.get("resumen_historico") or 
+                memoria_raw.get("eventos_historicos") or 
+                memoria_raw.get("impacto_agropecuario_minag") or 
+                memoria_raw.get("impacto_educativo") or
+                memoria_raw.get("impacto_sanitario_epidemiologico")):
+                tiene_datos_reales = True
+                memoria_clean = {
+                    "ubigeo": memoria_raw.get("ubigeo", ubigeo),
+                    "distrito": memoria_raw.get("distrito", nombre_dist),
+                    "provincia": memoria_raw.get("provincia", nombre_prov),
+                    "departamento": memoria_raw.get("departamento", nombre_dep),
+                    "nivel_riesgo_cenepred": memoria_raw.get("nivel_riesgo_cenepred", "Sin dato"),
+                    "resumen_historico": memoria_raw.get("resumen_historico", ""),
+                    "eventos_historicos": memoria_raw.get("eventos_historicos", []),
+                    "impacto_agropecuario_minag": memoria_raw.get("impacto_agropecuario_minag", {}),
+                    "impacto_educativo": memoria_raw.get("impacto_educativo", {}),
+                    "impacto_sanitario_epidemiologico": memoria_raw.get("impacto_sanitario_epidemiologico", {}),
+                    "impacto_fisico_hidrologico": memoria_raw.get("impacto_fisico_hidrologico", {}),
+                    "lecciones_aprendidas_caf_indeci": memoria_raw.get("lecciones_aprendidas_caf_indeci", []),
+                    "fuente_documental": memoria_raw.get("fuente_documental", "Catálogo Oficial FEN (MINAGRI/INDECI/CAF/CENEPRED)")
+                }
+
         return {
             "ubigeo": ubigeo,
             "distrito": nombre_dist,
@@ -248,7 +278,9 @@ class MunicipalClockService:
             },
             "puntos_criticos_distritales": puntos_criticos_resumen,
             "autoridad_coel_responsable": dist_info.get("contacto_defensa_civil") or {},
-            "directiva_tactica_alcalde": directiva
+            "directiva_tactica_alcalde": directiva,
+            "memoria_historica_fen": memoria_clean,
+            "mensaje_historico": None if tiene_datos_reales else "No hay información disponible para este distrito en el Catálogo Histórico FEN oficial."
         }
 
 

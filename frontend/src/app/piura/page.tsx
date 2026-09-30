@@ -26,9 +26,16 @@ import {
     ExternalLink,
     Clock,
     Flame,
-    Radio
+    Radio,
+    Printer,
+    Phone,
+    MapPin,
+    Home,
+    Truck,
+    Sparkles
 } from "lucide-react";
 import RadarViewerModal from "@/components/RadarViewerModal";
+import CopilotoTacticoPiuraModal from "@/components/CopilotoTacticoPiuraModal";
 
 interface CuencaCiega {
     id: string;
@@ -71,13 +78,15 @@ interface EstablecimientoSalud {
 }
 
 export default function PiuraContingencyPage() {
-    const [activeTab, setActiveTab] = useState<"cuencas" | "contraloria" | "udep_100dias" | "salud">("cuencas");
+    const [activeTab, setActiveTab] = useState<"cuencas" | "contraloria" | "udep_100dias" | "salud" | "planes_distritales">("cuencas");
     const [loading, setLoading] = useState<boolean>(true);
     const [planData, setPlanData] = useState<any>(null);
     const [cuencas, setCuencas] = useState<CuencaCiega[]>([]);
     const [auditoriaData, setAuditoriaData] = useState<any>(null);
     const [saludData, setSaludData] = useState<any>(null);
     const [transferenciaData, setTransferenciaData] = useState<any>(null);
+    const [planesDistritales, setPlanesDistritales] = useState<any[]>([]);
+    const [selectedPlanDistrital, setSelectedPlanDistrital] = useState<any>(null);
 
     // Estados de simulación interactiva
     const [lluviaSimulada, setLluviaSimulada] = useState<number>(65);
@@ -86,6 +95,7 @@ export default function PiuraContingencyPage() {
     const [selectedUbigeoCert, setSelectedUbigeoCert] = useState<string>("200101");
     const [certificadoSha256, setCertificadoSha256] = useState<any>(null);
     const [radarModalOpen, setRadarModalOpen] = useState<boolean>(false);
+    const [copilotoModalOpen, setCopilotoModalOpen] = useState<boolean>(false);
 
     const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -96,19 +106,24 @@ export default function PiuraContingencyPage() {
     const fetchPlanData = async () => {
         setLoading(true);
         try {
-            const [rPlan, rCuencas, rAudit, rSalud, rTrans] = await Promise.all([
-                fetch(`${API_BASE}/api/v1/piura/contingencia/plan-integral`).then(r => r.json()),
-                fetch(`${API_BASE}/api/v1/piura/cuencas-ciegas`).then(r => r.json()),
-                fetch(`${API_BASE}/api/v1/piura/contingencia/auditoria-pp0068`).then(r => r.json()),
-                fetch(`${API_BASE}/api/v1/piura/contingencia/salud-dsrslcc`).then(r => r.json()),
-                fetch(`${API_BASE}/api/v1/piura/contingencia/transferencia-2026`).then(r => r.json()),
+            const [rPlan, rCuencas, rAudit, rSalud, rTrans, rPlanesDist] = await Promise.all([
+                fetch(`${API_BASE}/api/v1/piura/contingencia/plan-integral`).then(r => r.json()).catch(() => null),
+                fetch(`${API_BASE}/api/v1/piura/cuencas-ciegas`).then(r => r.json()).catch(() => ({ cuencas_ciegas_criticas: [] })),
+                fetch(`${API_BASE}/api/v1/piura/contingencia/auditoria-pp0068`).then(r => r.json()).catch(() => null),
+                fetch(`${API_BASE}/api/v1/piura/contingencia/salud-dsrslcc`).then(r => r.json()).catch(() => null),
+                fetch(`${API_BASE}/api/v1/piura/contingencia/transferencia-2026`).then(r => r.json()).catch(() => null),
+                fetch(`${API_BASE}/api/v1/planes/piura/distritales`).then(r => r.json()).catch(() => []),
             ]);
 
             setPlanData(rPlan);
-            setCuencas(rCuencas.cuencas_ciegas_criticas || []);
+            setCuencas(rCuencas?.cuencas_ciegas_criticas || []);
             setAuditoriaData(rAudit);
             setSaludData(rSalud);
             setTransferenciaData(rTrans);
+            if (Array.isArray(rPlanesDist) && rPlanesDist.length > 0) {
+                setPlanesDistritales(rPlanesDist);
+                setSelectedPlanDistrital(rPlanesDist[0]);
+            }
 
             // Simular primer resultado
             ejecutarSimulacion("CC-PIU-01", 65);
@@ -168,7 +183,7 @@ export default function PiuraContingencyPage() {
                                 <Building2 className="w-3 h-3" /> MUNICIPALIDAD PROVINCIAL DE PIURA
                             </span>
                             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
-                                <ShieldCheck className="w-3 h-3" /> ESTÁNDAR SAGF-MC APROBADO
+                                <ShieldCheck className="w-3 h-3" /> PROTOCOLO CUSTODIA ISO 27037
                             </span>
                             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-500/20 text-red-300 border border-red-500/30 flex items-center gap-1 animate-pulse">
                                 <Flame className="w-3 h-3" /> FEN 2026-2027
@@ -182,7 +197,15 @@ export default function PiuraContingencyPage() {
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-2.5">
+                        <button
+                            onClick={() => setCopilotoModalOpen(true)}
+                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-sm font-bold transition-all shadow-lg shadow-emerald-600/30 border border-emerald-400/40 animate-pulse"
+                        >
+                            <Sparkles className="w-4 h-4 text-emerald-200" />
+                            Copiloto Táctico (Vertex AI)
+                        </button>
+
                         <button
                             onClick={() => setRadarModalOpen(true)}
                             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-sm font-semibold transition-all shadow-lg shadow-sky-600/30 border border-sky-400/30"
@@ -251,53 +274,65 @@ export default function PiuraContingencyPage() {
             </div>
 
             {/* SELECTOR DE PESTAÑAS */}
-            <div className="flex border-b border-slate-800 bg-slate-900/40 p-1 rounded-xl gap-1">
+            <div className="flex flex-wrap border-b border-slate-800 bg-slate-900/40 p-1 rounded-xl gap-1">
                 <button
                     onClick={() => setActiveTab("cuencas")}
-                    className={`flex-1 py-3 px-4 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition-all ${
+                    className={`flex-1 min-w-[180px] py-3 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
                         activeTab === "cuencas"
                             ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30"
                             : "text-slate-400 hover:text-white hover:bg-slate-800/60"
                     }`}
                 >
-                    <Droplets className="w-4 h-4" />
-                    1. Cuencas Ciegas & SARE (Piura Urbana)
+                    <Droplets className="w-4 h-4 text-cyan-400" />
+                    1. Cuencas Ciegas & SARE
                 </button>
 
                 <button
                     onClick={() => setActiveTab("contraloria")}
-                    className={`flex-1 py-3 px-4 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition-all ${
+                    className={`flex-1 min-w-[180px] py-3 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
                         activeTab === "contraloria"
                             ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30"
                             : "text-slate-400 hover:text-white hover:bg-slate-800/60"
                     }`}
                 >
-                    <Scale className="w-4 h-4" />
-                    2. Blindaje PP 0068 & Contraloría (OCI)
+                    <Scale className="w-4 h-4 text-amber-400" />
+                    2. Blindaje PP 0068 (OCI)
                 </button>
 
                 <button
                     onClick={() => setActiveTab("udep_100dias")}
-                    className={`flex-1 py-3 px-4 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition-all ${
+                    className={`flex-1 min-w-[180px] py-3 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
                         activeTab === "udep_100dias"
                             ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30"
                             : "text-slate-400 hover:text-white hover:bg-slate-800/60"
                     }`}
                 >
-                    <Building2 className="w-4 h-4" />
-                    3. Doctrina UDEP & Vacío 100 Días
+                    <Building2 className="w-4 h-4 text-emerald-400" />
+                    3. Doctrina UDEP & 100 Días
                 </button>
 
                 <button
                     onClick={() => setActiveTab("salud")}
-                    className={`flex-1 py-3 px-4 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition-all ${
+                    className={`flex-1 min-w-[180px] py-3 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
                         activeTab === "salud"
                             ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30"
                             : "text-slate-400 hover:text-white hover:bg-slate-800/60"
                     }`}
                 >
-                    <Stethoscope className="w-4 h-4" />
-                    4. Red Sanitaria & Dengue (DIRESA / DSRSLCC)
+                    <Stethoscope className="w-4 h-4 text-rose-400" />
+                    4. Red Sanitaria & Dengue
+                </button>
+
+                <button
+                    onClick={() => setActiveTab("planes_distritales")}
+                    className={`flex-1 min-w-[200px] py-3 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                        activeTab === "planes_distritales"
+                            ? "bg-emerald-600 text-white shadow-lg shadow-emerald-600/30"
+                            : "text-slate-300 hover:text-white hover:bg-slate-800/60 border border-emerald-500/20"
+                    }`}
+                >
+                    <FileText className="w-4 h-4 text-emerald-300" />
+                    5. Planes Distritales (El Tallán, Catacaos, etc.)
                 </button>
             </div>
 
@@ -711,11 +746,318 @@ export default function PiuraContingencyPage() {
                 </div>
             )}
 
+            {/* CONTENIDO TAB 5: PLANES DISTRITALES DE PIURA (EPICENTRO FEN) */}
+            {activeTab === "planes_distritales" && (
+                <div className="space-y-6">
+                    {/* BANNER ENLACE C2 CONSOLA NACIONAL */}
+                    <div className="bg-gradient-to-r from-emerald-950/70 via-slate-900 to-indigo-950/70 border border-emerald-500/30 rounded-2xl p-5 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div>
+                            <div className="flex items-center gap-2 mb-1">
+                                <span className="px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                                    RED REGIONAL DE PLANES DIGITALES FEN
+                                </span>
+                                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                                    RESUMEN TÁCTICO EN 1 PÁGINA
+                                </span>
+                            </div>
+                            <h3 className="text-xl font-bold text-white tracking-tight">
+                                Catálogo de Planes de Contingencia y Prevención de Piura
+                            </h3>
+                            <p className="text-xs text-slate-300 mt-1 max-w-2xl">
+                                Protocolos tácticos estandarizados para El Tallán (2026-2027), Catacaos, Sechura, Ayabaca y cuencas afluentes del Río Piura y Chira.
+                            </p>
+                        </div>
+
+                        <Link
+                            href="/planes"
+                            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold transition-all shadow-lg shadow-emerald-900/40 border border-emerald-400/30 whitespace-nowrap"
+                        >
+                            <span>Consola Nacional de Planes</span>
+                            <ExternalLink className="w-4 h-4 text-emerald-200" />
+                        </Link>
+                    </div>
+
+                    {/* SELECTOR RÁPIDO DE PLANES DISTRITALES */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                        {planesDistritales.map((p) => {
+                            const isSelected = selectedPlanDistrital?.id_plan === p.id_plan;
+                            return (
+                                <button
+                                    key={p.id_plan}
+                                    onClick={() => setSelectedPlanDistrital(p)}
+                                    className={`p-4 rounded-xl text-left border transition-all ${
+                                        isSelected
+                                            ? "bg-slate-900 border-emerald-500 ring-2 ring-emerald-500/30 shadow-lg shadow-emerald-950/50"
+                                            : "bg-slate-900/60 border-slate-800 hover:border-slate-700 hover:bg-slate-800/40"
+                                    }`}
+                                >
+                                    <div className="flex items-center justify-between text-[10px] mb-2">
+                                        <span className="font-mono text-emerald-400 font-bold">{p.ubigeo || "PIURA"}</span>
+                                        <span className="px-2 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                            {p.periodo_vigencia}
+                                        </span>
+                                    </div>
+                                    <h4 className="text-sm font-bold text-white line-clamp-1">{p.distrito || p.entidad}</h4>
+                                    <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">{p.titulo_oficial}</p>
+                                    <div className="mt-3 pt-2 border-t border-slate-800 flex items-center justify-between text-[10px] text-slate-400">
+                                        <span>Gatillo: <strong className="text-amber-400">{p.escenario_riesgo?.lluvia_gatillo_24h_mm || 40} mm</strong></span>
+                                        <span className="text-emerald-400 font-semibold">{isSelected ? "Activo" : "Ver Ficha"}</span>
+                                    </div>
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    {/* FICHA TÁCTICA RESUMIDA EN 1 PÁGINA (ACCIÓN DE CHOQUE 0-4H) */}
+                    {selectedPlanDistrital && (
+                        <div className="bg-slate-900/90 border border-emerald-500/30 rounded-2xl p-6 shadow-2xl space-y-6">
+                            {/* ENCABEZADO DE LA FICHA */}
+                            <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-slate-800 gap-4">
+                                <div>
+                                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                                            FICHA TÁCTICA AMARU • ACCIÓN INMEDIATA
+                                        </span>
+                                        <span className="px-2 py-0.5 rounded text-xs font-mono bg-slate-800 text-slate-300">
+                                            {selectedPlanDistrital.id_plan}
+                                        </span>
+                                        <span className="px-2 py-0.5 rounded text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                                            {selectedPlanDistrital.acto_resolutivo}
+                                        </span>
+                                    </div>
+                                    <h2 className="text-2xl font-black text-white">
+                                        {selectedPlanDistrital.titulo_oficial}
+                                    </h2>
+                                    <div className="text-xs text-slate-400 mt-1 flex items-center gap-2">
+                                        <Building2 className="w-3.5 h-3.5 text-emerald-400" />
+                                        <span>{selectedPlanDistrital.entidad}</span>
+                                        <span>•</span>
+                                        <MapPin className="w-3.5 h-3.5 text-cyan-400" />
+                                        <span>{selectedPlanDistrital.distrito || selectedPlanDistrital.provincia}, {selectedPlanDistrital.departamento}</span>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-3">
+                                    <button
+                                        onClick={() => window.print()}
+                                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors shadow-sm"
+                                    >
+                                        <Printer className="w-4 h-4 text-emerald-400" />
+                                        Imprimir Ficha (1 Página)
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* RESUMEN EJECUTIVO */}
+                            <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800">
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 block mb-1">
+                                    Resumen Operativo de la Autoridad
+                                </span>
+                                <p className="text-xs text-slate-200 leading-relaxed">
+                                    {selectedPlanDistrital.resumen_ejecutivo}
+                                </p>
+                            </div>
+
+                            {/* 3 BLOQUES TÁCTICOS FUNDAMENTALES */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                                {/* BLOQUE 1: ESCENARIO Y GATILLOS */}
+                                <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-3">
+                                    <div className="flex items-center justify-between text-xs text-slate-400">
+                                        <span className="font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                                            <AlertTriangle className="w-4 h-4" />
+                                            1. Umbrales Gatillo
+                                        </span>
+                                        <span className="text-[10px] px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold">
+                                            PELIGRO {selectedPlanDistrital.escenario_riesgo?.nivel_peligro}
+                                        </span>
+                                    </div>
+                                    
+                                    <div className="text-xs text-slate-300 font-semibold">
+                                        {selectedPlanDistrital.escenario_riesgo?.peligro_asociado}
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-2 text-xs pt-2">
+                                        <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                                            <span className="text-[10px] text-slate-500 block">Lluvia Gatillo 24h</span>
+                                            <span className="text-base font-bold text-amber-400">
+                                                &gt; {selectedPlanDistrital.escenario_riesgo?.lluvia_gatillo_24h_mm} mm
+                                            </span>
+                                        </div>
+                                        <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                                            <span className="text-[10px] text-slate-500 block">Caudal Crítico</span>
+                                            <span className="text-base font-bold text-cyan-400">
+                                                {selectedPlanDistrital.escenario_riesgo?.caudal_critico_m3s ? `${selectedPlanDistrital.escenario_riesgo.caudal_critico_m3s} m³/s` : "N/A"}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="text-xs space-y-1 pt-1 text-slate-400">
+                                        <div className="flex justify-between">
+                                            <span>Población Expuesta:</span>
+                                            <strong className="text-white">{(selectedPlanDistrital.escenario_riesgo?.poblacion_expuesta || 0).toLocaleString()} hab.</strong>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span>Viviendas en Riesgo:</span>
+                                            <strong className="text-white">{(selectedPlanDistrital.escenario_riesgo?.viviendas_expuestas || 0).toLocaleString()}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* BLOQUE 2: CADENA DE MANDO C2 Y TELEFONÍA */}
+                                <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-3">
+                                    <div className="flex items-center justify-between text-xs text-slate-400">
+                                        <span className="font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                                            <ShieldAlert className="w-4 h-4" />
+                                            2. Cadena Mando C2 (24/7)
+                                        </span>
+                                    </div>
+
+                                    <div className="space-y-2 text-xs">
+                                        <div>
+                                            <span className="text-[10px] text-slate-500 block">Presidente GT-GRD:</span>
+                                            <strong className="text-white block font-medium">
+                                                {selectedPlanDistrital.cadena_mando_c2?.presidente_gtgrd}
+                                            </strong>
+                                        </div>
+                                        <div>
+                                            <span className="text-[10px] text-slate-500 block">Secretaría Técnica / COEL:</span>
+                                            <span className="text-slate-300 block">
+                                                {selectedPlanDistrital.cadena_mando_c2?.secretaria_tecnica_coel}
+                                            </span>
+                                        </div>
+                                        <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-800 space-y-1">
+                                            <div className="flex items-center gap-2 text-emerald-400 font-mono font-bold">
+                                                <Phone className="w-3.5 h-3.5" />
+                                                <span>{selectedPlanDistrital.cadena_mando_c2?.telefono_emergencia}</span>
+                                            </div>
+                                            {selectedPlanDistrital.cadena_mando_c2?.frecuencia_radial_vhf && (
+                                                <div className="flex items-center gap-2 text-cyan-300 font-mono text-[11px]">
+                                                    <Radio className="w-3.5 h-3.5" />
+                                                    <span>{selectedPlanDistrital.cadena_mando_c2.frecuencia_radial_vhf}</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* BLOQUE 3: CAPACIDAD LOGÍSTICA */}
+                                <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-3">
+                                    <div className="flex items-center justify-between text-xs text-slate-400">
+                                        <span className="font-bold uppercase tracking-wider text-sky-400 flex items-center gap-1.5">
+                                            <Truck className="w-4 h-4" />
+                                            3. Recursos de Choque
+                                        </span>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-2 text-xs">
+                                        <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
+                                            <span className="text-[10px] text-slate-500 block">Motobombas</span>
+                                            <span className="text-base font-bold text-white">
+                                                {selectedPlanDistrital.recursos_disponibles?.motobombas_unidades || 0} unids.
+                                            </span>
+                                        </div>
+                                        <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
+                                            <span className="text-[10px] text-slate-500 block">Sacos Terreros</span>
+                                            <span className="text-base font-bold text-emerald-400">
+                                                {(selectedPlanDistrital.recursos_disponibles?.sacos_terreros_stock || 0).toLocaleString()}
+                                            </span>
+                                        </div>
+                                        <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
+                                            <span className="text-[10px] text-slate-500 block">Raciones BAH</span>
+                                            <span className="text-base font-bold text-amber-400">
+                                                {selectedPlanDistrital.recursos_disponibles?.raciones_alimentos_dias || 0} días
+                                            </span>
+                                        </div>
+                                        <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
+                                            <span className="text-[10px] text-slate-500 block">Generadores</span>
+                                            <span className="text-base font-bold text-cyan-400">
+                                                {selectedPlanDistrital.recursos_disponibles?.generadores_electricos || 0} unids.
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* PROTOCOLO TÁCTICO DE CHOQUE INMEDIATO (0-4H) */}
+                            <div className="p-5 rounded-xl bg-slate-950 border border-emerald-500/30 space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                                        <Clock className="w-4 h-4 text-emerald-400" />
+                                        Protocolo Táctico de Choque Inmediato (0 - 4 Horas)
+                                    </h4>
+                                    <span className="text-[10px] text-emerald-400 font-mono">EJECUCIÓN INMEDIATA POR EL ALCALDE</span>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    {selectedPlanDistrital.protocolo_inmediato_0_4h?.map((paso: string, idx: number) => (
+                                        <div key={idx} className="flex items-start gap-3 p-3 rounded-lg bg-slate-900/80 border border-slate-800 text-xs">
+                                            <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                                            <span className="text-slate-200">{paso}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* PUNTOS CRÍTICOS Y ALBERGUES */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+                                <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-2">
+                                    <span className="text-xs font-bold text-amber-400 uppercase tracking-wider block">
+                                        Puntos Críticos Priorizados
+                                    </span>
+                                    <div className="space-y-2 text-xs">
+                                        {selectedPlanDistrital.puntos_criticos_priorizados?.map((pt: any, i: number) => (
+                                            <div key={i} className="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                                                <div className="font-bold text-white">{pt.nombre}</div>
+                                                <div className="text-[11px] text-rose-300 mt-0.5">Amenaza: {pt.tipo_amenaza}</div>
+                                                <div className="text-[11px] text-emerald-400 mt-0.5">Acción: {pt.intervencion_inmediata}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-2">
+                                    <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider block">
+                                        Albergues y Zonas de Evacuación Segura
+                                    </span>
+                                    <div className="space-y-2 text-xs">
+                                        {selectedPlanDistrital.albergues_temporales?.length > 0 ? (
+                                            selectedPlanDistrital.albergues_temporales.map((alb: any, i: number) => (
+                                                <div key={i} className="p-2.5 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between">
+                                                    <div>
+                                                        <div className="font-bold text-white">{alb.nombre}</div>
+                                                        <div className="text-[10px] text-slate-400">
+                                                            Cota Segura: {alb.cota_segura ? "Sí" : "Verificar"} • Servicios: {alb.servicios_basicos ? "Operativos" : "Provisorios"}
+                                                        </div>
+                                                    </div>
+                                                    <span className="px-2 py-1 rounded bg-slate-800 text-cyan-300 font-bold font-mono">
+                                                        {alb.capacidad_personas} hab.
+                                                    </span>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="p-4 text-center text-xs text-slate-500 italic">
+                                                Este establecimiento coordina evacuación de pacientes hacia el corredor de salud del MINSA.
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
+
             {/* MODAL RADAR METEOROLÓGICO SENAMHI BANDA C */}
             <RadarViewerModal
                 isOpen={radarModalOpen}
                 onClose={() => setRadarModalOpen(false)}
                 initialLocalidad="PIU"
+            />
+
+            {/* MODAL COPILOTO TÁCTICO VERTEX AI SEARCH + TELEMETRÍA */}
+            <CopilotoTacticoPiuraModal
+                isOpen={copilotoModalOpen}
+                onClose={() => setCopilotoModalOpen(false)}
+                initialUbigeo="200101"
             />
         </div>
     );

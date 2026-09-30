@@ -110,7 +110,22 @@ Para evitar reportes fraudulentos ("vivos" que empadronan casas no afectadas par
 
 ---
 
-## 5. MATRIZ DE ENDPOINTS REST IMPLEMENTADOS
+## 5. BANDEJA DE CONTROL CONCURRENTE CGR & OBRAS DE LA ANA
+
+Para garantizar el cumplimiento de los estándares de la **Contraloría General de la República (CGR)** y unificar la auditoría física y presupuestal:
+1. **Bandeja de Control Concurrente (`/contraloria`):**
+   - Agrupa todas las obras públicas ejecutadas bajo el marco del Fenómeno El Niño (D.S. N.º 124-2026-PCM y PP 0068).
+   - Filtros dinámicos por Ubigeo, estado de avance físico/financiero SIAF, entidad ejecutora y nivel de riesgo.
+2. **Integración de Obras de la Autoridad Nacional del Agua (ANA):**
+   - Incorporación de intervenciones de descolmatación fluvial, limpieza de cauces, diques enrocados y fajas marginales.
+   - Centralización de la inversión requerida en la Suite Municipal 360° (`/municipal/[ubigeo]`) para que el alcalde y el jefe de ODC tengan visibilidad unificada de los contratos activos de la ANA en su territorio.
+3. **Reloj FEN Amaru con Análogos Históricos Horizontales:**
+   - Rediseño táctico con la tarjeta de **Análogos Históricos (1982-83, 1997-98, 2017, Yaku 2023)** desplegada en franja horizontal directamente debajo del reloj polar.
+   - En el lateral del reloj se sitúa el resumen agrupado de **Obras e Inversión Requerida de la ANA**, maximizando la eficiencia visual del operador C2.
+
+---
+
+## 6. MATRIZ DE ENDPOINTS REST IMPLEMENTADOS
 
 | Método | Endpoint | Módulo | Función y Control de Acceso |
 |---|---|---|---|
@@ -128,25 +143,23 @@ Para evitar reportes fraudulentos ("vivos" que empadronan casas no afectadas par
 | `POST` | `/api/v1/municipal/{ubigeo}/certificar-maquinaria` | SUITE MUNICIPAL 360° | Certificación de razonabilidad de maquinaria (Art. 27 Ley 30225). |
 | `GET` | `/api/v1/municipal/{ubigeo}/reloj-fen` | SUITE MUNICIPAL 360° | Reloj FEN Micro-Calibrado ($t_c$, $T_{\text{lag}}$, Ventana Dorada). |
 | `GET` | `/api/v1/municipal/{ubigeo}/plan-contingencia-digital` | SUITE MUNICIPAL 360° | Generador de Plan PCMD y resolución de alcaldía lista para firma. |
+| `GET` | `/api/v1/simulacion/mega-fen/indeci-ground-truth` | GROUND TRUTH C4ISR | Métricas oficiales SINPAD 2017 (100%) vs 2018 y multiplicadores. |
 
 ---
 
-## 6. VALIDACIÓN TÉCNICA Y AUDITORÍA DE TESTS (100% PASS)
+## 7. VALIDACIÓN TÉCNICA Y AUDITORÍA DE PRODUCCIÓN EN GOOGLE CLOUD
 
-Todas las implementaciones cuentan con respaldo de suites automatizadas de pruebas unitarias ejecutadas contra el entorno de producción local:
+Todas las implementaciones se encuentran validadas y activas en el entorno de producción de Google Cloud Platform:
 
-1. **`test_damnificados_amaru.py` (8 pruebas OK en 0.005s):**
-   - Validación de DNI de 8 dígitos.
-   - Desacoplamiento CUP-DAMN y aislamiento en Bóveda Zero-PII.
-   - Clasificación de vivienda colapsada con tirante a nivel techo.
-   - Clasificación de vivienda afectada leve sin elegibilidad al Bono BAE.
-   - Bandeja municipal desacoplada ordenada por severidad.
-   - Protocolo Break-the-Glass con bitácora WORM inmutable y hash SHA-256.
-   - Incorporación formal al SINPAD con código oficial.
-   - Métricas y estimación de presupuesto BAE distrital.
-2. **`test_salud_amaru.py` (7 pruebas OK):**
-   - Validación de DNI, generación de CUP-MINSA, categorización NTS-105, Break-the-Glass con CMP y soberanía médica.
-3. **`test_municipal_suite_360.py` (7 pruebas OK):**
-   - Obras PP 0068, certificación de maquinaria, reloj FEN Piura/Chosica y plan PCMD.
-4. **Frontend TypeScript (`npx tsc --noEmit`):**
-   - **0 errores** de compilación en todos los componentes y páginas de Next.js.
+1. **Servicios Cloud Run en Vivo:**
+   - **Frontend:** [https://coen-frontend-289004262994.us-central1.run.app/](https://coen-frontend-289004262994.us-central1.run.app/)
+   - **Backend:** [https://coen-backend-289004262994.us-central1.run.app/](https://coen-backend-289004262994.us-central1.run.app/)
+   - **Swagger Docs:** [https://coen-backend-289004262994.us-central1.run.app/docs](https://coen-backend-289004262994.us-central1.run.app/docs)
+2. **Suites Automatizadas de Pruebas Unitarias (100% PASS):**
+   - `test_damnificados_amaru.py`: 8 pruebas OK.
+   - `test_salud_amaru.py`: 7 pruebas OK.
+   - `test_municipal_suite_360.py`: 7 pruebas OK.
+3. **Frontend TypeScript (`npx tsc --noEmit`):**
+   - **0 errores** de compilación en las 33 rutas de la aplicación.
+4. **Respaldo Forense WORM:**
+   - Custodia criptográfica inmutable con hashing SHA-256 de todas las solicitudes Break-the-Glass y actas de formalización SINPAD.

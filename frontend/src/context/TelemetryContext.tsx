@@ -2,6 +2,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { API_BASE } from "@/config/api";
 
 interface TelemetryData {
   forecast: any; // replace with proper type if available
@@ -31,7 +32,7 @@ export const TelemetryProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     setError(null);
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const apiBase = API_BASE;
       const resp = await fetch(`${apiBase}/api/distrito/${code}/telemetria`);
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       const json = await resp.json();

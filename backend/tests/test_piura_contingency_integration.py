@@ -21,7 +21,7 @@ class TestPiuraContingencyIntegration(unittest.TestCase):
         self.assertIn("cobertura_global_plan_contingencia_pct", reporte)
         self.assertGreaterEqual(reporte["cobertura_global_plan_contingencia_pct"], 85.0)
         self.assertEqual(len(reporte["bloques_evaluados"]), 8)
-        self.assertEqual(reporte["estado_operativo"], "OPERATIVO_ALTO_ESTANDAR_SAGF_MC")
+        self.assertEqual(reporte["estado_operativo"], "OPERATIVO_CONFORME_DIRECTIVA_CGR")
         
         pilares = reporte["pilares_doctrinales_integrados"]
         self.assertEqual(pilares["doctrina_udep_prof_chang"]["estado"], "ACTIVO")

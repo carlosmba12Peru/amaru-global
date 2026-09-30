@@ -110,46 +110,53 @@ class AnaGeosnirhClient:
                         continue
 
                     item = {
-                        "object_id": attr.get("OBJECTID"),
-                        "id_intervencion": attr.get("IDE_INTERVENCION"),
-                        "id_punto_critico": attr.get("IDPC"),
-                        "codigo_ficha": attr.get("CODIGO"),
-                        "sector": attr.get("SECTOR"),
-                        "rio": attr.get("NOMBRE") or attr.get("FUENTE_NATURAL"),
-                        "cuenca": attr.get("CUENCA"),
-                        "departamento": (attr.get("nombdep") or "").strip().title(),
-                        "provincia": (attr.get("nombprov") or "").strip().title(),
-                        "distrito": (attr.get("nombdistri") or "").strip().title(),
-                        "actividad": attr.get("NOMBRE_DE_ACTIVIDAD"),
-                        "estado": attr.get("ESTADO"),
-                        "meta_km": attr.get("META", 0.0),
-                        "avance_km": attr.get("AVANCEKM", 0.0),
-                        "avance_porcentaje": attr.get("AVANCEKMPOR", 0.0),
-                        "volumen_descolmatar_m3": attr.get("VOLUMEN_M3", 0.0),
-                        "costo_total_soles": attr.get("COSTO_DE_LA_ACTIVIDAD", 0.0),
-                        "costo_directo_soles": attr.get("COSTO_DIRECTO", 0.0),
-                        "poblacion_protegida": attr.get("POB", 0),
-                        "habitantes_atendidos_valle": attr.get("HABITANTES_ATENDIDOS", 0),
-                        "viviendas_protegidas": attr.get("VIVIENDAS", 0),
-                        "hectareas_cultivo": attr.get("SUPERFICIE_HA", 0.0),
-                        "tipo_cultivos": attr.get("TIPO_DE_CULTIVOS", ""),
-                        "tipo_peligro": attr.get("PELIGRO", "Inundación / Erosión"),
-                        "nivel_peligro": attr.get("NIVEL_DE_PELIGRO", "MUY ALTO"),
-                        "responsable": attr.get("RESPONSABLE_MIDAGRI") or attr.get("RESPONSABLE", "MIDAGRI - ANA"),
-                        "decreto_supremo": attr.get("DECRETO", "D.S. N° 164-2026-EF"),
+                        "object_id": attr.get("OBJECTID") or 0,
+                        "id_intervencion": attr.get("IDE_INTERVENCION") or 0,
+                        "id_punto_critico": attr.get("IDPC") or 0,
+                        "codigo_ficha": attr.get("CODIGO") or "S/C",
+                        "sector": attr.get("SECTOR") or "Sector No Especificado",
+                        "rio": attr.get("NOMBRE") or attr.get("FUENTE_NATURAL") or "Río/Cauce Principal",
+                        "cuenca": attr.get("CUENCA") or "Cuenca No Especificada",
+                        "departamento": (attr.get("nombdep") or "").strip().title() or "Sin Departamento",
+                        "provincia": (attr.get("nombprov") or "").strip().title() or "Sin Provincia",
+                        "distrito": (attr.get("nombdistri") or "").strip().title() or "Sin Distrito",
+                        "actividad": attr.get("NOMBRE_DE_ACTIVIDAD") or "Limpieza, descolmatación y conformación de dique",
+                        "estado": attr.get("ESTADO") or "Por Ejecutar",
+                        "meta_km": float(attr.get("META") or 0.0),
+                        "avance_km": float(attr.get("AVANCEKM") or 0.0),
+                        "avance_porcentaje": float(attr.get("AVANCEKMPOR") or 0.0),
+                        "volumen_descolmatar_m3": float(attr.get("VOLUMEN_M3") or 0.0),
+                        "costo_total_soles": float(attr.get("COSTO_DE_LA_ACTIVIDAD") or 0.0),
+                        "costo_directo_soles": float(attr.get("COSTO_DIRECTO") or 0.0),
+                        "poblacion_protegida": int(attr.get("POB") or 0),
+                        "habitantes_atendidos_valle": int(attr.get("HABITANTES_ATENDIDOS") or 0),
+                        "viviendas_protegidas": int(attr.get("VIVIENDAS") or 0),
+                        "hectareas_cultivo": float(attr.get("SUPERFICIE_HA") or 0.0),
+                        "tipo_cultivos": attr.get("TIPO_DE_CULTIVOS") or "Cultivos de valle",
+                        "tipo_peligro": attr.get("PELIGRO") or "Inundación / Erosión Fluvial",
+                        "nivel_peligro": attr.get("NIVEL_DE_PELIGRO") or "MUY ALTO",
+                        "responsable": attr.get("RESPONSABLE_MIDAGRI") or attr.get("RESPONSABLE") or "MIDAGRI - ANA",
+                        "decreto_supremo": attr.get("DECRETO") or "D.S. N° 164-2026-EF",
                         "lat": lat_f,
                         "lon": lon_f,
-                        "ficha_pdf_url": attr.get("RUTA"),
-                        "galeria_fotos_url": attr.get("GALERIA")
+                        "ficha_pdf_url": attr.get("RUTA") or "",
+                        "galeria_fotos_url": attr.get("GALERIA") or ""
                     }
                     items.append(item)
 
             if items:
                 try:
-                    with open(CACHE_FILE_PC, "w", encoding="utf-8") as f:
+                    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+                    temp_f = CACHE_FILE_PC.with_suffix(".tmp")
+                    with open(temp_f, "w", encoding="utf-8") as f:
                         json.dump(items, f, ensure_ascii=False, indent=2)
-                except Exception as e:
-                    print(f"[AnaGeosnirhClient Warning] No se pudo escribir caché: {e}")
+                    temp_f.replace(CACHE_FILE_PC)
+                except Exception:
+                    try:
+                        with open(CACHE_FILE_PC, "w", encoding="utf-8") as f:
+                            json.dump(items, f, ensure_ascii=False, indent=2)
+                    except Exception:
+                        pass
 
         if not items and CACHE_FILE_PC.exists():
             try:

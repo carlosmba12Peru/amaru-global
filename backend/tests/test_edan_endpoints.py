@@ -166,5 +166,29 @@ class TestEdanEndpoints(unittest.TestCase):
         self.assertIn("constancia_cgr", vb_data)
         self.assertIn("CGR-CNC-2026-", vb_data["constancia_cgr"]["constancia_codigo"])
 
+    def test_casos_modelo_endpoints(self):
+        resp = self.client.get("/api/v1/edan/casos-modelo")
+        self.assertEqual(resp.status_code, 200)
+        casos = resp.json()
+        self.assertGreaterEqual(len(casos), 4)
+
+        # Cargar caso modelo Chosica
+        resp_chosica = self.client.get("/api/v1/edan/cargar-caso-modelo/modelo_chosica_lima")
+        self.assertEqual(resp_chosica.status_code, 200)
+        ficha_chosica = resp_chosica.json()
+        self.assertEqual(ficha_chosica["ubigeo"], "150119")
+        self.assertIn("HUAICO", ficha_chosica["formulario_1_evaluacion_rapida"]["peligro_asociado"])
+        self.assertIn("Carossio", ficha_chosica["formulario_2a_familias"][0]["sector_caserio"])
+
+        # Calcular Planilla BAH Anexo 02
+        resp_bah = self.client.post("/api/v1/edan/calcular-planilla-bah", json={"ficha": ficha_chosica})
+        self.assertEqual(resp_bah.status_code, 200)
+        bah = resp_bah.json()
+        self.assertEqual(bah["anexo_oficial"], "ANEXO N° 02")
+        self.assertGreater(bah["totales_almacen"]["carpas"], 0)
+        self.assertGreater(bah["totales_almacen"]["calaminas"], 0)
+        self.assertGreater(bah["totales_almacen"]["frazadas"], 0)
+        self.assertEqual(len(bah["filas"]), len(ficha_chosica["formulario_2a_familias"]))
+
 if __name__ == "__main__":
     unittest.main()

@@ -296,13 +296,21 @@ export default function RiosNortePage() {
     // Filtrar Puntos Críticos ANA
     const puntosAnaFiltrados = useMemo(() => {
         return puntosAna.filter(p => {
-            const matchDepto = filtroDeptoAna === "TODOS" || p.departamento.toUpperCase() === filtroDeptoAna.toUpperCase();
-            const matchEstado = filtroEstadoAna === "TODOS" || p.estado.toUpperCase().includes(filtroEstadoAna.toUpperCase());
-            const matchSearch = busquedaAna === "" || 
-                p.sector.toLowerCase().includes(busquedaAna.toLowerCase()) ||
-                p.rio.toLowerCase().includes(busquedaAna.toLowerCase()) ||
-                p.cuenca.toLowerCase().includes(busquedaAna.toLowerCase()) ||
-                p.distrito.toLowerCase().includes(busquedaAna.toLowerCase());
+            const depto = (p.departamento || "").toUpperCase();
+            const estado = (p.estado || "").toUpperCase();
+            const sector = (p.sector || "").toLowerCase();
+            const rio = (p.rio || "").toLowerCase();
+            const cuenca = (p.cuenca || "").toLowerCase();
+            const distrito = (p.distrito || "").toLowerCase();
+            const q = (busquedaAna || "").toLowerCase();
+
+            const matchDepto = filtroDeptoAna === "TODOS" || depto === filtroDeptoAna.toUpperCase();
+            const matchEstado = filtroEstadoAna === "TODOS" || estado.includes(filtroEstadoAna.toUpperCase());
+            const matchSearch = q === "" || 
+                sector.includes(q) ||
+                rio.includes(q) ||
+                cuenca.includes(q) ||
+                distrito.includes(q);
             return matchDepto && matchEstado && matchSearch;
         });
     }, [puntosAna, filtroDeptoAna, filtroEstadoAna, busquedaAna]);
@@ -853,11 +861,11 @@ export default function RiosNortePage() {
                                         <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800 text-[11px] font-mono text-slate-400">
                                             <div>
                                                 <span className="text-[10px] text-slate-500 block">Presupuesto ANA</span>
-                                                <strong className="text-slate-200">S/. {p.costo_total_soles.toLocaleString()}</strong>
+                                                <strong className="text-slate-200">S/. {(p.costo_total_soles || 0).toLocaleString()}</strong>
                                             </div>
                                             <div>
                                                 <span className="text-[10px] text-slate-500 block">Cultivos / Superficie</span>
-                                                <strong className="text-slate-200">{p.hectareas_cultivo} Ha ({p.tipo_cultivos || "Varios"})</strong>
+                                                <strong className="text-slate-200">{(p.hectareas_cultivo || 0)} Ha ({p.tipo_cultivos || "Varios"})</strong>
                                             </div>
                                         </div>
                                     </div>
@@ -1203,7 +1211,7 @@ export default function RiosNortePage() {
                                     Doctrina de Certeza de Datos C2 • Código de Colores de Procedencia (Data Pedigree):
                                 </span>
                                 <span className="text-[10px] font-mono text-slate-400 bg-slate-900 px-2.5 py-0.5 rounded border border-slate-800">
-                                    Estándar SAGF-MC • COEN-Digital
+                                    NTP-ISO 27037 / RFC 3161 • COEN-Digital
                                 </span>
                             </div>
 

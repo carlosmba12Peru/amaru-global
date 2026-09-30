@@ -1,40 +1,42 @@
-# ⚡ AMARU-CLIMATE – Suite Soberana de Inteligencia Territorial y Emergencia Climática
-## ARQUITECTURA DE MARCA PARAGUAS & SUBSERVICIOS SOBERANOS
+# ⚡ AMARU-CLIMATE • Suite Tripartita Soberana de Inteligencia Territorial y Emergencia Climática
+## PLATAFORMA DE MISIÓN CRÍTICA, GOBERNANZA ANTICIPATORIA & AUDITORÍA FORENSE
 ### Fenómeno El Niño (FEN 2026-2027) & Eventos Hidrometeorológicos Extremos
 
-> **Plataforma Tecnológica Soberana e Interoperable de Respuesta y Anticipación ante Desastres**  
-> Desarrollado con **FastAPI**, **Next.js 14 (App Router)**, **Google Gemini 1.5 Pro & Vision**, **Open-Meteo Pro (ECMWF IFS 9km)**, **SENAMHI WFS / Radares Banda C**, **DHN / IMARPE SIOFEN**, **ENFEN**, **ANA GeoSNIRH**, **CENEPRED**, **MEF Consulta Amigable (PP 0068)**, **RENIEC PIDE**, **MINSA CDC**, **MINCUL (BDPI / RENALIO)** y **Google Cloud Platform**.  
+> **Plataforma Tecnológica Soberana e Interoperable de Respuesta, Anticipación y Auditoría ante Desastres**  
+> Desarrollado con **FastAPI**, **Next.js 14 (App Router)**, **Google Gemini 1.5 Pro & Vision**, **Open-Meteo Pro (ECMWF IFS 9km)**, **SENAMHI WFS / Radares WRM200 Banda C**, **DHN / IMARPE SIOFEN**, **ENFEN**, **ANA GeoSNIRH**, **CENEPRED**, **MEF Consulta Amigable (PP 0068)**, **RENIEC PIDE**, **MINSA CDC**, **MINCUL (BDPI / RENALIO)** y **Google Cloud Platform**.  
 > **Marco Legal e Institucional:** Ley N.º 29664 (SINAGERD), D.S. N.º 124-2026-PCM (Estado de Emergencia FEN), Ley N.º 31526 & D.S. N.º 008-2022-VIVIENDA (Bono BAE de S/ 500), Ley N.º 29735 (Uso y Preservación de Lenguas Originarias del Perú), Ley N.º 29733 (Protección de Datos Personales / Bóveda Zero-PII AES-256), Ley N.º 26842 (Ley General de Salud), NTS N.º 105-MINSA (Triaje en Emergencias), Ley N.º 31814 & D.S. N.º 115-2025-PCM (Uso Ético de IA y Soberanía Humana / HITL), Ley N.º 30225 (Ley de Contrataciones del Estado - Art. 27 Contratación Directa), R.J. N.º 058-2019-CENEPRED/J (PPRRD), y Art. 377 del Código Penal (Inacción Funcional).
 
 ---
 
 ## 📑 Tabla de Contenidos
-1. [Arquitectura de Marca: AMARU-CLIMATE como Marca Paraguas](#-arquitectura-de-marca-amaru-climate-como-marca-paraguas)
+1. [Arquitectura Tripartita Soberana de AMARU-CLIMATE](#-arquitectura-tripartita-soberana-de-amaru-climate)
 2. [Subservicio 1: COED Nacional AMARU (C2 Macro-Estratégico)](#-subservicio-1-coed-nacional-amaru-c2-macro-estratégico)
-3. [Subservicio 2: COED Municipal AMARU (Suite Municipal 360°)](#-subservicio-2-coed-municipal-amaru-suite-municipal-360)
+3. [Subservicio 2: COED Municipal AMARU (Suite Municipal 360° & Bandeja CGR / ANA)](#-subservicio-2-coed-municipal-amaru-suite-municipal-360)
 4. [Subservicio 3: COED Social AMARU (Ground-Truth Comunitario & Resiliencia)](#-subservicio-3-coed-social-amaru-ground-truth-comunitario--resiliencia)
-5. [Inclusión Intercultural: Pre-Padrón EDAN en Lenguas Originarias & Voz Oral](#-inclusión-intercultural-pre-padrón-edan-en-lenguas-originarias--voz-oral)
-6. [Canales de Difusión Ciudadana: Telegram Gratuito & WhatsApp Web](#-canales-de-difusión-ciudadana-telegram-gratuito--whatsapp-web)
-7. [Módulo SALUD-AMARU: Triaje Digital Desacoplado & Soberanía Médica](#-módulo-salud-amaru-triaje-digital-desacoplado--soberanía-médica)
-8. [Módulo AMARU-DAMNIFICADOS: Pre-Padrón EDAN v2 & Bono BAE S/ 500](#-módulo-amaru-damnificados-pre-padrón-edan-v2--bono-bae-s-500)
-9. [Portafolio de Patentes & Propiedad Intelectual (Lab1 vs. Lab4)](#-portafolio-de-patentes--propiedad-intelectual-lab1-vs-lab4)
-10. [Swarm Multi-Agente Autónomo & Enjaulamiento Cognitivo](#-swarm-multi-agente-autónomo--enjaulamiento-cognitivo)
-11. [Bóveda Criptográfica Envelope Zero-PII & Auditoría WORM](#-bóveda-criptográfica-envelope-zero-pii--auditoría-worm)
-12. [Catálogo de Endpoints REST de la API](#-catálogo-de-endpoints-rest-de-la-api)
-13. [Puesta en Marcha y Suites de Pruebas Unitarias](#-puesta-en-marcha-y-suites-de-pruebas-unitarias)
+5. [Consola de Auditoría Forense y Calidad de Gobernanza (`/auditoria`)](#-consola-de-auditoría-forense-y-calidad-de-gobernanza-auditoria)
+6. [Estación de Radar Meteorológico Doppler Banda C en COED Nacional](#-estación-de-radar-meteorológico-doppler-banda-c-en-coed-nacional)
+7. [Pipeline Dual Soberano de Ingesta Oficial: IMARPE (BDO N° 268) & ENFEN](#-pipeline-dual-soberano-de-ingesta-oficial-imarpe--enfen)
+8. [Calibración Pericial INDECI Ground Truth (SINPAD 100%) & Simulación Mega-FEN](#-calibración-pericial-indeci-ground-truth-sinpad-100--simulación-mega-fen)
+9. [Doctrina Logística PP 0068, Obras ANA & Reloj Táctico Polar](#-doctrina-logística-pp-0068--reloj-táctico-polar)
+10. [Geovisor C2 con Doble Motor de Mapeo](#-geovisor-c2-con-doble-motor-de-mapeo)
+11. [Reporte Ciudadano Bimodal Blindado](#-reporte-ciudadano-bimodal-blindado)
+12. [Inclusión Intercultural: Pre-Padrón EDAN en Lenguas Originarias & Voz Oral](#-inclusión-intercultural-pre-padrón-edan-en-lenguas-originarias--voz-oral)
+13. [Módulo SALUD-AMARU: Triaje Digital Desacoplado & Soberanía Médica](#-módulo-salud-amaru-triaje-digital-desacoplado--soberanía-médica)
+14. [Swarm Multi-Agente Autónomo & Enjaulamiento Cognitivo](#-swarm-multi-agente-autónomo--enjaulamiento-cognitivo)
+15. [Bóveda Criptográfica Envelope Zero-PII & Auditoría WORM](#-bóveda-criptográfica-envelope-zero-pii--auditoría-worm)
+16. [Catálogo de Endpoints REST de la API](#-catálogo-de-endpoints-rest-de-la-api)
+17. [Despliegue en Google Cloud Platform (Producción 200 OK)](#-despliegue-en-google-cloud-platform--puesta-en-marcha)
 
 ---
 
-## 🏛️ Arquitectura de Marca: AMARU-CLIMATE como Marca Paraguas
+## 🏛️ Arquitectura Tripartita Soberana de AMARU-CLIMATE
 
-**AMARU-CLIMATE** constituye la **marca paraguas soberana** que agrupa y articula todos los esfuerzos tecnológicos, analíticos, territoriales y sociales frente a la crisis climática y eventos hidrometeorológicos extremos en el Perú.
-
-Bajo este paraguas operan tres subservicios estratégicos y complementarios:
+**AMARU-CLIMATE** unifica la toma de decisiones del Estado peruano, la ingeniería municipal de mitigación y la respuesta de primera línea vecinal a través de tres pilares operacionales coordinados:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                        AMARU-CLIMATE: MARCA PARAGUAS SOBERANA                          │
-│               Suite de Inteligencia Territorial, Alerta Temprana y C2                  │
+│                      AMARU-CLIMATE: SUITE TRIPARTITA SOBERANA                          │
+│               Inteligencia Territorial, Alerta Temprana, C2 y Auditoría                │
 └───────────────────────────────────────────┬────────────────────────────────────────────┘
                                             │
          ┌──────────────────────────────────┼──────────────────────────────────┐
@@ -44,11 +46,11 @@ Bajo este paraguas operan tres subservicios estratégicos y complementarios:
 │   (C2 Macro-Estratégico)     │ │   (Suite Municipal 360°)     │ │ (Comunidad & Primera Línea)│
 ├──────────────────────────────┤ ├──────────────────────────────┤ ├──────────────────────────────┤
 │ • Geovisor 3D Multiescala    │ │ • Consola PP 0068 (MEF/SIAF) │ │ • Reporte Ciudadano Blindado │
-│ • 159 Cuencas & Radares Now. │ │ • Certificador de Maquinaria │ │ • Pre-Padrón EDAN Bilingüe   │
+│ • Radar Doppler Banda C Now. │ │ • Certificador de Maquinaria │ │ • Pre-Padrón EDAN Bilingüe   │
 │ • Monitoreo ENFEN/IMARPE/DHN │ │ • Reloj FEN Micro-Calibrado  │ │ • Grabación Oral SHA-256     │
 │ • Despacho CAP v1.2 / SISMATE│ │ • Plan Contingencia (PCMD)   │ │ • AMARU-AYNI & Albergues     │
 │ • Ingesta KURAQ (27 Fuentes) │ │ • Consola Homologación T1    │ │ • SALUD-AMARU (Triaje NTS)   │
-│ • Modo War Room para Crisis  │ │ • Ficha EDAN / BAE S/ 500    │ │ • AMARU-AGRO (SAC / PPA)     │
+│ • Consola Auditoría Forense  │ │ • Ficha EDAN / BAE S/ 500    │ │ • AMARU-AGRO (SAC / PPA)     │
 └──────────────────────────────┘ └──────────────────────────────┘ └──────────────────────────────┘
 ```
 
@@ -57,29 +59,33 @@ Bajo este paraguas operan tres subservicios estratégicos y complementarios:
 ## 🌐 Subservicio 1: COED Nacional AMARU (C2 Macro-Estratégico)
 
 Diseñado para las salas de comando y control del nivel central, ministerios, INDECI, CENEPRED y Fuerzas Armadas:
-- **Geovisor 3D Nacional (Deck.gl / MapLibre):** Visualización espacial en tiempo real de precipitaciones ECMWF, caudales ANA, susceptibilidad aluvial CENEPRED y albergues temporales.
-- **Modo War Room (`[🖥️ Modo War Room]`):** Expansión visual que maximiza el mapa operativo a `540px` y colapsa paneles accesorios para videowalls de salas de crisis.
-- **Radar Nowcasting Banda C:** Integración con los radares meteorológicos de Piura (`PIU`) e Ica (`ICA`) para anticipación aluvial de 0 a 120 minutos.
-- **Fusión Oceanográfica & Fluvial:** Ingesta continua de la Bitácora Diaria Oceanográfica IMARPE/DHN (Región Niño 1+2), aforos telemétricos ANA GeoSNIRH y comunicados ENFEN.
+- **Geovisor 3D Nacional:** Visualización espacial en tiempo real de precipitaciones ECMWF IFS 9km, aforos fluviales telemétricos de la ANA, susceptibilidad aluvial CENEPRED y albergues temporales.
+- **Modo War Room:** Expansión visual que maximiza el mapa operativo a pantalla panorámica y colapsa paneles accesorios para videowalls de salas de crisis.
+- **Estación Permanente de Radar Doppler Banda C:** Integrada directamente en la consola principal (`/`) con loops de nowcasting interactivos y reflectividad calibrada en dBZ.
+- **Fusión Oceanográfica & Fluvial:** Ingesta de la Bitácora Diaria Oceanográfica IMARPE/DHN (Región Niño 1+2), comunicados ENFEN y aforos ANA GeoSNIRH.
 - **Despacho Estandarizado OASIS CAP v1.2:** Emisión de alertas estandarizadas compatibles con SISMATE (difusión celular masiva e interoperabilidad internacional).
 
 ---
 
-## 🏛️ Subservicio 2: COED Municipal AMARU (Suite Municipal 360°)
+## 🏛️ Subservicio 2: COED Municipal AMARU (Suite Municipal 360° & Bandeja CGR / ANA)
 
 Ubicado en `/municipal/[ubigeo]`, provee a los alcaldes y gerentes de Defensa Civil de los **1,891 municipios del Perú** un centro táctico integral:
-
 1. **Consola de Obras PP 0068 & Certificador de Maquinaria:**
-   - Auditoría en tiempo real del avance físico y financiero SIAF de proyectos de mitigación y defensas ribereñas.
+   - Auditoría en tiempo real del avance físico y financiero SIAF de 643 proyectos de defensas ribereñas y descolmatación.
    - **Certificador de Razonabilidad de Precios de Maquinaria Pesada:** Validación instantánea del precio por hora de tractores oruga D8, excavadoras y motobombas frente a la banda de precios oficiales de mercado, habilitando la contratación directa sin sobreprecios conforme al Art. 27 de la Ley N.º 30225.
    - **Alerta por Inacción Funcional:** Notificación preventiva sobre riesgo de responsabilidad penal bajo el **Art. 377 del Código Penal**.
-2. **Reloj FEN Municipal Micro-Calibrado:**
+2. **Bandeja de Control Concurrente CGR & Obras de la ANA (`/contraloria`):**
+   - Centraliza **todas las obras públicas del Fenómeno El Niño** y las intervenciones fluviales de la **Autoridad Nacional del Agua (ANA)** en un único visor de auditoría gubernamental.
+   - Filtros multicriterio por Ubigeo, estado físico/financiero SIAF, tipo de obra (dique, descolmatación, encauzamiento) y semáforo de riesgo CGR.
+   - Cuantificación de la inversión requerida y alertas tempranas para evitar observaciones y congelamiento de cuentas ediles.
+3. **Reloj FEN Municipal Micro-Calibrado & Arquitectura Horizontal:**
    - Cálculo del tiempo de concentración de la cuenca ($t_c$), tiempo de retardo hidrocinético ($T_{\text{lag}}$) y fecha límite de la **Ventana Dorada (30 de Noviembre)** para trabajos de descolmatación antes de la crecida de ríos ($Q < 15\text{ m}^3/\text{s}$).
-3. **Plan de Contingencia Municipal Digital (PCMD):**
+   - **Rediseño Ergonómico:** Los **Análogos Históricos (1982-83, 1997-98, 2017, Yaku 2023)** se despliegan en franja horizontal directamente debajo del reloj polar, y a su lado se exhibe el resumen estructurado de las **Obras de la ANA e Inversión Requerida**.
+4. **Plan de Contingencia Municipal Digital (PCMD):**
    - Generador automatizado de planes distritales con cálculo de Bienes de Ayuda Humanitaria (BAH) bajo directivas INDECI y proyecto formal de **Resolución de Alcaldía lista para firma**.
-4. **PPRRD Digital (CENEPRED):**
+5. **PPRRD Digital (CENEPRED):**
    - Cartera de inversiones estructurales y medidas no estructurales conforme a la R.J. N.º 058-2019-CENEPRED/J.
-5. **Pre-Padrón EDAN & Damnificados Validados:**
+6. **Pre-Padrón EDAN & Damnificados Validados:**
    - Bandeja distrital con desglose de familias, viviendas colapsadas, inhabitables, elegibles al Bono BAE y formalización en SINPAD.
 
 ---
@@ -87,128 +93,145 @@ Ubicado en `/municipal/[ubigeo]`, provee a los alcaldes y gerentes de Defensa Ci
 ## 👥 Subservicio 3: COED Social AMARU (Ground-Truth Comunitario & Resiliencia)
 
 Herramientas concebidas para la ciudadanía, juntas vecinales, ollas comunes y brigadas barriales de primera línea:
-- **Consola de Reporte Ciudadano Blindado (`/reporte-ciudadano`):**
-  - **Selector Ergonómico de Altura de Agua en 1 Toque:** `🦶 Tobillo (~15cm)`, `🦵 Rodilla (~50cm)`, `🧍 Cintura (~1.00m)`, `🏠 Techo (>2.00m)`.
-  - **Blindaje Anti-Fake:** Las fotografías y testimonios crudos no se publican en internet para evitar pánico colectivo ni viralización de bulos. Se genera un pin geográfico discreto tras validación forense con metadatos EXIF y Gemini Vision.
-- **AMARU-AYNI (`/ayni`):**
-  - Red comunitaria para ollas comunes (Ley N.º 31458), albergues temporales y juntas vecinales con canalización de necesidades logísticas y víveres.
+- **Consola de Reporte Ciudadano Blindado (`/reporte-ciudadano`):** Formulario estricto en Tiempo Real con selector ergonómico de tirante de agua en un toque (`🦶 Tobillo ~15cm`, `🦵 Rodilla ~50cm`, `🧍 Cintura ~1.00m`, `🏠 Techo >2.00m`).
+- **AMARU-AYNI (`/ayni`):** Red comunitaria para ollas comunes (Ley N.º 31458), albergues temporales y canalización de necesidades logísticas y víveres.
+- **YACHAY (`/yachay`):** Bioindicadores ancestrales y memoria histórica de resiliencia comunitaria.
+
+---
+
+## 🛡️ Consola de Auditoría Forense y Calidad de Gobernanza (`/auditoria`)
+
+AMARU-CLIMATE incorpora una consola dedicada a la supervisión y verificación independiente de los **7 Controles Forenses Automatizados**:
+
+| # | Control Forense | Base Normativa | Mecanismo Automatizado | Estado Operativo |
+|---|---|---|---|---|
+| **1** | **Sellado Inmutable SHA-256** | Ley 29733, RFC 3161 | Árbol de Merkle con hash SHA-256 por ficha. Desacoplamiento en Bóveda Cero-PII. | 🟢 CONFORME (14 registros ledger) |
+| **2** | **Filtro Anti-Agricultores de Escritorio** | Copernicus Sentinel-1 Banda C + Sentinel-2 | Comparativa SAR pre/post evento y NDVI histórico de 60 días para descartar parcelas sin cultivo previo y duplicidad parcelaria comunal. | 🟢 ACTIVO (6 fraudes bloqueados) |
+| **3** | **Alarma de Inacción Financiera PP 0068** | Directiva CGR N.° 013-2022-CG, MEF SIAF | Detección de descalce PIM vs. Devengado en 643 obras. Activación de alertas de Control Concurrente CGR y Art. 377 Código Penal. | 🟢 AUDITANDO (87 obras en alarma) |
+| **4** | **Custodia Forense NTS-105 MINSA** | Ley General de Salud 26842, Art. 290 CP | Triaje IA limitado a categorización sindrómica; prescripción médica exclusivamente reservada a galenos CMP mediante protocolo Break-the-Glass (bitácora WORM). | 🟢 BLINDADO (2 desbloqueos auditados) |
+| **5** | **Homologación Humana T1 (T+15 / T+30)** | D.S. 008-2021-VIVIENDA | El sistema asigna el código pre-calificado (`CUP-DAMN` o `CUP-MINSA`) para no detener la ayuda al 80% vulnerable; el perito humano valida in-situ a los 15-30 días con certificación SHA-256. | 🟢 VENTANA ABIERTA T1 |
+| **6** | **Circuit Breaker HITL** | Estándares C2 de Seguridad Operacional | Parada automática de emergencia (*fail-safe*) que suspende despachos masivos si la discrepancia estadística entre la IA y las actas físicas supera el 15%. | 🟢 ARMADO NORMAL (0 fallas críticas) |
+| **7** | **Anti-Fakenews & EXIF Forense** | ISO/IEC 27037 | Validación de Magic Bytes binarios, coordenadas GPS del sensor y verificación de compresión para evitar inyección de fotos descargadas de redes sociales o eventos pasados. | 🟢 ACTIVO (11 fotos espurias rechazadas) |
+
+*Incluye un Validador Interactivo de Códigos Únicos (`CUP-DAMN` y `CUP-MINSA`) y telemetría en vivo conectada al backend vía `GET /api/v1/auditoria/metricas-forenses`.*
+
+---
+
+## 📡 Estación de Radar Meteorológico Doppler Banda C en COED Nacional
+
+Emplazada como consola táctica interactiva en la página principal del COED Nacional (`/`):
+- **Estaciones Estratégicas:**
+  - **Piura (Banda C 5.6 GHz):** Cobertura operativa sobre las cuencas binacionales Chira, Piura y Tumbes.
+  - **Ica (Cerro Colorado):** Cobertura sobre la vertiente occidental y quebradas de Pisco, Ica y Palpa.
+- **Arquitectura de Doble Motor con Failover:**
+  - Motor primario: SENAMHI WRM200 Banda C.
+  - Motor de contingencia: Capa Doppler compuesta **RainViewer Perú**, evitando pantallas en negro ante geo-bloqueos externos.
+- **Controles de Comando:**
+  - Bucle animado de *Nowcasting* (0 a 120 minutos).
+  - Ángulos de elevación de haz (0.5°, 1.5°, 3.0°, 4.5°).
+  - Escala de reflectividad calibrada en dBZ (5 a 70 dBZ) para detección temprana de núcleos convectivos severos y lluvia torrencial.
+
+---
+
+## 🌊 Pipeline Dual Soberano de Ingesta Oficial: IMARPE (37 Boletines BDO) & ENFEN
+
+Para neutralizar el fallo estructural del web scraping ocasionado por WAF, bloqueos de IPs de centros de datos y variaciones de plantillas HTML, AMARU-CLIMATE implementa un canal dual:
+1. **Canal Automático & Catálogo Histórico Consolidado:**
+   - Indexación continua de **37 boletines oficiales diarios** (desde el 15 de agosto hasta el **25 de setiembre de 2026**, BDO N° 268).
+   - Monitoreo de TSM in-situ y anomalías térmicas $\Delta T$ en las **12 estaciones costeras fijas** (Tumbes a Ilo).
+   - Detección de alerta térmica extrema: **Chicama (+7.6 °C, TSM 23.5 °C)** y **Paita (+8.0 °C)** al 25 de setiembre de 2026 (Boletín N° 268).
+   - **Extracción Satelital Oficial de Alta Resolución (Copernicus / OSTIA / LHFM IMARPE):**
+     - **Figura 1:** Extensión macroescala en el Pacífico Tropical (Niño 1+2 / Niño 3.4) mostrando la colosal lengua de agua cálida acoplada a la costa septentrional y central.
+     - **Figura 3:** Anomalías térmicas de alta resolución en las 200 millas náuticas del mar peruano, evidenciando el retroceso del afloramiento de Humboldt.
+2. **Canal Manual de Depósito Forense de PDF:**
+   - Botón **`[ 📥 Depositar BDO (PDF) ]`** en la [Consola IMARPE (`/imarpe`)](https://coen-frontend-289004262994.us-central1.run.app/imarpe): Extrae en **< 1.5s** la temperatura superficial del mar (TSM) y anomalías en las 12 estaciones costeras, asociando el hash SHA-256 e indexando las figuras satelitales oficiales.
+   - Botón **`[ 📥 Depositar Comunicado (PDF) ]`** en la [Consola ENFEN (`/enfen`)](https://coen-frontend-289004262994.us-central1.run.app/enfen): Parsea el Comunicado Oficial, extrae las probabilidades de El Niño Costero (Com. N° 10 a 16-2026) y actualiza los indicadores multisectoriales sin depender de internet exterior.
+
+---
+
+## 🔬 Calibración Pericial INDECI Ground Truth (SINPAD 100%) & Simulación Mega-FEN
+
+Ubicado en la [Consola de Simulación Mega-FEN (`/simulacion`)](https://coen-frontend-289004262994.us-central1.run.app/simulacion), el motor de computación táctica **AMARU-C4ISR** está anclado formalmente a la base empírica auditada al 100% de liquidación por la Dirección de Respuesta del INDECI:
+
+1. **Contraste Empírico de Catástrofe (FEN 2017 vs. Temporada Regular 2018):**
+   - **Damnificados:** 283,137 vs. 13,085 (**21.6x** de incremento).
+   - **Viviendas Destruidas/Inhabitables:** 65,942 vs. 3,074 (**21.5x** de incremento).
+   - **Canales de Riego Destruidos:** 3,019 km vs. 36.5 km (**82.5x** de devastación agrícola).
+   - **Carreteras Destruidas:** 4,030 km vs. 418 km (**9.6x**).
+   - **Puentes Destruidos:** 493 puentes vs. 64 puentes (**7.7x** de fractura logística vial).
+2. **Leyes de Colapso de Servicios Esenciales (Auditoría SINPAD 2017):**
+   - Falla crítica en **Agua Potable y Saneamiento: 66.0%** (28% destruido, 38% afectado).
+   - Falla crítica en **Alcantarillado y Desagüe: 47.0%** (27% destruido, 20% colapsado).
+   - Falla crítica en **Energía Eléctrica: 48.0%** (16% destruido, 32% cortado).
+3. **Ecuaciones Logísticas de Mitigación con AMARU-CLIMATE:**
+   - **Veto y Evacuación en Fajas Marginales ANA:** 229 manzanas ribereñas identificadas en cauces críticos. La evacuación guiada con $T-48\text{h}$ de alerta salva 2,860 vidas en un escenario extremo ($\text{TSM} \ge +2.5^\circ\text{C}$).
+   - **Pre-posicionamiento T-144h:** Despacho terrestre de Bienes de Ayuda Humanitaria (BAH) a un coeficiente de $8.89\text{ kg/damnificado}$, evitando el costoso puente aéreo tras la caída de los 493 puentes costeros.
+
+---
+
+## 🛰️ Pipeline de Telemetría SENAMHI a Nivel Nacional en Google Cloud Platform
+
+AMARU-CLIMATE cuenta con un pipeline analítico de datos que conecta la red de observación del **SENAMHI** directamente con **Google Cloud Platform (us-central1)**:
+
+* **Censo de Estaciones a Nivel Nacional:** **973 estaciones** censadas a lo largo de los 24 departamentos (699 meteorológicas, 247 hidrológicas automáticas, 27 agrometeorológicas/sutron; 316 automáticas y 657 convencionales).
+* **Almacenamiento en Data Lake (Cloud Storage):** `gs://amaru-fen-demo-senamhi-lake`, particionado por `/raw/year=YYYY/month=MM/day=DD/` con políticas de ciclo de vida automáticas (`NEARLINE` a 30 días, `COLDLINE` a 90 días, `ARCHIVE` a 365 días).
+* **Data Warehouse Analítico (BigQuery):**
+  - **Dataset:** `amaru_senamhi_dw`
+  - **Tabla Particionada & Clustered:** `telemetria_estaciones`, particionada diariamente por `fecha_observacion` y agrupada (clustered) por `ubigeo`, `departamento` y `codigo_estacion`.
+  - **Vista Materializada:** `mv_resumen_hidro_distrital`, precomputando lluvia máxima de 24h, temperatura media y caudal máximo por distrito.
+* **Orquestación Continua (Cloud Scheduler):** Job `senamhi-telemetry-hourly-sync` ejecutado automáticamente cada hora (`0 * * * *`, hora Lima) disparando la ingesta telemétrica hacia Cloud Run.
+* **Manejo de Períodos Descontinuados (Failover Híbrido):** Para las estaciones con lagunas temporales históricas (7.6% - 12%) o los distritos sin estación física (~65% del país), el sistema activa automáticamente interpolación espacial (IDW / Kriging) y respaldo satelital en malla (**NASA GPM IMERG 0.1°** y **CHIRPS v2.0 0.05°**).
+
+---
+
+## ⏱️ Doctrina Logística PP 0068 & Reloj Táctico Polar
+
+El **Reloj Táctico Polar** (`TacticalPolarClock.tsx`) sintetiza en tiempo real los promedios de avance físico y financiero de las **6 Familias Estratégicas de Ingeniería del PP 0068** auditadas por el MEF y la Contraloría:
+1. Descolmatación intensiva de cauces fluviales (Rímac/Piura/La Leche).
+2. Enrocado riprap en fajas marginales urbanas.
+3. Defensas ribereñas y desvío de bocatomas rústicas.
+4. Preposicionamiento de convoyes de maquinaria INDECI/MTC.
+5. Limpieza de drenes pluviales y cuencas ciegas SARE.
+6. Mallas geodinámicas y barreras dinámicas en quebradas activas.
+
+---
+
+## 🗺️ Geovisor C2 con Doble Motor de Mapeo
+
+Ubicado en `/geovisor`, el operador táctico puede alternar al instante entre:
+- **Retícula Táctica C2 (Deck.gl / MapLibre):** Optimizado para baja latencia, capas temáticas vectoriales de cuencas, aforos ANA y reflectividad radar.
+- **Google Maps Platform Satelital 3D:** Ortofoto de alta resolución para inspección pericial de infraestructura, cauces de quebradas, puentes críticos y centros poblados.
+
+---
+
+## 🚨 Reporte Ciudadano Bimodal Blindado
+
+En `/reporte-ciudadano`, el flujo de registro se bifurca de manera estricta y transparente:
+- **Flujo de Afectación en Hábitat / Vivienda:** Conduce a la pre-calificación `CUP-DAMN` para la gestión del **Bono de Arrendamiento de Emergencia (BAE) de S/ 500** ante el Ministerio de Vivienda.
+- **Flujo de Afectación en Salud:** Banner y enlace directo hacia la consola médica **SALUD-AMARU (`/salud/triaje`)** para atención sindrómica bajo la **NTS N.° 105-MINSA** con emisión de código `CUP-MINSA`.
 
 ---
 
 ## 🌐 Inclusión Intercultural: Pre-Padrón EDAN en Lenguas Originarias & Voz Oral
 
-El Perú cuenta con 48 lenguas originarias y millones de ciudadanos cuya lengua materna no es el castellano. Bajo el amparo de la **Ley N.º 29735**, AMARU-CLIMATE garantiza soberanía e inclusión lingüística en el registro EDAN:
-
-### 1. Diccionario Etnolingüístico Oficial (`frontend/src/locales/edan_i18n.ts`)
-Soporte completo e interactivo para 5 variantes:
-- 🇵🇪 **Castellano** (`es`)
-- 🌄 **Runasimi Chanka** (`qu_chanka`): Ayacucho, Huancavelica, Apurímac.
-- 🏔️ **Runasimi Qullaw** (`qu_collao`): Cusco, Puno, Arequipa alta.
-- ❄️ **Runasimi Anqash** (`qu_ancash`): Callejón de Huaylas, Conchucos.
-- 🦙 **Aymara** (`aymara`): Altiplano, Puno, Moquegua, Tacna.
-
-### 2. Grabación de Testimonio Oral en Dispositivo (Zero-Cloud PII)
-- Componente nativo [`VoiceStoryRecorder.tsx`](frontend/src/components/VoiceStoryRecorder.tsx) basado en la Web Audio API estándar (`navigator.mediaDevices.getUserMedia`).
-- **Sin suscripciones ni costes en dólares:** No requiere plataformas propietarias externas (como Vapi AI) que forzarían la exposición de audios sensibles y presentan altas tasas de alucinación fonética en lenguas indígenas.
-- **Sellado Criptográfico SHA-256 en el Navegador:** El audio se procesa en la memoria del dispositivo del poblador, calculando su hash SHA-256 (`audio_testimonio_sha256`) antes del envío. Esto garantiza inalterabilidad probatoria ante el INDECI y la Contraloría sin transferir datos biométricos desprotegidos.
-
-### 3. Asistencia Bilingüe Acreditada MINCUL
-- El poblador puede activar la casilla `[ ] Requiere evaluador bilingüe`.
-- El sistema alerta inmediatamente en el COED Municipal para el despacho de personal acreditado en el Registro Nacional de Intérpretes y Traductores de Lenguas Indígenas (**ReNITLI / RENALIO**).
-
----
-
-## 📱 Canales de Difusión Ciudadana: Telegram Gratuito & WhatsApp Web
-
-Para facilitar la adopción masiva sin incurrir en cuotas de pago de APIs corporativas:
-
-### 1. Integración Gratuita con Telegram Bot API (Ideal para Pruebas y Operación de Campo)
-- **100% Gratuito y sin restricciones de verificación de empresa:** Telegram permite crear bots sin costo en segundos a través de `@BotFather`.
-- El backend de AMARU-CLIMATE ya cuenta con el despachador nativo en [`backend/services/ayni_service.py`](backend/services/ayni_service.py).
-- **Configuración de Variables de Entorno:**
-  ```env
-  TELEGRAM_BOT_TOKEN="tu_token_de_bot_father"
-  TELEGRAM_CHAT_ID="id_del_canal_o_grupo_coed"
-  ```
-- **Botón de Compartición Web:** En el comprobante digital de pre-empadronamiento se incluye el botón directo `t.me/share/url`, permitiendo que el damnificado comparta su código de custodia `CUP-DAMN` a su familia o directiva comunal con un solo toque.
-
-### 2. Enlace Directo a WhatsApp Web (Sin Meta Cloud API)
-- Para evitar las altas tarifas de mensajes salientes de WhatsApp Business Cloud API, el comprobante genera una URL codificada `https://api.whatsapp.com/send?text=...`.
-- El mensaje incluye el código de trámite, estado preliminar de vivienda, elegibilidad al Bono BAE y texto adaptado a la lengua materna seleccionada.
+Bajo el amparo de la **Ley N.º 29735**, AMARU-CLIMATE garantiza soberanía e inclusión lingüística:
+- **Traducción y Locución en Quechua y Aymara:** Fichas EDAN con interfaz bilingüe auditiva para comunidades rurales.
+- **Sellado Criptográfico Local de Audio:** Los testimonios orales se firman con hash SHA-256 localmente en el dispositivo antes de transmitirse, garantizando validez probatoria sin exponer datos biométricos.
+- **Certificación ReNITLI:** Validación por peritos traductores colegiados con fe pública pericial (Art. 220 Código Procesal Penal).
 
 ---
 
 ## 🩺 Módulo SALUD-AMARU: Triaje Digital Desacoplado & Soberanía Médica
 
-Especialmente diseñado para atender a poblaciones aisladas por desbordes y huaicos bajo estricto amparo de la **Ley General de Salud N.º 26842**, la **Ley N.º 29733** y la **NTS N.º 105-MINSA/DGSP**:
-
-1. **Desacoplamiento Cero-PII:** La identidad del paciente queda sellada en la Bóveda Criptográfica AES-256. El expediente médico público solo expone el código `CUP-MINSA-{UBIGEO}-{HEX}`.
-2. **Observación Preliminar de IA (No vinculante / Sin receta farmacológica):**
-   - 🔴 **Prioridad I (Rojo):** Emergencia con riesgo de muerte (dificultad respiratoria severa, shock, gestante con contracciones o sangrado, mordedura de serpiente).
-   - 🟡 **Prioridad II (Amarillo):** Urgencia mayor (dengue con signos de alarma, leptospirosis tras inmersión prolongada en aguas servidas, heridas infectadas con lodo).
-   - 🟢 **Prioridad III (Verde):** Urgencia menor (cuadros febriles leves, diarrea sin deshidratación).
-   - ⚪ **Prioridad IV (Azul):** Consulta médica diferible.
-3. **Protocolo Break-the-Glass Médico:**
-   - El sobre criptográfico solo puede ser abierto por un **Médico Cirujano habilitado con su N.º de CMP** e indicación de justificación clínica de urgencia (amparado en el Art. 14 inc. 4 de la Ley N.º 29733).
-   - El evento se registra en la bitácora inmutable **WORM (`data/audit_salud_break_glass.jsonl`)** con hash SHA-256.
-4. **Soberanía Médica:** El médico cirujano ratifica la prioridad, emite el diagnóstico presuntivo y dispone la conducta de rescate: *Evacuación Aeromédica FAP*, *Brigada Fluvial Zodiac*, *Teleorientación Telefónica* o *Manejo en Albergue*.
-
----
-
-## 📋 Módulo AMARU-DAMNIFICADOS: Pre-Padrón EDAN v2 & Bono BAE S/ 500
-
-Módulo de pre-empadronamiento digital y verificación cruzada territorial para acelerar la asistencia humanitaria y la canalización del **Bono de Arrendamiento de Emergencia (Bono BAE)**:
-
-1. **Marco Legal Integrado:**
-   - **Ley N.º 29664 (SINAGERD):** Distinción formal entre Damnificado (daño severo en vivienda o medios de vida) y Afectado (daño menor subsanable).
-   - **Ley N.º 31526 & D.S. N.º 008-2022-VIVIENDA:** Subsidio de **S/ 500 mensuales por hasta 2 años** para familias cuya vivienda sea declarada **Colapsada / Destruida** o **Inhabitable**.
-   - **Manual EDAN v2 (INDECI):** Estándar oficial de evaluación de daños para alimentación del **SINPAD**.
-2. **Motor de Consistencia Territorial AMARU-CLIMATE (Score 0 - 100%):**
-   - **Capa 1 (35%):** Alerta hidrológica activa en cuenca (SENAMHI, ANA, GloFAS).
-   - **Capa 2 (25%):** Buffer de proximidad al eje aluvial o faja marginal CENEPRED ($< 2.5\text{ km}$).
-   - **Capa 3 (20%):** Consenso espacial multivecinal ($\ge 2$ reportes coincidentes en el distrito).
-   - **Capa 4 (20%):** Peritaje Gemini Vision de huellas de barro y tirante de agua.
-3. **Pre-Clasificaciones Oficiales:**
-   - 🔴 **Damnificado - Vivienda Colapsada:** Tirante $> 2.00\text{ m}$ (`🏠 Techo`) o arrastre de cimientos. **Elegible al Bono BAE**, carpa unifamiliar y módulo temporal MVCS.
-   - 🟠 **Damnificado - Vivienda Inhabitable:** Inundación prolongada (`🧍 Cintura` o `🦵 Rodilla` con muros de adobe/quincha con riesgo de colapso). **Elegible al Bono BAE**.
-   - 🔵 **Afectado - Vivienda Afectada Leve:** Anegamiento de patio (`🦶 Tobillo`). No elegible a Bono BAE; priorizado para motobombas de achique y kits de herramientas.
-4. **Soberanía Humana & Formalización SINPAD:**
-   - La IA solo calcula consistencia técnica. El **Jefe de Defensa Civil distrital** ejecuta el Break-the-Glass oficial, inspecciona en campo, formaliza la Ficha EDAN y registra el caso en el **SINPAD Nacional**.
-
----
-
-## 💡 Portafolio de Patentes & Propiedad Intelectual (Lab1 vs. Lab4)
-
-### A. Herencia Tecnológica y Módulos Compartidos de Lab1
-AMARU-CLIMATE reutiliza componentes nucleares de ciberseguridad y soberanía de datos validados en Lab1:
-1. **Bóveda de Criptografía de Sobre Zero-PII (`SecureZeroPiiVault`):** Cifrado simétrico de datos sensibles en memoria volátil con clave maestra en sobre cerrado, emitiendo identificadores opacos desvinculados de la identidad civil.
-2. **Bitácora Inmutable WORM de Auditoría (*Break-the-Glass*):** Registro de solo adición con marca de tiempo UTC y hash encadenado SHA-256 para cualquier apertura forzada de datos confidenciales.
-3. **Sandbox de Enjaulamiento Cognitivo (*Agent Enjailment*):** Aislamiento estricto de agentes de IA donde cada modelo únicamente puede invocar herramientas de su dominio estricto, imposibilitando la escalada de privilegios o ejecución de código arbitrario.
-
-### B. Patente Madre / Insignia de Sistema (Arquitectura General Multiescala)
-> **Candidato a Patente:** *Sistema computacional y método de comunicación bidireccional multiescala para la sincronización hidrocinética, certificación criptográfica de daños en el borde y retroalimentación humanitaria en tiempo real.*
-> 
-> **Reclamo Esencial y Nivel Inventivo:**  
-> La novedad radica en que el sistema sincroniza en tiempo real un modelo predictivo hidrodinámico centralizado descendente con una malla de verificación territorial ascendente protegida por encriptación de sobre (Zero-PII), cerrando el ciclo mediante la emisión automatizada de comprobantes de elegibilidad a subsidios de arrendamiento de emergencia (Bono BAE) sin exponer datos biométricos ni depender de servicios de mensajería comercial de pago.
-
-### C. Fichas Técnicas de las 5 Patentes de Subsistema Especializado (Lab4)
-Las siguientes tecnologías representan desarrollos originales creados para resolver los desafíos físicos, geográficos y sociales del Fenómeno El Niño:
-
-| N.° | Denominación de la Invención | Campo Técnico | Problema Físico / Operativo que Resuelve |
-|:---:|:---|:---|:---|
-| **1** | **AMARU-METEO-FUSION** | Fusión de Sensores & Modelamiento Hidráulico | Corrige el sesgo orográfico de modelos globales (ECMWF 9km) en los Andes peruanos mediante fusión ponderada con radares Banda C Vaisala y detecta de forma autónoma la **Ventana Dorada de Inyección** ($Q < 15\text{ m}^3/\text{s}$) para obras ribereñas. |
-| **2** | **Motor Tetra-Índice con Amortiguador Asintótico** | Analítica Predictiva & Evaluación Multicriterio | Integra IRCE, IPH, IPI e ISH mediante matrices Saaty AHP e introduce un amortiguador no lineal de $+0.35$ que evita falsos negativos en cuencas áridas de respuesta torrencial súbita. |
-| **3** | **Zero-Cloud PII Oral Witness & EDAN Intercultural** | Criptografía en el Borde & Accesibilidad Lingüística | Permite la captura de testimonios orales de desastres en lenguas originarias con sellado de hash SHA-256 local en el navegador, preservando la validez probatoria sin exponer biometría de voz en nubes públicas. |
-| **4** | **Reloj Táctico Polar Multi-escala de Emergencia** | Interfaz Humano-Máquina C2 | Visualización polar concéntrica que sincroniza el tiempo de concentración de cuenca ($t_c$), tiempo de retardo aluvial ($T_{\text{lag}}$) y la fecha de desborde proyectada en videowalls de salas de crisis. |
-| **5** | **Serializador Dual CAP v1.2 / Cell Broadcast Rural** | Telecomunicaciones Resilientes | Convierte alertas técnicas en tramas bilingües ultracompactas preparadas para difusión celular masiva (SISMATE / SMS) funcionales incluso con colapso total de redes de datos móviles IP. |
+- **Clasificación Automatizada NTS-105 MINSA:** Determinación objetiva de prioridades I (Grave/Shock), II (Urgencia Mayor), III (Urgencia Menor) y IV (No Urgente).
+- **Protocolo Break-the-Glass:** La identidad del paciente permanece cifrada hasta que un médico colegiado (CMP) rompe el sello por necesidad clínica justificada, auditado en bitácora WORM.
+- **Soberanía Médica Absoluta:** Cumplimiento de la Ley General de Salud N.° 26842 y el Art. 290 del Código Penal; la IA asiste pero jamás prescribe ni reemplaza al médico.
 
 ---
 
 ## 🤖 Swarm Multi-Agente Autónomo & Enjaulamiento Cognitivo
 
-AMARU-CLIMATE opera con una constelación de agentes especializados coordinados bajo el principio de enjaulamiento cognitivo:
-
-| Agente | Nombre en Runa Simi / Rol | Misión Principal y Herramientas |
+| Agente | Nombre / Rol | Misión Principal y Herramientas |
 |---|---|---|
 | 👑 **Agente 1** | **KURAQ** (Master Data Ingestion) | Ingesta y validación de 27 fuentes oficiales (SENAMHI, IMARPE, ENFEN, ANA, GloFAS). |
 | 🧠 **Agente 2** | **YACHAY** (Memoria Histórica & Saberes) | Análogos históricos FEN (1983, 1998, 2017, Yaku 2023), bioindicadores y nodos CAF. |
@@ -216,8 +239,8 @@ AMARU-CLIMATE opera con una constelación de agentes especializados coordinados 
 | 📐 **Agente 4** | **YUPAQ** (Cálculo Físico & Hidrometeorológico) | Ecuaciones de Manning, Mohr-Coulomb, fórmulas tetra-índice Saaty AHP. |
 | ⚖️ **Agente 5** | **FISCALIZADOR** (Auditoría MEF & CGR) | Cruce de proyectos PP 0068, alertas SIAF y razonabilidad de maquinaria (Ley 30225). |
 | 👥 **Agente 6** | **COMUNITARIO** (Intercultural & Difusión) | Adaptación lingüística Quechua/Aymara y despacho a Telegram/WhatsApp. |
-| 🛰️ **Agente 7** | **SATELITAL** (Teledetección & Radar) | Nowcasting de radares Banda C Vaisala y detección de humedad de suelo Sentinel/ECMWF. |
-| 📜 **Agente 8** | **ReNITLI** (Fe Pública Intercultural) | Certificación pericial bilingüe con hash SHA-256 inmutable (Ley N.º 29735 / Art. 220 CPP). |
+| 🛰️ **Agente 7** | **SATELITAL** (Teledetección & Radar) | Nowcasting de radares Banda C WRM200 y detección de humedad de suelo Sentinel/ECMWF. |
+| 📜 **Agente 8** | **ReNITLI** (Fe Pública Intercultural) | Certificación pericial bilingüe con hash SHA-256 inmutable (Ley N.º 29735). |
 | 🩺 **Agente 9** | **SALUD-AMARU** (Triaje Desacoplado) | Clasificación preliminar NTS-105 MINSA y custodia de expedientes CUP-MINSA. |
 | 📋 **Agente 10** | **AMARU-DAMNIFICADOS** (Auditor Territorial) | Validación cruzada de Fichas EDAN, consistencia territorial y elegibilidad Bono BAE. |
 
@@ -225,86 +248,96 @@ AMARU-CLIMATE opera con una constelación de agentes especializados coordinados 
 
 ## 🔒 Bóveda Criptográfica Envelope Zero-PII & Auditoría WORM
 
-Para dar cumplimiento irrestricto a la **Ley N.º 29733 (Protección de Datos Personales)**:
-- **Envelope Encryption:** Los datos de filiación ciudadana se encriptan con claves simétricas AES-256 generadas dinámicamente en RAM.
-- **Códigos Opacos:** `CUP-MINSA-{UBIGEO}-{HEX}` para salud y `CUP-DAMN-{UBIGEO}-{HEX}` para damnificados.
-- **Bitácoras WORM (Write Once, Read Many):** Todo acceso por Break-the-Glass se registra en archivos `.jsonl` auditables con marca de tiempo UTC y hash SHA-256 encadenado:
-  - `data/audit_salud_break_glass.jsonl`
-  - `data/audit_damnificados_break_glass.jsonl`
+- **Envelope Encryption:** Claves simétricas AES-256 generadas en memoria volátil; llaves maestras en KMS.
+- **Códigos Opacos:** `CUP-MINSA-{UBIGEO}-{HEX}` para atenciones médicas y `CUP-DAMN-{UBIGEO}-{HEX}` para damnificados.
+- **Bitácoras WORM (Write Once, Read Many):** Registros inmutables `.jsonl` auditables con marca de tiempo UTC y hash SHA-256 encadenado:
+  - `backend/data/audit_salud_break_glass.jsonl`
+  - `backend/data/audit_damnificados_break_glass.jsonl`
 
 ---
 
 ## 🔌 Catálogo de Endpoints REST de la API
 
-### Módulo AMARU-DAMNIFICADOS (Pre-Padrón EDAN, Lenguas Originarias & Bono BAE)
-- `POST /api/v1/damnificados/registrar`: Pre-empadronamiento ciudadano bilingüe (Quechua/Aymara/Castellano), con soporte de `lengua_materna`, `requiere_asistencia_bilingue`, `audio_testimonio_sha256` y generación de `CUP-DAMN`.
-- `GET /api/v1/municipal/{ubigeo}/padron-damnificados`: Bandeja distrital desacoplada para Defensa Civil con distintivo de lengua originaria y audio testimonio.
-- `GET /api/v1/municipal/{ubigeo}/padron-damnificados/{cup}`: Consulta de expediente técnico desacoplado con metadatos lingüísticos.
-- `POST /api/v1/municipal/{ubigeo}/padron-damnificados/{cup}/desbloquear-identidad`: Protocolo Break-the-Glass con DNI de evaluador.
-- `POST /api/v1/municipal/{ubigeo}/padron-damnificados/{cup}/aprobar-sinpad`: Aprobación y formalización formal en SINPAD.
-- `GET /api/v1/municipal/{ubigeo}/padron-damnificados/metricas`: KPIs distritales y estimación de presupuesto BAE.
+### Auditoría Forense y Gobernanza Anticipatoria
+- `GET /api/v1/auditoria/metricas-forenses`: Estado consolidado de los 7 controles forenses, pre-padrón ledger, obras PP 0068, triaje NTS-105 y circuit breaker.
 
-### Módulo AMARU-AGRO (Pre-Padrón Agrícola, Seguro Catastrófico SAC & Auditoría Satelital)
-- `POST /api/v1/agro/registrar-siniestro`: Registro georreferenciado de parcela siniestrada, cultivo y tenencia PPA con emisión de `CUP-AGRO`.
-- `GET /api/v1/agro/auditoria-satelital/{cup}`: Consulta de cruce espectral Sentinel-1 SAR (inundación activa) y serie histórica NDVI de 60 días previos (biomasa pre-huaico).
-- `POST /api/v1/agro/homologar-sac/{cup}`: Acta de ajuste digitalizada y firma de perito de la Dirección Regional de Agricultura / Aseguradora.
-- `GET /api/v1/agro/cerradura-geodesica-h3`: Verificador espacial de exclusión de solapamiento de tierras comunales en hexágonos H3.
+### Ingesta Telemétrica SENAMHI en Google Cloud (BigQuery & Cloud Storage)
+- `POST /api/v1/jobs/ingest-senamhi`: Ingesta por lotes hacia `gs://amaru-fen-demo-senamhi-lake` y tabla particionada `telemetria_estaciones` en BigQuery.
+- `GET /api/v1/jobs/ingest-senamhi/health`: Diagnóstico de salud, conteo de estaciones censadas (973) y estado de conectividad.
+
+### Ingesta Dual Soberana (IMARPE & ENFEN)
+- `POST /api/imarpe/upload-pdf`: Carga manual y extracción forense instantánea de Boletín Diario Oceanográfico BDO (PDF).
+- `POST /api/enfen/upload-pdf`: Carga manual y extracción forense instantánea de Comunicado Oficial ENFEN (PDF).
+- `GET /api/imarpe/latest`: Último informe de TSM y anomalías térmicas en 12 estaciones costeras (al 25 de setiembre de 2026, BDO N° 268).
+- `GET /api/imarpe/history`: Serie histórica completa de 37 días continuos (15-Ago a 25-Set).
+- `GET /api/enfen/history`: Serie histórica de probabilidades de El Niño Costero (Comunicados N° 10 a 16-2026).
+
+### Módulo Simulación C4ISR & INDECI Ground Truth
+- `GET /api/v1/simulacion/mega-fen/nacional`: Simulación probabilística con asimilación dinámica, curvas TSM y avance PP0068.
+- `GET /api/v1/simulacion/mega-fen/indeci-ground-truth`: Datos oficiales SINPAD al 100% de liquidación (FEN 2017 vs. 2018 regular), multiplicadores y daño neto.
+- `GET /api/v1/simulacion/mega-fen/distritos`: Filtrado pericial de distritos con balances de mitigación C4ISR.
+- `GET /api/v1/simulacion/mega-fen/distrito/{ubigeo}`: Perfil distrital de estrés y vidas salvadas en fajas marginales ANA.
+
+### Módulo AMARU-DAMNIFICADOS (Pre-Padrón EDAN & Bono BAE S/ 500)
+- `POST /api/v1/damnificados/registrar`: Pre-empadronamiento bilingüe con emisión de `CUP-DAMN` y hash SHA-256.
+- `GET /api/v1/municipal/{ubigeo}/padron-damnificados`: Bandeja distrital desacoplada para Defensa Civil.
+- `POST /api/v1/municipal/{ubigeo}/padron-damnificados/{cup}/desbloquear-identidad`: Protocolo Break-the-Glass.
+- `POST /api/v1/municipal/{ubigeo}/padron-damnificados/{cup}/aprobar-sinpad`: Aprobación y formalización en SINPAD.
 
 ### Módulo SALUD-AMARU (Triaje Médico Desacoplado)
-- `POST /api/v1/salud/triaje/registrar`: Registro de paciente y emisión de observación NTS-105.
+- `POST /api/v1/salud/triaje/registrar`: Registro de paciente y emisión de observación NTS-105 con `CUP-MINSA`.
 - `GET /api/v1/salud/bandeja-minsa`: Bandeja médica con prioridad de gravedad (I, II, III).
-- `GET /api/v1/salud/caso/{cup}`: Detalle del caso clínico con identidad protegida.
-- `POST /api/v1/salud/caso/{cup}/homologar-medico`: Certificación médica oficial y vinculación con la historia clínica SIS/MINSA.
 - `POST /api/v1/salud/caso/{cup}/desbloquear-identidad`: Protocolo Break-the-Glass médico con CMP.
 - `POST /api/v1/salud/caso/{cup}/resolucion-medica`: Dictamen de conducta médica y rescate.
-- `GET /api/v1/salud/metricas`: Métricas ejecutivas de atenciones de emergencia.
 
-### Suite Municipal 360° & Obras PP 0068
-- `GET /api/v1/municipal/{ubigeo}/obras-pp0068`: Cartera de proyectos MEF y cuellos de botella SIAF.
-- `POST /api/v1/municipal/{ubigeo}/certificar-maquinaria`: Certificación de razonabilidad de precios de maquinaria pesada (Ley N.º 30225).
-- `GET /api/v1/municipal/{ubigeo}/reloj-fen`: Métricas hidrocinéticas de cuenca y fecha límite de Ventana Dorada.
+### Suite Municipal 360°, Obras PP 0068 & Bandeja CGR / ANA
+- `GET /api/v1/municipal/{ubigeo}/obras-pp0068`: Cartera de proyectos MEF Consulta Amigable, obras ANA y cuellos de botella SIAF.
+- `POST /api/v1/municipal/{ubigeo}/certificar-maquinaria`: Certificación de razonabilidad de maquinaria pesada (Art. 27 Ley 30225).
+- `GET /api/v1/municipal/{ubigeo}/reloj-fen`: Métricas hidrocinéticas de cuenca, Ventana Dorada y obras ANA asociadas.
 - `GET /api/v1/municipal/{ubigeo}/plan-contingencia-digital`: Generador del Plan PCMD y resolución de alcaldía.
-- `GET /api/v1/municipal/{ubigeo}/pprrd-digital`: Cartera de inversiones estructurales y medidas CENEPRED.
 
 ---
 
-## 🚀 Puesta en Marcha y Suites de Pruebas Unitarias
+## ☁️ Despliegue en Google Cloud Platform & Puesta en Marcha (Producción 200 OK)
 
-### 1. Requisitos Previos
-- **Python 3.11+**
-- **Node.js 18+** y **npm**
-- **Google Cloud Platform SDK (gcloud CLI)** configurado
+### URLs Oficiales en Producción (Cloud Run `us-central1`):
+* **Consola COED Nacional C2:** [https://coen-frontend-289004262994.us-central1.run.app/](https://coen-frontend-289004262994.us-central1.run.app/)
+* **Consola de Simulación Mega-FEN & Ground Truth INDECI:** [https://coen-frontend-289004262994.us-central1.run.app/simulacion](https://coen-frontend-289004262994.us-central1.run.app/simulacion)
+* **Bandeja de Control Concurrente CGR & Obras ANA:** [https://coen-frontend-289004262994.us-central1.run.app/contraloria](https://coen-frontend-289004262994.us-central1.run.app/contraloria)
+* **Consola Oceanográfica IMARPE (37 BDOs al 25-Set-2026):** [https://coen-frontend-289004262994.us-central1.run.app/imarpe](https://coen-frontend-289004262994.us-central1.run.app/imarpe)
+* **Consola de Auditoría Forense:** [https://coen-frontend-289004262994.us-central1.run.app/auditoria](https://coen-frontend-289004262994.us-central1.run.app/auditoria)
+* **Suite Municipal 360° (Ej. Piura):** [https://coen-frontend-289004262994.us-central1.run.app/municipal/200101](https://coen-frontend-289004262994.us-central1.run.app/municipal/200101)
+* **Consola Táctica ENFEN (7 Comunicados):** [https://coen-frontend-289004262994.us-central1.run.app/enfen](https://coen-frontend-289004262994.us-central1.run.app/enfen)
+* **Consola Médica SALUD-AMARU:** [https://coen-frontend-289004262994.us-central1.run.app/salud/consola-medica](https://coen-frontend-289004262994.us-central1.run.app/salud/consola-medica)
+* **Visor Multitemporal Satelital Soberano:** [https://coen-frontend-289004262994.us-central1.run.app/satelites](https://coen-frontend-289004262994.us-central1.run.app/satelites)
+* **Consola de Fiscalización Legal:** [https://coen-frontend-289004262994.us-central1.run.app/fiscal](https://coen-frontend-289004262994.us-central1.run.app/fiscal)
+* **Backend API REST & Swagger OpenAPI:** [https://coen-backend-289004262994.us-central1.run.app/docs](https://coen-backend-289004262994.us-central1.run.app/docs)
 
-### 2. Backend (FastAPI)
+### Despliegue Automatizado con Cloud Build
 ```bash
-cd backend
-python -m venv .venv
-# En Windows PowerShell:
-.\.venv\Scripts\Activate.ps1
-# En Linux/macOS:
-source .venv/bin/activate
+# 1. Despliegue de Backend:
+gcloud builds submit --tag gcr.io/amaru-fen-demo/coen-backend:latest ./backend --project amaru-fen-demo
+gcloud run deploy coen-backend --image gcr.io/amaru-fen-demo/coen-backend:latest --region us-central1 --project amaru-fen-demo --allow-unauthenticated --memory 1Gi --cpu 1 --quiet
 
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
+# 2. Despliegue de Frontend (Next.js 14):
+gcloud builds submit --config ./frontend/cloudbuild.yaml ./frontend --project amaru-fen-demo
+gcloud run deploy coen-frontend --image gcr.io/amaru-fen-demo/coen-frontend:latest --region us-central1 --project amaru-fen-demo --allow-unauthenticated --memory 1Gi --cpu 1 --quiet
 ```
 
-### 3. Frontend (Next.js 14)
+### Ejecución Local
 ```bash
+# Backend:
+cd backend
+python -m venv .venv
+source .venv/bin/activate  # o .\.venv\Scripts\Activate.ps1 en Windows
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+
+# Frontend:
 cd frontend
 npm install
 npm run dev
-# Acceder a http://localhost:3000
-```
-
-### 4. Ejecución de la Suite Completa de Pruebas (100% Pass)
-```bash
-# Desde la raíz del repositorio:
-$env:PYTHONPATH="backend"
-.\backend\.venv\Scripts\python.exe -m unittest backend/tests/test_damnificados_amaru.py backend/tests/test_salud_amaru.py backend/tests/test_municipal_suite_360.py
-
-# Verificación de TypeScript en Frontend (0 errores):
-cd frontend
-npx tsc --noEmit
+# Acceso en http://localhost:3000
 ```
 
 ---

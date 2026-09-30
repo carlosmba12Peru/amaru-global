@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import DistrictWeatherInspector from "@/components/DistrictWeatherInspector";
+import { API_BASE } from "@/config/api";
 import {
     Zap,
     CloudRain,
@@ -27,7 +28,8 @@ import {
     Database,
     Download,
     Eye,
-    TrendingUp
+    TrendingUp,
+    Clock
 } from "lucide-react";
 
 interface SueloCapas {
@@ -152,12 +154,15 @@ export default function MeteoFenConsole() {
     const [paginaActual, setPaginaActual] = useState<number>(1);
     const elementosPorPagina = 15;
 
+    const [operatingMode, setOperatingMode] = useState<"LIVE" | "SIMULACION">("LIVE");
+
     // Cargar datos desde el Backend
-    const fetchData = async () => {
+    const fetchData = async (overrideMode?: "LIVE" | "SIMULACION") => {
         setLoading(true);
         setError(null);
+        const modeToUse = overrideMode || operatingMode;
         try {
-            const res = await fetch("http://127.0.0.1:8000/api/meteo/ds124-matrix");
+            const res = await fetch(`${API_BASE}/api/meteo/ds124-matrix?mode=${modeToUse}`);
             if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
             const json: MeteoMatrixResponse = await res.json();
             setData(json);
@@ -168,10 +173,16 @@ export default function MeteoFenConsole() {
             }
         } catch (err: any) {
             console.error("Error al cargar matriz Open-Meteo DS124:", err);
-            setError("No se pudo conectar con el servicio meteorológico local. Reintentando...");
+            setError("No se pudo conectar con el servicio meteorológico. Reintentando...");
         } finally {
             setLoading(false);
         }
+    };
+
+    const toggleOperatingMode = () => {
+        const nextMode = operatingMode === "LIVE" ? "SIMULACION" : "LIVE";
+        setOperatingMode(nextMode);
+        fetchData(nextMode);
     };
 
     useEffect(() => {
@@ -182,7 +193,7 @@ export default function MeteoFenConsole() {
     const handleConsultarLive = async (ubigeo: string) => {
         setLiveLoading(true);
         try {
-            const res = await fetch(`http://127.0.0.1:8000/api/meteo/ds124-district/${ubigeo}`);
+            const res = await fetch(`${API_BASE}/api/meteo/ds124-district/${ubigeo}`);
             if (res.ok) {
                 const json = await res.json();
                 setLiveReport(json);
@@ -251,10 +262,10 @@ export default function MeteoFenConsole() {
 
         // En Modo 1: Situación Climática Actual (Mapa Exclusivo de Lluvias en Vivo de Hoy)
         // Solo cambia de color cuando efectivamente hay lluvias registradas hoy
-        if (d.lluvia_24h >= 50.0) return "#ef4444"; // Lluvia Torrencial (> 50 mm)
-        if (d.lluvia_24h >= 25.0) return "#f97316"; // Lluvia Fuerte (25-50 mm)
-        if (d.lluvia_24h >= 10.0) return "#eab308"; // Lluvia Moderada (10-25 mm)
-        if (d.lluvia_24h >= 1.0)  return "#22c55e"; // Lluvia Ligera (1-10 mm)
+        if (d.lluvia_24h >= 30.0) return "#ef4444"; // Lluvia Torrencial Crítica (> 30 mm)
+        if (d.lluvia_24h >= 15.0) return "#f97316"; // Lluvia Fuerte (15-30 mm)
+        if (d.lluvia_24h >= 5.0)  return "#eab308"; // Lluvia Moderada (5-15 mm)
+        if (d.lluvia_24h >= 1.0)  return "#22c55e"; // Lluvia Ligera (1-5 mm)
         return "#38bdf8"; // 0.0 mm: Seco / Sin Lluvia (Azul Cielo)
     };
 
@@ -396,7 +407,7 @@ export default function MeteoFenConsole() {
         distritosFiltrados.forEach((d) => {
             if (d.latitud == null || d.longitud == null) return;
             const color = getColorPunto(d);
-            const isRed = primaryMode === "clima" ? d.lluvia_24h >= 50.0 : d.nivel_alerta === "ROJO";
+            const isRed = primaryMode === "clima" ? d.lluvia_24h >= 30.0 : d.nivel_alerta === "ROJO";
             const isSelected = distritoSeleccionado?.ubigeo === d.ubigeo;
 
             const marker = new google.maps.Marker({
@@ -542,6 +553,18 @@ export default function MeteoFenConsole() {
 
                     <div className="flex items-center gap-2 self-start lg:self-center shrink-0">
                         <button
+                            onClick={toggleOperatingMode}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm border ${
+                                operatingMode === "SIMULACION"
+                                    ? "bg-red-950 text-red-300 border-red-700 animate-pulse"
+                                    : "bg-emerald-950 text-emerald-300 border-emerald-700"
+                            }`}
+                            title="Alternar entre Telemetría Real de Hoy (Open-Meteo Pro) y Escenario de Contingencia FEN Lluvia Crítica (>30 mm/24h)"
+                        >
+                            <Zap className="w-3.5 h-3.5" />
+                            <span>{operatingMode === "SIMULACION" ? "🔴 MODO HIDROMETEO CRÍTICO (>30mm)" : "🟢 EN VIVO OPEN-METEO PRO"}</span>
+                        </button>
+                        <button
                             onClick={() => setShowInspector(!showInspector)}
                             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-950/90 hover:bg-sky-900 border border-sky-600/60 text-xs font-bold text-sky-300 hover:text-white transition shadow-sm"
                             title="Abrir o cerrar el Inspector Climático Distrital (Portal Clima Perú)"
@@ -550,7 +573,7 @@ export default function MeteoFenConsole() {
                             <span>{showInspector ? "Ocultar Portal Clima" : "Inspector Distrital (1,891)"}</span>
                         </button>
                         <button
-                            onClick={fetchData}
+                            onClick={() => fetchData()}
                             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-750 text-xs font-semibold text-slate-300 hover:text-white transition shadow-sm"
                             title="Actualizar datos meteorológicos"
                         >
@@ -565,6 +588,14 @@ export default function MeteoFenConsole() {
                             {isFullscreen ? <Minimize2 className="w-3.5 h-3.5 text-amber-400" /> : <Maximize2 className="w-3.5 h-3.5 text-amber-400" />}
                             <span>{isFullscreen ? "Reducir" : "C2 Fullscreen"}</span>
                         </button>
+                        <Link
+                            href="/pronostico"
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold transition shadow-md shadow-cyan-600/30"
+                            title="Ver Matriz de Pronóstico a 7 Días y Protocolos EAP (T-144h, T-72h, T-24h)"
+                        >
+                            <Clock className="w-3.5 h-3.5" />
+                            <span>Predictivo 7D & EAP</span>
+                        </Link>
                         <Link
                             href="/"
                             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition shadow-md shadow-blue-600/30"
@@ -603,7 +634,7 @@ export default function MeteoFenConsole() {
                         <div className="bg-slate-900 border border-red-900/60 p-3 rounded-xl flex flex-col justify-between shadow-lg bg-gradient-to-b from-red-950/20 to-transparent">
                             <span className="text-[10px] uppercase font-bold text-red-400 flex items-center gap-1">
                                 <span className="h-2 w-2 rounded-full bg-red-500 animate-ping" />
-                                Alarma Roja (&gt; 50 mm)
+                                Alarma Roja (&gt; 30 mm)
                             </span>
                             <div className="text-2xl font-black text-red-400 font-mono">
                                 {data.estadisticas.conteo_alertas.ROJO}
@@ -612,7 +643,7 @@ export default function MeteoFenConsole() {
                         </div>
 
                         <div className="bg-slate-900 border border-orange-900/60 p-3 rounded-xl flex flex-col justify-between shadow-lg bg-gradient-to-b from-orange-950/20 to-transparent">
-                            <span className="text-[10px] uppercase font-bold text-orange-400">Alerta Naranja (25-50mm)</span>
+                            <span className="text-[10px] uppercase font-bold text-orange-400">Alerta Naranja (15-30mm)</span>
                             <div className="text-2xl font-black text-orange-400 font-mono">
                                 {data.estadisticas.conteo_alertas.NARANJA}
                             </div>
@@ -620,7 +651,7 @@ export default function MeteoFenConsole() {
                         </div>
 
                         <div className="bg-slate-900 border border-yellow-900/60 p-3 rounded-xl flex flex-col justify-between shadow-lg bg-gradient-to-b from-yellow-950/20 to-transparent">
-                            <span className="text-[10px] uppercase font-bold text-yellow-400">Atención Amarilla (10-25mm)</span>
+                            <span className="text-[10px] uppercase font-bold text-yellow-400">Atención Amarilla (5-15mm)</span>
                             <div className="text-2xl font-black text-yellow-400 font-mono">
                                 {data.estadisticas.conteo_alertas.AMARILLO}
                             </div>
@@ -628,7 +659,7 @@ export default function MeteoFenConsole() {
                         </div>
 
                         <div className="bg-slate-900 border border-emerald-900/60 p-3 rounded-xl flex flex-col justify-between shadow-lg bg-gradient-to-b from-emerald-950/20 to-transparent">
-                            <span className="text-[10px] uppercase font-bold text-emerald-400">Normal Verde (&lt; 10mm)</span>
+                            <span className="text-[10px] uppercase font-bold text-emerald-400">Normal Verde (&lt; 5mm)</span>
                             <div className="text-2xl font-black text-emerald-400 font-mono">
                                 {data.estadisticas.conteo_alertas.VERDE}
                             </div>

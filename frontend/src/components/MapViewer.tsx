@@ -12,6 +12,7 @@ import {
     ExternalLink,
     AlertTriangle,
     Key,
+    Lock,
     CheckCircle2,
     XCircle,
     Maximize2,
@@ -507,7 +508,7 @@ export default function MapViewer({ mode = "national", ubigeo }: Props) {
     const infoWindowRef = useRef<any>(null);
     const markersRef = useRef<any[]>([]);
     const polygonRef = useRef<any>(null);
-    const DEFAULT_MAPS_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
+    const DEFAULT_MAPS_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "AIzaSyCQpoz3Zw4JarglGM7w2aq46d9XCtwfTyE";
 
     // Capas Dinámicas con Telemetría Viva (Inicializadas con fallback de contingencia)
     const [marinosList, setMarinosList] = useState<PuntoTerritorial[]>(BOYAS_OCEANOGRAFICAS);
@@ -665,6 +666,11 @@ export default function MapViewer({ mode = "national", ubigeo }: Props) {
     const [mapError, setMapError] = useState<string | null>(null);
     const [showKeyModal, setShowKeyModal] = useState<boolean>(false);
     const [tempKeyInput, setTempKeyInput] = useState<string>("");
+
+    const handleOpenKeyModal = () => {
+        setTempKeyInput(apiKey || DEFAULT_MAPS_KEY);
+        setShowKeyModal(true);
+    };
 
     // ResizeObserver para que Google Maps recalcule su tamaño dinámicamente al expandir la visión
     useEffect(() => {
@@ -1236,6 +1242,14 @@ export default function MapViewer({ mode = "national", ubigeo }: Props) {
                         Relieve
                     </button>
                     <button
+                        onClick={handleOpenKeyModal}
+                        className="px-2 py-1 rounded text-[11px] font-medium text-slate-300 hover:bg-slate-800 transition-colors flex items-center gap-1"
+                        title="Configuración de Credencial Google Maps Platform"
+                    >
+                        <Lock className="w-3 h-3 text-amber-400" />
+                        <span>API Key</span>
+                    </button>
+                    <button
                         onClick={toggleFullscreen}
                         className={`px-2.5 py-1 rounded text-[11px] font-semibold flex items-center gap-1.5 transition shadow-lg ${isFullscreen
                             ? "bg-red-600 hover:bg-red-500 text-white animate-pulse border border-red-400"
@@ -1257,6 +1271,82 @@ export default function MapViewer({ mode = "national", ubigeo }: Props) {
                     </button>
                 </div>
             </div>
+
+            {/* Modal de Configuración Privada de API Key */}
+            {showKeyModal && (
+                <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-slate-900 border border-slate-700 max-w-md w-full rounded-2xl p-5 shadow-2xl space-y-4">
+                        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <div className="flex items-center gap-2">
+                                <Lock className="w-4 h-4 text-amber-400" />
+                                <h3 className="text-sm font-bold text-white">Google Maps Platform • Credencial</h3>
+                            </div>
+                            <button
+                                onClick={() => setShowKeyModal(false)}
+                                className="text-slate-400 hover:text-white text-xs"
+                            >
+                                ✕
+                            </button>
+                        </div>
+                        <p className="text-xs text-slate-300 leading-relaxed">
+                            Ingresa tu clave de API de Google Maps Platform. La clave se guardará únicamente de forma local en tu navegador (LocalStorage) y nunca será expuesta.
+                        </p>
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <label className="text-[11px] font-semibold text-slate-400 block">
+                                    Clave de API de Google Cloud:
+                                </label>
+                                {DEFAULT_MAPS_KEY && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setTempKeyInput(DEFAULT_MAPS_KEY)}
+                                        className="text-[11px] text-sky-400 hover:text-sky-300 underline font-medium cursor-pointer"
+                                    >
+                                        ⚡ Cargar clave del proyecto
+                                    </button>
+                                )}
+                            </div>
+                            <input
+                                type="text"
+                                value={tempKeyInput}
+                                onChange={(e) => setTempKeyInput(e.target.value)}
+                                placeholder="Pega tu clave aquí (AIzaSy...)"
+                                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 font-mono"
+                            />
+                        </div>
+                        {mapError && (
+                            <div className="p-2.5 rounded-lg bg-red-950/60 border border-red-800/80 text-[11px] text-red-300">
+                                {mapError}
+                            </div>
+                        )}
+                        <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+                            <button
+                                onClick={() => {
+                                    localStorage.removeItem("gmaps_api_key");
+                                    setApiKey(DEFAULT_MAPS_KEY);
+                                    setShowKeyModal(false);
+                                }}
+                                className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white"
+                            >
+                                Restablecer
+                            </button>
+                            <button
+                                onClick={() => {
+                                    if (tempKeyInput.trim()) {
+                                        localStorage.setItem("gmaps_api_key", tempKeyInput.trim());
+                                        setApiKey(tempKeyInput.trim());
+                                        setMapError(null);
+                                    }
+                                    setShowKeyModal(false);
+                                }}
+                                className="px-4 py-1.5 rounded-lg text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white shadow"
+                            >
+                                Guardar y Recargar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Barra de Capas Temáticas Especializadas C2 (Sub-barra superior izquierda) */}
             <div className="absolute top-14 left-3 z-10 flex flex-wrap items-center gap-1.5 bg-slate-900/90 backdrop-blur-md border border-slate-700/80 p-1.5 rounded-lg text-xs shadow-xl">
@@ -1325,13 +1415,30 @@ export default function MapViewer({ mode = "national", ubigeo }: Props) {
                 {(!apiKey || mapError) && (
                     <div className={`w-full h-full ${isFullscreen ? "h-[calc(100vh-20px)] min-h-[calc(100vh-20px)]" : "min-h-[480px]"} flex flex-col items-center justify-center p-4 bg-slate-950`}>
                         {/* Banner explicativo elegante */}
-                        <div className="mb-3 max-w-lg bg-blue-950/40 border border-blue-800/60 p-3 rounded-lg text-xs text-blue-200 flex items-start gap-2.5">
-                            <ShieldAlert className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-                            <div>
-                                <strong className="font-semibold text-white">Consola Cartográfica C2 Multicapa</strong>
-                                <p className="text-[11px] text-blue-300/90 mt-0.5">
-                                    Visualizando capas de Temperatura del Mar (TSM), Boyas DHN, Clima UBIGEOS y Quebradas.
-                                </p>
+                        <div className="mb-3 max-w-lg bg-slate-900 border border-slate-700/80 p-3.5 rounded-xl text-xs flex flex-col gap-2 shadow-xl">
+                            <div className="flex items-start gap-2.5">
+                                <ShieldAlert className={`w-4 h-4 shrink-0 mt-0.5 ${mapError ? "text-amber-400" : "text-sky-400"}`} />
+                                <div className="space-y-1">
+                                    <strong className="font-bold text-white block">
+                                        {mapError ? "Google Maps Platform • Advertencia de Inicialización" : "Consola Cartográfica C2 Multicapa"}
+                                    </strong>
+                                    <p className="text-[11px] text-slate-300 leading-relaxed">
+                                        {mapError 
+                                            ? mapError 
+                                            : "Operando con la cartografía vectorial de contingencia C2 (Boyas DHN, TSM Niño 1+2, Clima UBIGEOS y 46 Quebradas)."}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between pt-1 border-t border-slate-800 text-[11px]">
+                                <span className="text-slate-400 font-mono">
+                                    Estado API: {apiKey ? "Clave configurada" : "Sin clave pública"}
+                                </span>
+                                <button
+                                    onClick={handleOpenKeyModal}
+                                    className="text-sky-400 hover:text-sky-300 font-semibold underline cursor-pointer"
+                                >
+                                    Configurar Credencial
+                                </button>
                             </div>
                         </div>
 

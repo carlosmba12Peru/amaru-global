@@ -21,4 +21,14 @@ dist/
 data/*.pdf
 data/**/*.pdf
 data/*.xls
-backups/
+data/Fotos Satelite Aqua_Modis_Perú/
+backend/data/Consulta amigable mef 2026/
+backend/data/Estudio Nacional del Fenómeno del Niño ENFEN/
+backend/data/Reporte de Imarpe diario/
+backups/
+
+# Carpetas de pruebas temporales y scratch
+scratch/
+backend/scratch/
+*.log
+backend/test_out.txt

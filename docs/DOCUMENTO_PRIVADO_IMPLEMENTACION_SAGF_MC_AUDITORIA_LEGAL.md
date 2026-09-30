@@ -4,17 +4,26 @@
 > **Clasificación:** DOCUMENTO PRIVADO / RESERVADO - MISIÓN CRÍTICA  
 > **Sistema:** AMARU-CLIMATE / COEN-Digital (Plataforma Territorial de Alerta Temprana Bi-Escala)  
 > **Entidades de Aplicación:** INDECI, COEN, COER, Gobiernos Regionales, Alcaldías Distritales, CENEPRED, Ministerio de Cultura (MINCUL) y Contraloría General de la República (CGR).  
-> **Marco Normativo:** Ley N.º 29664 (SINAGERD), D.S. N.º 124-2026-PCM (Emergencia FEN), Ley N.º 31814 (Uso de IA en el Sector Público), D.S. N.º 115-2025-PCM (Gobernanza de IA de Alto Riesgo), Ley N.º 29733 (Protección de Datos Personales), NTP-ISO/IEC 27037:2012 (Evidencia Digital y Cadena de Custodia), IETF RFC 3161 (Sellado Digital de Tiempo TSA), Art. 220 Código Procesal Penal (Prueba Pericial), y Ley N.º 29735 (Lenguas Originarias y ReNITLI-MINCUL).
+> **Marco Normativo Vinculante:** Ley N.º 29664 (SINAGERD), D.S. N.º 124-2026-PCM (Emergencia FEN), Ley N.º 31814 (Uso de IA en el Sector Público), D.S. N.º 115-2025-PCM (Gobernanza de IA de Alto Riesgo), Ley N.º 29733 (Protección de Datos Personales), NTP-ISO/IEC 27037:2012 (Evidencia Digital y Cadena de Custodia), IETF RFC 3161 (Sellado Digital de Tiempo TSA), Art. 220 Código Procesal Penal (Prueba Pericial), y Ley N.º 29735 (Lenguas Originarias y ReNITLI-MINCUL).
+
+> [!CAUTION]
+> ### DECLARACIÓN DE ESTADO DOCTRINAL: ANÁLISIS EMPÍRICO NO SUSTENTABLE ANTE TERCEROS
+> La denominación interna **"SAGF-MC"** corresponde estrictamente a una **hipótesis de trabajo y análisis empírico exploratorio de laboratorio** desarrollado durante la fase de prototipado.
+> **NO CONSTITUYE UN ESTÁNDAR FORMALMENTE DESARROLLADO, PROMULGADO NI APROBADO POR NINGÚN ORGANISMO NORMATIVO O ESTATAL.**
+> Por consiguiente, **"SAGF-MC" NO PUEDE NI DEBE SER SUSTENTADO COMO ESTÁNDAR NI INVOCADO ANTE AUTORIDADES, ALCALDÍAS, ÓRGANOS DE CONTROL (CGR/OCI) NI EN EXPEDIENTES PÚBLICOS.**
+> 
+> **SUSTENTO TÉCNICO Y LEGAL OFICIAL VINCULANTE:**  
+> Toda la seguridad, gobernanza, cadena de custodia y blindaje operativo de la plataforma AMARU-CLIMATE descansa **EXCLUSIVAMENTE** en estándares formales internacionales y normas jurídicas vigentes en el Estado peruano (NTP-ISO/IEC 27037:2012, RFC 3161, Ley N.° 29733, D.S. N.° 115-2025-PCM, Ley N.° 30225, D.S. N.° 124-2026-PCM y Ley N.° 29664 SINAGERD).
 
 ---
 
 ## 1. INTRODUCCIÓN Y JUSTIFICACIÓN DOCTRINAL
 
-El **Estándar SAGF-MC** (*Seguridad, Auditoría, Gobernanza Forense y Marco Constitucional / Legal*) fue diseñado para dotar a la plataforma **AMARU-CLIMATE** de un blindaje técnico, legal y operativo inexpugnable.
+El marco de ingeniería de seguridad y gobernanza forense fue diseñado para dotar a la plataforma **AMARU-CLIMATE** de un blindaje técnico, legal y operativo fundamentado en el ordenamiento legal peruano e internacional.
 
 En el contexto de la gestión del riesgo de desastres (GRD), la automatización mediante Inteligencia Artificial no puede operar en un vacío legal ni mediante "cajas negras" estocásticas. Una alerta de evacuación emitida por error, una filtración de datos de familias vulnerables en albergues, una manipulación de fotografías de desastres o un despacho crítico no supervisado por una autoridad humana conllevan responsabilidades penales (Art. 377 y 378 del Código Penal por omisión o extralimitación de funciones) y constitucionales.
 
-Este documento consolida la arquitectura y la evidencia empírica de la implementación completa del estándar SAGF-MC a través de 5 fases de ingeniería de software seguro.
+Este documento consolida la arquitectura y la evidencia técnica implementada a través de las 5 fases de ingeniería de software seguro, sustentadas en normas oficiales vigentes.
 
 ---
 

@@ -9,4 +9,5 @@ __pycache__/
 *.pyc
 scratch/
 tests/
-data/*.pdf
+data/**/*.pdf
+**/*.pdf

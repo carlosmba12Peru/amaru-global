@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { API_BASE } from "@/config/api";
 import DistrictWeatherInspector from "@/components/DistrictWeatherInspector";
 import IrceAndGovernancePanel from "@/components/IrceAndGovernancePanel";
 import { Bot, ShieldAlert, Languages, Send, Activity, Cpu, AlertTriangle, CheckCircle2, Clock, Waves, Radio, FileCode2, Zap, MapPin, Building2 } from "lucide-react";
@@ -323,9 +324,52 @@ export default function ConsolaMunicipalPage({
     const [pipelineResult, setPipelineResult] = useState<PipelineData | null>(null);
     const [verModalCap, setVerModalCap] = useState(false);
 
+    const [liveMeteo, setLiveMeteo] = useState<{
+        lluvia_24h: number;
+        cape_j_kg: number;
+        humedad_suelo_pct: number;
+        nivel_alerta: "ROJO" | "NARANJA" | "AMARILLO" | "VERDE";
+        temperatura?: number;
+        descripcion_clima?: string;
+    } | null>(null);
+
+    useEffect(() => {
+        const fetchForecast = async () => {
+            try {
+                const res = await fetch(`${API_BASE}/api/meteo/district-forecast/${ubigeo}`);
+                if (res.ok) {
+                    const json = await res.json();
+                    if (json.current) {
+                        const rain = json.daily?.[0]?.rain_mm ?? json.current.precipitation ?? 0.0;
+                        const cape = json.current.cape_j_kg ?? 0.0;
+                        const soil = json.current.soil_moisture_pct ?? 25.0;
+                        const alertLevel: "ROJO" | "NARANJA" | "AMARILLO" | "VERDE" =
+                            rain >= 30 ? "ROJO" : rain >= 15 ? "NARANJA" : rain >= 5 ? "AMARILLO" : "VERDE";
+                        setLiveMeteo({
+                            lluvia_24h: rain,
+                            cape_j_kg: cape,
+                            humedad_suelo_pct: soil,
+                            nivel_alerta: alertLevel,
+                            temperatura: json.current.temperature ?? 25,
+                            descripcion_clima: json.current.weather_desc ?? "Cielo despejado"
+                        });
+                    }
+                }
+            } catch (e) {
+                console.warn("Error cargando pronóstico en vivo para dashboard municipal:", e);
+            }
+        };
+        fetchForecast();
+    }, [ubigeo]);
+
+    const lluviaActual = liveMeteo ? liveMeteo.lluvia_24h : data.lluvia_24h;
+    const alertaActual = liveMeteo ? liveMeteo.nivel_alerta : data.nivel_alerta;
+    const capeActual = liveMeteo ? liveMeteo.cape_j_kg : data.cape_j_kg;
+    const sueloActual = liveMeteo ? liveMeteo.humedad_suelo_pct : data.humedad_suelo_pct;
+
     const ejecutarCadenaMultiAgente = async () => {
         setEjecutandoAgentes(true);
-        const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+        const apiBase = API_BASE;
 
         try {
             const res = await fetch(`${apiBase}/api/agents/run/${ubigeo}?force_critical=true`, {
@@ -492,14 +536,16 @@ export default function ConsolaMunicipalPage({
                     </Link>
                     <div
                         className={`px-4 py-2 rounded-lg font-black text-sm tracking-wider border shadow-lg ${
-                            data.nivel_alerta === "ROJO"
+                            alertaActual === "ROJO"
                                 ? "bg-red-950 border-red-600 text-red-400 animate-pulse"
-                                : data.nivel_alerta === "AMARILLO"
+                                : alertaActual === "NARANJA"
+                                ? "bg-orange-950 border-orange-600 text-orange-400"
+                                : alertaActual === "AMARILLO"
                                 ? "bg-amber-950 border-amber-600 text-amber-400"
                                 : "bg-emerald-950 border-emerald-600 text-emerald-400"
                         }`}
                     >
-                        FASE OPERATIVA: ALERTA {data.nivel_alerta}
+                        FASE OPERATIVA: ALERTA {alertaActual}
                     </div>
                 </div>
             </div>
@@ -513,9 +559,9 @@ export default function ConsolaMunicipalPage({
                         <span className="text-[10px] font-mono bg-blue-950 text-blue-300 px-1.5 py-0.5 rounded">ECMWF IFS 9km</span>
                     </div>
                     <div className="text-3xl font-bold text-white">
-                        {data.lluvia_24h} mm
+                        {lluviaActual} mm
                     </div>
-                    <p className="text-[11px] text-emerald-400">Calibrada con EMA SENAMHI</p>
+                    <p className="text-[11px] text-emerald-400">{liveMeteo ? liveMeteo.descripcion_clima : "Calibrada con EMA SENAMHI"}</p>
                 </div>
 
                 {/* Termodinámica CAPE */}
@@ -525,9 +571,9 @@ export default function ConsolaMunicipalPage({
                         <span className="text-[10px] font-mono bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded">Convectivo</span>
                     </div>
                     <div className="text-3xl font-bold text-amber-400">
-                        {data.cape_j_kg} J/kg
+                        {capeActual} J/kg
                     </div>
-                    <p className="text-[11px] text-red-400">Energía severa de huaico en ladera</p>
+                    <p className="text-[11px] text-red-400">{capeActual > 800 ? "Energía convectiva severa" : "Atmósfera estable en cuenca"}</p>
                 </div>
 
                 {/* Perfil Suelo 4 Capas */}
@@ -537,9 +583,9 @@ export default function ConsolaMunicipalPage({
                         <span className="text-[10px] font-mono bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded">Talud</span>
                     </div>
                     <div className="text-3xl font-bold text-amber-400">
-                        {data.humedad_suelo_pct}%
+                        {sueloActual}%
                     </div>
-                    <p className="text-[11px] text-slate-400">Superficie: 42% • Freática: 35%</p>
+                    <p className="text-[11px] text-slate-400">Infiltración talud Open-Meteo Pro</p>
                 </div>
 
                 {/* Caudal GloFAS */}

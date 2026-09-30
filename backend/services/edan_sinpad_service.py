@@ -565,4 +565,377 @@ class EdanSinpadService:
         }
         return sinpad_payload
 
+    def calcular_planilla_bah(self, ficha: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Calcula la Planilla Oficial de Entrega de Bienes de Ayuda Humanitaria (ANEXO N° 02)
+        conforme a los criterios normativos y baremos calóricos del ANEXO N° 06 (INDECI).
+        """
+        ubigeo = ficha.get("ubigeo", "000000")
+        distrito = ficha.get("distrito", "Distrito Nacional")
+        provincia = ficha.get("provincia", "Provincia")
+        departamento = ficha.get("departamento", "Departamento")
+        codigo_sinpad = ficha.get("codigo_sinpad") or f"SINPAD-2026-{ubigeo}"
+        peligro = ficha.get("formulario_1_evaluacion_rapida", {}).get("peligro_asociado", "LLUVIAS_E_INUNDACIONES")
+        alcalde = ficha.get("alcalde", "Alcalde Distrital")
+        ahora = datetime.now(PERU_TZ)
+
+        familias = ficha.get("formulario_2a_familias", [])
+        filas_planilla = []
+
+        totales = {
+            "carpas": 0,
+            "calaminas": 0,
+            "planchas_triplay": 0,
+            "bobinas_plastico_m": 0,
+            "camas": 0,
+            "colchones": 0,
+            "frazadas": 0,
+            "mosquiteros": 0,
+            "raciones_frias": 0,
+            "raciones_crudas_kg": 0,
+            "bidones": 0,
+            "baldes": 0,
+            "sacos_terreros": 0,
+            "total_familias": len(familias),
+            "total_personas": 0,
+            "total_damnificados": 0,
+            "total_afectados": 0
+        }
+
+        for idx, f in enumerate(familias):
+            miembros = int(f.get("miembros_familia") or f.get("integrantes", 4))
+            totales["total_personas"] += miembros
+            condicion = f.get("condicion_habitante") or ("DAMNIFICADO" if f.get("condicion_vivienda") in ["INHABITABLE", "DESTRUIDA", "COLAPSADA"] else "AFECTADO")
+            es_damnificado = condicion == "DAMNIFICADO"
+
+            if es_damnificado:
+                totales["total_damnificados"] += 1
+                # Regla Anexo 06 para Damnificados:
+                carpa = 1
+                calamina = 18
+                triplay = 14
+                plastico_m = 44
+                camas = min(miembros, 5)
+                colchones = min(miembros, 5)
+                frazadas = min(miembros, 5)
+                mosquiteros = 2 if departamento in ["Piura", "Tumbes", "Lambayeque", "Loreto", "San Martín", "Ucayali"] else 1
+                racion_fria = miembros * 3  # 3 días ración fría (desayuno/almuerzo/cena)
+                racion_cruda = round(miembros * 0.59 * 15, 1)  # 15 días ración cruda a 590g bruto/día
+                bidon = 1
+                balde = 1
+                sacos = 20
+            else:
+                totales["total_afectados"] += 1
+                # Regla Anexo 06 para Afectados:
+                carpa = 0
+                calamina = 10
+                triplay = 6
+                plastico_m = 20
+                camas = 0
+                colchones = 0
+                frazadas = min(miembros, 3)
+                mosquiteros = 1 if departamento in ["Piura", "Tumbes", "Lambayeque"] else 0
+                racion_fria = miembros * 1
+                racion_cruda = round(miembros * 0.59 * 7, 1)  # 7 días ración cruda
+                bidon = 0
+                balde = 1
+                sacos = 15
+
+            totales["carpas"] += carpa
+            totales["calaminas"] += calamina
+            totales["planchas_triplay"] += triplay
+            totales["bobinas_plastico_m"] += plastico_m
+            totales["camas"] += camas
+            totales["colchones"] += colchones
+            totales["frazadas"] += frazadas
+            totales["mosquiteros"] += mosquiteros
+            totales["raciones_frias"] += racion_fria
+            totales["raciones_crudas_kg"] += racion_cruda
+            totales["bidones"] += bidon
+            totales["baldes"] += balde
+            totales["sacos_terreros"] += sacos
+
+            filas_planilla.append({
+                "numero_orden": idx + 1,
+                "direccion": f"{f.get('sector_caserio', 'Centro')} - {f.get('manzana_lote', 'S/N')}",
+                "titular": f.get("apellidos_nombres_titular") or f.get("nombres_apellidos", "TITULAR"),
+                "dni": f.get("dni_titular") or f.get("dni_jefe_familia", "00000000"),
+                "miembros_familia": miembros,
+                "condicion": condicion,
+                "techo": {
+                    "carpa": carpa,
+                    "calamina": calamina,
+                    "triplay": triplay,
+                    "plastico_m": plastico_m
+                },
+                "abrigo": {
+                    "camas": camas,
+                    "colchones": colchones,
+                    "frazadas": frazadas,
+                    "mosquiteros": mosquiteros
+                },
+                "alimentos": {
+                    "raciones_frias": racion_fria,
+                    "raciones_crudas_kg": racion_cruda
+                },
+                "enseres": {
+                    "bidon": bidon,
+                    "baldes": balde
+                },
+                "otros_bah": {
+                    "sacos_terreros": sacos,
+                    "menaje": "1 kit familiar" if es_damnificado else "Básico",
+                    "herramientas": "Pala y pico asignado a cuadrilla" if idx % 5 == 0 else "-"
+                },
+                "firma_conformidad": "CONFORME / HUELLA DIGITAL REGISTRADA",
+                "comisaria_referencia": f.get("comisaria_referencia", "Comisaría PNP"),
+                "colegio_referencia": f.get("colegio_referencia", "Local Educativo / Albergue")
+            })
+
+        totales["raciones_crudas_kg"] = round(totales["raciones_crudas_kg"], 1)
+
+        return {
+            "anexo_oficial": "ANEXO N° 02",
+            "titulo": "PLANILLA DE ENTREGA DE BIENES DE AYUDA HUMANITARIA (BAH)",
+            "normativa_referencia": "R.M. N° 324-2023-PCM / R.S. N° 002-2026-PCM / ANEXO 06 INDECI",
+            "codigo_sinpad": codigo_sinpad,
+            "entidad_ejecutora": "MUNICIPALIDAD DISTRITAL / PROVINCIAL",
+            "region": departamento,
+            "provincia": provincia,
+            "distrito": distrito,
+            "ubigeo": ubigeo,
+            "peligro": peligro,
+            "fecha_entrega": ahora.strftime("%d/%m/%Y"),
+            "hora_entrega": ahora.strftime("%H:%M:%S"),
+            "alcalde_responsable": alcalde,
+            "filas": filas_planilla,
+            "totales_almacen": totales,
+            "firmas_oficiales": {
+                "alcalde": f"{alcalde} (Alcalde Distrital / Presidente Plataforma)",
+                "encargado_almacen": "Jefe de Almacén de Defensa Civil / Logística Municipal",
+                "representante_comunidad": "Presidente de la Junta Vecinal / Caserío"
+            },
+            "declaracion_jurada_nota": "(i) La información consignada en la presente Planilla tiene carácter de Declaración Jurada. (ii) Las personas y funcionarios que ingresen información falsa serán pasibles de las acciones administrativas y penales (Art. 438 del Código Penal)."
+        }
+
+    def obtener_casos_modelo(self) -> List[Dict[str, Any]]:
+        """
+        Retorna la lista de Casos de Modelo Oficiales pre-configurados para llenado rápido
+        en emergencias (1 clic), con escenarios reales de eventos extremos.
+        """
+        return [
+            {
+                "id": "modelo_catacaos_piura",
+                "nombre": "Inundación Fluvial Catacaos - Río Piura",
+                "icono": "🌊",
+                "departamento": "Piura",
+                "provincia": "Piura",
+                "distrito": "Catacaos",
+                "ubigeo": "200105",
+                "tipo_evento": "DESBORDE_FLUVIAL_E_INUNDACION",
+                "descripcion": "Rotura de dique en margen izquierda del Río Piura. Desborde que arrasa caseríos Viduque, Simbilá y San Pablo Bajo con viviendas de adobe colapsadas y corte total de agua potable.",
+                "familias_damnificadas": 4,
+                "hectareas_afectadas": 35.0,
+                "badge": "FEN Costero Crítico (D.S. 124)"
+            },
+            {
+                "id": "modelo_chosica_lima",
+                "nombre": "Huaico Quebrada Carossio - Chosica",
+                "icono": "⛰️",
+                "departamento": "Lima",
+                "provincia": "Lima",
+                "distrito": "Lurigancho-Chosica",
+                "ubigeo": "150119",
+                "tipo_evento": "FLUJO_DETRITOS_HUAICO",
+                "descripcion": "Precipitación violenta en cabecera de cuenca. Activación violenta de quebradas Carossio y Quirio con arrastre de rocas, destrucción de viviendas y corte de la Carretera Central.",
+                "familias_damnificadas": 4,
+                "hectareas_afectadas": 0.0,
+                "badge": "Aluvial Sierra Centro"
+            },
+            {
+                "id": "modelo_illimo_lambayeque",
+                "nombre": "Desborde Súbito Río La Leche - Íllimo",
+                "icono": "🌧️",
+                "departamento": "Lambayeque",
+                "provincia": "Lambayeque",
+                "distrito": "Íllimo",
+                "ubigeo": "140304",
+                "tipo_evento": "DESBORDE_FLUVIAL_SUBITO",
+                "descripcion": "Crecida histórica del Río La Leche (caudal > 600 m³/s). Inundación del centro urbano y caseríos La Traposa y Zanjón, destruyendo cultivos de maíz y canales de riego.",
+                "familias_damnificadas": 4,
+                "hectareas_afectadas": 52.0,
+                "badge": "Valle Chancay-La Leche"
+            },
+            {
+                "id": "modelo_mancora_talara",
+                "nombre": "Lluvias Torrenciales y Vientos - Máncora",
+                "icono": "⛈️",
+                "departamento": "Piura",
+                "provincia": "Talara",
+                "distrito": "Máncora",
+                "ubigeo": "200706",
+                "tipo_evento": "LLUVIAS_EXTREMAS_Y_ANEGAMIENTO",
+                "descripcion": "Tormenta convectiva severa (> 85 mm en 4 horas). Colapso de techos ligeros en asentamientos humanos altos, rebose de desagües e incomunicación de accesos costeros.",
+                "familias_damnificadas": 3,
+                "hectareas_afectadas": 12.0,
+                "badge": "Litoral Norte Extremo"
+            }
+        ]
+
+    def cargar_caso_modelo(self, caso_id: str) -> Dict[str, Any]:
+        """
+        Carga la Ficha EDAN completa para un caso modelo predeterminado,
+        listo para edición, previsualización o emisión oficial instantánea.
+        """
+        casos = {c["id"]: c for c in self.obtener_casos_modelo()}
+        caso = casos.get(caso_id)
+        if not caso:
+            # Fallback a Catacaos
+            caso = self.obtener_casos_modelo()[0]
+
+        ubigeo = caso["ubigeo"]
+        plantilla = self.generar_plantilla(ubigeo)
+        plantilla["distrito"] = caso["distrito"]
+        plantilla["provincia"] = caso["provincia"]
+        plantilla["departamento"] = caso["departamento"]
+
+        if caso_id == "modelo_chosica_lima":
+            plantilla["formulario_1_evaluacion_rapida"] = {
+                "peligro_asociado": "FLUJO_DETRITOS_HUAICO_QUEBRADAS",
+                "fallecidos": 0,
+                "lesionados": 4,
+                "desaparecidos": 0,
+                "viviendas_destruidas": 2,
+                "viviendas_inhabitables": 2,
+                "viviendas_afectadas": 1,
+                "servicios_basicos_interrumpidos": {
+                    "agua_potable": "ROTURA_MATRIZ_TUBERIA_ALTA",
+                    "electricidad": "POSTES_CAIDOS_AV_AREQUIPA",
+                    "alcantarillado": "COLAPSO_POR_LODO_Y_PIEDRAS",
+                    "conectividad_vial": "CARRETERA_CENTRAL_KM_34_INTERRUMPIDA"
+                }
+            }
+            plantilla["formulario_2a_familias"] = [
+                {
+                    "numero_orden": 1,
+                    "sector_caserio": "Quebrada Carossio Sector Alto",
+                    "manzana_lote": "Mz. A Lote 02",
+                    "apellidos_nombres_titular": "QUISPE MAMANI JUSTO HERNAN",
+                    "dni_titular": "09823411",
+                    "sexo": "M",
+                    "edad": 49,
+                    "miembros_familia": 5,
+                    "ninos_0_12": 2,
+                    "adultos_mayores_65": 1,
+                    "gestantes": 0,
+                    "personas_discapacidad": 0,
+                    "condicion_habitante": "DAMNIFICADO",
+                    "condicion_vivienda": "DESTRUIDA",
+                    "material_pared": "ADOBE_Y_PIEDRA_COLAPSADO",
+                    "califica_bono_bae": True,
+                    "necesidades_urgentes": ["CARPAS", "HERRAMIENTAS", "RACIONES_FRIAS"],
+                    "comisaria_referencia": "Comisaría PNP Chosica",
+                    "colegio_referencia": "I.E. Pablo Patrón (Albergue INDECI)"
+                },
+                {
+                    "numero_orden": 2,
+                    "sector_caserio": "Jr. Arequipa Ribereño",
+                    "manzana_lote": "Mz. C Lote 08",
+                    "apellidos_nombres_titular": "PALACIOS VEGA ROSA LUZ",
+                    "dni_titular": "10452389",
+                    "sexo": "F",
+                    "edad": 34,
+                    "miembros_familia": 4,
+                    "ninos_0_12": 2,
+                    "adultos_mayores_65": 0,
+                    "gestantes": 1,
+                    "personas_discapacidad": 0,
+                    "condicion_habitante": "DAMNIFICADO",
+                    "condicion_vivienda": "INHABITABLE",
+                    "material_pared": "LADRILLO_LODO_1.5M",
+                    "califica_bono_bae": True,
+                    "necesidades_urgentes": ["CARPAS", "BIDON_AGUA", "KIT_ABRIGO"],
+                    "comisaria_referencia": "Comisaría PNP Chosica",
+                    "colegio_referencia": "I.E. Pablo Patrón (Albergue INDECI)"
+                },
+                {
+                    "numero_orden": 3,
+                    "sector_caserio": "Quebrada Quirio Zona Media",
+                    "manzana_lote": "Mz. K Lote 14",
+                    "apellidos_nombres_titular": "ROJAS CONDORI ESTEBAN",
+                    "dni_titular": "41209874",
+                    "sexo": "M",
+                    "edad": 62,
+                    "miembros_familia": 3,
+                    "ninos_0_12": 0,
+                    "adultos_mayores_65": 1,
+                    "gestantes": 0,
+                    "personas_discapacidad": 1,
+                    "condicion_habitante": "DAMNIFICADO",
+                    "condicion_vivienda": "DESTRUIDA",
+                    "material_pared": "QUINCHA_ARRASTRADA",
+                    "califica_bono_bae": True,
+                    "necesidades_urgentes": ["MODULO_TEMPORAL", "MEDICINAS", "RACIONES"],
+                    "comisaria_referencia": "Comisaría PNP Chosica",
+                    "colegio_referencia": "I.E. Felipe Huamán Poma"
+                },
+                {
+                    "numero_orden": 4,
+                    "sector_caserio": "Calle Moyopampa Baja",
+                    "manzana_lote": "Mz. D Lote 01",
+                    "apellidos_nombres_titular": "GUZMAN VILCA CARMEN ROSA",
+                    "dni_titular": "08123984",
+                    "sexo": "F",
+                    "edad": 41,
+                    "miembros_familia": 4,
+                    "ninos_0_12": 1,
+                    "adultos_mayores_65": 0,
+                    "gestantes": 0,
+                    "personas_discapacidad": 0,
+                    "condicion_habitante": "AFECTADO",
+                    "condicion_vivienda": "AFECTADA",
+                    "material_pared": "LADRILLO_ANEGADO_PATIO",
+                    "califica_bono_bae": False,
+                    "necesidades_urgentes": ["SACOS_TERREROS", "PALAS", "PASTILLAS_CLORO"],
+                    "comisaria_referencia": "Comisaría PNP Chosica",
+                    "colegio_referencia": "I.E. Pablo Patrón"
+                }
+            ]
+            plantilla["formulario_2b_medios_vida"] = {
+                "hectareas_cultivo_perdidas": 0.0,
+                "tipo_cultivo": "NINGUNO_ZONA_URBANA_ALUVIAL",
+                "ganado_muerto_o_afectado": 12,
+                "tipo_ganado": "ANIMALES_MENORES_AVES",
+                "canales_riego_destruidos_metros": 0.0,
+                "activacion_seguro_agricola_sac": False
+            }
+
+        elif caso_id == "modelo_illimo_lambayeque":
+            plantilla["formulario_1_evaluacion_rapida"] = {
+                "peligro_asociado": "DESBORDE_FLUVIAL_RIO_LA_LECHE",
+                "fallecidos": 0,
+                "lesionados": 1,
+                "desaparecidos": 0,
+                "viviendas_destruidas": 3,
+                "viviendas_inhabitables": 2,
+                "viviendas_afectadas": 2,
+                "servicios_basicos_interrumpidos": {
+                    "agua_potable": "POZOS_SUBTERRANEOS_INUNDADOS",
+                    "electricidad": "CORTE_PREVENTIVO_RED_RURAL",
+                    "alcantarillado": "COLAPSO_TOTAL_POR_COLMATACION",
+                    "conectividad_vial": "PUENTE_LA_LECHE_RESTRINGIDO"
+                }
+            }
+            plantilla["formulario_2b_medios_vida"] = {
+                "hectareas_cultivo_perdidas": 52.0,
+                "tipo_cultivo": "MAIZ_AMARILLO_DURO_Y_HORTALIZAS",
+                "ganado_muerto_o_afectado": 48,
+                "tipo_ganado": "VACUNO_Y_PORCINO",
+                "canales_riego_destruidos_metros": 1200.0,
+                "activacion_seguro_agricola_sac": True
+            }
+
+        return plantilla
+
 edan_sinpad_service = EdanSinpadService()
+

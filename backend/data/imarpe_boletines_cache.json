@@ -1,13 +1,13 @@
 {
-  "ultima_actualizacion": "2026-09-17",
-  "total_boletines": 29,
+  "ultima_actualizacion": "2026-09-25",
+  "total_boletines": 37,
   "boletines": [
     {
       "archivo": "BOL_IMARPE_BDO_2026-08-15.pdf",
       "fecha": "2026-08-15",
       "boletin_nro": "N° 227",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "Se destaca el aumento en la extensión e intensidad de las anomal´ ıas frente a San José, reportando valores máximos de +7,43 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,4 °C (Matarani), y 29,1 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Huanchaco (+6,7 °C) y Pisco (+3,1 °C), respecti- vamente.",
+      "diagnostico_oficial": "Se destaca el aumento en la extensión e intensidad de las anomal´ ias frente a San José, reportando valores máximos de +7,43 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,4 °C (Matarani), y 29,1 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Huanchaco (+6,7 °C) y Pisco (+3,1 °C), respecti- vamente.",
       "fecha_observacion": "14 de agosto de 2026",
       "estaciones": [
         {
@@ -267,7 +267,7 @@
       "fecha": "2026-08-16",
       "boletin_nro": "N° 228",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "Se observa una expansión de las anomal´ ıas mayores a +4,0 °C hasta San Juan de Marcona, manteniendo el n ´ ucleo de máxima intensidad frente a San José con valores de hasta +7,21 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,3 °C (Matarani), y 23,2 °C (San José). Las anomalías máximas y mínimas se dieron en Chicama (+6,1 °C) y Matarani (+3,5 °C), respec- tivamente.",
+      "diagnostico_oficial": "Se observa una expansión de las anomal´ ias mayores a +4,0 °C hasta San Juan de Marcona, manteniendo el n ´ ucleo de máxima intensidad frente a San José con valores de hasta +7,21 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,3 °C (Matarani), y 23,2 °C (San José). Las anomalías máximas y mínimas se dieron en Chicama (+6,1 °C) y Matarani (+3,5 °C), respec- tivamente.",
       "fecha_observacion": "15 de agosto de 2026",
       "estaciones": [
         {
@@ -527,7 +527,7 @@
       "fecha": "2026-08-18",
       "boletin_nro": "N° 230",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "Se acent ´ ua el calentamiento frente a Paracas con un n ´ ucleo de hasta +7,28 °C, dentro de una franja costera con anomal´ ıa promedio de +4,32 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,5 °C (Matarani), y 29,0 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Huanchaco (+6,0 °C) y Pisco (+2,5 °C), respecti- vamente.",
+      "diagnostico_oficial": "Se acent ´ ua el calentamiento frente a Paracas con un n ´ ucleo de hasta +7,28 °C, dentro de una franja costera con anomal´ ia promedio de +4,32 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,5 °C (Matarani), y 29,0 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Huanchaco (+6,0 °C) y Pisco (+2,5 °C), respecti- vamente.",
       "fecha_observacion": "17 de agosto de 2026",
       "estaciones": [
         {
@@ -1307,7 +1307,7 @@
       "fecha": "2026-08-21",
       "boletin_nro": "N° 233",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "La franja costera conserva una anomal´ ıa promedio de +4,33 °C, manteniendo sus n ´ ucleos en la zona norte-centro frente a Chicama (+6,29°C) y Salaverry (+6,51°C), y en la zona frente a Paracas (+6,98°C). En las estaciones costeras del IMARPE se registraron valores de TSM entre 17,8 °C (Chala), y 29,0 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Huanchaco (+5,5 °C) y Pisco (+2,9 °C), respecti- vamente.",
+      "diagnostico_oficial": "La franja costera conserva una anomal´ ia promedio de +4,33 °C, manteniendo sus n ´ ucleos en la zona norte-centro frente a Chicama (+6,29°C) y Salaverry (+6,51°C), y en la zona frente a Paracas (+6,98°C). En las estaciones costeras del IMARPE se registraron valores de TSM entre 17,8 °C (Chala), y 29,0 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Huanchaco (+5,5 °C) y Pisco (+2,9 °C), respecti- vamente.",
       "fecha_observacion": "20 de agosto de 2026",
       "estaciones": [
         {
@@ -1567,7 +1567,7 @@
       "fecha": "2026-08-22",
       "boletin_nro": "N° 234",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "Se muestra un descenso en el calentamiento promedio del litoral, con un valor de +3,94 °C, manteniéndose su n ´ ucleo frente a Paracas con anomal´ ıas de hasta +6,92 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 17,5 °C (Chala), y 29,1 °C (Tum- bes). Las anomalías máximas y mínimas se dieron en Chicama (+5,3 °C) y Pisco (+2,2 °C), respectivamente.",
+      "diagnostico_oficial": "Se muestra un descenso en el calentamiento promedio del litoral, con un valor de +3,94 °C, manteniéndose su n ´ ucleo frente a Paracas con anomal´ ias de hasta +6,92 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 17,5 °C (Chala), y 29,1 °C (Tum- bes). Las anomalías máximas y mínimas se dieron en Chicama (+5,3 °C) y Pisco (+2,2 °C), respectivamente.",
       "fecha_observacion": "21 de agosto de 2026",
       "estaciones": [
         {
@@ -1827,7 +1827,7 @@
       "fecha": "2026-08-23",
       "boletin_nro": "N° 235",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "El promedio en toda la franja costera disminuye a +3,84 °C, con Chicama (+6,61 °C) como el n ´ ucleo de mayor anomal´ ıa. En las estaciones costeras del IMARPE se registraron valores de TSM entre 17,8 °C (Chala), y 22,3 °C (San José). Las anomalías máximas y mínimas se dieron en Callao (+5,1 °C) y Pisco (+3,1 °C), respectivamente.",
+      "diagnostico_oficial": "El promedio en toda la franja costera disminuye a +3,84 °C, con Chicama (+6,61 °C) como el n ´ ucleo de mayor anomal´ ia. En las estaciones costeras del IMARPE se registraron valores de TSM entre 17,8 °C (Chala), y 22,3 °C (San José). Las anomalías máximas y mínimas se dieron en Callao (+5,1 °C) y Pisco (+3,1 °C), respectivamente.",
       "fecha_observacion": "22 de agosto de 2026",
       "estaciones": [
         {
@@ -2347,7 +2347,7 @@
       "fecha": "2026-08-25",
       "boletin_nro": "N° 237",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "Se mantienen las condiciones cálidas a lo largo de la costa con una anomal´ ıa promedio de +4,08 °C, registrando dos n ´ ucleos predominantes frente a las costas de Paracas (+7,06 °C) y Paita (+6,86 °C). En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,1 °C (Chala), y 29,2 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Huanchaco (+5,7 °C) y San José (+3,4 °C), res- pectivamente.",
+      "diagnostico_oficial": "Se mantienen las condiciones cálidas a lo largo de la costa con una anomal´ ia promedio de +4,08 °C, registrando dos n ´ ucleos predominantes frente a las costas de Paracas (+7,06 °C) y Paita (+6,86 °C). En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,1 °C (Chala), y 29,2 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Huanchaco (+5,7 °C) y San José (+3,4 °C), res- pectivamente.",
       "fecha_observacion": "24 de agosto de 2026",
       "estaciones": [
         {
@@ -2867,7 +2867,7 @@
       "fecha": "2026-08-27",
       "boletin_nro": "N° 239",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "Se observa una ligera atenuación en las anomal´ ıas máximas frente a Paita (+6,89°C) y Paracas (+6,77°C), as´ ı como en el promedio general del litoral (+4,28°C). En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,2 °C (Chala), y 28,8 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Huanchaco (+5,9 °C) y Matarani (+3,6 °C), res- pectivamente.",
+      "diagnostico_oficial": "Se observa una ligera atenuación en las anomal´ ias máximas frente a Paita (+6,89°C) y Paracas (+6,77°C), as´ i como en el promedio general del litoral (+4,28°C). En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,2 °C (Chala), y 28,8 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Huanchaco (+5,9 °C) y Matarani (+3,6 °C), res- pectivamente.",
       "fecha_observacion": "26 de agosto de 2026",
       "estaciones": [
         {
@@ -3647,7 +3647,7 @@
       "fecha": "2026-08-30",
       "boletin_nro": "N° 242",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "Contin ´ ua el aumento de la TSM frente a Paita con anomal´ ıas de hasta +7,59 °C, as´ ı como de su promedio a lo largo de la costa (+4,45 °C). En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,0 °C (Chala), y 23,0 °C (San José). Las anomalías máximas y mínimas se dieron en Paita (+5,8 °C) y Pisco (+2,6 °C), respectivamente.",
+      "diagnostico_oficial": "Contin ´ ua el aumento de la TSM frente a Paita con anomal´ ias de hasta +7,59 °C, as´ i como de su promedio a lo largo de la costa (+4,45 °C). En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,0 °C (Chala), y 23,0 °C (San José). Las anomalías máximas y mínimas se dieron en Paita (+5,8 °C) y Pisco (+2,6 °C), respectivamente.",
       "fecha_observacion": "29 de agosto de 2026",
       "estaciones": [
         {
@@ -3907,7 +3907,7 @@
       "fecha": "2026-08-31",
       "boletin_nro": "N° 243",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "Persiste el calentamiento frente a Paita con anomal´ ıas de hasta +7,59 °C, mientras que el promedio a lo largo de la costa asciende a +4,53 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,5 °C (Ilo), y 23,3 °C (Paita). Las anomalías máximas y mínimas se dieron en Paita (+6,4 °C) y Pisco (+2,8 °C), respectivamente.",
+      "diagnostico_oficial": "Persiste el calentamiento frente a Paita con anomal´ ias de hasta +7,59 °C, mientras que el promedio a lo largo de la costa asciende a +4,53 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,5 °C (Ilo), y 23,3 °C (Paita). Las anomalías máximas y mínimas se dieron en Paita (+6,4 °C) y Pisco (+2,8 °C), respectivamente.",
       "fecha_observacion": "30 de agosto de 2026",
       "estaciones": [
         {
@@ -4427,7 +4427,7 @@
       "fecha": "2026-09-03",
       "boletin_nro": "N° 246",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "Los n ´ ucleos más representativos del litoral persisten frente a Paita (+7,29 °C) y Paracas (+7,03 °C), en concordancia con una anomal´ ıa media costera que se sit ´ ua en torno a los +4,33 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,2 °C (Ilo), y 29,0 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Paita (+6,3 °C) y Ilo (+3,5 °C), respectivamente.",
+      "diagnostico_oficial": "Los n ´ ucleos más representativos del litoral persisten frente a Paita (+7,29 °C) y Paracas (+7,03 °C), en concordancia con una anomal´ ia media costera que se sit ´ ua en torno a los +4,33 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,2 °C (Ilo), y 29,0 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Paita (+6,3 °C) y Ilo (+3,5 °C), respectivamente.",
       "fecha_observacion": "02 de septiembre de 2026",
       "estaciones": [
         {
@@ -4687,7 +4687,7 @@
       "fecha": "2026-09-04",
       "boletin_nro": "N° 247",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "Se registra un incremento y expansión de las anomal´ ıas máximas frente a Paita con valores de hasta +8,08 °C, mientras que el promedio a lo largo del litoral asciende a +4,45 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,4 °C (Ilo), y 29,0 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Paita (+5,9 °C) y Pisco (+2,7 °C), respectivamente.",
+      "diagnostico_oficial": "Se registra un incremento y expansión de las anomal´ ias máximas frente a Paita con valores de hasta +8,08 °C, mientras que el promedio a lo largo del litoral asciende a +4,45 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,4 °C (Ilo), y 29,0 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Paita (+5,9 °C) y Pisco (+2,7 °C), respectivamente.",
       "fecha_observacion": "03 de septiembre de 2026",
       "estaciones": [
         {
@@ -4947,7 +4947,7 @@
       "fecha": "2026-09-05",
       "boletin_nro": "N° 248",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "Persiste y se observa una expansión del n ´ ucleo cálido frente a Paita con anomal´ ıas de hasta +8,08 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,4 °C (Matarani), y 29,2 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Paita (+6,1 °C) y Pisco (+3,3 °C), respectivamente.",
+      "diagnostico_oficial": "Persiste y se observa una expansión del n ´ ucleo cálido frente a Paita con anomal´ ias de hasta +8,08 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,4 °C (Matarani), y 29,2 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Paita (+6,1 °C) y Pisco (+3,3 °C), respectivamente.",
       "fecha_observacion": "04 de septiembre de 2026",
       "estaciones": [
         {
@@ -5207,7 +5207,7 @@
       "fecha": "2026-09-06",
       "boletin_nro": "N° 249",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "Se registra un incremento de la anomal´ ıa máxima frente a Paita llegando hasta el sur de Bayovar con valores de hasta +8,33 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,5 °C (Matarani), y 24,1 °C (Paita). Las anomalías máximas y mínimas se dieron en Paita (+7,2 °C) y Pisco (+2,7 °C), respectivamente.",
+      "diagnostico_oficial": "Se registra un incremento de la anomal´ ia máxima frente a Paita llegando hasta el sur de Bayovar con valores de hasta +8,33 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,5 °C (Matarani), y 24,1 °C (Paita). Las anomalías máximas y mínimas se dieron en Paita (+7,2 °C) y Pisco (+2,7 °C), respectivamente.",
       "fecha_observacion": "05 de septiembre de 2026",
       "estaciones": [
         {
@@ -5467,7 +5467,7 @@
       "fecha": "2026-09-07",
       "boletin_nro": "N° 250",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "Persiste el n ´ ucleo cálido frente a Paita con anomal´ ıas de hasta +7,90 °C, as´ ı mismo, el promedio en todo el litorial tiene un ligero incremento a +4,55 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,7 °C (Ilo), y 24,2 °C (Paita). Las anomalías máximas y mínimas se dieron en Paita (+7,4 °C) y Pisco (+2,9 °C), respectivamente.",
+      "diagnostico_oficial": "Persiste el n ´ ucleo cálido frente a Paita con anomal´ ias de hasta +7,90 °C, as´ i mismo, el promedio en todo el litorial tiene un ligero incremento a +4,55 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,7 °C (Ilo), y 24,2 °C (Paita). Las anomalías máximas y mínimas se dieron en Paita (+7,4 °C) y Pisco (+2,9 °C), respectivamente.",
       "fecha_observacion": "06 de septiembre de 2026",
       "estaciones": [
         {
@@ -5727,7 +5727,7 @@
       "fecha": "2026-09-08",
       "boletin_nro": "N° 251",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "Se observa una extensión del n ´ ucleo cálido en la zona norte con valores máximos de hasta +8,51 °C frente a Negritos, as´ ı como en todo el litoral con un promedio de +4,97 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,7 °C (Matarani), y 28,5 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Paita (+7,4 °C) y Pisco (+1,8 °C), respectivamente.",
+      "diagnostico_oficial": "Se observa una extensión del n ´ ucleo cálido en la zona norte con valores máximos de hasta +8,51 °C frente a Negritos, as´ i como en todo el litoral con un promedio de +4,97 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,7 °C (Matarani), y 28,5 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Paita (+7,4 °C) y Pisco (+1,8 °C), respectivamente.",
       "fecha_observacion": "07 de septiembre de 2026",
       "estaciones": [
         {
@@ -5987,7 +5987,7 @@
       "fecha": "2026-09-09",
       "boletin_nro": "N° 252",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "Se acent ´ ua el escenario cálido en toda la franja costera con un promedio de +5,14 °C, con un incremento y expansión de las anomal´ ıas máximas en la zona norte frente a Paita con valores de hasta +8,37 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,7 °C (Matarani), y 28,8 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Paita (+7,6 °C) y Pisco (+2,6 °C), respectivamente.",
+      "diagnostico_oficial": "Se acent ´ ua el escenario cálido en toda la franja costera con un promedio de +5,14 °C, con un incremento y expansión de las anomal´ ias máximas en la zona norte frente a Paita con valores de hasta +8,37 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,7 °C (Matarani), y 28,8 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Paita (+7,6 °C) y Pisco (+2,6 °C), respectivamente.",
       "fecha_observacion": "08 de septiembre de 2026",
       "estaciones": [
         {
@@ -6247,7 +6247,7 @@
       "fecha": "2026-09-10",
       "boletin_nro": "N° 253",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "Persisten las anomal´ ıas máximas frente a Paita con valores que ascienden a +8,60 °C, as´ ı mismo se observa un ligero incremento, con respecto a d´ ıas anteriores, en el valor promedio en todo el litoral (+5,2 °C). En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,8 °C (Matarani), y 28,9 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Paita (+7,6 °C) y Tumbes (+3,7 °C), respectiva- mente.",
+      "diagnostico_oficial": "Persisten las anomal´ ias máximas frente a Paita con valores que ascienden a +8,60 °C, as´ i mismo se observa un ligero incremento, con respecto a d´ ias anteriores, en el valor promedio en todo el litoral (+5,2 °C). En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,8 °C (Matarani), y 28,9 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Paita (+7,6 °C) y Tumbes (+3,7 °C), respectiva- mente.",
       "fecha_observacion": "09 de septiembre de 2026",
       "estaciones": [
         {
@@ -6507,7 +6507,7 @@
       "fecha": "2026-09-11",
       "boletin_nro": "N° 254",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "La anomal´ ıa promedio a lo largo de la costa desciende ligeramente a +5,02 °C, persistiendo el n ´ ucleo cálido frente a Paita con valores de hasta +8,36 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,5 °C (Chala), y 28,9 °C (Tum- bes). Las anomalías máximas y mínimas se dieron en Paita (+7,7 °C) y Tumbes (+3,7 °C), respectivamente.",
+      "diagnostico_oficial": "La anomal´ ia promedio a lo largo de la costa desciende ligeramente a +5,02 °C, persistiendo el n ´ ucleo cálido frente a Paita con valores de hasta +8,36 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,5 °C (Chala), y 28,9 °C (Tum- bes). Las anomalías máximas y mínimas se dieron en Paita (+7,7 °C) y Tumbes (+3,7 °C), respectivamente.",
       "fecha_observacion": "10 de septiembre de 2026",
       "estaciones": [
         {
@@ -7287,7 +7287,7 @@
       "fecha": "2026-09-17",
       "boletin_nro": "N° 260",
       "boletin_anio": "Año 13",
-      "diagnostico_oficial": "Se observa una extensión de las anomal´ ıas mayores a +6,0 °C desde la zona norte hasta Pisco con máximos de hasta +8,51 °C frente a Paita. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,2 °C (Ilo), y 29,1 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Paita (+7,6 °C) y Pisco (+2,4 °C), respectivamente.",
+      "diagnostico_oficial": "Se observa una extensión de las anomal´ ias mayores a +6,0 °C desde la zona norte hasta Pisco con máximos de hasta +8,51 °C frente a Paita. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,2 °C (Ilo), y 29,1 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Paita (+7,6 °C) y Pisco (+2,4 °C), respectivamente.",
       "fecha_observacion": "16 de septiembre de 2026",
       "estaciones": [
         {
@@ -7541,23 +7541,2157 @@
         },
         "promedio_anomalia_costera": 5.12
       }
+    },
+    {
+      "archivo": "BOL_IMARPE_BDO_2026-09-18.pdf",
+      "fecha": "2026-09-18",
+      "boletin_nro": "N° 261",
+      "boletin_anio": "Año 13",
+      "diagnostico_oficial": "En la franja litoral norte se observa una disminución delárea cubierta por anomal´ ias superiores a +6,0 °C. Por otro lado, el n ´ ucleo de máximo calentamiento (+8,29 °C) se desplazó hacia a Bayóvar. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,1 °C (Ilo), y 29,2 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Paita (+7,9 °C) y Pisco (+3,0 °C), respectivamente.",
+      "fecha_observacion": "17 de septiembre de 2026",
+      "estaciones": [
+        {
+          "id": "tumbes",
+          "nombre": "Tumbes",
+          "lat_ref": -3.64,
+          "lng_ref": -80.61,
+          "region": "Tumbes",
+          "puerto": "Puerto Pizarro",
+          "tsm_c": 29.2,
+          "anomalia_c": 3.8,
+          "lat": -3.64,
+          "lng": -80.61,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Tumbes 03,64◦S 80,61◦W 29,2 +3,8"
+        },
+        {
+          "id": "paita",
+          "nombre": "Paita",
+          "lat_ref": -5.08,
+          "lng_ref": -81.12,
+          "region": "Piura",
+          "puerto": "Paita",
+          "tsm_c": 24.8,
+          "anomalia_c": 7.9,
+          "lat": -5.08,
+          "lng": -81.12,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Paita 05,08◦S 81,12◦W 24,8 +7,9"
+        },
+        {
+          "id": "san_jose",
+          "nombre": "San José",
+          "lat_ref": -6.77,
+          "lng_ref": -79.97,
+          "region": "Lambayeque",
+          "puerto": "San José",
+          "tsm_c": 23.8,
+          "anomalia_c": 5.0,
+          "lat": -6.77,
+          "lng": -79.97,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "San Jos´e 06,77◦S 79,97◦W 23,8 +5,0"
+        },
+        {
+          "id": "chicama",
+          "nombre": "Chicama",
+          "lat_ref": -7.69,
+          "lng_ref": -79.44,
+          "region": "La Libertad",
+          "puerto": "Puerto Chicama",
+          "tsm_c": 23.3,
+          "anomalia_c": 7.4,
+          "lat": -7.69,
+          "lng": -79.44,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Chicama 07,69◦S 79,44◦W 23,3 +7,4"
+        },
+        {
+          "id": "huanchaco",
+          "nombre": "Huanchaco",
+          "lat_ref": -8.08,
+          "lng_ref": -79.12,
+          "region": "La Libertad",
+          "puerto": "Huanchaco",
+          "tsm_c": 22.3,
+          "anomalia_c": 5.8,
+          "lat": -8.08,
+          "lng": -79.12,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Huanchaco 08,08◦S 79,12◦W 22,3 +5,8"
+        },
+        {
+          "id": "chimbote",
+          "nombre": "Chimbote",
+          "lat_ref": -9.46,
+          "lng_ref": -78.38,
+          "region": "Áncash",
+          "puerto": "Chimbote",
+          "tsm_c": 24.1,
+          "anomalia_c": 5.7,
+          "lat": -9.46,
+          "lng": -78.38,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Chimbote 09,46◦S 78,38◦W 24,1 +5,7"
+        },
+        {
+          "id": "huacho",
+          "nombre": "Huacho",
+          "lat_ref": -11.12,
+          "lng_ref": -77.62,
+          "region": "Lima",
+          "puerto": "Huacho",
+          "tsm_c": 21.5,
+          "anomalia_c": 6.2,
+          "lat": -11.12,
+          "lng": -77.62,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Huacho 11,12◦S 77,62◦W 21,5 +6,2"
+        },
+        {
+          "id": "callao",
+          "nombre": "Callao",
+          "lat_ref": -12.07,
+          "lng_ref": -77.16,
+          "region": "Callao",
+          "puerto": "Callao",
+          "tsm_c": 19.7,
+          "anomalia_c": 4.8,
+          "lat": -12.07,
+          "lng": -77.16,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Callao 12,07◦S 77,16◦W 19,7 +4,8"
+        },
+        {
+          "id": "pisco",
+          "nombre": "Pisco",
+          "lat_ref": -13.71,
+          "lng_ref": -76.22,
+          "region": "Ica",
+          "puerto": "Pisco / Paracas",
+          "tsm_c": 21.6,
+          "anomalia_c": 3.0,
+          "lat": -13.71,
+          "lng": -76.22,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Pisco 13,71◦S 76,22◦W 21,6 +3,0"
+        },
+        {
+          "id": "chala",
+          "nombre": "Chala",
+          "lat_ref": -15.85,
+          "lng_ref": -74.23,
+          "region": "Arequipa",
+          "puerto": "Chala",
+          "tsm_c": 18.7,
+          "anomalia_c": null,
+          "lat": -15.85,
+          "lng": -74.23,
+          "alerta": {
+            "nivel": "SIN_DATOS",
+            "etiqueta": "No informa ΔT",
+            "color": "slate",
+            "severidad": 0
+          },
+          "estado_reporte": "SIN_ANOMALIA",
+          "linea_raw": "Chala 15,85◦S 74,23◦W 18,7"
+        },
+        {
+          "id": "matarani",
+          "nombre": "Matarani",
+          "lat_ref": -17.02,
+          "lng_ref": -72.11,
+          "region": "Arequipa",
+          "puerto": "Matarani",
+          "tsm_c": 19.0,
+          "anomalia_c": 4.1,
+          "lat": -17.02,
+          "lng": -72.11,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Matarani 17,02◦S 72,11◦W 19,0 +4,1"
+        },
+        {
+          "id": "ilo",
+          "nombre": "Ilo",
+          "lat_ref": -17.64,
+          "lng_ref": -71.35,
+          "region": "Moquegua",
+          "puerto": "Ilo",
+          "tsm_c": 18.1,
+          "anomalia_c": 3.4,
+          "lat": -17.64,
+          "lng": -71.35,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Ilo 17,64◦S 71,35◦W 18,1 +3,4"
+        }
+      ],
+      "resumen": {
+        "total_estaciones": 12,
+        "estaciones_activas": 11,
+        "estacion_critica": {
+          "nombre": "Paita",
+          "anomalia_c": 7.9,
+          "tsm_c": 24.8
+        },
+        "promedio_anomalia_costera": 5.19
+      }
+    },
+    {
+      "archivo": "BOL_IMARPE_BDO_2026-09-19.pdf",
+      "fecha": "2026-09-19",
+      "boletin_nro": "N° 262",
+      "boletin_anio": "Año 13",
+      "diagnostico_oficial": "Se observa un incremento de la TSM en la zona norte con un n ´ ucleo máximo de hasta +8,83 °C frente a Bayóvar. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,5 °C (Matarani), y 29,6 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Chicama (+7,5 °C) y Pisco (+2,5 °C), respectiva- mente.",
+      "fecha_observacion": "18 de septiembre de 2026",
+      "estaciones": [
+        {
+          "id": "tumbes",
+          "nombre": "Tumbes",
+          "lat_ref": -3.64,
+          "lng_ref": -80.61,
+          "region": "Tumbes",
+          "puerto": "Puerto Pizarro",
+          "tsm_c": 29.6,
+          "anomalia_c": 4.2,
+          "lat": -3.64,
+          "lng": -80.61,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Tumbes 03,64◦S 80,61◦W 29,6 +4,2"
+        },
+        {
+          "id": "paita",
+          "nombre": "Paita",
+          "lat_ref": -5.08,
+          "lng_ref": -81.12,
+          "region": "Piura",
+          "puerto": "Paita",
+          "tsm_c": 24.1,
+          "anomalia_c": 7.2,
+          "lat": -5.08,
+          "lng": -81.12,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Paita 05,08◦S 81,12◦W 24,1 +7,2"
+        },
+        {
+          "id": "san_jose",
+          "nombre": "San José",
+          "lat_ref": -6.77,
+          "lng_ref": -79.97,
+          "region": "Lambayeque",
+          "puerto": "San José",
+          "tsm_c": 24.6,
+          "anomalia_c": 5.7,
+          "lat": -6.77,
+          "lng": -79.97,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "San Jos´e 06,77◦S 79,97◦W 24,6 +5,7"
+        },
+        {
+          "id": "chicama",
+          "nombre": "Chicama",
+          "lat_ref": -7.69,
+          "lng_ref": -79.44,
+          "region": "La Libertad",
+          "puerto": "Puerto Chicama",
+          "tsm_c": 23.4,
+          "anomalia_c": 7.5,
+          "lat": -7.69,
+          "lng": -79.44,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Chicama 07,69◦S 79,44◦W 23,4 +7,5"
+        },
+        {
+          "id": "huanchaco",
+          "nombre": "Huanchaco",
+          "lat_ref": -8.08,
+          "lng_ref": -79.12,
+          "region": "La Libertad",
+          "puerto": "Huanchaco",
+          "tsm_c": 22.3,
+          "anomalia_c": 5.7,
+          "lat": -8.08,
+          "lng": -79.12,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Huanchaco 08,08◦S 79,12◦W 22,3 +5,7"
+        },
+        {
+          "id": "chimbote",
+          "nombre": "Chimbote",
+          "lat_ref": -9.46,
+          "lng_ref": -78.38,
+          "region": "Áncash",
+          "puerto": "Chimbote",
+          "tsm_c": 24.4,
+          "anomalia_c": 6.0,
+          "lat": -9.46,
+          "lng": -78.38,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Chimbote 09,46◦S 78,38◦W 24,4 +6,0"
+        },
+        {
+          "id": "huacho",
+          "nombre": "Huacho",
+          "lat_ref": -11.12,
+          "lng_ref": -77.62,
+          "region": "Lima",
+          "puerto": "Huacho",
+          "tsm_c": 21.4,
+          "anomalia_c": 6.1,
+          "lat": -11.12,
+          "lng": -77.62,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Huacho 11,12◦S 77,62◦W 21,4 +6,1"
+        },
+        {
+          "id": "callao",
+          "nombre": "Callao",
+          "lat_ref": -12.07,
+          "lng_ref": -77.16,
+          "region": "Callao",
+          "puerto": "Callao",
+          "tsm_c": 19.6,
+          "anomalia_c": 4.7,
+          "lat": -12.07,
+          "lng": -77.16,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Callao 12,07◦S 77,16◦W 19,6 +4,7"
+        },
+        {
+          "id": "pisco",
+          "nombre": "Pisco",
+          "lat_ref": -13.71,
+          "lng_ref": -76.22,
+          "region": "Ica",
+          "puerto": "Pisco / Paracas",
+          "tsm_c": 21.2,
+          "anomalia_c": 2.5,
+          "lat": -13.71,
+          "lng": -76.22,
+          "alerta": {
+            "nivel": "VIGILANCIA",
+            "etiqueta": "Vigilancia Térmica",
+            "color": "yellow",
+            "severidad": 2
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Pisco 13,71◦S 76,22◦W 21,2 +2,5"
+        },
+        {
+          "id": "chala",
+          "nombre": "Chala",
+          "lat_ref": -15.85,
+          "lng_ref": -74.23,
+          "region": "Arequipa",
+          "puerto": "Chala",
+          "tsm_c": 18.9,
+          "anomalia_c": null,
+          "lat": -15.85,
+          "lng": -74.23,
+          "alerta": {
+            "nivel": "SIN_DATOS",
+            "etiqueta": "No informa ΔT",
+            "color": "slate",
+            "severidad": 0
+          },
+          "estado_reporte": "SIN_ANOMALIA",
+          "linea_raw": "Chala 15,85◦S 74,23◦W 18,9"
+        },
+        {
+          "id": "matarani",
+          "nombre": "Matarani",
+          "lat_ref": -17.02,
+          "lng_ref": -72.11,
+          "region": "Arequipa",
+          "puerto": "Matarani",
+          "tsm_c": 18.5,
+          "anomalia_c": 3.6,
+          "lat": -17.02,
+          "lng": -72.11,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Matarani 17,02◦S 72,11◦W 18,5 +3,6"
+        },
+        {
+          "id": "ilo",
+          "nombre": "Ilo",
+          "lat_ref": -17.64,
+          "lng_ref": -71.35,
+          "region": "Moquegua",
+          "puerto": "Ilo",
+          "tsm_c": 19.3,
+          "anomalia_c": 4.6,
+          "lat": -17.64,
+          "lng": -71.35,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Ilo 17,64◦S 71,35◦W 19,3 +4,6"
+        }
+      ],
+      "resumen": {
+        "total_estaciones": 12,
+        "estaciones_activas": 11,
+        "estacion_critica": {
+          "nombre": "Chicama",
+          "anomalia_c": 7.5,
+          "tsm_c": 23.4
+        },
+        "promedio_anomalia_costera": 5.25
+      }
+    },
+    {
+      "archivo": "BOL_IMARPE_BDO_2026-09-20.pdf",
+      "fecha": "2026-09-20",
+      "boletin_nro": "N° 263",
+      "boletin_anio": "Año 13",
+      "diagnostico_oficial": "Persiste el n ´ ucleo máximo de hasta +8,53 °C frente a Bayóvar, con un promedio de +4,65 °C en todo el litoral peruano. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,9 °C (Matarani), y 24,3 °C (San José). Las anomalías máximas y mínimas se dieron en Chicama (+7,1 °C) y Pisco (+1,9 °C), respectivamente.",
+      "fecha_observacion": "19 de septiembre de 2026",
+      "estaciones": [
+        {
+          "id": "tumbes",
+          "nombre": "Tumbes",
+          "lat_ref": -3.64,
+          "lng_ref": -80.61,
+          "region": "Tumbes",
+          "puerto": "Puerto Pizarro",
+          "tsm_c": null,
+          "anomalia_c": null,
+          "lat": -3.64,
+          "lng": -80.61,
+          "alerta": {
+            "nivel": "SIN_DATOS",
+            "etiqueta": "No informa ΔT",
+            "color": "slate",
+            "severidad": 0
+          },
+          "estado_reporte": "SIN_DATOS",
+          "linea_raw": "Tumbes 03,64◦S 80,61◦W (1)"
+        },
+        {
+          "id": "paita",
+          "nombre": "Paita",
+          "lat_ref": -5.08,
+          "lng_ref": -81.12,
+          "region": "Piura",
+          "puerto": "Paita",
+          "tsm_c": 23.9,
+          "anomalia_c": 7.1,
+          "lat": -5.08,
+          "lng": -81.12,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Paita 05,08◦S 81,12◦W 23,9 +7,1"
+        },
+        {
+          "id": "san_jose",
+          "nombre": "San José",
+          "lat_ref": -6.77,
+          "lng_ref": -79.97,
+          "region": "Lambayeque",
+          "puerto": "San José",
+          "tsm_c": 24.3,
+          "anomalia_c": 5.4,
+          "lat": -6.77,
+          "lng": -79.97,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "San Jos´e 06,77◦S 79,97◦W 24,3 +5,4"
+        },
+        {
+          "id": "chicama",
+          "nombre": "Chicama",
+          "lat_ref": -7.69,
+          "lng_ref": -79.44,
+          "region": "La Libertad",
+          "puerto": "Puerto Chicama",
+          "tsm_c": 23.0,
+          "anomalia_c": 7.1,
+          "lat": -7.69,
+          "lng": -79.44,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Chicama 07,69◦S 79,44◦W 23,0 +7,1"
+        },
+        {
+          "id": "huanchaco",
+          "nombre": "Huanchaco",
+          "lat_ref": -8.08,
+          "lng_ref": -79.12,
+          "region": "La Libertad",
+          "puerto": "Huanchaco",
+          "tsm_c": 21.3,
+          "anomalia_c": 4.8,
+          "lat": -8.08,
+          "lng": -79.12,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Huanchaco 08,08◦S 79,12◦W 21,3 +4,8"
+        },
+        {
+          "id": "chimbote",
+          "nombre": "Chimbote",
+          "lat_ref": -9.46,
+          "lng_ref": -78.38,
+          "region": "Áncash",
+          "puerto": "Chimbote",
+          "tsm_c": 24.0,
+          "anomalia_c": 5.7,
+          "lat": -9.46,
+          "lng": -78.38,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Chimbote 09,46◦S 78,38◦W 24,0 +5,7"
+        },
+        {
+          "id": "huacho",
+          "nombre": "Huacho",
+          "lat_ref": -11.12,
+          "lng_ref": -77.62,
+          "region": "Lima",
+          "puerto": "Huacho",
+          "tsm_c": 21.3,
+          "anomalia_c": 6.0,
+          "lat": -11.12,
+          "lng": -77.62,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Huacho 11,12◦S 77,62◦W 21,3 +6,0"
+        },
+        {
+          "id": "callao",
+          "nombre": "Callao",
+          "lat_ref": -12.07,
+          "lng_ref": -77.16,
+          "region": "Callao",
+          "puerto": "Callao",
+          "tsm_c": 19.7,
+          "anomalia_c": 4.8,
+          "lat": -12.07,
+          "lng": -77.16,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Callao 12,07◦S 77,16◦W 19,7 +4,8"
+        },
+        {
+          "id": "pisco",
+          "nombre": "Pisco",
+          "lat_ref": -13.71,
+          "lng_ref": -76.22,
+          "region": "Ica",
+          "puerto": "Pisco / Paracas",
+          "tsm_c": 20.6,
+          "anomalia_c": 1.9,
+          "lat": -13.71,
+          "lng": -76.22,
+          "alerta": {
+            "nivel": "VIGILANCIA",
+            "etiqueta": "Vigilancia Térmica",
+            "color": "yellow",
+            "severidad": 2
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Pisco 13,71◦S 76,22◦W 20,6 +1,9"
+        },
+        {
+          "id": "chala",
+          "nombre": "Chala",
+          "lat_ref": -15.85,
+          "lng_ref": -74.23,
+          "region": "Arequipa",
+          "puerto": "Chala",
+          "tsm_c": 19.0,
+          "anomalia_c": null,
+          "lat": -15.85,
+          "lng": -74.23,
+          "alerta": {
+            "nivel": "SIN_DATOS",
+            "etiqueta": "No informa ΔT",
+            "color": "slate",
+            "severidad": 0
+          },
+          "estado_reporte": "SIN_ANOMALIA",
+          "linea_raw": "Chala 15,85◦S 74,23◦W 19,0"
+        },
+        {
+          "id": "matarani",
+          "nombre": "Matarani",
+          "lat_ref": -17.02,
+          "lng_ref": -72.11,
+          "region": "Arequipa",
+          "puerto": "Matarani",
+          "tsm_c": 18.9,
+          "anomalia_c": 4.0,
+          "lat": -17.02,
+          "lng": -72.11,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Matarani 17,02◦S 72,11◦W 18,9 +4,0"
+        },
+        {
+          "id": "ilo",
+          "nombre": "Ilo",
+          "lat_ref": -17.64,
+          "lng_ref": -71.35,
+          "region": "Moquegua",
+          "puerto": "Ilo",
+          "tsm_c": 19.1,
+          "anomalia_c": 4.4,
+          "lat": -17.64,
+          "lng": -71.35,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Ilo 17,64◦S 71,35◦W 19,1 +4,4"
+        }
+      ],
+      "resumen": {
+        "total_estaciones": 12,
+        "estaciones_activas": 10,
+        "estacion_critica": {
+          "nombre": "Paita",
+          "anomalia_c": 7.1,
+          "tsm_c": 23.9
+        },
+        "promedio_anomalia_costera": 5.12
+      }
+    },
+    {
+      "archivo": "BOL_IMARPE_BDO_2026-09-21.pdf",
+      "fecha": "2026-09-21",
+      "boletin_nro": "N° 264",
+      "boletin_anio": "Año 13",
+      "diagnostico_oficial": "Se presenta una expansión de las anomal´ ias mayores a +6,0 °C llegando hasta Chimbote, manteniendo su n ´ ucleo frente a Paita (+8,07 °C). En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,9 °C (Ilo), y 24,0 °C (Chimbo- te). Las anomalías máximas y mínimas se dieron en Chicama (+7,3 °C) y Pisco (+2,2 °C), respectivamente.",
+      "fecha_observacion": "20 de septiembre de 2026",
+      "estaciones": [
+        {
+          "id": "tumbes",
+          "nombre": "Tumbes",
+          "lat_ref": -3.64,
+          "lng_ref": -80.61,
+          "region": "Tumbes",
+          "puerto": "Puerto Pizarro",
+          "tsm_c": null,
+          "anomalia_c": null,
+          "lat": -3.64,
+          "lng": -80.61,
+          "alerta": {
+            "nivel": "SIN_DATOS",
+            "etiqueta": "No informa ΔT",
+            "color": "slate",
+            "severidad": 0
+          },
+          "estado_reporte": "SIN_DATOS",
+          "linea_raw": "Tumbes 03,64◦S 80,61◦W (1)"
+        },
+        {
+          "id": "paita",
+          "nombre": "Paita",
+          "lat_ref": -5.08,
+          "lng_ref": -81.12,
+          "region": "Piura",
+          "puerto": "Paita",
+          "tsm_c": 23.9,
+          "anomalia_c": 7.1,
+          "lat": -5.08,
+          "lng": -81.12,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Paita 05,08◦S 81,12◦W 23,9 +7,1"
+        },
+        {
+          "id": "san_jose",
+          "nombre": "San José",
+          "lat_ref": -6.77,
+          "lng_ref": -79.97,
+          "region": "Lambayeque",
+          "puerto": "San José",
+          "tsm_c": null,
+          "anomalia_c": null,
+          "lat": -6.77,
+          "lng": -79.97,
+          "alerta": {
+            "nivel": "SIN_DATOS",
+            "etiqueta": "No informa ΔT",
+            "color": "slate",
+            "severidad": 0
+          },
+          "estado_reporte": "SIN_DATOS",
+          "linea_raw": "San Jos´e 06,77◦S 79,97◦W (1)"
+        },
+        {
+          "id": "chicama",
+          "nombre": "Chicama",
+          "lat_ref": -7.69,
+          "lng_ref": -79.44,
+          "region": "La Libertad",
+          "puerto": "Puerto Chicama",
+          "tsm_c": 23.2,
+          "anomalia_c": 7.3,
+          "lat": -7.69,
+          "lng": -79.44,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Chicama 07,69◦S 79,44◦W 23,2 +7,3"
+        },
+        {
+          "id": "huanchaco",
+          "nombre": "Huanchaco",
+          "lat_ref": -8.08,
+          "lng_ref": -79.12,
+          "region": "La Libertad",
+          "puerto": "Huanchaco",
+          "tsm_c": 21.2,
+          "anomalia_c": 4.6,
+          "lat": -8.08,
+          "lng": -79.12,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Huanchaco 08,08◦S 79,12◦W 21,2 +4,6"
+        },
+        {
+          "id": "chimbote",
+          "nombre": "Chimbote",
+          "lat_ref": -9.46,
+          "lng_ref": -78.38,
+          "region": "Áncash",
+          "puerto": "Chimbote",
+          "tsm_c": 24.0,
+          "anomalia_c": 5.6,
+          "lat": -9.46,
+          "lng": -78.38,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Chimbote 09,46◦S 78,38◦W 24,0 +5,6"
+        },
+        {
+          "id": "huacho",
+          "nombre": "Huacho",
+          "lat_ref": -11.12,
+          "lng_ref": -77.62,
+          "region": "Lima",
+          "puerto": "Huacho",
+          "tsm_c": 21.6,
+          "anomalia_c": 6.3,
+          "lat": -11.12,
+          "lng": -77.62,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Huacho 11,12◦S 77,62◦W 21,6 +6,3"
+        },
+        {
+          "id": "callao",
+          "nombre": "Callao",
+          "lat_ref": -12.07,
+          "lng_ref": -77.16,
+          "region": "Callao",
+          "puerto": "Callao",
+          "tsm_c": 19.8,
+          "anomalia_c": 4.8,
+          "lat": -12.07,
+          "lng": -77.16,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Callao 12,07◦S 77,16◦W 19,8 +4,8"
+        },
+        {
+          "id": "pisco",
+          "nombre": "Pisco",
+          "lat_ref": -13.71,
+          "lng_ref": -76.22,
+          "region": "Ica",
+          "puerto": "Pisco / Paracas",
+          "tsm_c": 20.9,
+          "anomalia_c": 2.2,
+          "lat": -13.71,
+          "lng": -76.22,
+          "alerta": {
+            "nivel": "VIGILANCIA",
+            "etiqueta": "Vigilancia Térmica",
+            "color": "yellow",
+            "severidad": 2
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Pisco 13,71◦S 76,22◦W 20,9 +2,2"
+        },
+        {
+          "id": "chala",
+          "nombre": "Chala",
+          "lat_ref": -15.85,
+          "lng_ref": -74.23,
+          "region": "Arequipa",
+          "puerto": "Chala",
+          "tsm_c": null,
+          "anomalia_c": null,
+          "lat": -15.85,
+          "lng": -74.23,
+          "alerta": {
+            "nivel": "SIN_DATOS",
+            "etiqueta": "No informa ΔT",
+            "color": "slate",
+            "severidad": 0
+          },
+          "estado_reporte": "SIN_DATOS",
+          "linea_raw": "Chala 15,85◦S 74,23◦W (1)"
+        },
+        {
+          "id": "matarani",
+          "nombre": "Matarani",
+          "lat_ref": -17.02,
+          "lng_ref": -72.11,
+          "region": "Arequipa",
+          "puerto": "Matarani",
+          "tsm_c": null,
+          "anomalia_c": null,
+          "lat": -17.02,
+          "lng": -72.11,
+          "alerta": {
+            "nivel": "SIN_DATOS",
+            "etiqueta": "No informa ΔT",
+            "color": "slate",
+            "severidad": 0
+          },
+          "estado_reporte": "SIN_DATOS",
+          "linea_raw": "Matarani 17,02◦S 72,11◦W (1)"
+        },
+        {
+          "id": "ilo",
+          "nombre": "Ilo",
+          "lat_ref": -17.64,
+          "lng_ref": -71.35,
+          "region": "Moquegua",
+          "puerto": "Ilo",
+          "tsm_c": 18.9,
+          "anomalia_c": 4.2,
+          "lat": -17.64,
+          "lng": -71.35,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Ilo 17,64◦S 71,35◦W 18,9 +4,2"
+        }
+      ],
+      "resumen": {
+        "total_estaciones": 12,
+        "estaciones_activas": 8,
+        "estacion_critica": {
+          "nombre": "Chicama",
+          "anomalia_c": 7.3,
+          "tsm_c": 23.2
+        },
+        "promedio_anomalia_costera": 5.26
+      }
+    },
+    {
+      "archivo": "BOL_IMARPE_BDO_2026-09-22.pdf",
+      "fecha": "2026-09-22",
+      "boletin_nro": "N° 265",
+      "boletin_anio": "Año 13",
+      "diagnostico_oficial": "Nuevamente se intensifica la zona frente a Paita alcanzando máximos de hasta +8,79 °C, mientras que el litoral se mantiene en promedio +4,7 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,3 °C (Chala), y 29,4 °C (Tum- bes). Las anomalías máximas y mínimas se dieron en Chicama (+7,2 °C) y Pisco (+2,6 °C), respectivamente.",
+      "fecha_observacion": "21 de septiembre de 2026",
+      "estaciones": [
+        {
+          "id": "tumbes",
+          "nombre": "Tumbes",
+          "lat_ref": -3.64,
+          "lng_ref": -80.61,
+          "region": "Tumbes",
+          "puerto": "Puerto Pizarro",
+          "tsm_c": 29.4,
+          "anomalia_c": 4.0,
+          "lat": -3.64,
+          "lng": -80.61,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Tumbes 03,64◦S 80,61◦W 29,4 +4,0"
+        },
+        {
+          "id": "paita",
+          "nombre": "Paita",
+          "lat_ref": -5.08,
+          "lng_ref": -81.12,
+          "region": "Piura",
+          "puerto": "Paita",
+          "tsm_c": 23.5,
+          "anomalia_c": 6.6,
+          "lat": -5.08,
+          "lng": -81.12,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Paita 05,08◦S 81,12◦W 23,5 +6,6"
+        },
+        {
+          "id": "san_jose",
+          "nombre": "San José",
+          "lat_ref": -6.77,
+          "lng_ref": -79.97,
+          "region": "Lambayeque",
+          "puerto": "San José",
+          "tsm_c": 24.4,
+          "anomalia_c": 5.6,
+          "lat": -6.77,
+          "lng": -79.97,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "San Jos´e 06,77◦S 79,97◦W 24,4 +5,6"
+        },
+        {
+          "id": "chicama",
+          "nombre": "Chicama",
+          "lat_ref": -7.69,
+          "lng_ref": -79.44,
+          "region": "La Libertad",
+          "puerto": "Puerto Chicama",
+          "tsm_c": 23.1,
+          "anomalia_c": 7.2,
+          "lat": -7.69,
+          "lng": -79.44,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Chicama 07,69◦S 79,44◦W 23,1 +7,2"
+        },
+        {
+          "id": "huanchaco",
+          "nombre": "Huanchaco",
+          "lat_ref": -8.08,
+          "lng_ref": -79.12,
+          "region": "La Libertad",
+          "puerto": "Huanchaco",
+          "tsm_c": 22.1,
+          "anomalia_c": 5.6,
+          "lat": -8.08,
+          "lng": -79.12,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Huanchaco 08,08◦S 79,12◦W 22,1 +5,6"
+        },
+        {
+          "id": "chimbote",
+          "nombre": "Chimbote",
+          "lat_ref": -9.46,
+          "lng_ref": -78.38,
+          "region": "Áncash",
+          "puerto": "Chimbote",
+          "tsm_c": 23.9,
+          "anomalia_c": 5.6,
+          "lat": -9.46,
+          "lng": -78.38,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Chimbote 09,46◦S 78,38◦W 23,9 +5,6"
+        },
+        {
+          "id": "huacho",
+          "nombre": "Huacho",
+          "lat_ref": -11.12,
+          "lng_ref": -77.62,
+          "region": "Lima",
+          "puerto": "Huacho",
+          "tsm_c": 22.2,
+          "anomalia_c": 6.9,
+          "lat": -11.12,
+          "lng": -77.62,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Huacho 11,12◦S 77,62◦W 22,2 +6,9"
+        },
+        {
+          "id": "callao",
+          "nombre": "Callao",
+          "lat_ref": -12.07,
+          "lng_ref": -77.16,
+          "region": "Callao",
+          "puerto": "Callao",
+          "tsm_c": 20.0,
+          "anomalia_c": 5.1,
+          "lat": -12.07,
+          "lng": -77.16,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Callao 12,07◦S 77,16◦W 20,0 +5,1"
+        },
+        {
+          "id": "pisco",
+          "nombre": "Pisco",
+          "lat_ref": -13.71,
+          "lng_ref": -76.22,
+          "region": "Ica",
+          "puerto": "Pisco / Paracas",
+          "tsm_c": 21.3,
+          "anomalia_c": 2.6,
+          "lat": -13.71,
+          "lng": -76.22,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Pisco 13,71◦S 76,22◦W 21,3 +2,6"
+        },
+        {
+          "id": "chala",
+          "nombre": "Chala",
+          "lat_ref": -15.85,
+          "lng_ref": -74.23,
+          "region": "Arequipa",
+          "puerto": "Chala",
+          "tsm_c": 18.3,
+          "anomalia_c": null,
+          "lat": -15.85,
+          "lng": -74.23,
+          "alerta": {
+            "nivel": "SIN_DATOS",
+            "etiqueta": "No informa ΔT",
+            "color": "slate",
+            "severidad": 0
+          },
+          "estado_reporte": "SIN_ANOMALIA",
+          "linea_raw": "Chala 15,85◦S 74,23◦W 18,3"
+        },
+        {
+          "id": "matarani",
+          "nombre": "Matarani",
+          "lat_ref": -17.02,
+          "lng_ref": -72.11,
+          "region": "Arequipa",
+          "puerto": "Matarani",
+          "tsm_c": 18.8,
+          "anomalia_c": 3.8,
+          "lat": -17.02,
+          "lng": -72.11,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Matarani 17,02◦S 72,11◦W 18,8 +3,8"
+        },
+        {
+          "id": "ilo",
+          "nombre": "Ilo",
+          "lat_ref": -17.64,
+          "lng_ref": -71.35,
+          "region": "Moquegua",
+          "puerto": "Ilo",
+          "tsm_c": 18.6,
+          "anomalia_c": 3.9,
+          "lat": -17.64,
+          "lng": -71.35,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Ilo 17,64◦S 71,35◦W 18,6 +3,9"
+        }
+      ],
+      "resumen": {
+        "total_estaciones": 12,
+        "estaciones_activas": 11,
+        "estacion_critica": {
+          "nombre": "Chicama",
+          "anomalia_c": 7.2,
+          "tsm_c": 23.1
+        },
+        "promedio_anomalia_costera": 5.17
+      }
+    },
+    {
+      "archivo": "BOL_IMARPE_BDO_2026-09-23.pdf",
+      "fecha": "2026-09-23",
+      "boletin_nro": "N° 266",
+      "boletin_anio": "Año 13",
+      "diagnostico_oficial": "Persisten las anomal´ ias máximas frente a Paita con valores de +8,22 °C; asimismo, se registra un aumento de la TSM frente al Callao con anomal´ ias de hasta +7,33 °C. En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,1 °C (Chala), y 29,8 °C (Tum- bes). Las anomalías máximas y mínimas se dieron en Chicama (+7,0 °C) y Pisco (+1,7 °C), respectivamente.",
+      "fecha_observacion": "22 de septiembre de 2026",
+      "estaciones": [
+        {
+          "id": "tumbes",
+          "nombre": "Tumbes",
+          "lat_ref": -3.64,
+          "lng_ref": -80.61,
+          "region": "Tumbes",
+          "puerto": "Puerto Pizarro",
+          "tsm_c": 29.8,
+          "anomalia_c": 4.3,
+          "lat": -3.64,
+          "lng": -80.61,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Tumbes 03,64◦S 80,61◦W 29,8 +4,3"
+        },
+        {
+          "id": "paita",
+          "nombre": "Paita",
+          "lat_ref": -5.08,
+          "lng_ref": -81.12,
+          "region": "Piura",
+          "puerto": "Paita",
+          "tsm_c": 23.5,
+          "anomalia_c": 6.6,
+          "lat": -5.08,
+          "lng": -81.12,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Paita 05,08◦S 81,12◦W 23,5 +6,6"
+        },
+        {
+          "id": "san_jose",
+          "nombre": "San José",
+          "lat_ref": -6.77,
+          "lng_ref": -79.97,
+          "region": "Lambayeque",
+          "puerto": "San José",
+          "tsm_c": 24.5,
+          "anomalia_c": 5.6,
+          "lat": -6.77,
+          "lng": -79.97,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "San Jos´e 06,77◦S 79,97◦W 24,5 +5,6"
+        },
+        {
+          "id": "chicama",
+          "nombre": "Chicama",
+          "lat_ref": -7.69,
+          "lng_ref": -79.44,
+          "region": "La Libertad",
+          "puerto": "Puerto Chicama",
+          "tsm_c": 22.9,
+          "anomalia_c": 7.0,
+          "lat": -7.69,
+          "lng": -79.44,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Chicama 07,69◦S 79,44◦W 22,9 +7,0"
+        },
+        {
+          "id": "huanchaco",
+          "nombre": "Huanchaco",
+          "lat_ref": -8.08,
+          "lng_ref": -79.12,
+          "region": "La Libertad",
+          "puerto": "Huanchaco",
+          "tsm_c": 22.5,
+          "anomalia_c": 6.0,
+          "lat": -8.08,
+          "lng": -79.12,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Huanchaco 08,08◦S 79,12◦W 22,5 +6,0"
+        },
+        {
+          "id": "chimbote",
+          "nombre": "Chimbote",
+          "lat_ref": -9.46,
+          "lng_ref": -78.38,
+          "region": "Áncash",
+          "puerto": "Chimbote",
+          "tsm_c": 24.1,
+          "anomalia_c": 5.7,
+          "lat": -9.46,
+          "lng": -78.38,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Chimbote 09,46◦S 78,38◦W 24,1 +5,7"
+        },
+        {
+          "id": "huacho",
+          "nombre": "Huacho",
+          "lat_ref": -11.12,
+          "lng_ref": -77.62,
+          "region": "Lima",
+          "puerto": "Huacho",
+          "tsm_c": 21.9,
+          "anomalia_c": 6.6,
+          "lat": -11.12,
+          "lng": -77.62,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Huacho 11,12◦S 77,62◦W 21,9 +6,6"
+        },
+        {
+          "id": "callao",
+          "nombre": "Callao",
+          "lat_ref": -12.07,
+          "lng_ref": -77.16,
+          "region": "Callao",
+          "puerto": "Callao",
+          "tsm_c": 20.1,
+          "anomalia_c": 5.2,
+          "lat": -12.07,
+          "lng": -77.16,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Callao 12,07◦S 77,16◦W 20,1 +5,2"
+        },
+        {
+          "id": "pisco",
+          "nombre": "Pisco",
+          "lat_ref": -13.71,
+          "lng_ref": -76.22,
+          "region": "Ica",
+          "puerto": "Pisco / Paracas",
+          "tsm_c": 20.5,
+          "anomalia_c": 1.7,
+          "lat": -13.71,
+          "lng": -76.22,
+          "alerta": {
+            "nivel": "VIGILANCIA",
+            "etiqueta": "Vigilancia Térmica",
+            "color": "yellow",
+            "severidad": 2
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Pisco 13,71◦S 76,22◦W 20,5 +1,7"
+        },
+        {
+          "id": "chala",
+          "nombre": "Chala",
+          "lat_ref": -15.85,
+          "lng_ref": -74.23,
+          "region": "Arequipa",
+          "puerto": "Chala",
+          "tsm_c": 18.1,
+          "anomalia_c": null,
+          "lat": -15.85,
+          "lng": -74.23,
+          "alerta": {
+            "nivel": "SIN_DATOS",
+            "etiqueta": "No informa ΔT",
+            "color": "slate",
+            "severidad": 0
+          },
+          "estado_reporte": "SIN_ANOMALIA",
+          "linea_raw": "Chala 15,85◦S 74,23◦W 18,1"
+        },
+        {
+          "id": "matarani",
+          "nombre": "Matarani",
+          "lat_ref": -17.02,
+          "lng_ref": -72.11,
+          "region": "Arequipa",
+          "puerto": "Matarani",
+          "tsm_c": 18.8,
+          "anomalia_c": 3.8,
+          "lat": -17.02,
+          "lng": -72.11,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Matarani 17,02◦S 72,11◦W 18,8 +3,8"
+        },
+        {
+          "id": "ilo",
+          "nombre": "Ilo",
+          "lat_ref": -17.64,
+          "lng_ref": -71.35,
+          "region": "Moquegua",
+          "puerto": "Ilo",
+          "tsm_c": 18.7,
+          "anomalia_c": 4.0,
+          "lat": -17.64,
+          "lng": -71.35,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Ilo 17,64◦S 71,35◦W 18,7 +4,0"
+        }
+      ],
+      "resumen": {
+        "total_estaciones": 12,
+        "estaciones_activas": 11,
+        "estacion_critica": {
+          "nombre": "Chicama",
+          "anomalia_c": 7.0,
+          "tsm_c": 22.9
+        },
+        "promedio_anomalia_costera": 5.14
+      },
+      "cartas_satelitales": [
+        {
+          "id": "figura_1",
+          "titulo": "I. CONDICIONES DE MACROESCALA — Figura 1: TSM y Anomalías en el Pacífico Tropical (Niño 1+2 / 3.4)",
+          "url": "/imarpe_images/figura_1_pacifico_tropical_2026-09-23.png",
+          "canonical_url": "/imarpe_images/figura_1_pacifico_tropical.png?v=2026-09-23",
+          "fecha": "2026-09-23",
+          "fuente": "OSTIA-UKMO-L4-GLOB-v2.0 (UK Met Office) / Marine Copernicus / IMARPE"
+        },
+        {
+          "id": "figura_3",
+          "titulo": "Figura 3: Anomalías Térmicas Multitemporales frente al Litoral Peruano",
+          "url": "/imarpe_images/figura_3_anomalias_costa_peru_2026-09-23.png",
+          "canonical_url": "/imarpe_images/figura_3_anomalias_costa_peru.png?v=2026-09-23",
+          "fecha": "2026-09-23",
+          "fuente": "OSTIA-UKMO-L4-GLOB-v2.0 / DGIOCC IMARPE"
+        }
+      ]
+    },
+    {
+      "archivo": "BOL_IMARPE_BDO_2026-09-24.pdf",
+      "fecha": "2026-09-24",
+      "boletin_nro": "N° 267",
+      "boletin_anio": "Año 13",
+      "diagnostico_oficial": "Se registra una expansión de las anomal´ ias superiores a +6,0 °C en la franja centro-norte, alcanzando valores máximos frente a Paita (+8,03 °C) y Huacho (+7,28 °C). En las estaciones costeras del IMARPE se registraron valores de TSM entre 18,6 °C (Ilo), y 29,9 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Chicama (+7,6 °C) y Pisco (+2,4 °C), respectivamente.",
+      "fecha_observacion": "23 de septiembre de 2026",
+      "estaciones": [
+        {
+          "id": "tumbes",
+          "nombre": "Tumbes",
+          "lat_ref": -3.64,
+          "lng_ref": -80.61,
+          "region": "Tumbes",
+          "puerto": "Puerto Pizarro",
+          "tsm_c": 29.9,
+          "anomalia_c": 4.4,
+          "lat": -3.64,
+          "lng": -80.61,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Tumbes 03,64◦S 80,61◦W 29,9 +4,4"
+        },
+        {
+          "id": "paita",
+          "nombre": "Paita",
+          "lat_ref": -5.08,
+          "lng_ref": -81.12,
+          "region": "Piura",
+          "puerto": "Paita",
+          "tsm_c": 23.9,
+          "anomalia_c": 7.0,
+          "lat": -5.08,
+          "lng": -81.12,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Paita 05,08◦S 81,12◦W 23,9 +7,0"
+        },
+        {
+          "id": "san_jose",
+          "nombre": "San José",
+          "lat_ref": -6.77,
+          "lng_ref": -79.97,
+          "region": "Lambayeque",
+          "puerto": "San José",
+          "tsm_c": 25.0,
+          "anomalia_c": 6.1,
+          "lat": -6.77,
+          "lng": -79.97,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "San Jos´e 06,77◦S 79,97◦W 25,0 +6,1"
+        },
+        {
+          "id": "chicama",
+          "nombre": "Chicama",
+          "lat_ref": -7.69,
+          "lng_ref": -79.44,
+          "region": "La Libertad",
+          "puerto": "Puerto Chicama",
+          "tsm_c": 23.5,
+          "anomalia_c": 7.6,
+          "lat": -7.69,
+          "lng": -79.44,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Chicama 07,69◦S 79,44◦W 23,5 +7,6"
+        },
+        {
+          "id": "huanchaco",
+          "nombre": "Huanchaco",
+          "lat_ref": -8.08,
+          "lng_ref": -79.12,
+          "region": "La Libertad",
+          "puerto": "Huanchaco",
+          "tsm_c": 23.9,
+          "anomalia_c": 7.4,
+          "lat": -8.08,
+          "lng": -79.12,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Huanchaco 08,08◦S 79,12◦W 23,9 +7,4"
+        },
+        {
+          "id": "chimbote",
+          "nombre": "Chimbote",
+          "lat_ref": -9.46,
+          "lng_ref": -78.38,
+          "region": "Áncash",
+          "puerto": "Chimbote",
+          "tsm_c": 24.6,
+          "anomalia_c": 6.2,
+          "lat": -9.46,
+          "lng": -78.38,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Chimbote 09,46◦S 78,38◦W 24,6 +6,2"
+        },
+        {
+          "id": "huacho",
+          "nombre": "Huacho",
+          "lat_ref": -11.12,
+          "lng_ref": -77.62,
+          "region": "Lima",
+          "puerto": "Huacho",
+          "tsm_c": 22.0,
+          "anomalia_c": 6.8,
+          "lat": -11.12,
+          "lng": -77.62,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Huacho 11,12◦S 77,62◦W 22,0 +6,8"
+        },
+        {
+          "id": "callao",
+          "nombre": "Callao",
+          "lat_ref": -12.07,
+          "lng_ref": -77.16,
+          "region": "Callao",
+          "puerto": "Callao",
+          "tsm_c": 20.6,
+          "anomalia_c": 5.7,
+          "lat": -12.07,
+          "lng": -77.16,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Callao 12,07◦S 77,16◦W 20,6 +5,7"
+        },
+        {
+          "id": "pisco",
+          "nombre": "Pisco",
+          "lat_ref": -13.71,
+          "lng_ref": -76.22,
+          "region": "Ica",
+          "puerto": "Pisco / Paracas",
+          "tsm_c": 21.2,
+          "anomalia_c": 2.4,
+          "lat": -13.71,
+          "lng": -76.22,
+          "alerta": {
+            "nivel": "VIGILANCIA",
+            "etiqueta": "Vigilancia Térmica",
+            "color": "yellow",
+            "severidad": 2
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Pisco 13,71◦S 76,22◦W 21,2 +2,4"
+        },
+        {
+          "id": "chala",
+          "nombre": "Chala",
+          "lat_ref": -15.85,
+          "lng_ref": -74.23,
+          "region": "Arequipa",
+          "puerto": "Chala",
+          "tsm_c": 19.0,
+          "anomalia_c": null,
+          "lat": -15.85,
+          "lng": -74.23,
+          "alerta": {
+            "nivel": "SIN_DATOS",
+            "etiqueta": "No informa ΔT",
+            "color": "slate",
+            "severidad": 0
+          },
+          "estado_reporte": "SIN_ANOMALIA",
+          "linea_raw": "Chala 15,85◦S 74,23◦W 19,0"
+        },
+        {
+          "id": "matarani",
+          "nombre": "Matarani",
+          "lat_ref": -17.02,
+          "lng_ref": -72.11,
+          "region": "Arequipa",
+          "puerto": "Matarani",
+          "tsm_c": 19.1,
+          "anomalia_c": 4.2,
+          "lat": -17.02,
+          "lng": -72.11,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Matarani 17,02◦S 72,11◦W 19,1 +4,2"
+        },
+        {
+          "id": "ilo",
+          "nombre": "Ilo",
+          "lat_ref": -17.64,
+          "lng_ref": -71.35,
+          "region": "Moquegua",
+          "puerto": "Ilo",
+          "tsm_c": 18.6,
+          "anomalia_c": 3.9,
+          "lat": -17.64,
+          "lng": -71.35,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Ilo 17,64◦S 71,35◦W 18,6 +3,9"
+        }
+      ],
+      "resumen": {
+        "total_estaciones": 12,
+        "estaciones_activas": 11,
+        "estacion_critica": {
+          "nombre": "Chicama",
+          "anomalia_c": 7.6,
+          "tsm_c": 23.5
+        },
+        "promedio_anomalia_costera": 5.61
+      },
+      "cartas_satelitales": [
+        {
+          "id": "figura_1",
+          "titulo": "I. CONDICIONES DE MACROESCALA — Figura 1: TSM y Anomalías en el Pacífico Tropical (Niño 1+2 / 3.4)",
+          "url": "/imarpe_images/figura_1_pacifico_tropical_2026-09-24.png",
+          "canonical_url": "/imarpe_images/figura_1_pacifico_tropical.png?v=2026-09-24",
+          "fecha": "2026-09-24",
+          "fuente": "OSTIA-UKMO-L4-GLOB-v2.0 (UK Met Office) / Marine Copernicus / IMARPE"
+        },
+        {
+          "id": "figura_3",
+          "titulo": "Figura 3: Anomalías Térmicas Multitemporales frente al Litoral Peruano",
+          "url": "/imarpe_images/figura_3_anomalias_costa_peru_2026-09-24.png",
+          "canonical_url": "/imarpe_images/figura_3_anomalias_costa_peru.png?v=2026-09-24",
+          "fecha": "2026-09-24",
+          "fuente": "OSTIA-UKMO-L4-GLOB-v2.0 / DGIOCC IMARPE"
+        }
+      ]
+    },
+    {
+      "archivo": "BOL_IMARPE_BDO_2026-09-25.pdf",
+      "fecha": "2026-09-25",
+      "boletin_nro": "N° 268",
+      "boletin_anio": "Año 13",
+      "diagnostico_oficial": "Persisten los valores de anomal´ ias mayores a +6,0 °C en la franja centro-norte, con su valor máximo de +8,67 °C frente a Paita. En las estaciones costeras del IMARPE se registraron valores de TSM entre 19,2 °C (Ilo), y 30,3 °C (Tumbes). Las anomalías máximas y mínimas se dieron en Chicama (+7,7 °C) y Pisco (+3,0 °C), respectivamente.",
+      "fecha_observacion": "24 de septiembre de 2026",
+      "estaciones": [
+        {
+          "id": "tumbes",
+          "nombre": "Tumbes",
+          "lat_ref": -3.64,
+          "lng_ref": -80.61,
+          "region": "Tumbes",
+          "puerto": "Puerto Pizarro",
+          "tsm_c": 30.3,
+          "anomalia_c": 4.8,
+          "lat": -3.64,
+          "lng": -80.61,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Tumbes 03,64◦S 80,61◦W 30,3 +4,8"
+        },
+        {
+          "id": "paita",
+          "nombre": "Paita",
+          "lat_ref": -5.08,
+          "lng_ref": -81.12,
+          "region": "Piura",
+          "puerto": "Paita",
+          "tsm_c": 24.1,
+          "anomalia_c": 7.2,
+          "lat": -5.08,
+          "lng": -81.12,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Paita 05,08◦S 81,12◦W 24,1 +7,2"
+        },
+        {
+          "id": "san_jose",
+          "nombre": "San José",
+          "lat_ref": -6.77,
+          "lng_ref": -79.97,
+          "region": "Lambayeque",
+          "puerto": "San José",
+          "tsm_c": 25.6,
+          "anomalia_c": 6.7,
+          "lat": -6.77,
+          "lng": -79.97,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "San Jos´e 06,77◦S 79,97◦W 25,6 +6,7"
+        },
+        {
+          "id": "chicama",
+          "nombre": "Chicama",
+          "lat_ref": -7.69,
+          "lng_ref": -79.44,
+          "region": "La Libertad",
+          "puerto": "Puerto Chicama",
+          "tsm_c": 23.6,
+          "anomalia_c": 7.7,
+          "lat": -7.69,
+          "lng": -79.44,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Chicama 07,69◦S 79,44◦W 23,6 +7,7"
+        },
+        {
+          "id": "huanchaco",
+          "nombre": "Huanchaco",
+          "lat_ref": -8.08,
+          "lng_ref": -79.12,
+          "region": "La Libertad",
+          "puerto": "Huanchaco",
+          "tsm_c": 23.9,
+          "anomalia_c": 7.4,
+          "lat": -8.08,
+          "lng": -79.12,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Huanchaco 08,08◦S 79,12◦W 23,9 +7,4"
+        },
+        {
+          "id": "chimbote",
+          "nombre": "Chimbote",
+          "lat_ref": -9.46,
+          "lng_ref": -78.38,
+          "region": "Áncash",
+          "puerto": "Chimbote",
+          "tsm_c": 24.8,
+          "anomalia_c": 6.4,
+          "lat": -9.46,
+          "lng": -78.38,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Chimbote 09,46◦S 78,38◦W 24,8 +6,4"
+        },
+        {
+          "id": "huacho",
+          "nombre": "Huacho",
+          "lat_ref": -11.12,
+          "lng_ref": -77.62,
+          "region": "Lima",
+          "puerto": "Huacho",
+          "tsm_c": 22.1,
+          "anomalia_c": 6.8,
+          "lat": -11.12,
+          "lng": -77.62,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Huacho 11,12◦S 77,62◦W 22,1 +6,8"
+        },
+        {
+          "id": "callao",
+          "nombre": "Callao",
+          "lat_ref": -12.07,
+          "lng_ref": -77.16,
+          "region": "Callao",
+          "puerto": "Callao",
+          "tsm_c": 21.3,
+          "anomalia_c": 6.4,
+          "lat": -12.07,
+          "lng": -77.16,
+          "alerta": {
+            "nivel": "ALERTA_EXTREMA",
+            "etiqueta": "Alerta Térmica Extrema (El Niño)",
+            "color": "red",
+            "severidad": 4
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Callao 12,07◦S 77,16◦W 21,3 +6,4"
+        },
+        {
+          "id": "pisco",
+          "nombre": "Pisco",
+          "lat_ref": -13.71,
+          "lng_ref": -76.22,
+          "region": "Ica",
+          "puerto": "Pisco / Paracas",
+          "tsm_c": 21.9,
+          "anomalia_c": 3.0,
+          "lat": -13.71,
+          "lng": -76.22,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Pisco 13,71◦S 76,22◦W 21,9 +3,0"
+        },
+        {
+          "id": "chala",
+          "nombre": "Chala",
+          "lat_ref": -15.85,
+          "lng_ref": -74.23,
+          "region": "Arequipa",
+          "puerto": "Chala",
+          "tsm_c": 19.4,
+          "anomalia_c": null,
+          "lat": -15.85,
+          "lng": -74.23,
+          "alerta": {
+            "nivel": "SIN_DATOS",
+            "etiqueta": "No informa ΔT",
+            "color": "slate",
+            "severidad": 0
+          },
+          "estado_reporte": "SIN_ANOMALIA",
+          "linea_raw": "Chala 15,85◦S 74,23◦W 19,4"
+        },
+        {
+          "id": "matarani",
+          "nombre": "Matarani",
+          "lat_ref": -17.02,
+          "lng_ref": -72.11,
+          "region": "Arequipa",
+          "puerto": "Matarani",
+          "tsm_c": 19.3,
+          "anomalia_c": 4.3,
+          "lat": -17.02,
+          "lng": -72.11,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Matarani 17,02◦S 72,11◦W 19,3 +4,3"
+        },
+        {
+          "id": "ilo",
+          "nombre": "Ilo",
+          "lat_ref": -17.64,
+          "lng_ref": -71.35,
+          "region": "Moquegua",
+          "puerto": "Ilo",
+          "tsm_c": 19.2,
+          "anomalia_c": 4.5,
+          "lat": -17.64,
+          "lng": -71.35,
+          "alerta": {
+            "nivel": "ALERTA_MODERADA",
+            "etiqueta": "Alerta Térmica Alta",
+            "color": "orange",
+            "severidad": 3
+          },
+          "estado_reporte": "OK",
+          "linea_raw": "Ilo 17,64◦S 71,35◦W 19,2 +4,5"
+        }
+      ],
+      "resumen": {
+        "total_estaciones": 12,
+        "estaciones_activas": 11,
+        "estacion_critica": {
+          "nombre": "Chicama",
+          "anomalia_c": 7.7,
+          "tsm_c": 23.6
+        },
+        "promedio_anomalia_costera": 5.93
+      },
+      "cartas_satelitales": [
+        {
+          "id": "figura_1",
+          "titulo": "I. CONDICIONES DE MACROESCALA — Figura 1: TSM y Anomalías en el Pacífico Tropical (Niño 1+2 / 3.4)",
+          "url": "/imarpe_images/figura_1_pacifico_tropical_2026-09-25.png",
+          "canonical_url": "/imarpe_images/figura_1_pacifico_tropical.png?v=2026-09-25",
+          "fecha": "2026-09-25",
+          "fuente": "OSTIA-UKMO-L4-GLOB-v2.0 (UK Met Office) / Marine Copernicus / IMARPE"
+        },
+        {
+          "id": "figura_3",
+          "titulo": "Figura 3: Anomalías Térmicas Multitemporales frente al Litoral Peruano",
+          "url": "/imarpe_images/figura_3_anomalias_costa_peru_2026-09-25.png",
+          "canonical_url": "/imarpe_images/figura_3_anomalias_costa_peru.png?v=2026-09-25",
+          "fecha": "2026-09-25",
+          "fuente": "OSTIA-UKMO-L4-GLOB-v2.0 / DGIOCC IMARPE"
+        }
+      ]
     }
   ],
   "cartas_satelitales": [
     {
       "id": "figura_1",
       "titulo": "I. CONDICIONES DE MACROESCALA — Figura 1: TSM y Anomalías en el Pacífico Tropical (Niño 1+2 / 3.4)",
-      "url": "/imarpe_images/figura_1_pacifico_tropical_2026-09-17.png",
-      "canonical_url": "/imarpe_images/figura_1_pacifico_tropical.png?v=2026-09-17",
-      "fecha": "2026-09-17",
+      "url": "/imarpe_images/figura_1_pacifico_tropical_2026-09-25.png",
+      "canonical_url": "/imarpe_images/figura_1_pacifico_tropical.png?v=2026-09-25",
+      "fecha": "2026-09-25",
       "fuente": "OSTIA-UKMO-L4-GLOB-v2.0 (UK Met Office) / Marine Copernicus / IMARPE"
     },
     {
       "id": "figura_3",
       "titulo": "Figura 3: Anomalías Térmicas Multitemporales frente al Litoral Peruano",
-      "url": "/imarpe_images/figura_3_anomalias_costa_peru_2026-09-17.png",
-      "canonical_url": "/imarpe_images/figura_3_anomalias_costa_peru.png?v=2026-09-17",
-      "fecha": "2026-09-17",
+      "url": "/imarpe_images/figura_3_anomalias_costa_peru_2026-09-25.png",
+      "canonical_url": "/imarpe_images/figura_3_anomalias_costa_peru.png?v=2026-09-25",
+      "fecha": "2026-09-25",
       "fuente": "OSTIA-UKMO-L4-GLOB-v2.0 / DGIOCC IMARPE"
     }
   ],
@@ -7774,6 +9908,62 @@
           "anomalia_c": 3.7,
           "estado": "OK",
           "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-18",
+          "tsm_c": 29.2,
+          "anomalia_c": 3.8,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-19",
+          "tsm_c": 29.6,
+          "anomalia_c": 4.2,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-20",
+          "tsm_c": null,
+          "anomalia_c": null,
+          "estado": "SIN_DATOS",
+          "nivel_alerta": "SIN_DATOS"
+        },
+        {
+          "fecha": "2026-09-21",
+          "tsm_c": null,
+          "anomalia_c": null,
+          "estado": "SIN_DATOS",
+          "nivel_alerta": "SIN_DATOS"
+        },
+        {
+          "fecha": "2026-09-22",
+          "tsm_c": 29.4,
+          "anomalia_c": 4.0,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-23",
+          "tsm_c": 29.8,
+          "anomalia_c": 4.3,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-24",
+          "tsm_c": 29.9,
+          "anomalia_c": 4.4,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-25",
+          "tsm_c": 30.3,
+          "anomalia_c": 4.8,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
         }
       ]
     },
@@ -7987,6 +10177,62 @@
           "fecha": "2026-09-17",
           "tsm_c": 24.5,
           "anomalia_c": 7.6,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-18",
+          "tsm_c": 24.8,
+          "anomalia_c": 7.9,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-19",
+          "tsm_c": 24.1,
+          "anomalia_c": 7.2,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-20",
+          "tsm_c": 23.9,
+          "anomalia_c": 7.1,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-21",
+          "tsm_c": 23.9,
+          "anomalia_c": 7.1,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-22",
+          "tsm_c": 23.5,
+          "anomalia_c": 6.6,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-23",
+          "tsm_c": 23.5,
+          "anomalia_c": 6.6,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-24",
+          "tsm_c": 23.9,
+          "anomalia_c": 7.0,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-25",
+          "tsm_c": 24.1,
+          "anomalia_c": 7.2,
           "estado": "OK",
           "nivel_alerta": "ALERTA_EXTREMA"
         }
@@ -8204,6 +10450,62 @@
           "anomalia_c": 5.4,
           "estado": "OK",
           "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-18",
+          "tsm_c": 23.8,
+          "anomalia_c": 5.0,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-19",
+          "tsm_c": 24.6,
+          "anomalia_c": 5.7,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-20",
+          "tsm_c": 24.3,
+          "anomalia_c": 5.4,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-21",
+          "tsm_c": null,
+          "anomalia_c": null,
+          "estado": "SIN_DATOS",
+          "nivel_alerta": "SIN_DATOS"
+        },
+        {
+          "fecha": "2026-09-22",
+          "tsm_c": 24.4,
+          "anomalia_c": 5.6,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-23",
+          "tsm_c": 24.5,
+          "anomalia_c": 5.6,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-24",
+          "tsm_c": 25.0,
+          "anomalia_c": 6.1,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-25",
+          "tsm_c": 25.6,
+          "anomalia_c": 6.7,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
         }
       ]
     },
@@ -8417,6 +10719,62 @@
           "fecha": "2026-09-17",
           "tsm_c": 23.4,
           "anomalia_c": 7.4,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-18",
+          "tsm_c": 23.3,
+          "anomalia_c": 7.4,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-19",
+          "tsm_c": 23.4,
+          "anomalia_c": 7.5,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-20",
+          "tsm_c": 23.0,
+          "anomalia_c": 7.1,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-21",
+          "tsm_c": 23.2,
+          "anomalia_c": 7.3,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-22",
+          "tsm_c": 23.1,
+          "anomalia_c": 7.2,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-23",
+          "tsm_c": 22.9,
+          "anomalia_c": 7.0,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-24",
+          "tsm_c": 23.5,
+          "anomalia_c": 7.6,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-25",
+          "tsm_c": 23.6,
+          "anomalia_c": 7.7,
           "estado": "OK",
           "nivel_alerta": "ALERTA_EXTREMA"
         }
@@ -8634,6 +10992,62 @@
           "anomalia_c": 6.0,
           "estado": "OK",
           "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-18",
+          "tsm_c": 22.3,
+          "anomalia_c": 5.8,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-19",
+          "tsm_c": 22.3,
+          "anomalia_c": 5.7,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-20",
+          "tsm_c": 21.3,
+          "anomalia_c": 4.8,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-21",
+          "tsm_c": 21.2,
+          "anomalia_c": 4.6,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-22",
+          "tsm_c": 22.1,
+          "anomalia_c": 5.6,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-23",
+          "tsm_c": 22.5,
+          "anomalia_c": 6.0,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-24",
+          "tsm_c": 23.9,
+          "anomalia_c": 7.4,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-25",
+          "tsm_c": 23.9,
+          "anomalia_c": 7.4,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
         }
       ]
     },
@@ -8847,6 +11261,62 @@
           "fecha": "2026-09-17",
           "tsm_c": 23.8,
           "anomalia_c": 5.4,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-18",
+          "tsm_c": 24.1,
+          "anomalia_c": 5.7,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-19",
+          "tsm_c": 24.4,
+          "anomalia_c": 6.0,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-20",
+          "tsm_c": 24.0,
+          "anomalia_c": 5.7,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-21",
+          "tsm_c": 24.0,
+          "anomalia_c": 5.6,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-22",
+          "tsm_c": 23.9,
+          "anomalia_c": 5.6,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-23",
+          "tsm_c": 24.1,
+          "anomalia_c": 5.7,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-24",
+          "tsm_c": 24.6,
+          "anomalia_c": 6.2,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-25",
+          "tsm_c": 24.8,
+          "anomalia_c": 6.4,
           "estado": "OK",
           "nivel_alerta": "ALERTA_EXTREMA"
         }
@@ -9064,6 +11534,62 @@
           "anomalia_c": 6.6,
           "estado": "OK",
           "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-18",
+          "tsm_c": 21.5,
+          "anomalia_c": 6.2,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-19",
+          "tsm_c": 21.4,
+          "anomalia_c": 6.1,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-20",
+          "tsm_c": 21.3,
+          "anomalia_c": 6.0,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-21",
+          "tsm_c": 21.6,
+          "anomalia_c": 6.3,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-22",
+          "tsm_c": 22.2,
+          "anomalia_c": 6.9,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-23",
+          "tsm_c": 21.9,
+          "anomalia_c": 6.6,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-24",
+          "tsm_c": 22.0,
+          "anomalia_c": 6.8,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-25",
+          "tsm_c": 22.1,
+          "anomalia_c": 6.8,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
         }
       ]
     },
@@ -9279,6 +11805,62 @@
           "anomalia_c": 4.4,
           "estado": "OK",
           "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-18",
+          "tsm_c": 19.7,
+          "anomalia_c": 4.8,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-19",
+          "tsm_c": 19.6,
+          "anomalia_c": 4.7,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-20",
+          "tsm_c": 19.7,
+          "anomalia_c": 4.8,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-21",
+          "tsm_c": 19.8,
+          "anomalia_c": 4.8,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-22",
+          "tsm_c": 20.0,
+          "anomalia_c": 5.1,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-23",
+          "tsm_c": 20.1,
+          "anomalia_c": 5.2,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-24",
+          "tsm_c": 20.6,
+          "anomalia_c": 5.7,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-25",
+          "tsm_c": 21.3,
+          "anomalia_c": 6.4,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
         }
       ]
     },
@@ -9494,6 +12076,62 @@
           "anomalia_c": 2.4,
           "estado": "OK",
           "nivel_alerta": "VIGILANCIA"
+        },
+        {
+          "fecha": "2026-09-18",
+          "tsm_c": 21.6,
+          "anomalia_c": 3.0,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-19",
+          "tsm_c": 21.2,
+          "anomalia_c": 2.5,
+          "estado": "OK",
+          "nivel_alerta": "VIGILANCIA"
+        },
+        {
+          "fecha": "2026-09-20",
+          "tsm_c": 20.6,
+          "anomalia_c": 1.9,
+          "estado": "OK",
+          "nivel_alerta": "VIGILANCIA"
+        },
+        {
+          "fecha": "2026-09-21",
+          "tsm_c": 20.9,
+          "anomalia_c": 2.2,
+          "estado": "OK",
+          "nivel_alerta": "VIGILANCIA"
+        },
+        {
+          "fecha": "2026-09-22",
+          "tsm_c": 21.3,
+          "anomalia_c": 2.6,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-23",
+          "tsm_c": 20.5,
+          "anomalia_c": 1.7,
+          "estado": "OK",
+          "nivel_alerta": "VIGILANCIA"
+        },
+        {
+          "fecha": "2026-09-24",
+          "tsm_c": 21.2,
+          "anomalia_c": 2.4,
+          "estado": "OK",
+          "nivel_alerta": "VIGILANCIA"
+        },
+        {
+          "fecha": "2026-09-25",
+          "tsm_c": 21.9,
+          "anomalia_c": 3.0,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
         }
       ]
     },
@@ -9706,6 +12344,62 @@
         {
           "fecha": "2026-09-17",
           "tsm_c": 18.7,
+          "anomalia_c": null,
+          "estado": "SIN_ANOMALIA",
+          "nivel_alerta": "SIN_DATOS"
+        },
+        {
+          "fecha": "2026-09-18",
+          "tsm_c": 18.7,
+          "anomalia_c": null,
+          "estado": "SIN_ANOMALIA",
+          "nivel_alerta": "SIN_DATOS"
+        },
+        {
+          "fecha": "2026-09-19",
+          "tsm_c": 18.9,
+          "anomalia_c": null,
+          "estado": "SIN_ANOMALIA",
+          "nivel_alerta": "SIN_DATOS"
+        },
+        {
+          "fecha": "2026-09-20",
+          "tsm_c": 19.0,
+          "anomalia_c": null,
+          "estado": "SIN_ANOMALIA",
+          "nivel_alerta": "SIN_DATOS"
+        },
+        {
+          "fecha": "2026-09-21",
+          "tsm_c": null,
+          "anomalia_c": null,
+          "estado": "SIN_DATOS",
+          "nivel_alerta": "SIN_DATOS"
+        },
+        {
+          "fecha": "2026-09-22",
+          "tsm_c": 18.3,
+          "anomalia_c": null,
+          "estado": "SIN_ANOMALIA",
+          "nivel_alerta": "SIN_DATOS"
+        },
+        {
+          "fecha": "2026-09-23",
+          "tsm_c": 18.1,
+          "anomalia_c": null,
+          "estado": "SIN_ANOMALIA",
+          "nivel_alerta": "SIN_DATOS"
+        },
+        {
+          "fecha": "2026-09-24",
+          "tsm_c": 19.0,
+          "anomalia_c": null,
+          "estado": "SIN_ANOMALIA",
+          "nivel_alerta": "SIN_DATOS"
+        },
+        {
+          "fecha": "2026-09-25",
+          "tsm_c": 19.4,
           "anomalia_c": null,
           "estado": "SIN_ANOMALIA",
           "nivel_alerta": "SIN_DATOS"
@@ -9924,6 +12618,62 @@
           "anomalia_c": 3.9,
           "estado": "OK",
           "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-18",
+          "tsm_c": 19.0,
+          "anomalia_c": 4.1,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-19",
+          "tsm_c": 18.5,
+          "anomalia_c": 3.6,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-20",
+          "tsm_c": 18.9,
+          "anomalia_c": 4.0,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-21",
+          "tsm_c": null,
+          "anomalia_c": null,
+          "estado": "SIN_DATOS",
+          "nivel_alerta": "SIN_DATOS"
+        },
+        {
+          "fecha": "2026-09-22",
+          "tsm_c": 18.8,
+          "anomalia_c": 3.8,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-23",
+          "tsm_c": 18.8,
+          "anomalia_c": 3.8,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-24",
+          "tsm_c": 19.1,
+          "anomalia_c": 4.2,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-25",
+          "tsm_c": 19.3,
+          "anomalia_c": 4.3,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
         }
       ]
     },
@@ -10137,6 +12887,62 @@
           "fecha": "2026-09-17",
           "tsm_c": 18.2,
           "anomalia_c": 3.5,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-18",
+          "tsm_c": 18.1,
+          "anomalia_c": 3.4,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-19",
+          "tsm_c": 19.3,
+          "anomalia_c": 4.6,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_EXTREMA"
+        },
+        {
+          "fecha": "2026-09-20",
+          "tsm_c": 19.1,
+          "anomalia_c": 4.4,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-21",
+          "tsm_c": 18.9,
+          "anomalia_c": 4.2,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-22",
+          "tsm_c": 18.6,
+          "anomalia_c": 3.9,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-23",
+          "tsm_c": 18.7,
+          "anomalia_c": 4.0,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-24",
+          "tsm_c": 18.6,
+          "anomalia_c": 3.9,
+          "estado": "OK",
+          "nivel_alerta": "ALERTA_MODERADA"
+        },
+        {
+          "fecha": "2026-09-25",
+          "tsm_c": 19.2,
+          "anomalia_c": 4.5,
           "estado": "OK",
           "nivel_alerta": "ALERTA_MODERADA"
         }

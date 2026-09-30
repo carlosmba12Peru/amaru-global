@@ -95,9 +95,22 @@ export default function GeovisorPage() {
 
             {/* Renderizado Condicional del Motor Cartográfico Seleccionado */}
             {mapEngine === "c2_tactical" ? (
-                <GeovisorConsole />
+                <GeovisorConsole onSwitchToGoogleMaps={() => setMapEngine("google_maps")} />
             ) : (
-                <div className="w-full bg-slate-900/60 border border-slate-800 rounded-2xl p-2 shadow-2xl overflow-hidden">
+                <div className="w-full bg-slate-900/60 border border-slate-800 rounded-2xl p-2 shadow-2xl overflow-hidden space-y-2">
+                    <div className="flex items-center justify-between px-3 py-1.5 bg-slate-950/80 rounded-xl border border-slate-800 text-xs">
+                        <div className="flex items-center gap-2 text-emerald-400 font-semibold">
+                            <Satellite className="w-4 h-4" />
+                            <span>Google Maps Platform: Visualización Satelital e Híbrida 3D del Perú</span>
+                        </div>
+                        <button
+                            onClick={() => setMapEngine("c2_tactical")}
+                            className="flex items-center gap-1.5 px-3 py-1 bg-slate-800 hover:bg-slate-700 text-sky-300 rounded-lg text-xs font-medium transition cursor-pointer border border-slate-700"
+                        >
+                            <CloudRain className="w-3.5 h-3.5 text-sky-400" />
+                            <span>Volver a Retícula C2 Doppler</span>
+                        </button>
+                    </div>
                     <MapViewer mode="national" />
                 </div>
             )}

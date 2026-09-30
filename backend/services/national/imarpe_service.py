@@ -99,6 +99,37 @@ def get_cache_filepath() -> str:
     os.makedirs(target_dir, exist_ok=True)
     return os.path.join(target_dir, "imarpe_boletines_cache.json")
 
+def safe_write_bytes(dest_path: str, data: bytes) -> bool:
+    """Escribe bytes en disco de manera segura, con fallback para entornos con Windows Controlled Folder Access."""
+    try:
+        os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+        with open(dest_path, "wb") as f:
+            f.write(data)
+        return True
+    except Exception as e:
+        logger.debug(f"Direct write failed for {dest_path} ({e}), attempting copy via temp...")
+        try:
+            import tempfile
+            import subprocess
+            import uuid
+            tmp = os.path.join(tempfile.gettempdir(), f"imarpe_tmp_{uuid.uuid4().hex}.bin")
+            with open(tmp, "wb") as f_tmp:
+                f_tmp.write(data)
+            cmd = f'copy /Y "{tmp}" "{dest_path}"'
+            subprocess.run(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            try:
+                os.remove(tmp)
+            except Exception:
+                pass
+            return os.path.exists(dest_path)
+        except Exception as e2:
+            logger.error(f"safe_write_bytes falló para {dest_path}: {e2}")
+            return False
+
+def safe_write_text(dest_path: str, text: str, encoding: str = "utf-8") -> bool:
+    """Escribe texto en disco de manera segura."""
+    return safe_write_bytes(dest_path, text.encode(encoding))
+
 def parse_coordenada_str(coord_str: str) -> Optional[float]:
     """Convierte '05,08◦S' a -5.08 o '81,12◦W' a -81.12."""
     try:
@@ -140,6 +171,7 @@ def parse_single_imarpe_pdf(pdf_path: str) -> Optional[Dict[str, Any]]:
             diagnostico = (
                 diagnostico
                 .replace("´ı", "í")
+                .replace("\u0131", "i")
                 .replace("´o", "ó")
                 .replace("´a", "á")
                 .replace("´e", "é")
@@ -278,21 +310,21 @@ class ImarpeService:
         data_dirs = get_imarpe_data_dirs()
         logger.info(f"Escaneando directorios IMARPE: {data_dirs}")
         
-        pdf_paths = []
+        pdf_map = {}
         for d in data_dirs:
             for root, _, files in os.walk(d):
                 for f in files:
-                    if f.startswith("BOL_IMARPE_") and f.endswith(".pdf"):
+                    if f.lower().endswith(".pdf"):
                         full_path = os.path.join(root, f)
-                        if full_path not in pdf_paths:
-                            pdf_paths.append(full_path)
+                        if f not in pdf_map:
+                            pdf_map[f] = full_path
 
-        pdf_paths.sort()
-        logger.info(f"Encontrados {len(pdf_paths)} boletines IMARPE.")
+        sorted_files = sorted(pdf_map.keys())
+        logger.info(f"Encontrados {len(sorted_files)} boletines IMARPE únicos.")
 
         boletines = []
-        for p in pdf_paths:
-            res = parse_single_imarpe_pdf(p)
+        for f in sorted_files:
+            res = parse_single_imarpe_pdf(pdf_map[f])
             if res:
                 boletines.append(res)
 
@@ -301,64 +333,75 @@ class ImarpeService:
 
         # Extraer figuras satelitales oficiales del boletín más reciente
         cartas_extraidas = []
-        if boletines and pdf_paths:
+        if boletines:
             latest_boletin = boletines[-1]
             latest_fecha = latest_boletin.get("fecha", "latest")
-            latest_pdf = pdf_paths[-1]
             try:
                 # Directorio en frontend/public
                 public_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))), "frontend", "public", "imarpe_images")
                 os.makedirs(public_dir, exist_ok=True)
                 
-                reader = pypdf.PdfReader(latest_pdf)
-                # Extraer imagen principal de página 1 (Figura 1: I. CONDICIONES DE MACROESCALA - Pacífico Tropical)
-                if len(reader.pages) >= 1 and len(reader.pages[0].images) > 0:
-                    # En los boletines de IMARPE, images[0] es el banner institucional (Im1) e images[1] es la Figura 1 (Im2)
-                    fig1_img = None
-                    for candidate in reader.pages[0].images:
-                        if candidate.name == "Im2.png" or "Im2" in candidate.name or len(candidate.data) < 1000000:
-                            fig1_img = candidate
-                            break
-                    if not fig1_img and len(reader.pages[0].images) > 1:
-                        fig1_img = reader.pages[0].images[1]
-                    elif not fig1_img:
-                        fig1_img = reader.pages[0].images[0]
+                # Extraer para los últimos boletines
+                for b in boletines[-3:]:
+                    b_fecha = b.get("fecha")
+                    b_pdf = pdf_map.get(b.get("archivo"))
+                    if not b_pdf or not os.path.exists(b_pdf):
+                        continue
+                    
+                    fig1_dated = os.path.join(public_dir, f"figura_1_pacifico_tropical_{b_fecha}.png")
+                    fig3_dated = os.path.join(public_dir, f"figura_3_anomalias_costa_peru_{b_fecha}.png")
+                    
+                    try:
+                        reader = pypdf.PdfReader(b_pdf)
+                        # Pág 1: Figura 1
+                        if len(reader.pages) >= 1 and len(reader.pages[0].images) > 0:
+                            fig1_img = None
+                            for candidate in reader.pages[0].images:
+                                if candidate.name == "Im2.png" or "Im2" in candidate.name or len(candidate.data) < 1000000:
+                                    fig1_img = candidate
+                                    break
+                            if not fig1_img and len(reader.pages[0].images) > 1:
+                                fig1_img = reader.pages[0].images[1]
+                            elif not fig1_img:
+                                fig1_img = reader.pages[0].images[0]
 
-                    fig1_data = fig1_img.data
-                    fig1_canonical = os.path.join(public_dir, "figura_1_pacifico_tropical.png")
-                    fig1_dated = os.path.join(public_dir, f"figura_1_pacifico_tropical_{latest_fecha}.png")
-                    with open(fig1_canonical, "wb") as f_img:
-                        f_img.write(fig1_data)
-                    with open(fig1_dated, "wb") as f_img:
-                        f_img.write(fig1_data)
+                            if fig1_img:
+                                safe_write_bytes(fig1_dated, fig1_img.data)
+                                if b == latest_boletin:
+                                    fig1_canonical = os.path.join(public_dir, "figura_1_pacifico_tropical.png")
+                                    safe_write_bytes(fig1_canonical, fig1_img.data)
 
-                    cartas_extraidas.append({
-                        "id": "figura_1",
-                        "titulo": "I. CONDICIONES DE MACROESCALA — Figura 1: TSM y Anomalías en el Pacífico Tropical (Niño 1+2 / 3.4)",
-                        "url": f"/imarpe_images/figura_1_pacifico_tropical_{latest_fecha}.png",
-                        "canonical_url": f"/imarpe_images/figura_1_pacifico_tropical.png?v={latest_fecha}",
-                        "fecha": latest_fecha,
-                        "fuente": "OSTIA-UKMO-L4-GLOB-v2.0 (UK Met Office) / Marine Copernicus / IMARPE"
-                    })
-                
-                # Extraer imagen de página 2 (Figura 3: Anomalías frente a la costa peruana)
-                if len(reader.pages) >= 2 and len(reader.pages[1].images) >= 3:
-                    fig3_data = reader.pages[1].images[2].data
-                    fig3_canonical = os.path.join(public_dir, "figura_3_anomalias_costa_peru.png")
-                    fig3_dated = os.path.join(public_dir, f"figura_3_anomalias_costa_peru_{latest_fecha}.png")
-                    with open(fig3_canonical, "wb") as f_img:
-                        f_img.write(fig3_data)
-                    with open(fig3_dated, "wb") as f_img:
-                        f_img.write(fig3_data)
+                        # Pág 2: Figura 3
+                        if len(reader.pages) >= 2 and len(reader.pages[1].images) >= 3:
+                            fig3_data = reader.pages[1].images[2].data
+                            safe_write_bytes(fig3_dated, fig3_data)
+                            if b == latest_boletin:
+                                fig3_canonical = os.path.join(public_dir, "figura_3_anomalias_costa_peru.png")
+                                safe_write_bytes(fig3_canonical, fig3_data)
+                    except Exception as e_extract:
+                        logger.warning(f"Error extrayendo imágenes para {b_fecha}: {e_extract}")
 
-                    cartas_extraidas.append({
-                        "id": "figura_3",
-                        "titulo": "Figura 3: Anomalías Térmicas Multitemporales frente al Litoral Peruano",
-                        "url": f"/imarpe_images/figura_3_anomalias_costa_peru_{latest_fecha}.png",
-                        "canonical_url": f"/imarpe_images/figura_3_anomalias_costa_peru.png?v={latest_fecha}",
-                        "fecha": latest_fecha,
-                        "fuente": "OSTIA-UKMO-L4-GLOB-v2.0 / DGIOCC IMARPE"
-                    })
+                    b_cartas = [
+                        {
+                            "id": "figura_1",
+                            "titulo": f"I. CONDICIONES DE MACROESCALA — Figura 1: TSM y Anomalías en el Pacífico Tropical (Niño 1+2 / 3.4)",
+                            "url": f"/imarpe_images/figura_1_pacifico_tropical_{b_fecha}.png",
+                            "canonical_url": f"/imarpe_images/figura_1_pacifico_tropical.png?v={b_fecha}",
+                            "fecha": b_fecha,
+                            "fuente": "OSTIA-UKMO-L4-GLOB-v2.0 (UK Met Office) / Marine Copernicus / IMARPE"
+                        },
+                        {
+                            "id": "figura_3",
+                            "titulo": f"Figura 3: Anomalías Térmicas Multitemporales frente al Litoral Peruano",
+                            "url": f"/imarpe_images/figura_3_anomalias_costa_peru_{b_fecha}.png",
+                            "canonical_url": f"/imarpe_images/figura_3_anomalias_costa_peru.png?v={b_fecha}",
+                            "fecha": b_fecha,
+                            "fuente": "OSTIA-UKMO-L4-GLOB-v2.0 / DGIOCC IMARPE"
+                        }
+                    ]
+                    b["cartas_satelitales"] = b_cartas
+                    if b == latest_boletin:
+                        cartas_extraidas = b_cartas
             except Exception as e:
                 logger.error(f"Error extrayendo cartas satelitales: {e}")
 
@@ -393,8 +436,10 @@ class ImarpeService:
             "catalogo_estaciones": ESTACIONES_CATALOGO
         }
 
-        with open(self.cache_file, "w", encoding="utf-8") as f_out:
-            json.dump(consolidado, f_out, indent=2, ensure_ascii=False)
+        try:
+            safe_write_text(self.cache_file, json.dumps(consolidado, indent=2, ensure_ascii=False))
+        except Exception as e:
+            logger.warning(f"No se pudo guardar imarpe_boletines_cache.json en disco: {e}")
 
         self._cache_data = consolidado
         return {
@@ -405,21 +450,40 @@ class ImarpeService:
         }
 
     def _ensure_cache(self) -> Dict[str, Any]:
-        """Carga la caché en memoria o la genera si no existe."""
+        """Carga la caché en memoria o la genera si no existe o si hay nuevos boletines."""
         if self._cache_data is not None:
             return self._cache_data
 
+        cached = None
         if os.path.exists(self.cache_file):
             try:
                 with open(self.cache_file, "r", encoding="utf-8") as f_in:
-                    self._cache_data = json.load(f_in)
-                    return self._cache_data
+                    cached = json.load(f_in)
             except Exception:
                 pass
 
-        # Generar por primera vez
-        self.sync_bulletins()
-        return self._cache_data or {}
+        # Verificar si hay más boletines en disco que en la caché (únicos por nombre)
+        data_dirs = get_imarpe_data_dirs()
+        unique_disk_pdfs = set(
+            f for d in data_dirs for _, _, files in os.walk(d) for f in files if f.lower().endswith(".pdf")
+        )
+        total_disk_pdfs = len(unique_disk_pdfs)
+        # Si hay caché en disco y tiene boletines:
+        # En contenedor (sin PDFs físicos) o si la caché ya cubre todos los PDFs, retornar caché.
+        if cached and len(cached.get("boletines", [])) > 0:
+            if total_disk_pdfs == 0 or len(cached.get("boletines", [])) >= total_disk_pdfs:
+                self._cache_data = cached
+                return self._cache_data
+
+        # Si no hay caché o hay más archivos en disco, resincronizar
+        try:
+            self.sync_bulletins()
+        except Exception as e:
+            logger.warning(f"Error sincronizando boletines: {e}")
+            if cached:
+                self._cache_data = cached
+
+        return self._cache_data or cached or {}
 
     def get_latest_bulletin(self) -> Optional[Dict[str, Any]]:
         """Retorna el boletín más reciente disponible."""

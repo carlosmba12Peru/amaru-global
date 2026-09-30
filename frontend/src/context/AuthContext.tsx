@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { API_BASE } from "@/config/api";
 
 export interface AuthUser {
     username: string;
@@ -31,8 +32,6 @@ const STORAGE_KEY = "coen_auth_session_v1";
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<AuthUser | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-
-    const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
     // Cargar y verificar sesión al iniciar
     useEffect(() => {

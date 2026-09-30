@@ -132,7 +132,7 @@ export default function AuditoriaPage() {
                         <div>
                             <div className="flex items-center gap-2">
                                 <span className="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[11px] font-mono font-bold">
-                                    SAGF-MC & ISO 27037
+                                    NTP-ISO/IEC 27037 & RFC 3161
                                 </span>
                                 <h1 className="text-lg md:text-xl font-black text-white tracking-wide">
                                     CONSOLA DE AUDITORÍA FORENSE & CALIDAD DE GOBERNANZA

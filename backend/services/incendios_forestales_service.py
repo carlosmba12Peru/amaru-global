@@ -265,7 +265,8 @@ class IncendiosForestalesService:
             return self._firms_cache
 
         area_peru = "-81.33,-18.35,-68.65,-0.03"
-        url = f"https://firms.modaps.eosdis.nasa.gov/api/area/csv/{self._firms_map_key}/VIIRS_SNPP_NRT/{area_peru}/2"
+        # Ventana ampliada de 3 días (72h) para garantizar ingesta de la pasada previa de ayer y retención PTT
+        url = f"https://firms.modaps.eosdis.nasa.gov/api/area/csv/{self._firms_map_key}/VIIRS_SNPP_NRT/{area_peru}/3"
         focos_vivos: List[Dict[str, Any]] = []
 
         try:
@@ -312,7 +313,8 @@ class IncendiosForestalesService:
                             "cobertura": f"Biomasa Vegetal / Pajonal en {geo['distrito']}",
                             "riesgo_cenepred": "MUY_ALTO" if frp >= 25.0 else "ALTO",
                             "patrimonio_cercano": f"Cuenca y Bosques de {geo['provincia']} ({geo['departamento']})",
-                            "hora_deteccion": f"{row.get('acq_date', '2026-10-16')} {row.get('acq_time', '0000')} UTC",
+                            "hora_deteccion": f"{row.get('acq_date', '2026-10-17')} {row.get('acq_time', '0000')} UTC",
+                            "acq_date": row.get('acq_date', '2026-10-17'),
                             "fuente": "NASA FIRMS Near-Real-Time",
                             "open_meteo": {
                                 "temperatura_ambiente_c": temp_estimada_c,
@@ -323,7 +325,7 @@ class IncendiosForestalesService:
                                 "peligro_propagacion": "PROPAGACIÓN_EXTREMA" if (temp_estimada_c > 30 or rafagas_kmh > 35) else "PROPAGACIÓN_ACTIVA"
                             }
                         })
-                        if len(focos_vivos) >= 400:  # Capacidad expandida de focos vivos
+                        if len(focos_vivos) >= 1200:  # Capacidad expandida de ingesta
                             break
 
                 # Ordenar por FRP descendente

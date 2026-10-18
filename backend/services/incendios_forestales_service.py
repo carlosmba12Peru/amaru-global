@@ -505,7 +505,11 @@ class IncendiosForestalesService:
                     "cortafuegos_recomendado_km": cortafuegos_recomendado_km,
                     "maquinaria_pesada_requerida": maquinaria_pesada,
                     "declaratoria_emergencia": declaratoria_emergencia,
-                    "focos_ids": [f["id"] for f in cluster_focos]
+                    "focos_ids": [f["id"] for f in cluster_focos],
+                    "indeci_coen_match": self._cruzar_cluster_con_indeci(
+                        {"distrito_epicentro": geo_cercano["distrito"]},
+                        distritos_en_buffer
+                    )
                 })
 
         # Ordenar por número de focos y FRP descendente
@@ -1041,5 +1045,79 @@ class IncendiosForestalesService:
             }
         }
 
+    # Base Canónica de 65 Reportes Oficiales INDECI COEN (16-18 Octubre 2026)
+    RAW_B64_INDECI_COEN = "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"
+
+    def get_reportes_indeci_coen(self) -> List[Dict[str, Any]]:
+        """Retorna el catálogo canónico de reportes de Incendios Forestales INDECI-COEN decodificado."""
+        try:
+            import base64
+            import zlib
+            import json
+            raw_bytes = zlib.decompress(base64.b64decode(self.RAW_B64_INDECI_COEN))
+            return json.loads(raw_bytes.decode('utf-8'))
+        except Exception as e:
+            logger.error(f"Error decodificando reportes INDECI COEN: {e}")
+            return []
+
+    def _cruzar_cluster_con_indeci(self, cluster: Dict[str, Any], distritos_buffer: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+        """
+        MOTOR DE CRUCE C2 SATÉLITE - TERRENO (INDECI COEN):
+        Busca si el epicentro o distritos en el radio del cluster cuentan con reportes oficiales
+        emitidos por el COEN-INDECI en la ventana de emergencia.
+        """
+        reportes = self.get_reportes_indeci_coen()
+        if not reportes:
+            return None
+
+        # Nombres de distritos a contrastar (epicentro + buffer)
+        nombres_objetivo = [cluster.get("distrito_epicentro", "").upper().strip()]
+        for d in distritos_buffer:
+            nombres_objetivo.append(d.get("distrito", "").upper().strip())
+
+        # Caso especial Río Tambo / Satipo
+        if "RIO TAMBO" in nombres_objetivo or "RÍO TAMBO" in nombres_objetivo:
+            nombres_objetivo.extend(["RIO TAMBO", "RÍO TAMBO", "SATIPO"])
+        # Caso especial Cotabambas / Curahuasi / Abancay
+        if "COTABAMBAS" in nombres_objetivo or "CURAHUASI" in nombres_objetivo or "MARA" in nombres_objetivo:
+            nombres_objetivo.extend(["COTABAMBAS", "CURAHUASI", "ABANCAY", "PAMPACHIRI"])
+
+        matches = []
+        for rep in reportes:
+            dist_rep = rep.get("distrito", "").upper().strip()
+            # Chequear coincidencia exacta o de contención
+            for nobj in nombres_objetivo:
+                if len(nobj) > 3 and (nobj in dist_rep or dist_rep in nobj):
+                    matches.append(rep)
+                    break
+
+        if not matches:
+            return None
+
+        # Priorizar reporte más grave (ACTIVO > CONTROLADO > EXTINGUIDO)
+        prioridad = {"ACTIVO": 3, "CONTROLADO": 2, "EN_EVALUACION": 1, "EXTINGUIDO": 0}
+        matches.sort(key=lambda x: prioridad.get(x.get("estado_terreno", ""), 0), reverse=True)
+        top = matches[0]
+
+        return {
+            "validacion_oficial": "VALIDADO_COEN_INDECI",
+            "estado_terreno": top.get("estado_terreno"),
+            "reporte_oficial": top.get("reporte"),
+            "sinpad": top.get("sinpad") or "EN TRÁMITE LOCAL",
+            "distrito_reportado": top.get("distrito"),
+            "departamento_reportado": top.get("departamento"),
+            "hectareas_destruidas_edan": top.get("ha_destruidas", 0.0),
+            "sectores_comunidades": top.get("comunidades", []),
+            "apoyo_aereo_fap_ejercito": top.get("apoyo_aereo", False),
+            "total_reportes_coen_sector": len(matches),
+            "fuente_portal": top.get("fuente"),
+            "directriz_c2": (
+                "CONFIRMADO ACTIVO EN TERRENO POR AUTORIDADES. MANTENER OPERATIVO INCLUSO ANTE OCULTAMIENTO NUBOSO."
+                if top.get("estado_terreno") == "ACTIVO"
+                else "EVENTO EN FASE DE CONTROL O EXTINCIÓN POR BRIGADAS LOCALES."
+            )
+        }
+
 incendios_service = IncendiosForestalesService()
+
 

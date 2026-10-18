@@ -180,6 +180,20 @@ interface ClusterIncendio {
     cortafuegos_recomendado_km: number;
     maquinaria_pesada_requerida: string;
     declaratoria_emergencia: string;
+    indeci_coen_match?: {
+        validacion_oficial: string;
+        estado_terreno: string;
+        reporte_oficial: string;
+        sinpad: string;
+        distrito_reportado: string;
+        departamento_reportado: string;
+        hectareas_destruidas_edan: number;
+        sectores_comunidades: string[];
+        apoyo_aereo_fap_ejercito: boolean;
+        total_reportes_coen_sector: number;
+        fuente_portal: string;
+        directriz_c2: string;
+    };
 }
 
 export default function IncendiosForestalesPage() {
@@ -1634,6 +1648,47 @@ export default function IncendiosForestalesPage() {
                                                         {dr.distrito} ({dr.distancia_km.toFixed(1)}km)
                                                     </span>
                                                 ))}
+                                            </div>
+                                        )}
+
+                                        {cl.indeci_coen_match && (
+                                            <div className="text-[10px] bg-emerald-950/40 border border-emerald-600/60 p-2 rounded-lg mb-2.5 space-y-1">
+                                                <div className="flex items-center justify-between">
+                                                    <span className="font-bold text-emerald-400 flex items-center gap-1">
+                                                        🏛️ COEN - INDECI
+                                                    </span>
+                                                    <span className={`px-1.5 py-0.2 rounded text-[9px] font-bold ${
+                                                        cl.indeci_coen_match.estado_terreno === "ACTIVO"
+                                                            ? "bg-red-900 text-red-200 border border-red-700 animate-pulse"
+                                                            : (cl.indeci_coen_match.estado_terreno === "CONTROLADO" ? "bg-amber-900 text-amber-200" : "bg-emerald-900 text-emerald-200")
+                                                    }`}>
+                                                        TERRENO: {cl.indeci_coen_match.estado_terreno}
+                                                    </span>
+                                                </div>
+                                                <div className="text-slate-300">
+                                                    <b>{cl.indeci_coen_match.reporte_oficial}</b> | SINPAD: <strong className="text-amber-300">{cl.indeci_coen_match.sinpad}</strong>
+                                                </div>
+                                                {cl.indeci_coen_match.hectareas_destruidas_edan > 0 && (
+                                                    <div className="text-amber-300">
+                                                        <b>EDAN preliminar:</b> {cl.indeci_coen_match.hectareas_destruidas_edan} ha destruidas
+                                                    </div>
+                                                )}
+                                                {cl.indeci_coen_match.sectores_comunidades && cl.indeci_coen_match.sectores_comunidades.length > 0 && (
+                                                    <div className="text-slate-400 text-[9px] truncate">
+                                                        <b>Sectores:</b> {cl.indeci_coen_match.sectores_comunidades.join(", ")}
+                                                    </div>
+                                                )}
+                                                <div className="pt-0.5">
+                                                    <a
+                                                        href={cl.indeci_coen_match.fuente_portal}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        onClick={(e) => e.stopPropagation()}
+                                                        className="text-[9px] text-sky-400 hover:underline flex items-center gap-1"
+                                                    >
+                                                        <span>🔗 Ver reporte oficial en portal INDECI</span>
+                                                    </a>
+                                                </div>
                                             </div>
                                         )}
 

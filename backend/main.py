@@ -73,6 +73,12 @@ from agents.satelital_agent import agente_satelital
 from agents.schemas import RazonabilidadPrecioRequest, CitizenReportInput
 from services.salud_service import SaludAmaruService
 from services.damnificados_service import damnificados_service
+from services.crioclima_service import crioclima_service, CrioclimaEAPDetonacionRequest
+from services.voluntariado_especializado_service import VoluntariadoEspecializadoService
+from services.expediente_contratacion_d8_service import ExpedienteContratacionD8Service
+from services.salud_comunitaria_triaje_service import SaludComunitariaTriajeService
+from services.shamir_vault_service import shamir_vault_service
+from services.incendios_forestales_service import incendios_service
 from fastapi.responses import StreamingResponse, FileResponse
 import io
 
@@ -221,13 +227,57 @@ async def get_polar_clocks():
 # ============================================================================
 
 @app.get("/api/meteo/ds124-matrix")
-async def get_meteo_ds124_matrix(mode: str = "LIVE"):
+async def get_meteo_ds124_matrix(mode: str = "LIVE", teatro: str = "FEN"):
     """
-    Retorna la matriz integral y semáforo de precipitación Open-Meteo para los
-    893 distritos declarados en el Decreto de Emergencia D.S. Nº 124-2026-PCM ante el FEN 2026-2027.
-    Soporta mode='LIVE' (telemetría real en vivo de hoy) y mode='SIMULACION' (escenario de contingencia pico FEN).
+    Retorna la matriz integral y semáforo meteorológico para el teatro operacional seleccionado:
+    - FEN: 875 distritos declarados en el Decreto de Emergencia D.S. Nº 124-2026-PCM (pluvial)
+    - CHIRI: 1,530 distritos nacionales de Heladas y Friajes (ERHF CENEPRED 2024 / PMHF)
+    - PUNO: 110 distritos del Altiplano puneño
+    - DOBLE_RIESGO: 592 distritos en Pinza Multi-Amenaza
+    - TODOS: 1,813 distritos consolidados
+    Soporta mode='LIVE' (telemetría real en vivo de hoy) y mode='SIMULACION' (escenario de contingencia pico).
     """
-    return MeteoServicePro.get_ds124_matrix(mode=mode)
+    return MeteoServicePro.get_ds124_matrix(mode=mode, teatro=teatro)
+
+@app.get("/api/territorio/matriz-unificada")
+async def get_matriz_territorial_unificada(
+    teatro: Optional[str] = None,
+    departamento: Optional[str] = None,
+    q: Optional[str] = None
+):
+    """
+    Directorio nacional de los 1,813 distritos monitoreados en la Matriz de Riesgos AMARU-CLIMATE (COED Nacional).
+    """
+    import os, json
+    data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "matriz_territorial_nacional_riesgos.json")
+    if not os.path.exists(data_path):
+        data_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "matriz_territorial_nacional_riesgos.json")
+    if not os.path.exists(data_path):
+        raise HTTPException(status_code=404, detail="Matriz territorial nacional no encontrada.")
+    with open(data_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    
+    distritos = data.get("distritos", [])
+    if teatro:
+        t = teatro.upper().strip()
+        if t == "FEN": distritos = [d for d in distritos if d.get("regimen_fen")]
+        elif t == "CHIRI": distritos = [d for d in distritos if d.get("regimen_chiri")]
+        elif t == "PUNO": distritos = [d for d in distritos if d.get("es_puno_altiplano")]
+        elif t == "DOBLE_RIESGO": distritos = [d for d in distritos if d.get("doble_vulnerabilidad")]
+    
+    if departamento and departamento != "TODOS":
+        dep_u = departamento.upper().strip()
+        distritos = [d for d in distritos if d.get("departamento") == dep_u]
+
+    if q:
+        query = q.lower().strip()
+        distritos = [d for d in distritos if query in d.get("distrito", "").lower() or query in d.get("provincia", "").lower() or query in d.get("ubigeo", "")]
+
+    return {
+        "metadata": data.get("metadata", {}),
+        "total_filtrado": len(distritos),
+        "distritos": distritos
+    }
 
 @app.get("/api/meteo/ds124-district/{ubigeo}")
 async def get_meteo_ds124_district(ubigeo: str):
@@ -2292,6 +2342,86 @@ async def post_simular_red_global(req: SimulacionRedRequest):
     return humanitarian_router.simular_red_regional(puentes_cortados=req.puentes_cortados)
 
 
+class BloqueoVialRequest(BaseModel):
+    tipo_incidente: str = "HUAYCO"
+    ubicacion: str
+    descripcion: str
+    puente_afectado: Optional[str] = None
+    arista_afectada: Optional[str] = None
+    reportado_por: str = "POLTUR_PNP_MTC"
+    severidad: str = "ALTO"
+
+
+@app.get("/api/v1/logistica/bloqueos")
+async def get_bloqueos_viales():
+    """
+    Retorna la lista de incidentes y bloqueos viales en tiempo real (huaycos, crecidas, puentes colapsados).
+    """
+    return {
+        "total_bloqueos": len(humanitarian_router.listar_bloqueos_activos()),
+        "bloqueos": humanitarian_router.listar_bloqueos_activos()
+    }
+
+
+@app.post("/api/v1/logistica/bloqueos")
+async def post_registrar_bloqueo_vial(req: BloqueoVialRequest):
+    """
+    Registra un nuevo bloqueo vial o corte de puente por evento meteorológico extremo.
+    Afecta en tiempo real el ruteo de convoyes logísticos ($0 USD).
+    """
+    bloqueo = humanitarian_router.registrar_bloqueo(
+        tipo_incidente=req.tipo_incidente,
+        ubicacion=req.ubicacion,
+        descripcion=req.descripcion,
+        puente_afectado=req.puente_afectado,
+        arista_afectada=req.arista_afectada,
+        reportado_por=req.reportado_por,
+        severidad=req.severidad
+    )
+    return {
+        "exito": True,
+        "mensaje": "Bloqueo vial registrado e inyectado al optimizador de convoyes.",
+        "bloqueo": bloqueo
+    }
+
+
+@app.delete("/api/v1/logistica/bloqueos/{bloqueo_id}")
+async def delete_eliminar_bloqueo_vial(bloqueo_id: str):
+    """
+    Levanta un bloqueo vial cuando la maquinaria de Provías Nacional o batallones de ingeniería rehabilitan el tramo.
+    """
+    eliminado = humanitarian_router.eliminar_bloqueo(bloqueo_id)
+    if not eliminado:
+        return Response(content='{"error": "Bloqueo no encontrado"}', status_code=404, media_type="application/json")
+    return {
+        "exito": True,
+        "mensaje": f"Bloqueo {bloqueo_id} levantado. Vía rehabilitada para tránsito pesado.",
+        "bloqueos_restantes": len(humanitarian_router.listar_bloqueos_activos())
+    }
+
+
+@app.post("/api/v1/logistica/despachar-edan/{edan_id}")
+@app.post("/api/v1/logistica/despachar-orden-edan/{edan_id}")
+async def post_despachar_orden_edan(edan_id: str):
+    """
+    Genera la Orden Formal de Despacho Humanitario INDECI C2 vinculada a la Ficha EDAN aprobada:
+    Desbloquea almacenes en horas 0-2 con Quórum Dual, calcula convoy militar y rutea evitando bloqueos.
+    """
+    resultado = humanitarian_router.despachar_orden_edan(edan_id)
+    return resultado
+
+
+@app.post("/api/v1/logistica/simulacro-mega-fen")
+async def post_ejecutar_simulacro_mega_fen():
+    """
+    Dispara el Simulacro Operacional C4ISR Mega-FEN 2026-2027:
+    Colapsa los 6 puentes críticos de la historia (1998/2017) en tiempo real,
+    activa desvíos tácticos del MTC y demuestra el protocolo humanitario de auxilio inmediato.
+    """
+    resultado = humanitarian_router.ejecutar_simulacro_mega_fen()
+    return resultado
+
+
 # ==============================================================================
 # FASE 3: FICHA EDAN OFICIAL SINPAD v2 CON CONTROL CONCURRENTE CGR
 # Conforme a la R.S. Nº 002-2026-PCM/SGRD y R.M. Nº 324-2023-PCM
@@ -2303,6 +2433,8 @@ class EdanEvaluarConsistenciaRequest(BaseModel):
 class EdanGenerarOficialRequest(BaseModel):
     ficha: Dict[str, Any]
     token_autoridad: Optional[str] = None
+    token_alcalde: Optional[str] = None
+    token_indeci: Optional[str] = None
 
 class ContraloriaVistoBuenoRequest(BaseModel):
     edan_id: str
@@ -2364,12 +2496,16 @@ async def post_edan_generar_oficial(req: EdanGenerarOficialRequest):
     """
     Genera la Ficha EDAN Oficial con hash SHA-256 inmutable, código QR y dispara
     la notificación inmediata por webhook a la Contraloría General de la República.
+    Soporta Quórum Dual (Alcalde + INDECI/OCI).
     """
     res = edan_sinpad_service.generar_ficha_oficial(
         payload=req.ficha,
-        token_autoridad=req.token_autoridad
+        token_autoridad=req.token_autoridad,
+        token_alcalde=req.token_alcalde,
+        token_indeci=req.token_indeci
     )
     return res
+
 
 
 @app.get("/api/v1/edan/descargar-pdf/{edan_id}")
@@ -2429,7 +2565,329 @@ async def post_contraloria_emitir_visto_bueno(req: ContraloriaVistoBuenoRequest)
         return Response(content=f'{{"error": "{res["error"]}"}}', status_code=400, media_type="application/json")
     return res
 
+
 # ==============================================================================
+# MÓDULO 5: EMULADOR WHATSAPP COMUNITARIO Y WEBHOOK (META / TWILIO / FIELD MESH)
+# ==============================================================================
+from services.whatsapp_community_service import whatsapp_community_service
+from services.cgr_worm_service import cgr_worm_service
+
+
+class WhatsAppSimularEnvioRequest(BaseModel):
+    remitente: str
+    mensaje: str
+    nombre_contacto: Optional[str] = None
+    caserio: Optional[str] = None
+    distrito: Optional[str] = None
+    coordenadas: Optional[Dict[str, float]] = None
+    modo_offline: bool = False
+
+
+@app.post("/api/v1/comunidad/whatsapp/webhook")
+async def post_whatsapp_webhook(req: Dict[str, Any]):
+    """
+    Webhook unificado compatible con Meta Cloud API y Twilio Webhook.
+    Parsea automáticamente remitente, texto y coordenadas GPS satelitales.
+    """
+    remitente = "+51 900 000 000"
+    mensaje = ""
+    coords = None
+
+    # Formato Twilio
+    if "From" in req or "Body" in req:
+        remitente = str(req.get("From", "+51 900 000 000"))
+        mensaje = str(req.get("Body", ""))
+        lat = req.get("Latitude")
+        lng = req.get("Longitude")
+        if lat and lng:
+            try:
+                coords = {"lat": float(lat), "lng": float(lng)}
+            except Exception:
+                pass
+    # Formato Meta Cloud API
+    elif "entry" in req:
+        try:
+            entry = req["entry"][0]["changes"][0]["value"]
+            msg = entry["messages"][0]
+            remitente = msg.get("from", remitente)
+            if msg.get("type") == "text":
+                mensaje = msg["text"]["body"]
+            elif msg.get("type") == "location":
+                loc = msg["location"]
+                coords = {"lat": float(loc["latitude"]), "lng": float(loc["longitude"])}
+                mensaje = f"Ubicación GPS compartida: {loc.get('name', 'Punto en Riesgo')}"
+        except Exception:
+            mensaje = str(req)
+    else:
+        mensaje = str(req.get("mensaje") or req.get("text") or "")
+        remitente = str(req.get("remitente") or remitente)
+
+    res = whatsapp_community_service.registrar_mensaje_entrante(
+        remitente=remitente,
+        mensaje=mensaje,
+        coordenadas=coords
+    )
+    return res
+
+
+@app.post("/api/v1/comunidad/whatsapp/simular-envio")
+async def post_whatsapp_simular_envio(req: WhatsAppSimularEnvioRequest):
+    """
+    Permite a los operadores de campo y evaluadores simular reportes vecinales
+    de caseríos rurales con o sin conectividad (Buffer Store-and-Forward).
+    """
+    res = whatsapp_community_service.registrar_mensaje_entrante(
+        remitente=req.remitente,
+        mensaje=req.mensaje,
+        nombre_contacto=req.nombre_contacto,
+        caserio=req.caserio,
+        distrito=req.distrito,
+        coordenadas=req.coordenadas,
+        modo_offline=req.modo_offline
+    )
+    return res
+
+
+@app.get("/api/v1/comunidad/whatsapp/mensajes")
+async def get_whatsapp_mensajes(limite: int = Query(50, ge=1, le=200)):
+    """Retorna los reportes comunitarios recibidos vía WhatsApp procesados por el C4ISR."""
+    return {
+        "total_mensajes": len(whatsapp_community_service.listar_mensajes(limite)),
+        "mensajes": whatsapp_community_service.listar_mensajes(limite)
+    }
+
+
+@app.post("/api/v1/comunidad/whatsapp/sincronizar-offline")
+async def post_whatsapp_sincronizar_offline():
+    """Descarga y procesa en bloque la cola de reportes guardados durante cortes de red."""
+    return whatsapp_community_service.sincronizar_cola_offline()
+
+
+@app.get("/api/v1/comunidad/whatsapp/plantillas-rapidas")
+async def get_whatsapp_plantillas():
+    """Retorna plantillas pre-elaboradas de situaciones críticas FEN para simulación inmediata."""
+    return whatsapp_community_service.listar_plantillas()
+
+
+@app.get("/api/v1/comunidad/whatsapp/estadisticas")
+async def get_whatsapp_estadisticas():
+    """Retorna estadísticas consolidadas del buzón de auxilio comunitario."""
+    return whatsapp_community_service.obtener_estadisticas()
+
+
+# ==============================================================================
+# MÓDULO 6: BITÁCORA INMUTABLE WORM CGR (CONTROL CONCURRENTE LEY 31358)
+# ==============================================================================
+
+class CGRWormAcunarRequest(BaseModel):
+    tipo_evento: str
+    actor_responsable: str
+    entidad_origen: str
+    datos_evento: Dict[str, Any]
+
+
+@app.get("/api/v1/auditoria/cgr-worm/ledger")
+async def get_cgr_worm_ledger(limite: int = Query(100, ge=1, le=500)):
+    """
+    Retorna la cadena criptográfica completa de bloques inmutables WORM
+    (Write-Once-Read-Many) para fiscalización del OCI y Contraloría General.
+    """
+    return {
+        "total_bloques": len(cgr_worm_service.obtener_ledger(limite)),
+        "ledger": cgr_worm_service.obtener_ledger(limite)
+    }
+
+
+@app.get("/api/v1/auditoria/cgr-worm/verificar")
+async def get_cgr_worm_verificar():
+    """
+    Ejecuta una auditoría criptográfica en tiempo real sobre todos los bloques
+    de la cadena WORM, verificando punteros prev_hash y firmas SHA-256.
+    """
+    return cgr_worm_service.verificar_integridad_cadena()
+
+
+@app.post("/api/v1/auditoria/cgr-worm/acunar-evento")
+async def post_cgr_worm_acunar_evento(req: CGRWormAcunarRequest):
+    """Acuña manualmente un evento administrativo o legal en la cadena inmutable CGR."""
+    bloque = cgr_worm_service.acunar_evento(
+        tipo_evento=req.tipo_evento,
+        actor_responsable=req.actor_responsable,
+        entidad_origen=req.entidad_origen,
+        datos_evento=req.datos_evento
+    )
+    return {"exito": True, "bloque": bloque}
+
+
+@app.get("/api/v1/auditoria/cgr-worm/certificado-cgr")
+async def get_cgr_worm_certificado():
+    """
+    Genera el Certificado Pericial Oficial de Inmutabilidad y No Repudio
+    amparado en la Ley N.° 31358 para su remisión a la CGR.
+    """
+    return cgr_worm_service.generar_certificado_auditoria_cgr()
+
+
+# ==============================================================================
+# FASE 1 (IEEE CLIMATECHAIN): ANCLAJE PÚBLICO BLOCKCHAIN ON-CHAIN (L3 ANCHOR)
+# Normativa: UN COP 31, Track 4 IEEE Hackathon, Ley N.° 31358 & Fe Pública
+# ==============================================================================
+from services.blockchain_anchor_service import blockchain_anchor_service
+
+
+class BlockchainAnchorRequest(BaseModel):
+    summary: Optional[str] = "AMARU-CGR-AUDIT-BATCH"
+
+
+@app.get("/api/v1/blockchain/status")
+async def get_blockchain_status():
+    """
+    Retorna el estado de operatividad de la capa Blockchain L3 (Polygon Amoy Testnet),
+    contrato notarial y explorador público para jurados del IEEE y auditoría internacional.
+    """
+    return blockchain_anchor_service.obtener_estado_blockchain()
+
+
+@app.post("/api/v1/blockchain/anchor-now")
+async def post_blockchain_anchor_now(req: Optional[BlockchainAnchorRequest] = None):
+    """
+    Toma los bloques acumulados en el WORM Ledger CGR, calcula la Raíz de Merkle
+    y los sella en la red pública Polygon Amoy emitiendo una transacción auditable.
+    """
+    summary = req.summary if req and req.summary else "AMARU-CGR-AUDIT-BATCH"
+    res = blockchain_anchor_service.anclar_bloques_en_blockchain(summary=summary)
+    return res
+
+
+@app.get("/api/v1/blockchain/anchors-history")
+async def get_blockchain_anchors_history(limite: int = Query(50, ge=1, le=200)):
+    """
+    Retorna el historial cronológico de todas las raíces de Merkle ancladas en la red pública.
+    """
+    return {
+        "total": len(blockchain_anchor_service.obtener_historial_anclajes(limite)),
+        "anchors": blockchain_anchor_service.obtener_historial_anclajes(limite)
+    }
+
+
+@app.get("/api/v1/blockchain/verify/{tx_hash}")
+async def get_blockchain_verify_tx(tx_hash: str):
+    """
+    Verifica la validez criptográfica de una transacción on-chain y su correspondencia
+    con los bloques y raíces de Merkle de AMARU-CLIMATE.
+    """
+    return blockchain_anchor_service.verificar_tx_hash(tx_hash)
+
+
+# ==============================================================================
+# INTEGRACIÓN CENEPRED - SIGRID: PLANES DE PREVENCIÓN Y PUNTOS CRÍTICOS (PPRRD)
+# Normativa: Ley N.° 29664, R.J. N.° 058-2019-CENEPRED/J & Biblioteca SIGRID
+# ==============================================================================
+from services.sigrid_cenepred_service import sigrid_cenepred_service
+
+
+class SigridValidarCoordenadaRequest(BaseModel):
+    latitud: float
+    longitud: float
+    ubigeo: Optional[str] = "200605"
+    radio_tolerancia_m: Optional[float] = 650.0
+
+
+class SigridCertificarEventoRequest(BaseModel):
+    actor: str
+    ubigeo: str
+    latitud: float
+    longitud: float
+    datos_evento: Dict[str, Any]
+
+
+@app.get("/api/v1/sigrid/distrito/{ubigeo}")
+async def get_sigrid_plan_distrital(ubigeo: str):
+    """
+    Retorna el plan oficial de prevención de desastres CENEPRED SIGRID,
+    escenarios de riesgo (inundación/sequía) y metadatos oficiales del distrito.
+    """
+    plan = sigrid_cenepred_service.obtener_plan_distrital(ubigeo)
+    if not plan:
+        raise HTTPException(status_code=404, detail=f"No se encontró plan SIGRID registrado para el ubigeo {ubigeo}")
+    return plan
+
+
+@app.get("/api/v1/sigrid/puntos-criticos/{ubigeo}")
+async def get_sigrid_puntos_criticos(ubigeo: str):
+    """
+    Retorna la lista de puntos críticos georreferenciados (WGS84 Lat/Lon y UTM)
+    registrados en la biblioteca oficial de CENEPRED SIGRID para el distrito.
+    """
+    puntos = sigrid_cenepred_service.obtener_puntos_criticos(ubigeo)
+    return {
+        "ubigeo": ubigeo,
+        "total_puntos": len(puntos),
+        "puntos_criticos": puntos
+    }
+
+
+@app.post("/api/v1/sigrid/validar-coordenada")
+async def post_sigrid_validar_coordenada(req: SigridValidarCoordenadaRequest):
+    """
+    Cruza una coordenada GPS en tiempo real frente al catálogo de puntos críticos
+    oficiales de CENEPRED SIGRID para verificar si coincide con zonas de riesgo del Estado.
+    """
+    return sigrid_cenepred_service.validar_coordenada_frente_a_sigrid(
+        latitud=req.latitud,
+        longitud=req.longitud,
+        ubigeo=req.ubigeo or "200605",
+        radio_tolerancia_m=req.radio_tolerancia_m or 650.0
+    )
+
+
+@app.post("/api/v1/sigrid/certificar-evento")
+async def post_sigrid_certificar_evento(req: SigridCertificarEventoRequest):
+    """
+    Valida un evento frente a SIGRID y acuña un bloque inmutable en el WORM Ledger
+    de la Contraloría con anclaje a la red Blockchain Polygon Amoy.
+    """
+    return sigrid_cenepred_service.certificar_evento_sigrid_en_worm(
+        actor=req.actor,
+        ubigeo=req.ubigeo,
+        latitud=req.latitud,
+        longitud=req.longitud,
+        datos_evento=req.datos_evento
+    )
+
+
+@app.get("/api/v1/sigrid/departamental/piura")
+async def get_sigrid_departamental_piura():
+    """
+    Retorna el concentrador cartográfico consolidado de los 102 puntos críticos
+    de Piura (CENEPRED SIGRID 10773 + 69 intervenciones fluviales ANA + SAREs urbanos).
+    """
+    return sigrid_cenepred_service.obtener_catalogo_departamental_piura()
+
+
+@app.get("/api/v1/sigrid/departamental/{departamento}")
+async def get_sigrid_departamental(departamento: str):
+    """
+    Retorna el concentrador cartográfico de puntos críticos georreferenciados para cualquiera
+    de las regiones del Gran Escudo Costero FEN 2026:
+    PIURA, LIMA, AREQUIPA, LA LIBERTAD, ICA, LAMBAYEQUE, TUMBES, o COSTA_NACIONAL (513 puntos).
+    """
+    cat = sigrid_cenepred_service.obtener_catalogo_departamental(departamento)
+    if "error" in cat:
+        raise HTTPException(status_code=404, detail=cat["error"])
+    return cat
+
+
+@app.get("/api/v1/sigrid/costa/resumen")
+async def get_sigrid_costa_resumen():
+    """
+    Retorna el balance ejecutivo del Gran Escudo Costero FEN 2026 (513 puntos en 7 regiones).
+    """
+    return sigrid_cenepred_service.obtener_resumen_costa_nacional()
+
+
+# ==============================================================================
+
 # FASE 3.1: CONECTOR PIDE - RENIEC & CONSOLA DE VALIDACIÓN DE IDENTIDAD
 # Normativa: D.L. Nº 1246, D.U. Nº 006-2020 y D.S. N.° 124-2026-PCM
 # ==============================================================================
@@ -2489,6 +2947,26 @@ async def get_pide_reniec_bitacora():
         "total_registros": len(pide_reniec_connector.listar_bitacora()),
         "consultas": pide_reniec_connector.listar_bitacora()
     }
+
+
+class PideSimularTripartitaRequest(BaseModel):
+    dni: str
+    ubigeo_emergencia: Optional[str] = "200105"
+    rol_evaluador: Optional[str] = "TODOS"
+
+
+@app.post("/api/v1/pide/reniec/simular-evaluacion-tripartita")
+async def post_pide_reniec_simular_tripartita(req: PideSimularTripartitaRequest):
+    """
+    Simulación de Aprobación Tripartita de 3 Puertas (RENIEC, Municipio e INDECI/OCI)
+    para auditar la elegibilidad de subsidios (Bono BAE S/ 500 y BAH) sin llamar a PIDE en vivo.
+    """
+    return pide_reniec_connector.simular_evaluacion_tripartita(
+        dni=req.dni,
+        ubigeo_emergencia=req.ubigeo_emergencia or "200105",
+        rol_evaluador=req.rol_evaluador or "TODOS"
+    )
+
 
 
 # =====================================================================
@@ -3669,6 +4147,7 @@ async def get_municipal_pprrd_digital(ubigeo: str):
     plan = await contingency_plan_engine.generar_plan_contingencia(ubigeo)
     plan_dict = plan.model_dump() if hasattr(plan, "model_dump") else plan.dict()
     matriz_pprrd = plan_dict.get("matriz_inversion_pprrd", {})
+    sigrid_data = sigrid_cenepred_service.obtener_plan_distrital(ubigeo)
     return {
         "ubigeo": ubigeo,
         "distrito": plan_dict.get("distrito"),
@@ -3677,7 +4156,8 @@ async def get_municipal_pprrd_digital(ubigeo: str):
         "marco_legal": "R.J. N.° 058-2019-CENEPRED/J & Ley N.° 29664",
         "objetivo_estrategico": "Reducir la vulnerabilidad territorial ante inundaciones y movimientos en masa FEN",
         "matriz_inversion_pprrd": matriz_pprrd,
-        "obras_pp0068_relacionadas": municipal_obras_service.get_obras_distritales(ubigeo)
+        "obras_pp0068_relacionadas": municipal_obras_service.get_obras_distritales(ubigeo),
+        "sigrid_cenepred": sigrid_data
     }
 
 
@@ -4113,5 +4593,708 @@ async def get_indeci_ground_truth():
     """
     from services.indeci_ground_truth_service import indeci_ground_truth_service
     return indeci_ground_truth_service.obtener_comparativa_indeci()
+
+
+# =========================================================================
+# ENDPOINTS CRIOCLIMA & LA NIÑA 2026 (AMARU-CHIRI / PUNO 106 DISTRITOS)
+# =========================================================================
+
+@app.get("/api/crioclima/puno/resumen")
+async def get_crioclima_puno_resumen():
+    """
+    Retorna el balance estadístico consolidado de los 106 distritos de Puno
+    ante heladas y friajes (CENEPRED ERHF 2024 / PMHF).
+    """
+    return crioclima_service.get_resumen_puno()
+
+@app.get("/api/crioclima/puno/distritos")
+async def get_crioclima_puno_distritos(
+    provincia: Optional[str] = Query(None, description="Filtrar por provincia de Puno (ej. CARABAYA, EL COLLAO)"),
+    prioridad: Optional[str] = Query(None, description="Filtrar por prioridad PMHF (ej. Prioridad 1, Prioridad 2)"),
+    buscar: Optional[str] = Query(None, description="Buscar por nombre de distrito, ubigeo o nombre común"),
+    nivel: Optional[str] = Query(None, description="Filtrar por semáforo C2 (ROJO, NARANJA, AMARILLO, VERDE)"),
+    eap: Optional[str] = Query(None, description="Filtrar por protocolo EAP activo (T-144h, T-72h, T-24h)")
+):
+    """
+    Retorna el listado completo y parametrizado de los 106 distritos de Puno
+    con sus censos pecuarios, vulnerabilidad de viviendas y centros de salud.
+    """
+    return crioclima_service.listar_distritos_puno(
+        provincia=provincia, prioridad=prioridad, buscar=buscar, nivel=nivel, eap=eap
+    )
+
+@app.get("/api/crioclima/distrito/{ubigeo}/evaluacion-impacto")
+async def get_crioclima_distrito_impacto(ubigeo: str):
+    """
+    Cruza la vulnerabilidad territorial de CENEPRED con el pronóstico de 7 días
+    de Open-Meteo IFS (Tmin, nieve, granizo) para calcular el impacto proyectado y logística EAP.
+    """
+    res = await crioclima_service.evaluar_impacto_distrito(ubigeo)
+    if "error" in res:
+        raise HTTPException(status_code=404, detail=res["error"])
+    return res
+
+@app.post("/api/crioclima/distrito/{ubigeo}/detonar-eap")
+async def post_crioclima_detonar_eap(ubigeo: str, request: CrioclimaEAPDetonacionRequest):
+    """
+    Detona un Protocolo de Acción Temprana (EAP) crioclimático con acta criptográfica SHA-256.
+    """
+    if request.ubigeo != ubigeo:
+        request.ubigeo = ubigeo
+    return crioclima_service.detonar_eap_crioclima(request)
+
+@app.get("/api/crioclima/eap/historial")
+async def get_crioclima_eap_historial():
+    """
+    Retorna el historial de activaciones y órdenes de despacho EAP emitidas ante heladas y nevadas.
+    """
+    return crioclima_service.get_historial_detonaciones()
+
+
+# =========================================================================
+# TEATRO DE OPERACIONES C2: CONSOLAS TRIPARTITAS DE ALERTAS EN CASCADA
+# (COED NACIONAL -> COED MUNICIPAL -> COED SOCIAL)
+# =========================================================================
+from services.alerts_cascade_service import (
+    alerts_cascade_service,
+    EmisionAlertaNacionalRequest,
+    ValidacionDetonacionMunicipalRequest,
+    AprobacionHumanaNacionalRequest
+)
+
+@app.get("/api/alertas/nacional/resumen")
+async def get_alertas_nacionales_resumen():
+    """
+    Retorna el concentrador consolidado de alertas activas emitidas por el COED Nacional AMARU
+    para los regímenes pluvial FEN y crioclimático CHIRI.
+    """
+    return alerts_cascade_service.get_resumen_nacional()
+
+@app.post("/api/alertas/nacional/emitir")
+async def post_emitir_alerta_nacional(request: EmisionAlertaNacionalRequest):
+    """
+    Genera una propuesta de alerta agéntica (PROPUESTA_AGENTICA_PENDIENTE).
+    Requiere aprobación y firma humana (HITL) para pasar a distribución institucional.
+    """
+    return alerts_cascade_service.emitir_alerta_nacional(request)
+
+@app.post("/api/alertas/nacional/aprobar-hitl")
+async def post_aprobar_alerta_nacional_hitl(request: AprobacionHumanaNacionalRequest):
+    """
+    PUERTA DE SOBERANÍA HUMANA (HITL):
+    El Oficial de Guardia o Director Técnico firma digitalmente la alerta nacional,
+    certificando la no-suplantación del SISMATE/COEN y habilitando su distribución a municipios.
+    """
+    try:
+        return alerts_cascade_service.aprobar_alerta_nacional_hitl(request)
+    except ValueError as ve:
+        return Response(content=json.dumps({"error": str(ve)}), status_code=400, media_type="application/json")
+    except KeyError as ke:
+        return Response(content=json.dumps({"error": str(ke)}), status_code=404, media_type="application/json")
+
+@app.get("/api/alertas/municipal/{ubigeo}")
+async def get_alertas_bandeja_municipal(ubigeo: str):
+    """
+    Retorna la Bandeja de Entrada privada del Alcalde y su GT-GRD para un UBIGEO específico.
+    """
+    return alerts_cascade_service.get_bandeja_municipal(ubigeo)
+
+@app.post("/api/alertas/municipal/{ubigeo}/validar-detonar")
+async def post_validar_detonar_municipal(ubigeo: str, request: ValidacionDetonacionMunicipalRequest):
+    """
+    El Alcalde valida la alerta del COED Nacional, detona la orden logística PP 0068 / Ley 30225 y emite la alerta social comunitaria.
+    """
+    if request.ubigeo != ubigeo:
+        request.ubigeo = ubigeo
+    return alerts_cascade_service.validar_y_detonar_municipal(request)
+
+@app.get("/api/alertas/social/{ubigeo}")
+async def get_alertas_consola_social(ubigeo: str):
+    """
+    Retorna el tablero cívico sin tecnicismos para la sociedad organizada (castellano, quechua y aymara).
+    """
+    return alerts_cascade_service.get_consola_social(ubigeo)
+
+
+# =============================================================================
+# ENDPOINTS DOCTRINARIOS: MATRIZ MULTI-ACTOR SINAGERD & CIRCUITO BIDIRECCIONAL
+# =============================================================================
+
+@app.get("/api/v1/doctrina/matriz-actores")
+async def get_matriz_actores_sinagerd():
+    """
+    Retorna la Matriz Institucional Multi-Actor de Roles y Competencias del SINAGERD,
+    clasificada por niveles gubernamentales, ministerios sectoriales y anclaje Blockchain.
+    """
+    return {
+        "sistema": "AMARU-CLIMATE • Matriz Doctrinaria Multi-Actor SINAGERD",
+        "marco_legal": "Ley N.º 29664 / D.S. N.º 048-2011-PCM / Ley N.º 31358 (CGR)",
+        "niveles_señalética": {
+            "NACIONAL": {"color": "rose", "hex": "#f43f5e", "label": "🔴 Nacional (PCM / INDECI / Sectores)"},
+            "REGIONAL": {"color": "cyan", "hex": "#06b6d4", "label": "🔵 Regional (GORE / COER)"},
+            "MUNICIPAL": {"color": "amber", "hex": "#f59e0b", "label": "🟠 Municipal (Alcalde / GT-GRD / PP 0068)"},
+            "SOCIAL": {"color": "emerald", "hex": "#10b981", "label": "🟢 Social (JUVESC / Rondas / Regantes)"},
+            "CONTROL": {"color": "yellow", "hex": "#eab308", "label": "⚖️ Control (Contraloría CGR / Fiscalía)"},
+            "BLOCKCHAIN": {"color": "purple", "hex": "#a855f7", "label": "🟣 Blockchain (Polygon L3 / Red Pública Externa)"}
+        },
+        "actores": [
+            {
+                "id": "pcm",
+                "nivel": "NACIONAL",
+                "subcategoria": "ENTE_RECTOR",
+                "entidad": "PCM (Presidencia del Consejo de Ministros)",
+                "icono": "Landmark",
+                "badge_color": "rose",
+                "rol_doctrinario": "Ente rector del SINAGERD. Emisión de Decretos Supremos de Estado de Emergencia (D.S. N.º 124-2026-PCM) y priorización presupuestal del FONDES.",
+                "base_legal": "Ley N.º 29664 Art. 10",
+                "entregable_clave": "Decreto Supremo publicado en El Peruano"
+            },
+            {
+                "id": "indeci",
+                "nivel": "NACIONAL",
+                "subcategoria": "ENTE_OPERATIVO",
+                "entidad": "INDECI (Instituto Nacional de Defensa Civil)",
+                "icono": "ShieldAlert",
+                "badge_color": "rose",
+                "rol_doctrinario": "Conducción del COEN, administración técnica de la plataforma SINPAD y almacenamiento centralizado de Bienes de Ayuda Humanitaria (BAH).",
+                "base_legal": "Ley N.º 29664 Art. 12",
+                "entregable_clave": "Fichas SINPAD y Almacenes Nacionales BAH"
+            },
+            {
+                "id": "minsa",
+                "nivel": "NACIONAL",
+                "subcategoria": "SECTORIAL_ASISTENCIAL",
+                "entidad": "MINSA (Ministerio de Salud)",
+                "icono": "HeartPulse",
+                "badge_color": "rose",
+                "rol_doctrinario": "Operación del COE-Salud, triaje masivo desacoplado NTS-105, prioridad de camas hospitalarias y despliegue de ambulancias SAMU.",
+                "base_legal": "Ley N.º 29664 Art. 14 / NTS-105-MINSA",
+                "entregable_clave": "CUP-MINSA (Triaje Vital y Prioridad de Evacuación)"
+            },
+            {
+                "id": "midagri",
+                "nivel": "NACIONAL",
+                "subcategoria": "SECTORIAL_MEDIOS_VIDA",
+                "entidad": "MIDAGRI (Desarrollo Agrario y Riego)",
+                "icono": "Wheat",
+                "badge_color": "rose",
+                "rol_doctrinario": "Ejecución del Seguro Agrícola Catastrófico (SAC), indemnización por hectáreas anegadas y mortandad de ganado alpaquero/ovino por heladas.",
+                "base_legal": "D.S. N.º 002-2024-MIDAGRI",
+                "entregable_clave": "CUP-AGRO (Formulario EDAN 2B e Indemnización SAC)"
+            },
+            {
+                "id": "mvcs",
+                "nivel": "NACIONAL",
+                "subcategoria": "SECTORIAL_HABITAT",
+                "entidad": "MVCS (Vivienda, Construcción y Saneamiento)",
+                "icono": "Home",
+                "badge_color": "rose",
+                "rol_doctrinario": "Otorgamiento del Bono de Arrendamiento para Emergencias (BAE S/ 500/mes) para viviendas destruidas/inhabitables y despliegue de plantas potabilizadoras SARE.",
+                "base_legal": "Ley N.º 31526 (Bono BAE)",
+                "entregable_clave": "CUP-DAMN (Formulario EDAN 2A y Padrón BAE)"
+            },
+            {
+                "id": "gore_coer",
+                "nivel": "REGIONAL",
+                "subcategoria": "INTERMEDIO",
+                "entidad": "Gobierno Regional (GORE / COER)",
+                "icono": "Building2",
+                "badge_color": "cyan",
+                "rol_doctrinario": "Coordinación de emergencias Nivel 4, administración de almacenes regionales adelantados y apoyo con maquinaria pesada a distritos colapsados.",
+                "base_legal": "Ley N.º 27867 Art. 61",
+                "entregable_clave": "Maquinaria en apoyo y Convoyes Regionales BAH"
+            },
+            {
+                "id": "alcalde_gtgrd",
+                "nivel": "MUNICIPAL",
+                "subcategoria": "TACTICO_LOCAL",
+                "entidad": "Alcalde Distrital/Provincial (GT-GRD)",
+                "icono": "Building",
+                "badge_color": "amber",
+                "rol_doctrinario": "Preside el Grupo de Trabajo (GT-GRD), aprueba la firma de la Directiva C2 SHA-256, autoriza Contrataciones Directas (Ley 30225 Art. 27 b) y canaliza el EDAN v2.",
+                "base_legal": "Ley N.º 29664 Art. 14 / TUO Ley 30225 / PP 0068",
+                "entregable_clave": "Acta Municipal C2 SHA-256 & Fichas EDAN 2A/2B"
+            },
+            {
+                "id": "comunidad_juvesc",
+                "nivel": "SOCIAL",
+                "subcategoria": "COMUNITARIO",
+                "entidad": "Sociedad Organizada (JUVESC, Rondas, Regantes)",
+                "icono": "Users",
+                "badge_color": "emerald",
+                "rol_doctrinario": "Primera línea de respuesta cívica, validación de sensor humano en terreno mediante fotos con GPS EXIF y evacuación preventiva a albergues.",
+                "base_legal": "Ley N.º 29664 Art. 60",
+                "entregable_clave": "Reportes Ciudadanos y Control Social Ground-Truth"
+            },
+            {
+                "id": "cgr_fiscalia",
+                "nivel": "CONTROL",
+                "subcategoria": "FISCALIZACION",
+                "entidad": "Contraloría General (CGR) / Fiscalía",
+                "icono": "Scale",
+                "badge_color": "yellow",
+                "rol_doctrinario": "Aplica el Control Concurrente (Ley 31358). Fiscaliza la legalidad de contrataciones de emergencia sin frenar el auxilio, previniendo delitos del Art. 377 CP.",
+                "base_legal": "Ley N.º 31358 / Código Penal Art. 377",
+                "entregable_clave": "Informes de Hito de Control WORM"
+            },
+            {
+                "id": "polygon_blockchain",
+                "nivel": "BLOCKCHAIN",
+                "subcategoria": "RED_EXTERNA",
+                "entidad": "Polygon Blockchain (L3 Anchor / ClimateAuditAnchor.sol)",
+                "icono": "Lock",
+                "badge_color": "purple",
+                "rol_doctrinario": "Anclaje notarial incorruptible fuera del servidor del Estado. Sella la Raíz de Merkle de todos los eventos en un Smart Contract público visible en PolygonScan.",
+                "base_legal": "Fe Pública Criptográfica Determinista (IEEE Standard)",
+                "entregable_clave": "TxHash On-Chain Público (amoy.polygonscan.com)"
+            }
+        ]
+    }
+
+@app.get("/api/v1/doctrina/simular-flujo")
+async def get_simulacion_flujo_bidireccional(ubigeo: str = "200101", tipo_evento: str = "PLUVIAL_FEN"):
+    """
+    Simula la secuencia en 6 pasos del flujo bidireccional Full-Duplex (Top-Down y Bottom-Up)
+    con sellos SHA-256 y anclaje en Polygon Blockchain.
+    """
+    es_chiri = tipo_evento == "CRIOCLIMA_CHIRI"
+    nombre_distrito = "Santa Rosa de Mazocruz (Puno)" if es_chiri else "Piura (Bajo Piura)"
+
+    return {
+        "ubigeo": ubigeo,
+        "distrito": nombre_distrito,
+        "tipo_evento": tipo_evento,
+        "regimen": "🔵 CHIRI (Heladas / Friaje)" if es_chiri else "🔴 FEN (Lluvias Torrenciales)",
+        "pasos_flujo_bidireccional": [
+            {
+                "paso": 1,
+                "direccion": "TOP_DOWN",
+                "emisor": "🔴 Instituciones Científicas / AMARU Engine",
+                "receptor": "🟠 COED Municipal (Alcalde)",
+                "accion": "Ingesta de Radar Doppler / GloFAS y emisión de Directiva C2 de Alerta Temprana EAP.",
+                "badge_color": "rose",
+                "hash_sha256": "SHA256:a9f974a6dcae857e98720961ed3707ebe7e4333ddfab257f5f4dc8711b3334ff"
+            },
+            {
+                "paso": 2,
+                "direccion": "TOP_DOWN",
+                "emisor": "🟠 COED Municipal (Alcalde)",
+                "receptor": "🟠 Presupuesto PP 0068 / Logística",
+                "accion": "Firma del Acta de Emergencia, activación de la Ley 30225 Art. 27 b y contratación directa de motobombas / tractores D8.",
+                "badge_color": "amber",
+                "hash_sha256": "SHA256:c2b874a1dcae857e98720961ed3707ebe7e4333ddfab257f5f4dc8711b3334aa"
+            },
+            {
+                "paso": 3,
+                "direccion": "TOP_DOWN",
+                "emisor": "🟠 COED Municipal (Alcalde)",
+                "receptor": "🟢 Sociedad Organizada (JUVESC)",
+                "accion": "Despacho multicanal de alertas comunitarias en castellano, quechua y aymara. Habilitación de refugios temporales.",
+                "badge_color": "emerald",
+                "hash_sha256": "SHA256:d3c974a6dcae857e98720961ed3707ebe7e4333ddfab257f5f4dc8711b3334bb"
+            },
+            {
+                "paso": 4,
+                "direccion": "BOTTOM_UP",
+                "emisor": "🟢 Sociedad Organizada (Sensor Humano)",
+                "receptor": "🟠 COED Municipal (Defensa Civil)",
+                "accion": "Envío de Reportes Ciudadanos georreferenciados con foto y metadatos EXIF-GPS. Verificación de consenso espacial.",
+                "badge_color": "emerald",
+                "hash_sha256": "SHA256:e4d074a6dcae857e98720961ed3707ebe7e4333ddfab257f5f4dc8711b3334cc"
+            },
+            {
+                "paso": 5,
+                "direccion": "BOTTOM_UP",
+                "emisor": "🟠 COED Municipal (Alcalde)",
+                "receptor": "🔴 INDECI / Sectores (MINSA, MIDAGRI, MVCS)",
+                "accion": "Consolidación de Ficha EDAN 2A (Bono BAE S/ 500) y EDAN 2B (Seguro SAC MIDAGRI) e inyección a la plataforma SINPAD.",
+                "badge_color": "rose",
+                "hash_sha256": "SHA256:f5e174a6dcae857e98720961ed3707ebe7e4333ddfab257f5f4dc8711b3334dd"
+            },
+            {
+                "paso": 6,
+                "direccion": "BOTTOM_UP",
+                "emisor": "🟠 COED Municipal / AMARU Engine",
+                "receptor": "🟣 Polygon Blockchain L3 & Contraloría CGR",
+                "accion": "Cálculo de Raíz de Merkle y anclaje on-chain en el Smart Contract ClimateAuditAnchor.sol (Fe Pública Incorruptible).",
+                "badge_color": "purple",
+                "hash_sha256": "SHA256:0x683a9f74a6dcae857e98720961ed3707ebe7e4333ddfab257f5f4dc8711b3334ee",
+                "polygonscan_url": "https://amoy.polygonscan.com/tx/0x683a9f74a6dcae857e98720961ed3707ebe7e4333ddfab257f5f4dc8711b3334ee"
+            }
+        ]
+    }
+
+
+# ==============================================================================
+# ENDPOINTS REST: RED DE VOLUNTARIOS ESPECIALIZADOS, EXPEDIENTES D8 Y TRIAJE MINSA
+# ==============================================================================
+
+class RegistroVoluntarioRequest(BaseModel):
+    nombre_completo: str
+    dni: str
+    especialidad: str
+    departamento: str
+    provincia: str
+    distrito: str
+    codigo_certificacion: str
+    telefono_contacto: str
+
+class GenerarExpedienteD8Request(BaseModel):
+    ubigeo: str
+    distrito: str
+    provincia: str
+    departamento: str
+    nombre_alcalde: str
+    secretario_tecnico: str
+    items_requeridos: List[Dict]
+    voluntario_ocse_codigo: Optional[str] = "VOL-OCSE-CERT-8849"
+
+class TriajeNTS105Request(BaseModel):
+    cup_code: str
+    ubigeo: str
+    sintomas: List[str]
+    es_vulnerable: Optional[bool] = False
+    edad_anios: Optional[int] = 30
+
+@app.get("/api/v1/voluntarios/resumen")
+async def get_voluntarios_resumen_endpoint():
+    """Retorna el estado global y métricas telemétricas de la Red de Voluntarios Especializados."""
+    return VoluntariadoEspecializadoService.obtener_resumen_red_voluntariado()
+
+@app.post("/api/v1/voluntarios/registrar")
+async def registrar_voluntario_endpoint(payload: RegistroVoluntarioRequest):
+    """Registra y certifica a un voluntario (VOLUNTARIO_GRD, VOLUNTARIO_OCSE, VOLUNTARIO_ACS_MINSA)."""
+    return VoluntariadoEspecializadoService.registrar_voluntario(
+        nombre_completo=payload.nombre_completo,
+        dni=payload.dni,
+        especialidad=payload.especialidad,
+        departamento=payload.departamento,
+        provincia=payload.provincia,
+        distrito=payload.distrito,
+        codigo_certificacion=payload.codigo_certificacion,
+        telefono_contacto=payload.telefono_contacto
+    )
+
+@app.post("/api/v1/voluntarios/despachar")
+async def despachar_voluntarios_endpoint(ubigeo_target: str = Query("200101")):
+    """Ejecuta el algoritmo de emparejamiento geográfico para asignar voluntarios a municipios DS124."""
+    return VoluntariadoEspecializadoService.despachar_voluntarios_ds124(ubigeo_target)
+
+@app.post("/api/v1/expedientes/generar-d8")
+async def generar_expediente_d8_endpoint(payload: GenerarExpedienteD8Request):
+    """Genera el Expediente Técnico-Legal completo de Contratación Directa (Art. 27 Ley 30225 - D8)."""
+    return ExpedienteContratacionD8Service.generar_expediente_d8(
+        ubigeo=payload.ubigeo,
+        distrito=payload.distrito,
+        provincia=payload.provincia,
+        departamento=payload.departamento,
+        nombre_alcalde=payload.nombre_alcalde,
+        secretario_tecnico=payload.secretario_tecnico,
+        items_requeridos=payload.items_requeridos,
+        voluntario_ocse_codigo=payload.voluntario_ocse_codigo or "VOL-OCSE-CERT-8849"
+    )
+
+@app.post("/api/v1/salud/triaje-nts105")
+async def triaje_nts105_endpoint(payload: TriajeNTS105Request):
+    """Clasifica una atención médica de triaje bajo la Norma Técnica NTS-105 MINSA."""
+    return SaludComunitariaTriajeService.procesar_triaje_nts105(
+        cup_code=payload.cup_code,
+        ubigeo=payload.ubigeo,
+        sintomas=payload.sintomas,
+        es_vulnerable=payload.es_vulnerable or False,
+        edad_anios=payload.edad_anios or 30
+    )
+
+@app.get("/api/v1/salud/riesgo-epidemiologico")
+async def riesgo_epidemiologico_endpoint(
+    ubigeo: str = Query("200114"),
+    temperatura_c: float = Query(28.5),
+    dias_agua_estancada: int = Query(5)
+):
+    """Calcula el Índice de Riesgo Epidemiológico (IRE) para brotes metaxénicos post-inundación."""
+    return SaludComunitariaTriajeService.calcular_indice_riesgo_epidemiologico(
+        ubigeo=ubigeo,
+        temperatura_c=temperatura_c,
+        dias_agua_estancada=dias_agua_estancada
+    )
+
+# ==============================================================================
+# BÓVEDA DE UMBRAL CRIPTOGRÁFICO DE SHAMIR (k=2, n=3) - LEY N.º 29733 & INDECI
+# ==============================================================================
+
+class ShamirReconstructRequest(BaseModel):
+    cup: str
+    provided_shares: List[str]
+    operador_id: Optional[str] = "OFICIAL_INDECI_COEL"
+    motivo: Optional[str] = "ENTREGA_HUMANITARIA_IN_SITU"
+
+@app.get("/api/v1/shamir/cases")
+async def get_shamir_cases_endpoint():
+    """Lista los expedientes protegidos bajo la bóveda ciega Zero-PII de Shamir."""
+    return {
+        "status": "SUCCESS",
+        "normativa": "Ley N.º 29733 (Art. 14 inc. 4) & Directiva EDAN v2 INDECI",
+        "esquema": "Umbral de Shamir (k=2, n=3) en GF(p)",
+        "custodia": {
+            "share_1": "INDECI / COEL (Almacén / Centro de Despacho Humanitario)",
+            "share_2": "ANPD - MINJUSDH (Garante Tutelar de Privacidad)",
+            "share_3": "DAMNIFICADO_TITULAR (Soberanía Ciudadana en PWA / QR)"
+        },
+        "cases": shamir_vault_service.list_cases()
+    }
+
+@app.get("/api/v1/shamir/cases/{cup}")
+async def get_shamir_case_detail_endpoint(cup: str):
+    """Obtiene los metadatos y tokens criptográficos de los 3 shares institucionales de un caso."""
+    detail = shamir_vault_service.get_case_detail(cup)
+    if not detail:
+        raise HTTPException(status_code=404, detail=f"Caso {cup} no encontrado en la bóveda Shamir")
+    return {
+        "status": "SUCCESS",
+        "case": detail
+    }
+
+@app.post("/api/v1/shamir/reconstruct")
+async def reconstruct_shamir_secret_endpoint(payload: ShamirReconstructRequest):
+    """
+    Ejecuta la regla de umbral (k=2, n=3) de Shamir para reconstituir S y desprecintar PII en RAM volátil.
+    - Rechaza si sólo se aporta 1 share (Incertidumbre perfecta).
+    - Autoriza ordinario si INDECI (Share 1) + Damnificado (Share 3).
+    - Autoriza extraordinario si INDECI (Share 1) + ANPD (Share 2) bajo Art. 14 inc. 4 Ley 29733.
+    """
+    result = shamir_vault_service.reconstruct_secret(
+        cup=payload.cup,
+        provided_shares=payload.provided_shares,
+        operador_id=payload.operador_id or "OFICIAL_INDECI_COEL",
+        motivo=payload.motivo or "DESPRECINTADO_HUMANITARIO"
+    )
+    return result
+
+@app.get("/api/v1/shamir/audit")
+async def get_shamir_audit_endpoint():
+    """Retorna la bitácora inmutable WORM de intentos y desprecintados de la bóveda."""
+    return {
+        "status": "SUCCESS",
+        "audit_log": shamir_vault_service.get_audit_log()
+    }
+
+# ==============================================================================
+# CONSOLA C2 NACIONAL CONTRA INCENDIOS FORESTALES (CENEPRED / GNW / FWI)
+# ==============================================================================
+
+class IncendioFwiRequest(BaseModel):
+    temperatura_c: float = 24.5
+    humedad_relativa_pct: float = 28.0
+    viento_kmh: float = 32.0
+    dias_sin_lluvia: int = 18
+    humedad_suelo_0_7cm: Optional[float] = 0.08
+    pendiente_grados: Optional[float] = 30.0
+    tipo_combustible_peso: Optional[int] = 5
+
+class IncendioCortafuegoD8Request(BaseModel):
+    ubigeo: str
+    distrito: str
+    provincia: str
+    departamento: str
+    fwi_score: float = 54.2
+    hectareas_amenazadas: float = 1450.0
+    longitud_cortafuego_km: Optional[float] = 8.5
+
+@app.get("/api/v1/incendios/resumen-nacional")
+async def get_incendios_resumen_endpoint():
+    """Retorna el consolidado oficial de CENEPRED (Doc 17792 y 10471) y Global Nature Watch."""
+    return incendios_service.get_resumen_nacional()
+
+@app.get("/api/v1/incendios/focos-activos")
+async def get_incendios_focos_endpoint():
+    """Retorna los focos de calor satelitales (VIIRS 375m & MODIS 1km) calibrados con CENEPRED."""
+    return incendios_service.get_focos_activos()
+
+@app.post("/api/v1/incendios/calcular-fwi")
+async def post_calcular_fwi_endpoint(payload: IncendioFwiRequest):
+    """Calcula el Fire Weather Index (FWI) dinámico con variables Open-Meteo Pro (suelo 0-7cm, ráfagas, pendiente)."""
+    return incendios_service.calcular_fwi_distrital(
+        temperatura_c=payload.temperatura_c,
+        humedad_relativa_pct=payload.humedad_relativa_pct,
+        viento_kmh=payload.viento_kmh,
+        dias_sin_lluvia=payload.dias_sin_lluvia,
+        humedad_suelo_0_7cm=payload.humedad_suelo_0_7cm or 0.10,
+        pendiente_grados=payload.pendiente_grados or 25.0,
+        tipo_combustible_peso=payload.tipo_combustible_peso or 5
+    )
+
+@app.post("/api/v1/incendios/expediente-cortafuego-d8")
+async def post_expediente_cortafuego_d8_endpoint(payload: IncendioCortafuegoD8Request):
+    """Genera el acta de contratación directa de emergencia (D8) para apertura de cortafuegos mecanizados y cisternas."""
+    return incendios_service.generar_acta_cortafuego_d8(
+        ubigeo=payload.ubigeo,
+        distrito=payload.distrito,
+        provincia=payload.provincia,
+        departamento=payload.departamento,
+        fwi_score=payload.fwi_score,
+        hectareas_amenazadas=payload.hectareas_amenazadas,
+        longitud_cortafuego_km=payload.longitud_cortafuego_km or 8.5
+    )
+
+@app.get("/api/v1/incendios/distritos-2018")
+async def get_incendios_distritos_2018_endpoint(departamento: Optional[str] = None, solo_cenepred: bool = False):
+    """
+    Retorna el Padrón Geodésico Distrital para el Visor Táctico Google Maps Platform.
+    Por defecto retorna el universo de 1,893 municipalidades (con flag es_cenepred_2018), 
+    o puede filtrarse solo a los 492 distritos priorizados si solo_cenepred=True.
+    """
+    if solo_cenepred:
+        distritos = incendios_service.get_distritos_cenepred_2018()
+    else:
+        distritos = incendios_service.get_catalogo_nacional_distritos()
+
+    if departamento and departamento != "TODOS":
+        dept_norm = departamento.strip().upper()
+        distritos = [d for d in distritos if d["departamento"] == dept_norm]
+
+    return {
+        "status": "SUCCESS",
+        "fuente": "INEI / RENIEC (Padrón Nacional 1,893 Distritos) & CENEPRED 2018 (492 Priorizados)",
+        "total_distritos": len(distritos),
+        "distritos": distritos
+    }
+
+@app.get("/api/v1/incendios/catalogo-nacional-distritos")
+async def get_catalogo_nacional_distritos_endpoint(departamento: Optional[str] = None):
+    """Retorna las 1,893 Municipalidades Distritales del Perú con georreferenciación y autoridades."""
+    distritos = incendios_service.get_catalogo_nacional_distritos()
+    if departamento and departamento != "TODOS":
+        dept_norm = departamento.strip().upper()
+        distritos = [d for d in distritos if d["departamento"] == dept_norm]
+    return {
+        "status": "SUCCESS",
+        "total_distritos": len(distritos),
+        "distritos": distritos
+    }
+
+@app.get("/api/v1/incendios/clusters-activos")
+async def get_incendios_clusters_endpoint(radio_km: float = 12.0, min_focos: int = 2):
+    """
+    MOTOR DE ENVERGADURA Y COMPLEJOS DE INCENDIOS C2:
+    Agrupa los focos de calor satelitales NASA FIRMS en un radio determinado
+    y genera alertas de envergadura (MEGA_INCENDIO_COMPLEJO, INCENDIO_GRAN_ENVERGADURA, INCENDIO_MODERADO_EXPANSION)
+    con requerimiento de maquinaria pesada bajo la Ley 30225 Art. 27 inc. b.
+    """
+    clusters = incendios_service.get_clusters_incendios(radio_agrupamiento_km=radio_km, min_focos=min_focos)
+    return {
+        "status": "SUCCESS",
+        "total_clusters_detectados": len(clusters),
+        "radio_agrupamiento_km": radio_km,
+        "umbral_min_focos": min_focos,
+        "clusters": clusters
+    }
+
+@app.get("/api/v1/incendios/reportes-indeci-coen")
+async def get_reportes_indeci_coen_endpoint():
+    """
+    CANAL OFICIAL COEN - INDECI:
+    Retorna los 65 reportes oficiales de emergencias de Incendios Forestales
+    emitidos del 16 al 18 de octubre de 2026, con códigos SINPAD, evaluación de daños (ha)
+    y estado operacional verificado en tierra (ACTIVO, CONTROLADO, EXTINGUIDO).
+    """
+    reportes = incendios_service.get_reportes_indeci_coen()
+    return {
+        "status": "SUCCESS",
+        "fuente": "https://portal.indeci.gob.pe/informe/reportes-preliminares-complementarios-emergencias/",
+        "total_reportes": len(reportes),
+        "reportes": reportes
+    }
+
+class IncendioDispararAlertaRequest(BaseModel):
+    ubigeo: str
+    distrito: str
+    provincia: str
+    departamento: str
+    nivel_alerta: str = "ROJO"  # ROJO, NARANJA, AMARILLO
+    lead_time: str = "T-24h"    # T-24h, T-72h, T-144h
+    fwi_score: float = 48.5
+    foco_sensor: Optional[str] = "VIIRS Suomi-NPP (375m)"
+    frp_mw: Optional[float] = 45.0
+    faja_cortafuego_km: Optional[float] = 8.5
+    gatillo_cientifico: Optional[str] = None
+
+@app.post("/api/v1/incendios/disparar-alerta-eap")
+async def post_incendio_disparar_alerta_eap_endpoint(payload: IncendioDispararAlertaRequest):
+    """
+    PASARELA TÁCTICA C2:
+    Despacha la alerta detectada por NASA FIRMS / Open-Meteo Pro directamente
+    hacia el Hub de Alertas Tripartitas (alerts_cascade_service) bajo el régimen INCENDIO_FORESTAL.
+    """
+    titulo = f"Alerta Táctica por Incendio Forestal Activo ({payload.lead_time}): {payload.distrito} - {payload.provincia} ({payload.departamento})"
+    gatillo = payload.gatillo_cientifico or (
+        f"Detección satelital NASA FIRMS ({payload.foco_sensor}) con potencia radiativa FRP {payload.frp_mw} MW. "
+        f"Índice FWI distrital de {payload.fwi_score} y estrés hídrico de biomasa combustible. "
+        f"Se requiere apertura inmediata de faja cortafuego de {payload.faja_cortafuego_km or 8.5} km con tractor oruga D8."
+    )
+
+    req_alerta = EmisionAlertaNacionalRequest(
+        titulo=titulo,
+        regimen="INCENDIO_FORESTAL",
+        nivel_alerta=payload.nivel_alerta,
+        lead_time=payload.lead_time,
+        distritos_objetivo=[payload.ubigeo],
+        gatillo_cientifico=gatillo,
+        acciones_mandatadas=[
+            f"1. Despliegue de tractor oruga D6/D8 para apertura de {payload.faja_cortafuego_km or 8.5} km de cortafuego (Ley 30225 Art. 27 inc. b).",
+            "2. Posicionamiento de cisterna de 5,000 galones en trocha carrozable para líneas de enfriamiento.",
+            "3. Prohibición total de quemas agropecuarias y rastrojos en el sector rural.",
+            "4. Evacuación preventiva de familias y ganado en el perímetro de amortiguamiento de 3 a 5 km."
+        ],
+        emisor_responsable="Consola C2 Nacional contra Incendios Forestales AMARU"
+    )
+
+    resultado = alerts_cascade_service.emitir_alerta_nacional(req_alerta)
+    return {
+        "status": "ALERTA_DISPARADA_A_CONSOLA_TRIPARTITA",
+        "id_alerta": resultado.get("id_alerta"),
+        "ubigeo": payload.ubigeo,
+        "distrito": payload.distrito,
+        "nivel_alerta": payload.nivel_alerta,
+        "siguiente_paso": "Aprobación y firma HITL del Oficial de Guardia en /alertas",
+        "detalle_alerta": resultado
+    }
+
+@app.get("/api/v1/incendios/planes-contingencia")
+async def get_planes_contingencia_catalogo_endpoint():
+    """
+    Retorna el catálogo integrado de planes de contingencia regionales (Cusco, Junín, Satipo, Apurímac-Mara, Ucayali, San Martín)
+    y escenarios de riesgo CENEPRED disponibles en AMARU-CLIMATE.
+    """
+    planes = incendios_service.get_planes_contingencia_catalogo()
+    return {
+        "status": "SUCCESS",
+        "total_planes": len(planes),
+        "planes": planes
+    }
+
+class EvaluacionQuemaSabogalRequest(BaseModel):
+    viento_kmh: float = 12.0
+    humedad_relativa_pct: float = 38.0
+    temperatura_c: float = 21.0
+    pendiente_grados: float = 15.0
+    tipo_biomasa: str = "PAJONAL_ALTOANDINO"
+
+@app.post("/api/v1/incendios/evaluacion-quema-sabogal")
+async def post_evaluacion_quema_sabogal_endpoint(payload: EvaluacionQuemaSabogalRequest):
+    """
+    Calcula el Semáforo Comunitario de Quemas Seguras y Manejo Integral del Fuego
+    según las directrices científicas de la Dra. Ana Sabogal (INTE-PUCP) para el COED Social.
+    """
+    resultado = incendios_service.evaluar_quema_comunitaria_sabogal(
+        viento_kmh=payload.viento_kmh,
+        humedad_relativa_pct=payload.humedad_relativa_pct,
+        temperatura_c=payload.temperatura_c,
+        pendiente_grados=payload.pendiente_grados,
+        tipo_biomasa=payload.tipo_biomasa
+    )
+    return {
+        "status": "SUCCESS",
+        "evaluacion": resultado
+    }
 
 

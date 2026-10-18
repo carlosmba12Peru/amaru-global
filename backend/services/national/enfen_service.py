@@ -12,15 +12,20 @@ from datetime import datetime
 from typing import Dict, Any, List, Optional
 import pypdf
 
-DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data")
-ENFEN_PDF_DIR = os.path.join(DATA_DIR, "Estudio Nacional del Fenómeno del Niño ENFEN")
-if not os.path.exists(ENFEN_PDF_DIR) or len(os.listdir(ENFEN_PDF_DIR)) == 0:
-    PARENT_DATA_DIR = os.path.join(os.path.dirname(DATA_DIR), "data")
-    parent_enfen = os.path.join(PARENT_DATA_DIR, "Estudio Nacional del Fenómeno del Niño ENFEN")
-    if os.path.exists(parent_enfen) and len(os.listdir(parent_enfen)) > 0:
-        ENFEN_PDF_DIR = parent_enfen
+ROOT_DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))), "data")
+BACKEND_DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
 
-CACHE_FILE = os.path.join(DATA_DIR, "enfen_comunicados_dataset.json")
+root_enfen = os.path.join(ROOT_DATA_DIR, "Estudio Nacional del Fenómeno del Niño ENFEN")
+backend_enfen = os.path.join(BACKEND_DATA_DIR, "Estudio Nacional del Fenómeno del Niño ENFEN")
+
+if os.path.exists(root_enfen) and (not os.path.exists(backend_enfen) or len(os.listdir(root_enfen)) >= len(os.listdir(backend_enfen))):
+    ENFEN_PDF_DIR = root_enfen
+    DATA_DIR = ROOT_DATA_DIR
+else:
+    ENFEN_PDF_DIR = backend_enfen
+    DATA_DIR = BACKEND_DATA_DIR
+
+CACHE_FILE = os.path.join(BACKEND_DATA_DIR, "enfen_comunicados_dataset.json")
 
 # Datos calibrados base por defecto (en caso de que la carpeta no contenga PDFs inicialmente)
 DEFAULT_COMUNICADOS = [
@@ -128,8 +133,63 @@ DEFAULT_COMUNICADOS = [
         "pesca": "Anchoveta norte-centro profundizada y replegada; disponibilidad sostenida de samasa, perico, barrilete, melva y atún aleta amarilla.",
         "lluvias": "Costa norte y central con temperaturas récord y lluvias torrenciales desde noviembre. Sierra sur y Amazonía con condiciones de lluvia inferior a lo normal (riesgo hídrico y heladas).",
         "archivo": "Comunicado_Of_ENFEN N° 16-2026.pdf"
+    },
+    {
+        "id": "17-2026",
+        "numero": "17-2026",
+        "titulo": "COMUNICADO OFICIAL ENFEN N° 17-2026",
+        "fecha": "28 de setiembre 2026",
+        "fecha_iso": "2026-09-28",
+        "estado_alerta": "Alerta de El Niño Costero",
+        "horizonte": "Verano 2026 - 2027 (Prolongado hasta Otoño de 2027)",
+        "probabilidades_nino_costero": {"extraordinario": 52, "fuerte": 42, "moderado": 6, "debil": 0},
+        "probabilidades_nino_global": {"muy_fuerte": 60, "fuerte": 35, "moderado": 5, "debil": 0},
+        "resumen": "ENFEN sostiene que El Niño Costero (región Niño 1+2) se mantendría con una magnitud extraordinaria respecto al calentamiento del mar hasta enero 2027, reduciendo su magnitud hacia el otoño de 2027. Para el trimestre octubre-diciembre se prevén precipitaciones superiores a lo normal en la costa norte y caudales por encima de sus valores habituales en los ríos Tumbes, Chira, Piura, La Leche y Jequetepeque.",
+        "pesca": "Disponibilidad sostenida de bonito, pez sierra y samasa frente al litoral; especies oceánicas como perico, barrilete, melva y atún aleta amarilla cerca de la costa. Ocurrencia de especies de aguas cálidas al sur de sus áreas habituales.",
+        "lluvias": "Lluvias superiores a lo normal en costa norte, costa central y vertiente occidental norte (octubre-diciembre y verano 2027). Temperaturas del aire muy superiores a lo habitual con alta probabilidad de nuevos récords térmicos. Sierra sur y Titicaca con déficit de lluvias y caudales.",
+        "archivo": "Comunicado_Of_ENFEN N° 17-2026.pdf",
+        "proximo_comunicado": "15 de octubre de 2026"
+    },
+    {
+        "id": "18-2026",
+        "numero": "18-2026",
+        "titulo": "COMUNICADO OFICIAL ENFEN N° 18-2026",
+        "fecha": "16 de octubre 2026",
+        "fecha_iso": "2026-10-16",
+        "estado_alerta": "Alerta de El Niño Costero",
+        "horizonte": "Verano 2026 - 2027 (Extendido hasta Otoño de 2027)",
+        "probabilidades_nino_costero": {"extraordinario": 55, "fuerte": 40, "moderado": 5, "debil": 0},
+        "probabilidades_nino_global": {"muy_fuerte": 65, "fuerte": 30, "moderado": 5, "debil": 0},
+        "resumen": "EL NIÑO COSTERO SE EXTENDERÍA HASTA EL OTOÑO DE 2027. La Temperatura Superficial del Mar continúa presentando anomalías positivas con tendencia ascendente. Frente a la costa peruana (región Niño 1+2) es más probable que el calentamiento del mar se mantenga con una magnitud extraordinaria hasta enero de 2027, para luego disminuir a fuerte hasta inicios del otoño de 2027. En el Pacífico central (región Niño 3.4) la temperatura se mantendría con magnitud muy fuerte hasta febrero de 2027.",
+        "pesca": "Anchoveta en fase juvenil, muy pegada a la costa y profundizada. Buena disponibilidad de bonito, pez sierra y samasa cerca de la costa centro y sur; asimismo especies oceánicas como perico, barrilete, melva y atún aleta amarilla a lo largo de toda la costa.",
+        "lluvias": "Lluvias sobre lo normal en costa norte, costa central y sierra norte occidental con posibles precipitaciones localizadas de moderada a fuerte intensidad en el norte. En verano 2027 continuarán sobre lo normal en costa norte y central. Sierra sur y Amazonía con precipitaciones y caudales inferiores a lo normal, manteniendo el lago Titicaca y embalses (Tinajones, Paucarani) bajo déficit hídrico.",
+        "caudales": "Superiores a lo normal desde noviembre en los ríos Tumbes, Chira, Piura, La Leche y Jequetepeque, y desde diciembre en los ríos Rímac y Chillón. En Ica caudales de normal a superior; en Arequipa, Moquegua y Tacna normales a inferiores. Cuenca amazónica y tributarios del Titicaca por debajo de lo normal.",
+        "archivo": "Comunicado_Of_ENFEN N° 18-2026.pdf",
+        "proximo_comunicado": "30 de octubre de 2026"
     }
 ]
+
+def safe_write_text(dest_path: str, text: str, encoding: str = "utf-8") -> bool:
+    try:
+        os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+        with open(dest_path, "wb") as f:
+            f.write(text.encode(encoding))
+        return True
+    except Exception:
+        try:
+            import tempfile, subprocess, uuid
+            tmp = os.path.join(tempfile.gettempdir(), f"enfen_tmp_{uuid.uuid4().hex}.json")
+            with open(tmp, "wb") as f_tmp:
+                f_tmp.write(text.encode(encoding))
+            cmd = f'copy /Y "{tmp}" "{dest_path}"'
+            subprocess.run(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            try:
+                os.remove(tmp)
+            except Exception:
+                pass
+            return os.path.exists(dest_path)
+        except Exception:
+            return False
 
 class EnfenService:
     def __init__(self):
@@ -170,13 +230,20 @@ class EnfenService:
                 reader = pypdf.PdfReader(fpath)
                 full_text = "\n".join([p.extract_text() or "" for p in reader.pages])
 
-                # Extracción con regex de metadatos
-                num_match = re.search(r'COMUNICADO\s+OFICIAL\s+ENFEN\s+N[°º\s]+(\d+[-/]\d+)', full_text, re.IGNORECASE)
-                date_match = re.search(r'(\d{1,2}\s+de\s+[a-zñA-Z]+\s+202\d)', full_text)
+                # Extracción con regex de metadatos más robusto
+                num_match = re.search(r'COMUNICADO\s+OFICIAL\s+ENFEN\s+N[°º\s]*(\d+)\s*[-/]\s*(\d+)', full_text, re.IGNORECASE)
+                if not num_match:
+                    num_match = re.search(r'N[°º\s]*(\d+)\s*[-/]\s*(\d+)', fname, re.IGNORECASE)
+
+                date_match = re.search(r'(\d{1,2}\s+(?:de\s+)?[a-zñA-Z]+\s+(?:de\s+)?202\d)', full_text, re.IGNORECASE)
                 alerta_match = re.search(r'Estado del sistema de alerta:\s*([^\n\r]+)', full_text, re.IGNORECASE)
 
-                num = num_match.group(1).replace("/", "-") if num_match else fname.replace(".pdf", "")
-                fecha = date_match.group(1) if date_match else "Setiembre 2026"
+                if num_match:
+                    num = f"{num_match.group(1)}-{num_match.group(2)}"
+                else:
+                    num = fname.replace(".pdf", "")
+
+                fecha = date_match.group(1) if date_match else "28 de setiembre 2026"
                 alerta = alerta_match.group(1).strip() if alerta_match else "Alerta de El Niño Costero"
 
                 # Buscar en defaults base para complementar probabilidades tabulares
@@ -190,29 +257,29 @@ class EnfenService:
                     "muy_fuerte": 50, "fuerte": 40, "moderado": 10, "debil": 0
                 }
 
-                # Extracción del primer párrafo del Resumen Ejecutivo
+                # Extracción del primer párrafo o titular ejecutivo
                 resumen = ""
-                resumen_match = re.search(r'RESUMEN\s+EJECUTIVO\s*\n+([^\n]+(?:\n[^\n]+){1,4})', full_text, re.IGNORECASE)
+                resumen_match = re.search(r'(?:EL NIÑO COSTERO SE EXTENDERÍA[^\n]+(?:\n[^\n]+){1,5}|RESUMEN\s+EJECUTIVO\s*\n+([^\n]+(?:\n[^\n]+){1,4}))', full_text, re.IGNORECASE)
                 if resumen_match:
-                    resumen = " ".join([l.strip() for l in resumen_match.group(1).split("\n") if l.strip()])
-                elif default_match:
-                    resumen = default_match["resumen"]
+                    resumen = " ".join([l.strip() for l in resumen_match.group(0).split("\n") if l.strip()])
+                if not resumen and default_match:
+                    resumen = default_match.get("resumen", "")
 
                 # Bioindicadores pesqueros
                 pesca = ""
-                pesca_match = re.search(r'Respecto a los recursos pesqueros,([^\n]+(?:\n[^\n]+){1,3})', full_text, re.IGNORECASE)
+                pesca_match = re.search(r'(?:Pesquero:\s*|Respecto a los recursos pesqueros,)([^\n]+(?:\n[^\n]+){1,3})', full_text, re.IGNORECASE)
                 if pesca_match:
-                    pesca = "Respecto a los recursos pesqueros," + " ".join([l.strip() for l in pesca_match.group(1).split("\n") if l.strip()])
-                elif default_match:
-                    pesca = default_match["pesca"]
+                    pesca = " ".join([l.strip() for l in pesca_match.group(0).split("\n") if l.strip()])
+                if not pesca and default_match:
+                    pesca = default_match.get("pesca", "")
 
                 # Lluvias
                 lluvias = ""
-                lluvias_match = re.search(r'Con relaci[oó]n a las lluvias,([^\n]+(?:\n[^\n]+){1,3})', full_text, re.IGNORECASE)
+                lluvias_match = re.search(r'(?:Lluvias:\s*|Con relaci[oó]n a las lluvias,)([^\n]+(?:\n[^\n]+){1,4})', full_text, re.IGNORECASE)
                 if lluvias_match:
-                    lluvias = "Con relación a las lluvias," + " ".join([l.strip() for l in lluvias_match.group(1).split("\n") if l.strip()])
-                elif default_match:
-                    lluvias = default_match["lluvias"]
+                    lluvias = " ".join([l.strip() for l in lluvias_match.group(0).split("\n") if l.strip()])
+                if not lluvias and default_match:
+                    lluvias = default_match.get("lluvias", "")
 
                 comunicado_obj = {
                     "id": num,
@@ -241,10 +308,10 @@ class EnfenService:
         else:
             self.comunicados = DEFAULT_COMUNICADOS
 
-        # Guardar en caché JSON
+        # Guardar en caché JSON de forma segura
         try:
-            with open(CACHE_FILE, "w", encoding="utf-8") as f:
-                json.dump(self.comunicados, f, ensure_ascii=False, indent=2)
+            content = json.dumps(self.comunicados, ensure_ascii=False, indent=2)
+            safe_write_text(CACHE_FILE, content)
             print(f"[EnfenService] Guardados {len(self.comunicados)} comunicados en caché JSON.")
         except Exception as e:
             print(f"[EnfenService] Error escribiendo caché: {e}")
@@ -261,6 +328,14 @@ class EnfenService:
         if not self.comunicados:
             return DEFAULT_COMUNICADOS[-1]
         return self.comunicados[-1]
+
+    def get_latest_comunicado(self) -> Dict[str, Any]:
+        """Alias para get_latest()."""
+        return self.get_latest()
+
+    def get_latest_comunicado(self) -> Dict[str, Any]:
+        """Alias para get_latest()."""
+        return self.get_latest()
 
     def get_all(self) -> List[Dict[str, Any]]:
         """Retorna todos los comunicados oficiales."""

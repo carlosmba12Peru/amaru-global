@@ -4,9 +4,8 @@
     "numero": "10-2026",
     "titulo": "COMUNICADO OFICIAL ENFEN N° 10-2026",
     "fecha": "29 de mayo 2026",
-    "fecha_iso": "2026-05-29",
-    "estado_alerta": "Alerta de El Niño Costero",
-    "horizonte": "Verano 2026 - 2027",
+    "estado_alerta": "Alerta de El Niño Costero1",
+    "horizonte": "Verano 2026 - 2027 (Extendido hasta Otoño/Invierno 2027)",
     "probabilidades_nino_costero": {
       "extraordinario": 10,
       "fuerte": 42,
@@ -19,19 +18,20 @@
       "moderado": 35,
       "debil": 10
     },
-    "resumen": "ENFEN mantiene el estado de Alerta de El Niño Costero y prevé que se desarrolle de magnitud moderada a fuerte.",
+    "resumen": "RESUMEN EJECUTIVO ENFEN mantiene el estado de “Alerta de El Niño Costero” y prevé que el Niño Costero se prolongaría, por lo pronto, hasta febrero de 2027, con mayor probabilidad de magnitud moderada. Se prevé el desarrollo de El Niño en el Pacífico ecuatorial central (región Niño 3.4) desde junio",
     "pesca": "Anchoveta en condición vulnerable en la zona centro-norte.",
     "lluvias": "Escenarios normales a moderados.",
-    "archivo": "Comunicado Of_ENFEN N° 10-2026.pdf"
+    "archivo": "Comunicado Of_ENFEN N° 10-2026.pdf",
+    "tamano_bytes": 592194,
+    "total_paginas": 3
   },
   {
     "id": "11-2026",
     "numero": "11-2026",
     "titulo": "COMUNICADO OFICIAL ENFEN N° 11-2026",
     "fecha": "15 de junio 2026",
-    "fecha_iso": "2026-06-15",
-    "estado_alerta": "Alerta de El Niño Costero",
-    "horizonte": "Verano 2026 - 2027",
+    "estado_alerta": "Alerta de El Niño Costero1",
+    "horizonte": "Verano 2026 - 2027 (Extendido hasta Otoño/Invierno 2027)",
     "probabilidades_nino_costero": {
       "extraordinario": 14,
       "fuerte": 48,
@@ -44,19 +44,20 @@
       "moderado": 30,
       "debil": 6
     },
-    "resumen": "Se prevé que el evento alcance una magnitud entre fuerte (48%) y moderada (36%).",
+    "resumen": "RESUMEN EJECUTIVO ENFEN mantiene el estado de “Alerta de El Niño Costero”. Para la región Niño 1+2, el Niño Costero se prolongaría hasta el próximo verano de 2027, con una mayor probabilidad de presentar una magnitud fuerte entre junio y septiembre, para luego disminuir a moderado hasta diciembre. Para el verano 2026 - 2027, se prevé que el evento alcance una magnitud entre fuerte (48 %) y moderada (46 %).",
     "pesca": "Presencia incipiente de especies de aguas oceánicas.",
     "lluvias": "Incremento de probabilidad de lluvias en cuenca norte.",
-    "archivo": "Comunicado Of_ENFEN N° 11-2026.pdf"
+    "archivo": "Comunicado Of_ENFEN N° 11-2026.pdf",
+    "tamano_bytes": 661798,
+    "total_paginas": 3
   },
   {
     "id": "12-2026",
     "numero": "12-2026",
     "titulo": "COMUNICADO OFICIAL ENFEN N° 12-2026",
     "fecha": "26 de junio 2026",
-    "fecha_iso": "2026-06-26",
-    "estado_alerta": "Alerta de El Niño Costero",
-    "horizonte": "Verano 2026 - 2027",
+    "estado_alerta": "Alerta de El Niño Costero1",
+    "horizonte": "Verano 2026 - 2027 (Extendido hasta Otoño/Invierno 2027)",
     "probabilidades_nino_costero": {
       "extraordinario": 22,
       "fuerte": 48,
@@ -69,19 +70,20 @@
       "moderado": 22,
       "debil": 4
     },
-    "resumen": "Proyección de magnitud fuerte consolidada en región Niño 1+2.",
+    "resumen": "RESUMEN EJECUTIVO ENFEN mantiene el estado de “Alerta de El Niño Costero”. Para la región Niño 1+2, el Niño Costero se extendería hasta el verano de 2027. Se proyecta con mayor probabilidad una magnitud fuerte hasta octubre, la cual disminuiría a moderada en noviembre. Para el siguiente verano (diciembre 2026 - marzo 2027), se prevé que el evento presente una magnitud fuerte o moderada.",
     "pesca": "Anchoveta replegada cerca a la costa.",
     "lluvias": "Avisos de lluvias intensas en vertiente occidental.",
-    "archivo": "Comunicado_Of_ENFEN N° 12-2026.pdf"
+    "archivo": "Comunicado_Of_ENFEN N° 12-2026.pdf",
+    "tamano_bytes": 578062,
+    "total_paginas": 3
   },
   {
     "id": "13-2026",
     "numero": "13-2026",
     "titulo": "COMUNICADO OFICIAL ENFEN N° 13-2026",
     "fecha": "17 de julio 2026",
-    "fecha_iso": "2026-07-17",
-    "estado_alerta": "Alerta de El Niño Costero",
-    "horizonte": "Verano 2026 - 2027",
+    "estado_alerta": "Alerta de El Niño Costero1",
+    "horizonte": "Verano 2026 - 2027 (Extendido hasta Otoño/Invierno 2027)",
     "probabilidades_nino_costero": {
       "extraordinario": 28,
       "fuerte": 48,
@@ -94,19 +96,20 @@
       "moderado": 17,
       "debil": 3
     },
-    "resumen": "No se descarta la magnitud extraordinaria hacia finales de 2026.",
+    "resumen": "RESUMEN EJECUTIVO ENFEN mantiene el estado de “Alerta de El Niño Costero”.  En la región Niño 1+2, es probable la continuación de El Niño Costero hasta abril de 2027, por lo pronto. Asimismo, es más probable que el evento continúe de magnitud fuerte; sin embargo, no se descarta la magnitud extraordinaria, hacia finales de 2026.",
     "pesca": "Disponibilidad de perico y barrilete en costa central.",
     "lluvias": "Riesgo de precipitaciones extremas en Piura y Tumbes.",
-    "archivo": "Comunicado_Of_ENFEN N° 13-2026.pdf"
+    "archivo": "Comunicado_Of_ENFEN N° 13-2026.pdf",
+    "tamano_bytes": 605076,
+    "total_paginas": 4
   },
   {
     "id": "14-2026",
     "numero": "14-2026",
     "titulo": "COMUNICADO OFICIAL ENFEN N° 14-2026",
     "fecha": "14 de agosto 2026",
-    "fecha_iso": "2026-08-14",
-    "estado_alerta": "Alerta de El Niño Costero",
-    "horizonte": "Verano 2026 - 2027",
+    "estado_alerta": "Alerta de El Niño Costero1",
+    "horizonte": "Verano 2026 - 2027 (Extendido hasta Otoño/Invierno 2027)",
     "probabilidades_nino_costero": {
       "extraordinario": 35,
       "fuerte": 46,
@@ -119,19 +122,20 @@
       "moderado": 11,
       "debil": 2
     },
-    "resumen": "Magnitud más probable entre fuerte y extraordinaria hasta el verano 2027.",
+    "resumen": "RESUMEN EJECUTIVO ENFEN mantiene el estado de “Alerta de El Niño Costero”.  En la región Niño 1+2, se prevé la continuación de El Niño Costero con una magnitud más probable entre fuerte y extraordinaria hasta el verano. Para la región Niño 3.4 (Pacífico ecuatorial central), se prevé que El Niño se extienda hasta inicios de otoño 2027. Sus magnitudes más probables serían fuertes de agosto a setiembre y de fuerte a muy fuerte entre",
     "pesca": "Anchoveta profundizada por onda Kelvin cálida.",
     "lluvias": "Precipitaciones sobre lo normal en el norte.",
-    "archivo": "Comunicado_Of_ENFEN N° 14-2026.pdf"
+    "archivo": "Comunicado_Of_ENFEN N° 14-2026.pdf",
+    "tamano_bytes": 606314,
+    "total_paginas": 4
   },
   {
     "id": "15-2026",
     "numero": "15-2026",
     "titulo": "COMUNICADO OFICIAL ENFEN N° 15-2026",
     "fecha": "28 de agosto 2026",
-    "fecha_iso": "2026-08-28",
-    "estado_alerta": "Alerta de El Niño Costero",
-    "horizonte": "Verano 2026 - 2027",
+    "estado_alerta": "Alerta de El Niño Costero1",
+    "horizonte": "Verano 2026 - 2027 (Extendido hasta Otoño/Invierno 2027)",
     "probabilidades_nino_costero": {
       "extraordinario": 42,
       "fuerte": 45,
@@ -144,19 +148,20 @@
       "moderado": 9,
       "debil": 1
     },
-    "resumen": "Alta probabilidad de que El Niño Costero persista con magnitud extraordinaria hasta verano de 2027.",
+    "resumen": "RESUMEN EJECUTIVO ENFEN mantiene el estado de “Alerta de El Niño Costero”.  En la región Niño 1+2, se mantiene una alta probabilidad de que El Niño Costero persista hasta el verano de 2027, con una magnitud extraordinaria de setiembre 2026 a enero de 2027 (≥ 62%), y entre fuerte y extraordinaria en febrero y marzo de 2027. En la región Niño 3.4 (Pacífico ecuatorial central), se mantiene una alta probabilidad de que El Niño alcance",
     "pesca": "Especies ecuatoriales (samasa, pez sierra) en litoral central.",
     "lluvias": "Previsión de desbordes fluviales tempranos.",
-    "archivo": "Comunicado_Of_ENFEN N° 15-2026.pdf"
+    "archivo": "Comunicado_Of_ENFEN N° 15-2026.pdf",
+    "tamano_bytes": 633357,
+    "total_paginas": 4
   },
   {
     "id": "16-2026",
     "numero": "16-2026",
     "titulo": "COMUNICADO OFICIAL ENFEN N° 16-2026",
     "fecha": "14 de setiembre 2026",
-    "fecha_iso": "2026-09-14",
-    "estado_alerta": "Alerta de El Niño Costero",
-    "horizonte": "Verano 2026 - 2027 (Extendido a Otoño/Invierno 2027)",
+    "estado_alerta": "Alerta de El Niño Costero1",
+    "horizonte": "Verano 2026 - 2027 (Extendido hasta Otoño/Invierno 2027)",
     "probabilidades_nino_costero": {
       "extraordinario": 48,
       "fuerte": 45,
@@ -169,9 +174,63 @@
       "moderado": 5,
       "debil": 0
     },
-    "resumen": "ENFEN sostiene que El Niño Costero continuaría hasta mediados de otoño de 2027, con la más alta probabilidad de una magnitud extraordinaria de setiembre 2026 a enero de 2027.",
-    "pesca": "Anchoveta norte-centro profundizada y replegada; disponibilidad sostenida de samasa, perico, barrilete, melva y atún aleta amarilla.",
-    "lluvias": "Costa norte y central con temperaturas récord y lluvias torrenciales desde noviembre. Sierra sur y Amazonía con condiciones de lluvia inferior a lo normal (riesgo hídrico y heladas).",
-    "archivo": "Comunicado_Of_ENFEN N° 16-2026.pdf"
+    "resumen": "RESUMEN EJECUTIVO ENFEN sostiene que El Niño Costero (región Niño 1+2) continuaría hasta mediados de otoño de 2027, con la más alta probabilidad de una magnitud extraordinaria de setiembre 2026 a enero de 2027. El Niño (región Niño 3.4) presentaría una magnitud muy fuerte de setiembre de 2026 a enero de 2027. Entre febrero y marzo, cambiaría a fuerte, para continuar debilitándose durante el otoño hacia una",
+    "pesca": "Respecto a los recursos pesqueros, se espera que en las próximas semanas la anchoveta de la región norte centro permanezca profundizada y replegada en la zona costera. Asimismo, frente a la costa central, se mantendrá la disponibilidad de especies asociadas a aguas ecuatoriales (peces sierra y samasa) y oceánicas (perico, barrilete, melva y atún aleta amarilla), entre otros.",
+    "lluvias": "Con relación a las lluvias, se esperan condiciones por encima de lo normal en la costa norte, con posibles episodios de lluvias de moderada a fuerte intensidad desde noviembre. En la sierra sur y sectores de la Amazonía se prevé condiciones de lluvias de normal a inferior.",
+    "archivo": "Comunicado_Of_ENFEN N° 16-2026.pdf",
+    "tamano_bytes": 584675,
+    "total_paginas": 3
+  },
+  {
+    "id": "17-2026",
+    "numero": "17-2026",
+    "titulo": "COMUNICADO OFICIAL ENFEN N° 17-2026",
+    "fecha": "28 septiembre 2027",
+    "estado_alerta": "Alerta de El Niño Costero",
+    "horizonte": "Verano 2026 - 2027 (Extendido hasta Otoño/Invierno 2027)",
+    "probabilidades_nino_costero": {
+      "extraordinario": 52,
+      "fuerte": 42,
+      "moderado": 6,
+      "debil": 0
+    },
+    "probabilidades_nino_global": {
+      "muy_fuerte": 60,
+      "fuerte": 35,
+      "moderado": 5,
+      "debil": 0
+    },
+    "resumen": "ENFEN sostiene que El Niño Costero (región Niño 1+2) se mantendría con una magnitud extraordinaria respecto al calentamiento del mar hasta enero 2027, reduciendo su magnitud hacia el otoño de 2027. Para el trimestre octubre-diciembre se prevén precipitaciones superiores a lo normal en la costa norte y caudales por encima de sus valores habituales en los ríos Tumbes, Chira, Piura, La Leche y Jequetepeque.",
+    "pesca": "Disponibilidad sostenida de bonito, pez sierra y samasa frente al litoral; especies oceánicas como perico, barrilete, melva y atún aleta amarilla cerca de la costa. Ocurrencia de especies de aguas cálidas al sur de sus áreas habituales.",
+    "lluvias": "Lluvias superiores a lo normal en costa norte, costa central y vertiente occidental norte (octubre-diciembre y verano 2027). Temperaturas del aire muy superiores a lo habitual con alta probabilidad de nuevos récords térmicos. Sierra sur y Titicaca con déficit de lluvias y caudales.",
+    "archivo": "Comunicado_Of_ENFEN N° 17-2026.pdf",
+    "tamano_bytes": 716171,
+    "total_paginas": 2
+  },
+  {
+    "id": "18-2026",
+    "numero": "18-2026",
+    "titulo": "COMUNICADO OFICIAL ENFEN N° 18-2026",
+    "fecha": "16 octubre 2026",
+    "estado_alerta": "Alerta de El Niño Costero",
+    "horizonte": "Verano 2026 - 2027 (Extendido hasta Otoño/Invierno 2027)",
+    "probabilidades_nino_costero": {
+      "extraordinario": 55,
+      "fuerte": 40,
+      "moderado": 5,
+      "debil": 0
+    },
+    "probabilidades_nino_global": {
+      "muy_fuerte": 65,
+      "fuerte": 30,
+      "moderado": 5,
+      "debil": 0
+    },
+    "resumen": "EL NIÑO COSTERO SE EXTENDERÍA HASTA EL OTOÑO DE 2027 La Temperatura Superficial de l Mar del Pacifico continúa presentando anomalías positivas con tendencia ascendente (Figura 1). Frente a la costa peruana (región Niño 1+2) es más probable que calentamiento del mar (El Niño costero) se mantenga con una magnitud de extraordinaria2 hasta enero de 2027 (Figura 2), para luego disminuir a fuerte hasta inicios del otoño de 2027. Asimismo,",
+    "pesca": "Pesquero: La anchoveta se observa mayormente en su fase juvenil, muy  pegada a la costa y profundizada. Se espera que continúe una buena d isponibilidad de bonito, pez sierra y samasa cerca de la costa centro y sur; asimismo, otras especies como perico, barrilete, melva y atún aleta amarilla, entre otras, a lo largo de toda la costa.",
+    "lluvias": "Lluvias: Para lo que resta de l 20266, se irán incrementando las lluvias por encima de lo normal en la costa norte, costa central y la sierra nort e occidental , con posibles precipitaciones localizadas  de moderada a fuerte intensidad en el norte. En la sierra sur y la Amazonía , las precipitaciones continuarían de normal a inferior. Para el verano de 2027 7, lluvias sobre  lo normal en la costa norte, costa centr al y sierra norte",
+    "archivo": "Comunicado_Of_ENFEN N° 18-2026.pdf",
+    "tamano_bytes": 778221,
+    "total_paginas": 2
   }
 ]

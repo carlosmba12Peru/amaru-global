@@ -216,7 +216,7 @@ export default function EnfenConsolePage() {
                             {latest ? `N° ${latest.numero}` : "Cargando..."}
                         </div>
                         <p className="text-[11px] text-slate-400 font-medium">
-                            Emitido: <span className="text-sky-300 font-semibold">{latest?.fecha || "14 de setiembre 2026"}</span>
+                            Emitido: <span className="text-sky-300 font-semibold">{latest?.fecha || "16 de octubre 2026"}</span>
                         </p>
                     </div>
 
@@ -241,7 +241,7 @@ export default function EnfenConsolePage() {
                             <Calendar className="w-4 h-4 text-amber-400" />
                         </div>
                         <div className="text-base font-black text-amber-400 font-mono pt-1">
-                            Hasta Otoño/Invierno 2027
+                            Hasta Otoño 2027
                         </div>
                         <p className="text-[11px] text-slate-400 font-medium">
                             Sustento para extensión multianual C2
@@ -280,7 +280,7 @@ export default function EnfenConsolePage() {
                                     </span>
                                 </h2>
                                 <p className="text-[11px] text-slate-400">
-                                    Serie temporal oficial ENFEN (Comunicados N° 10 a N° 16-2026) proyectada hacia Verano/Invierno 2027
+                                    Serie temporal oficial ENFEN (Comunicados N° 10 a N° 18-2026) proyectada hacia Verano y Otoño 2027
                                 </p>
                             </div>
                         </div>

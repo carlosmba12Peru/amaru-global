@@ -211,6 +211,7 @@ export default function IncendiosForestalesPage() {
     const [distritoSearch, setDistritoSearch] = useState<string>("");
     const [soloCenepred, setSoloCenepred] = useState<boolean>(false);
     const [filtroEstadoFuego, setFiltroEstadoFuego] = useState<"TODOS" | "FUEGO_ACTIVO" | "PREVENTIVO">("TODOS");
+    const [filtroConciliacionIndeci, setFiltroConciliacionIndeci] = useState<"TODOS" | "VALIDADOS_COEN" | "CIEGOS_ESTADO">("TODOS");
     const [coedTabActiva, setCoedTabActiva] = useState<"NACIONAL" | "MUNICIPAL" | "SOCIAL">("NACIONAL");
 
     // Filtros avanzados para Focos Térmicos Satelitales (VIIRS / NASA FIRMS)
@@ -1569,9 +1570,49 @@ export default function IncendiosForestalesPage() {
                                         DETECCIÓN DE COMPLEJOS Y CONCENTRACIÓN DE FOCOS (INCENDIOS DE GRAN ENVERGADURA)
                                     </h3>
                                     <p className="text-[11px] text-slate-400 font-sans">
-                                        Algoritmo de Agrupamiento Espacial C2 (Radio 12 km) • Clasificación según Nivel de Alerta y Potencia FRP
+                                        Algoritmo de Agrupamiento Espacial C2 (Radio 12 km) • Fusión Satelital vs. Reportes Oficiales COEN-INDECI
                                     </p>
                                 </div>
+                            </div>
+
+                            {/* BARRA DE FILTRO DE CONCILIACIÓN TÁCTICA */}
+                            <div className="flex items-center gap-1.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-[10px]">
+                                <button
+                                    onClick={() => setFiltroConciliacionIndeci("TODOS")}
+                                    className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                                        filtroConciliacionIndeci === "TODOS"
+                                            ? "bg-slate-700 text-white shadow"
+                                            : "text-slate-400 hover:text-white"
+                                    }`}
+                                >
+                                    TODOS ({clusters.length})
+                                </button>
+                                <button
+                                    onClick={() => setFiltroConciliacionIndeci("VALIDADOS_COEN")}
+                                    className={`px-2.5 py-1 rounded-lg font-bold flex items-center gap-1 transition-all ${
+                                        filtroConciliacionIndeci === "VALIDADOS_COEN"
+                                            ? "bg-emerald-600 text-white shadow"
+                                            : "text-emerald-400 hover:bg-emerald-950/40"
+                                    }`}
+                                >
+                                    <span>🏛️ CON REPORTE COEN</span>
+                                    <span className="bg-emerald-950 px-1.5 py-0.2 rounded text-[9px]">
+                                        {clusters.filter(c => !!c.indeci_coen_match).length}
+                                    </span>
+                                </button>
+                                <button
+                                    onClick={() => setFiltroConciliacionIndeci("CIEGOS_ESTADO")}
+                                    className={`px-2.5 py-1 rounded-lg font-bold flex items-center gap-1 transition-all ${
+                                        filtroConciliacionIndeci === "CIEGOS_ESTADO"
+                                            ? "bg-purple-600 text-white shadow"
+                                            : "text-purple-400 hover:bg-purple-950/40"
+                                    }`}
+                                >
+                                    <span>👁️‍🗨️ INCENDIOS CIEGOS</span>
+                                    <span className="bg-purple-950 px-1.5 py-0.2 rounded text-[9px]">
+                                        {clusters.filter(c => !c.indeci_coen_match).length}
+                                    </span>
+                                </button>
                             </div>
                         </div>
 
@@ -1598,7 +1639,13 @@ export default function IncendiosForestalesPage() {
                         )}
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            {clusters.slice(0, 6).map((cl) => {
+                            {clusters
+                                .filter(cl => {
+                                    if (filtroConciliacionIndeci === "VALIDADOS_COEN") return !!cl.indeci_coen_match;
+                                    if (filtroConciliacionIndeci === "CIEGOS_ESTADO") return !cl.indeci_coen_match;
+                                    return true;
+                                })
+                                .slice(0, 9).map((cl) => {
                                 const isMega = cl.tipo_incendio === "MEGA_INCENDIO_COMPLEJO";
                                 const isGran = cl.tipo_incendio === "INCENDIO_GRAN_ENVERGADURA";
                                 return (
@@ -1651,7 +1698,8 @@ export default function IncendiosForestalesPage() {
                                             </div>
                                         )}
 
-                                        {cl.indeci_coen_match && (
+                                        {/* BLOQUE DE CONCILIACIÓN OPERATIVA INDECI COEN O INCENDIO CIEGO */}
+                                        {cl.indeci_coen_match ? (
                                             <div className="text-[10px] bg-emerald-950/40 border border-emerald-600/60 p-2 rounded-lg mb-2.5 space-y-1">
                                                 <div className="flex items-center justify-between">
                                                     <span className="font-bold text-emerald-400 flex items-center gap-1">
@@ -1687,6 +1735,34 @@ export default function IncendiosForestalesPage() {
                                                         className="text-[9px] text-sky-400 hover:underline flex items-center gap-1"
                                                     >
                                                         <span>🔗 Ver reporte oficial en portal INDECI</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="text-[10px] bg-purple-950/30 border border-purple-800/60 p-2 rounded-lg mb-2.5 space-y-1">
+                                                <div className="flex items-center justify-between">
+                                                    <span className="font-bold text-purple-300 flex items-center gap-1">
+                                                        👁️‍🗨️ INCENDIO CIEGO PARA EL ESTADO
+                                                    </span>
+                                                    <span className="bg-purple-950 border border-purple-600 text-purple-200 font-bold px-1.5 py-0.2 rounded text-[8px]">
+                                                        SIN REGISTRO OFICIAL
+                                                    </span>
+                                                </div>
+                                                <div className="text-slate-300 leading-tight text-[9.5px]">
+                                                    Sin información reportada en el portal del COEN-INDECI al <b>18/10/2026</b>.
+                                                </div>
+                                                <div className="text-amber-300/90 text-[9px] leading-tight">
+                                                    ⚠️ OGRD municipal sin ficha EDAN ingresada en SINPAD. Se sugiere emitir alerta temprana EAP.
+                                                </div>
+                                                <div className="pt-0.5">
+                                                    <a
+                                                        href="https://portal.indeci.gob.pe/informe/reportes-preliminares-complementarios-emergencias/"
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        onClick={(e) => e.stopPropagation()}
+                                                        className="text-[9px] text-purple-300 hover:underline flex items-center gap-1"
+                                                    >
+                                                        <span>🔗 Consultar repositorio oficial INDECI</span>
                                                     </a>
                                                 </div>
                                             </div>

@@ -12,13 +12,13 @@
 
 Para facilitar una evaluación exhaustiva y autónoma en menos de 10 minutos, recomendamos seguir esta secuencia de 5 estaciones:
 
-| Estación | Ruta en Producción | Qué se demuestra al Evaluador / Jurado |
+| Estación | Ruta en Producción (Auto-English) | Qué se demuestra al Evaluador / Jurado |
 | :---: | :--- | :--- |
-| **1** | [`/incendios`](https://coen-frontend-289004262994.us-central1.run.app/incendios) | **Motor C2 Satelital y 38 Incendios Ciegos:** Clusterización DBSCAN ($R=12\text{ km}$), persistencia térmica PTT 48h y conciliación INDECI. |
-| **2** | [`/auditoria`](https://coen-frontend-289004262994.us-central1.run.app/auditoria) | **Notaría Blockchain Polygon y Bitácora WORM:** Verificación de árboles de Merkle, hashes SHA-256 inmutables y trazabilidad anti-corrupción. |
-| **3** | [`/reporte-ciudadano`](https://coen-frontend-289004262994.us-central1.run.app/reporte-ciudadano) | **Borde Social Zero-PII y Seguro Agrario (SAC):** Generación del comprobante `CUP-AGRO` / `CUP-DAMN`, audio en RAM y cálculo Saaty. |
-| **4** | [`/municipal/200105`](https://coen-frontend-289004262994.us-central1.run.app/municipal/200105) | **Gobernanza HITL y Candado Cognitivo:** Padrón ciego, inspección ocular obligatoria ($T \ge 30\text{ s}$) y protocolo Break-the-Glass. |
-| **5** | [`/doctrina/matriz-sinagerd`](https://coen-frontend-289004262994.us-central1.run.app/doctrina/matriz-sinagerd) | **Arquitectura Global IEEE (EW4All):** Mapeo de los 6 eslabones OMM/UNDRR y correspondencia con el marco jurídico legal. |
+| **1** | [`/incendios?lang=en`](https://coen-frontend-289004262994.us-central1.run.app/incendios?lang=en) | **Motor C2 Satelital y 38 Incendios Ciegos:** Clusterización DBSCAN ($R=12\text{ km}$), persistencia térmica PTT 48h y conciliación INDECI. |
+| **2** | [`/auditoria?lang=en`](https://coen-frontend-289004262994.us-central1.run.app/auditoria?lang=en) | **Notaría Blockchain Polygon y Bitácora WORM:** Verificación de árboles de Merkle, hashes SHA-256 inmutables y trazabilidad anti-corrupción. |
+| **3** | [`/reporte-ciudadano?lang=en`](https://coen-frontend-289004262994.us-central1.run.app/reporte-ciudadano?lang=en) | **Borde Social Zero-PII y Seguro Agrario (SAC):** Generación del comprobante `CUP-AGRO` / `CUP-DAMN`, audio en RAM y cálculo Saaty. |
+| **4** | [`/municipal/200105?lang=en`](https://coen-frontend-289004262994.us-central1.run.app/municipal/200105?lang=en) | **Gobernanza HITL y Candado Cognitivo:** Padrón ciego, inspección ocular obligatoria ($T \ge 30\text{ s}$) y protocolo Break-the-Glass. |
+| **5** | [`/doctrina/matriz-sinagerd?lang=en`](https://coen-frontend-289004262994.us-central1.run.app/doctrina/matriz-sinagerd?lang=en) | **Arquitectura Global IEEE (EW4All):** Mapeo de los 6 eslabones OMM/UNDRR y correspondencia con el marco jurídico legal. |
 
 ---
 

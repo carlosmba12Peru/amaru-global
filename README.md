@@ -6,6 +6,7 @@
 > **Smart Contract:** [`ClimateAuditAnchor.sol`](contracts/ClimateAuditAnchor.sol) deployed & verified on **Polygon Amoy Testnet** ([0x5462C7F1aC5a0C58356A21e25F883d6aF92289c0](https://amoy.polygonscan.com/address/0x5462C7F1aC5a0C58356A21e25F883d6aF92289c0))  
 > **Live Production C2:** [coen-frontend-289004262994.us-central1.run.app/incendios](https://coen-frontend-289004262994.us-central1.run.app/incendios)  
 > **Public API Gateway:** [coen-backend-289004262994.us-central1.run.app/api/v1/incendios/clusters-activos](https://coen-backend-289004262994.us-central1.run.app/api/v1/incendios/clusters-activos)  
+> **Evaluator Walkthrough & Manual (Step-by-Step):** [MANUAL_NAVEGACION_EVALUADOR_IEEE.md](docs/MANUAL_NAVEGACION_EVALUADOR_IEEE.md)  
 > **Devpost Submission:** [AMARU-CLIMATE Submission #1243712](https://devpost.com/submit-to/29114-ieee-climatechain-global-hackathon/manage/submissions/1243712/edit)  
 > **Sovereign Territorial Sandbox:** For detailed documentation on Peru's multi-hazard civil protection suite (1,891 districts, SINAGERD, SAC agricultural insurance, and MEF PP 0068 audits), see [README_PERU.md](README_PERU.md).
 

@@ -608,15 +608,26 @@ export default function HeaderNav() {
                         <span>{horaLocal || "--:--:--"}</span>
                     </div>
 
-                    {/* Conmutador Bilingüe Español / Inglés (Language Switcher) */}
+                    {/* Conmutador Multilingüe (Español / English / Quechua / Aymara) */}
                     <button
                         onClick={toggleLanguage}
                         className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-500/50 text-indigo-300 font-bold transition shadow-sm hover:scale-105"
-                        title={language === "es" ? "Cambiar a Inglés (English for IEEE Judges)" : "Switch to Spanish (Español)"}
+                        title={
+                            language === "es"
+                                ? "Click para cambiar a English (For IEEE Judges)"
+                                : language === "en"
+                                ? "Click para cambiar a Runasimi (Quechua)"
+                                : language === "qu"
+                                ? "Click para cambiar a Aymara"
+                                : "Click para volver a Español"
+                        }
                     >
                         <Globe className="w-3.5 h-3.5 text-indigo-400" />
-                        <span className="font-mono text-[11px] tracking-wider uppercase">
-                            {language === "es" ? "ES 🇪🇸" : "EN 🇺🇸"}
+                        <span className="font-mono text-[11px] tracking-wider uppercase font-black">
+                            {language === "es" && "ES 🇪🇸"}
+                            {language === "en" && "EN 🇺🇸"}
+                            {language === "qu" && "QU 🌾"}
+                            {language === "ay" && "AY 🏔️"}
                         </span>
                     </button>
 

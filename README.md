@@ -57,6 +57,34 @@ While international and national meteorological sentries (NOAA, ECMWF, SENAMHI) 
 
 **AMARU-GLOBAL bridges this last-mile gap:** By ingesting multi-sensor telemetry, executing autonomous nowcasting under ethical human supervision (HITL), and publishing standardized **OASIS CAP v1.2 alerts notarized on the Polygon blockchain**, it establishes an unbroken, tamper-proof chain of trust from the satellite orbit directly to the frontline citizen and local civil defense responders.
 
+### The Peruvian Living Testbed: Compound Climate Dipole (ENSO Multi-Hazard)
+To validate this universal architecture under the most severe real-world conditions, **Peru serves as the world's most rigorous natural climate laboratory**. Its extreme geography (from the hyper-arid Pacific coast across the 6,000-meter Andean cordillera to the Amazonian basin) concentrates the three active fronts of planetary climate disruption:
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│               PERU AS A LIVING TESTBED: THE COMPOUND CLIMATE DIPOLE                    │
+└──────────────────────────────────────────┬─────────────────────────────────────────────┘
+                                           │
+         ┌─────────────────────────────────┼─────────────────────────────────┐
+         ▼                                 ▼                                 ▼
+┌─────────────────────────────┐ ┌─────────────────────────────┐ ┌─────────────────────────────┐
+│ 1. COASTAL FRONT            │ │ 2. SIERRA / JUNGLE FRONT    │ │ 3. ALTIPLANO FRONT          │
+│ El Niño & Flash Floods      │ │ Walker Disruption & Fires   │ │ La Niña & Cryoclimatic Cold │
+├─────────────────────────────┤ ├─────────────────────────────┤ ├─────────────────────────────┤
+│• Ocean thermal saturation   │ │• Walker cell alteration     │ │• Severe freeze surges       │
+│  triggers torrential rains. │ │  drives extreme drought.    │ │  plunging below -15°C.      │
+│• Hydraulic concentration:   │ │• Wildfires spread uphill at │ │• Cryogenic shock collapses  │
+│  4 to 12h basin strike.     │ │  4 km/h (chimney effect).   │ │  alpaca herds & pastures.   │
+│• CENEPRED SIGRID integration│ │• 86 DBSCAN fire complexes.  │ │• Crioclima Puno (106 dist.) │
+│  over 23 critical streams.  │ │• 38 "Blind Fires" detected. │ │• Parametric relief dossier. │
+└─────────────────────────────┘ └─────────────────────────────┘ └─────────────────────────────┘
+```
+
+1. **Coastal Front (El Niño & Flash Floods):** Anomalous warming across the Pacific (ENFEN / NOAA ocean buoys) triggers extreme convective downpours across the Piura and Chira river basins. Flood waves strike urban centers in barely 4 to 12 hours. AMARU bridges this through CENEPRED SIGRID risk integration and real-time monitoring across 23 critical alluvial stream corridors.
+2. **Sierra & Rainforest Front (Drought & Megafires):** Simultaneously, the atmospheric displacement of the Walker circulation induces severe drought across the Andean slopes and Amazonian high jungle. Thermal chimney effects accelerate uphill flame fronts at 4 km/h. AMARU aggregates orbital thermal hotspots into 86 national complexes via geodesic DBSCAN, exposing 38 "Blind Wildfires" active outside official administrative registries.
+3. **Altiplano Cryospheric Front (La Niña & Extreme Freeze):** The counter-phase of ENSO unleashes intense cryogenic frost surges (< -15°C) across the Andean high plateau (Puno and Cusco), devastating camelid livestock. AMARU operationalizes the Crioclima model across 106 vulnerable districts with parametric evidence dossiers for rapid catastrophe relief.
+
+
 ---
 
 ## 3. The Core Dilemma: The Golden Window vs. Post-Disaster Corruption

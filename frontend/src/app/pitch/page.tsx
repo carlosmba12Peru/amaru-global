@@ -15,7 +15,8 @@ import {
   Award,
   Layers,
   Sparkles,
-  Play
+  Play,
+  CloudSnow
 } from "lucide-react";
 
 export default function PitchPage() {
@@ -264,17 +265,17 @@ export default function PitchPage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="p-5 rounded-xl bg-slate-950/80 border border-cyan-800/40 space-y-3">
                 <div className="flex items-center gap-2 text-cyan-400 font-bold text-sm">
                   <Waves className="w-5 h-5" />
-                  Frente Costero: Inundaciones y Huaicos
+                  1. Frente Costero: El Niño & Inundaciones
                 </div>
                 <p className="text-xs text-slate-300 leading-relaxed">
                   El calentamiento anómalo del Mar de Grau (boyas ENFEN/NOAA) activa precipitaciones extremas en las cuencas de Piura y Chira. La onda de avenida tarda apenas 4 a 12 horas en golpear las ciudades.
                 </p>
                 <div className="text-[11px] text-slate-400 font-mono">
-                  • Integración planes CENEPRED SIGRID-10773<br />
+                  • Integración CENEPRED SIGRID-10773<br />
                   • 23 puntos críticos georreferenciados
                 </div>
               </div>
@@ -282,7 +283,7 @@ export default function PitchPage() {
               <div className="p-5 rounded-xl bg-slate-950/80 border border-orange-800/40 space-y-3">
                 <div className="flex items-center gap-2 text-orange-400 font-bold text-sm">
                   <Flame className="w-5 h-5" />
-                  Frente Sierra / Amazonía: Sequía e Incendios
+                  2. Frente Sierra / Selva: Sequía e Incendios
                 </div>
                 <p className="text-xs text-slate-300 leading-relaxed">
                   Simultáneamente, la alteración de la celda de Walker provoca estrés hídrico extremo y sequías en los Andes y selva alta. El fuego avanza a 4 km/h colina arriba a través de efectos chimenea.
@@ -290,6 +291,20 @@ export default function PitchPage() {
                 <div className="text-[11px] text-slate-400 font-mono">
                   • 86 complejos nacionales agrupados (DBSCAN)<br />
                   • 38 Incendios Ciegos expuestos frente a INDECI
+                </div>
+              </div>
+
+              <div className="p-5 rounded-xl bg-slate-950/80 border border-sky-800/40 space-y-3">
+                <div className="flex items-center gap-2 text-sky-400 font-bold text-sm">
+                  <CloudSnow className="w-5 h-5" />
+                  3. Frente Altiplánico: La Niña & Heladas
+                </div>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  La oscilación fría de La Niña desata heladas meteorológicas extremas (&lt; -15°C) en el Altiplano (Puno/Cusco), diezmando alpacas y cultivos altoandinos mediante estrés térmico criogénico.
+                </p>
+                <div className="text-[11px] text-slate-400 font-mono">
+                  • Modelo Crioclima Puno (106 distritos)<br />
+                  • Paramétrico SAC para ganadería camélida
                 </div>
               </div>
             </div>

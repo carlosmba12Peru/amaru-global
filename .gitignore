@@ -34,7 +34,10 @@ backend/scratch/
 backend/test_out.txt
 
 # Propiedad Intelectual Privada y Patentes
-docs/PATENTE_INDECOPI_AMARU_CLIMATE.md
-docs/PATENTE_MADRE_AMARU_CLIMATE_INDECOPI.md
-docs/DOCUMENTO_PRIVADO_*
+docs/*PATENTE*
+docs/*PRIVADO*
+docs/*Privado*
+docs/*privado*
+docs/*CONFIDEN*
+docs/*SECRET*
 

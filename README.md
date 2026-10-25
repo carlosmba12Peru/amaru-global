@@ -4,10 +4,11 @@
 > **Track:** **Track 4 — Climate Data & Environmental Monitoring**  
 > **Cross-Track Integration:** Track 1 (Carbon & Emission/Audit Transparency) & Track 3 (Sustainable Supply Chains)  
 > **Smart Contract:** [`ClimateAuditAnchor.sol`](contracts/ClimateAuditAnchor.sol) deployed & verified on **Polygon Amoy Testnet** ([0x5462C7F1aC5a0C58356A21e25F883d6aF92289c0](https://amoy.polygonscan.com/address/0x5462C7F1aC5a0C58356A21e25F883d6aF92289c0))  
-> **Live Production C2 (Auto-English for IEEE Judges):** [coen-frontend-289004262994.us-central1.run.app/incendios?lang=en](https://coen-frontend-289004262994.us-central1.run.app/incendios?lang=en)  
-> **Live Production C2 (Spanish Testbed):** [coen-frontend-289004262994.us-central1.run.app/incendios](https://coen-frontend-289004262994.us-central1.run.app/incendios)  
-> **Public API Gateway:** [coen-backend-289004262994.us-central1.run.app/api/v1/incendios/clusters-activos](https://coen-backend-289004262994.us-central1.run.app/api/v1/incendios/clusters-activos)  
+> **Pilot Prototype C2 (Auto-English for IEEE Judges):** [coen-frontend-289004262994.us-central1.run.app/incendios?lang=en](https://coen-frontend-289004262994.us-central1.run.app/incendios?lang=en)  
+> **Pilot Prototype C2 (Spanish Testbed):** [coen-frontend-289004262994.us-central1.run.app/incendios](https://coen-frontend-289004262994.us-central1.run.app/incendios)  
+> **Public Prototype API Gateway:** [coen-backend-289004262994.us-central1.run.app/api/v1/incendios/clusters-activos](https://coen-backend-289004262994.us-central1.run.app/api/v1/incendios/clusters-activos)  
 > **Devpost Submission:** [AMARU-CLIMATE Submission #1243712](https://devpost.com/submit-to/29114-ieee-climatechain-global-hackathon/manage/submissions/1243712/edit)  
+> **Prototype Status & Legal Notice:** Independent research & proof-of-concept software prototype developed exclusively for the IEEE ClimateChain Hackathon. Not affiliated with the Government of Peru or any state institution.
 
 ---
 
@@ -23,7 +24,9 @@
 9. [The Field Validation Testbed: Wildfires & Blind Fires](#9-the-field-validation-testbed-wildfires--blind-fires)
 10. [Technology Stack](#10-technology-stack)
 11. [Quickstart: Local Execution & Testing](#11-quickstart-local-execution--testing)
-12. [License & IEEE Acknowledgement](#12-license--ieee-acknowledgement)
+12. [Academic Prototype & Institutional Disclaimer](#12-academic-prototype--institutional-disclaimer)
+13. [License & IEEE Acknowledgement](#13-license--ieee-acknowledgement)
+
 
 ---
 
@@ -338,9 +341,18 @@ python -m unittest tests/test_blockchain_anchor.py tests/test_alerts_cascade.py
 
 ---
 
-## 12. License & IEEE Acknowledgement
+## 12. Academic Prototype & Institutional Disclaimer
+
+1. **Independent Technological Initiative:** AMARU-GLOBAL is an independent, private research initiative and proof-of-concept software prototype developed exclusively for the **IEEE ClimateChain Global Hackathon 2026**.
+2. **No Official Government Affiliation:** This project is **NOT an official portal, service, or institutional communication channel of the Government of Peru**, nor is it legally affiliated with INDECI (National Civil Defense Institute), COEN (National Emergency Operations Center), SENAMHI, or any ministry or public agency.
+3. **Research & Simulation Sandbox:** All dashboards, maps, and simulations process publicly accessible open scientific data (e.g., NASA FIRMS, Open-Meteo, Copernicus, NOAA) for demonstration, stress-testing, and algorithmic evaluation purposes only. It does not replace official national emergency sirens, directives, or state civil protection protocols.
+
+---
+
+## 13. License & IEEE Acknowledgement
 
 Developed for the **IEEE ClimateChain Global Hackathon 2026** (Organized by IEEE Blockchain Türkiye, IEEE Blockchain Technical Committee, IEEE Orange County & AI Ecosystem Association).
 
 Licensed under the **Apache License 2.0**.
+
 

@@ -1166,7 +1166,7 @@ export default function MapViewer({ mode = "national", ubigeo }: Props) {
                 {/* Título & Badge de Proveedor */}
                 <div className="pointer-events-auto flex items-center gap-2 bg-slate-900/90 backdrop-blur-md border border-slate-700/80 px-3 py-1.5 rounded-lg text-xs shadow-xl">
                     <span className="font-bold text-white flex items-center gap-1.5">
-                        🛰️ C2 GEOVISOR COEN
+                        🛰️ C2 GEOVISOR COED NACIONAL
                     </span>
                     <span className="text-slate-500">•</span>
                     {isLiveTelemetry ? (

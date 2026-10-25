@@ -33,7 +33,8 @@ import {
     ShieldAlert,
     Landmark,
     Waves,
-    Wheat
+    Wheat,
+    Scale
 } from "lucide-react";
 
 interface ExpedienteCGR {
@@ -359,15 +360,15 @@ export default function ContraloriaConcurrentePage() {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-800">
                     <div>
                         <div className="flex flex-wrap items-center gap-2 mb-2">
-                            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1.5">
-                                <Shield className="w-3.5 h-3.5" />
-                                Contraloría General de la República - Control Concurrente en Tiempo Real
+                            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1.5">
+                                <Scale className="w-3.5 h-3.5" />
+                                NIVEL 4 • GOBERNANZA, AUDITORÍA &amp; FE PÚBLICA (ANILLO 3)
                             </span>
                             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                                 Ley Nº 31358 &amp; D.S. N.° 124-2026-PCM
                             </span>
                             <span className="px-2.5 py-0.5 rounded-full text-xs font-mono bg-red-950/80 text-red-300 border border-red-800/60 font-bold">
-                                Criterios Informe N° 10671-2026-CG/AGR-SOP
+                                Control Concurrente CGR en Vivo (Art. 27 lit b Ley 30225)
                             </span>
                         </div>
                         <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
@@ -379,27 +380,56 @@ export default function ContraloriaConcurrentePage() {
                         </p>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2.5">
+                    <div className="flex flex-wrap items-center gap-2">
+                        <Link
+                            href="/lex"
+                            className="px-3.5 py-2 rounded-xl bg-amber-950/60 hover:bg-amber-900 border border-amber-700/50 text-amber-200 text-xs font-semibold flex items-center gap-1.5 transition shadow"
+                        >
+                            <Scale className="w-3.5 h-3.5 text-amber-400" />
+                            <span>AMARU-LEX</span>
+                        </Link>
                         <Link
                             href="/edan"
-                            className="px-3.5 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-semibold flex items-center gap-1.5 transition"
+                            className="px-3.5 py-2 rounded-xl bg-emerald-950/60 hover:bg-emerald-900 border border-emerald-700/50 text-emerald-200 text-xs font-semibold flex items-center gap-1.5 transition"
                         >
-                            <Building2 className="w-4 h-4" />
-                            Consola EDAN Municipal
+                            <Building2 className="w-3.5 h-3.5 text-emerald-400" />
+                            <span>Consola EDAN</span>
+                        </Link>
+                        <Link
+                            href="/auditoria"
+                            className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition"
+                        >
+                            <FileCheck2 className="w-3.5 h-3.5 text-emerald-400" />
+                            <span>Bitácora WORM</span>
                         </Link>
                         <Link
                             href="/fiscal"
-                            className="px-3.5 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-semibold flex items-center gap-1.5 transition"
+                            className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition"
                         >
-                            <Coins className="w-4 h-4" />
-                            Consulta Amigable MEF
+                            <Landmark className="w-3.5 h-3.5 text-cyan-400" />
+                            <span>Fiscal PP 068</span>
                         </Link>
-                        <Link
-                            href="/rios-norte"
-                            className="px-3.5 py-2 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-300 text-xs font-semibold flex items-center gap-1.5 transition"
-                        >
-                            <Waves className="w-4 h-4" />
-                            Control Fluvial ANA
+                    </div>
+                </div>
+
+                {/* Dock de Gobernanza Legal & Trazabilidad C2 */}
+                <div className="mt-4 p-3 bg-slate-900/90 border border-amber-900/40 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs">
+                    <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                        <span className="font-bold text-amber-300">ANILLO 3 DE BLINDAJE LEGAL:</span>
+                        <span className="text-slate-400 hidden md:inline">Control Concurrente CGR en Vivo e ISO 27037</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Link href="/rios-norte" className="px-2.5 py-1 rounded-lg bg-sky-950/60 hover:bg-sky-900 text-sky-200 border border-sky-800/40 transition flex items-center gap-1">
+                            <Waves className="w-3 h-3 text-sky-400" />
+                            <span>Control Fluvial ANA</span>
+                        </Link>
+                        <Link href="/doctrina" className="px-2.5 py-1 rounded-lg bg-purple-950/60 hover:bg-purple-900 text-purple-200 border border-purple-800/40 transition flex items-center gap-1">
+                            <span>Fórmulas C2</span>
+                        </Link>
+                        <span className="text-slate-600">|</span>
+                        <Link href="/alertas" className="px-2.5 py-1 rounded-lg bg-amber-950/50 hover:bg-amber-900 text-amber-200 border border-amber-800/40 transition flex items-center gap-1 text-[11px]">
+                            <span>⬆ Nivel 2 Municipal</span>
                         </Link>
                     </div>
                 </div>

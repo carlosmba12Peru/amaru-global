@@ -27,17 +27,32 @@ backend/data/Estudio Nacional del Fenómeno del Niño ENFEN/
 backend/data/Reporte de Imarpe diario/
 backups/
 
-# Carpetas de pruebas temporales y scratch
+# Propiedad Intelectual Privada, Patentes y Documentación Interna
+docs/
 scratch/
 backend/scratch/
+backend/data/
 *.log
 backend/test_out.txt
+*.docx
+*.pptx
+*.xlsx
+*.jfif
+generate_docx_*.py
+generate_ppt_*.py
+inspect_*.py
+parse_*.py
+save_pdf.py
+deep_dive_extract.py
+download_sigrid.py
+live_clusters.json
+commit_msg_*.txt
 
-# Propiedad Intelectual Privada y Patentes
-docs/*PATENTE*
-docs/*PRIVADO*
-docs/*Privado*
-docs/*privado*
-docs/*CONFIDEN*
-docs/*SECRET*
+# Data interna pesada (solo se rastrean mocks mínimos requeridos para tests)
+data/
+!data/catalogo_quebradas_criticas.json
+!data/fuentes_validadas_amaru.json
+!data/geodatos_893_distritos_ubigeo.json
+!data/historico_sincronizaciones_c2.json
+
 

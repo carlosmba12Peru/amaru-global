@@ -38,7 +38,10 @@ import {
     Maximize2,
     Building,
     HeartPulse,
-    ExternalLink
+    ExternalLink,
+    Users,
+    GraduationCap,
+    BookOpen
 } from "lucide-react";
 import { API_BASE } from "@/config/api";
 
@@ -244,6 +247,17 @@ export default function ReporteCiudadanoPage() {
 
         setFormSubmitting(true);
         try {
+            // Mapeo dinámico de centroides según UBIGEO
+            const mapaCentroides: Record<string, { lat: number; lng: number }> = {
+                "200105": { lat: -5.265, lng: -80.678 },  // Catacaos
+                "140301": { lat: -6.512, lng: -79.856 },  // Íllimo
+                "130101": { lat: -8.112, lng: -79.018 },  // Trujillo
+                "150118": { lat: -11.938, lng: -76.702 }, // Lurigancho Chosica
+                "240101": { lat: -3.566, lng: -80.451 },  // Tumbes
+                "210404": { lat: -16.230, lng: -69.660 }  // Mazocruz
+            };
+            const coordsBase = mapaCentroides[formUbigeo] || { lat: -11.938, lng: -76.702 };
+
             // Si marcó Pre-Padrón EDAN / Bono BAE, registrar primero en el servicio desacoplado
             if (esDamnificadoEdan) {
                 const edanPayload = {
@@ -254,8 +268,8 @@ export default function ReporteCiudadanoPage() {
                     ubigeo: formUbigeo,
                     direccion_exacta: formLugar.trim(),
                     referencia_catastral: "Reporte Georreferenciado COED Social",
-                    lat: formUbigeo === "200105" ? -5.265 : formUbigeo === "140301" ? -6.512 : formUbigeo === "130101" ? -8.112 : -11.938,
-                    lng: formUbigeo === "200105" ? -80.678 : formUbigeo === "140301" ? -79.856 : formUbigeo === "130101" ? -79.018 : -76.702,
+                    lat: coordsBase.lat,
+                    lng: coordsBase.lng,
                     condicion_tenencia: edanCondicion,
                     material_muros: edanMaterialMuros,
                     material_techo: edanMaterialTecho,
@@ -300,8 +314,8 @@ export default function ReporteCiudadanoPage() {
                 tipo_evento: formTipoEvento,
                 ubigeo: formUbigeo,
                 lugar_especifico: formLugar,
-                lat: formUbigeo === "200105" ? -5.265 : formUbigeo === "140301" ? -6.512 : formUbigeo === "130101" ? -8.112 : -11.938,
-                lng: formUbigeo === "200105" ? -80.678 : formUbigeo === "140301" ? -79.856 : formUbigeo === "130101" ? -79.018 : -76.702,
+                lat: coordsBase.lat,
+                lng: coordsBase.lng,
                 nivel_afectacion: formNivel,
                 calle_inundada: true,
                 testimonio: formTestimonio,
@@ -348,24 +362,46 @@ export default function ReporteCiudadanoPage() {
             <div className="bg-slate-900 border-b border-slate-800 px-4 py-4 shadow-lg">
                 <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
-                        <div className="flex items-center gap-2 mb-1">
-                            <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/30">
-                                <ShieldCheck className="w-5 h-5" />
-                            </div>
-                            <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                                COED SOCIAL AMARU • Consola de Reporte Ciudadano Blindado
-                            </h1>
-                            <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 uppercase tracking-wider">
-                                COED Social C2
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                            <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-black bg-rose-500 text-white uppercase tracking-wider shadow-md shadow-rose-500/20">
+                                NIVEL 3 • COED SOCIAL
+                            </span>
+                            <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-950 text-rose-300 border border-rose-700/60">
+                                ANILLO 2 PATENTE: BLINDAJE CRIPTOGRÁFICO EN BORDE (ZERO-CLOUD PII)
+                            </span>
+                            <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">
+                                WEB AUDIO API EN RAM • SHA-256 LOCAL
                             </span>
                         </div>
-                        <p className="text-xs text-slate-400 max-w-3xl leading-relaxed">
-                            Módulo de Ground-Truth Comunitario para el <strong>Fenómeno El Niño 2026-2027</strong> y memoria histórica de desastres.
-                            Protegido bajo la <strong>Ley N° 29733</strong> de Protección de Datos Personales con blindaje estricto:
-                            <span className="text-amber-300 font-medium ml-1">
-                                Las fotos y testimonios crudos NO se publican en internet para evitar pánico colectivo y fake news virales.
-                            </span>
+                        <h1 className="text-xl md:text-2xl font-black tracking-tight text-white flex items-center gap-2">
+                            COED SOCIAL AMARU • Sensor Humano y Resiliencia Comunitaria
+                        </h1>
+                        <p className="text-xs text-slate-300 max-w-3xl leading-relaxed mt-0.5">
+                            Adquisición tripartita (Hábitat, Salud y Pecuario). El audio oral se procesa en memoria volátil sin subir voz a la nube comercial (Ley N° 29733 y Decisión 486).
                         </p>
+
+                        {/* DOCK SOCIAL DE HERRAMIENTAS INTEGRADAS */}
+                        <div className="flex items-center gap-2 mt-2.5 flex-wrap text-[11px]">
+                            <Link href="/ayni" className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-rose-300 hover:border-rose-500 transition">
+                                <Users className="w-3.5 h-3.5" />
+                                <span>AMARU-AYNI</span>
+                            </Link>
+                            <Link href="/salud/triaje" className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-rose-300 hover:border-rose-500 transition">
+                                <HeartPulse className="w-3.5 h-3.5" />
+                                <span>Triaje Salud FEN</span>
+                            </Link>
+                            <Link href="/yachay" className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-emerald-300 hover:border-emerald-500 transition">
+                                <GraduationCap className="w-3.5 h-3.5" />
+                                <span>AMARU-YACHAY</span>
+                            </Link>
+                            <Link href="/glosario" className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-sky-300 hover:border-sky-500 transition">
+                                <BookOpen className="w-3.5 h-3.5" />
+                                <span>Glosario 5 Lenguas</span>
+                            </Link>
+                            <Link href="/municipal/200101" className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-950/60 border border-amber-700/60 text-amber-300 hover:border-amber-400 transition font-bold">
+                                <span>&larr; Retorno a COED Municipal</span>
+                            </Link>
+                        </div>
                     </div>
 
                     {/* Botones de Navegación de Pestañas */}
@@ -429,7 +465,7 @@ export default function ReporteCiudadanoPage() {
                         <div className="bg-slate-950/80 border border-slate-800 rounded-lg p-2.5 flex flex-col">
                             <span className="text-[10px] text-emerald-400 uppercase tracking-wider font-semibold">Validados C2</span>
                             <span className="text-lg font-extrabold text-emerald-400 mt-0.5">{stats.validados_operaciones_c2}</span>
-                            <span className="text-[10px] text-emerald-500/80">Confirmados COEN</span>
+                            <span className="text-[10px] text-emerald-500/80">Confirmados COED Nacional</span>
                         </div>
                         <div className="bg-slate-950/80 border border-rose-900/40 rounded-lg p-2.5 flex flex-col">
                             <span className="text-[10px] text-rose-400 uppercase tracking-wider font-semibold">Fake News Bloqueadas</span>
@@ -489,7 +525,7 @@ export default function ReporteCiudadanoPage() {
                                         🛡️ GARANTÍA DE PRIVACIDAD CIUDADANA Y BLINDAJE ANTI-DESINFORMACIÓN
                                     </h3>
                                     <p className="leading-relaxed text-amber-200/90">
-                                        En cumplimiento del <strong>Protocolo Nacional de Manejo de Información en Crisis del COEN</strong> y la
+                                        En cumplimiento del <strong>Protocolo Nacional de Manejo de Información en Crisis del COED Nacional</strong> y la
                                         <strong> Ley N° 29733</strong>, las fotografías, videos y testimonios que usted adjunte
                                         <strong> NUNCA SERÁN EXPUESTOS NI PUBLICADOS EN REDES SOCIALES NI EN INTERNET</strong>.
                                     </p>
@@ -500,46 +536,91 @@ export default function ReporteCiudadanoPage() {
                                 </div>
                             </div>
 
-                            {/* BANNER BIMODAL DOCTRINAL: HÁBITAT (VIVIENDA / CUP-DAMN) VS SALUD (MINSA / CUP-MINSA) */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-                                <div className="bg-slate-950/90 border-2 border-emerald-500/70 rounded-xl p-3.5 shadow-md flex items-start gap-3">
+                            {/* BANNER TRIPARTITO DOCTRINAL: TRÍADA DE PROTECCIÓN CIUDADANA EN BORDE (CUP-DAMN, CUP-MINSA & CUP-AGRO) */}
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                                {/* 1. CUP-DAMN */}
+                                <div className="bg-slate-950/90 border-2 border-emerald-500/70 rounded-xl p-3 shadow-md flex items-start gap-2.5">
                                     <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-400 shrink-0 mt-0.5 border border-emerald-500/30">
-                                        <Building className="w-5 h-5" />
+                                        <Building className="w-4 h-4" />
                                     </div>
                                     <div className="flex-1">
                                         <div className="flex items-center justify-between">
                                             <h4 className="font-bold text-xs text-emerald-300 uppercase tracking-wide">
-                                                🏠 Damnificado Hábitat / Vivienda
+                                                🏠 Hábitat & Vivienda
                                             </h4>
-                                            <span className="text-[9px] bg-emerald-950 text-emerald-300 border border-emerald-700 px-1.5 py-0.5 rounded font-mono font-bold">
-                                                ACTIVO AQUÍ
+                                            <span className="text-[9px] bg-emerald-950 text-emerald-300 border border-emerald-700 px-1 py-0.2 rounded font-mono font-bold">
+                                                CUP-DAMN
                                             </span>
                                         </div>
-                                        <p className="text-[11px] text-slate-300 mt-1 leading-snug">
-                                            Pérdida de techo, colapso de muros, cuencas ciegas y solicitud del <strong>Bono BAE (S/ 500)</strong> con código criptográfico <code>CUP-DAMN</code>.
+                                        <p className="text-[10px] text-slate-300 mt-1 leading-snug">
+                                            Pérdida de techo, colapso de muros y solicitud del <strong>Bono BAE (S/ 500)</strong> para Ficha EDAN 2B.
                                         </p>
                                     </div>
                                 </div>
 
-                                <div className="bg-slate-950/90 border border-rose-600/70 hover:border-rose-400 rounded-xl p-3.5 shadow-md flex items-start gap-3 transition group">
+                                {/* 2. CUP-MINSA */}
+                                <div className="bg-slate-950/90 border border-rose-600/70 hover:border-rose-400 rounded-xl p-3 shadow-md flex items-start gap-2.5 transition group">
                                     <div className="p-2 rounded-lg bg-rose-500/20 text-rose-400 shrink-0 mt-0.5 border border-rose-500/30">
-                                        <HeartPulse className="w-5 h-5" />
+                                        <HeartPulse className="w-4 h-4" />
                                     </div>
                                     <div className="flex-1">
                                         <div className="flex items-center justify-between">
                                             <h4 className="font-bold text-xs text-rose-300 uppercase tracking-wide">
-                                                🚑 ¿Afectación Médica / Heridos?
+                                                🚑 Urgencia Médica
                                             </h4>
                                             <Link
                                                 href="/salud/triaje"
-                                                className="text-[10px] font-bold text-white bg-rose-600 hover:bg-rose-500 px-2 py-0.5 rounded transition flex items-center gap-1 shadow"
+                                                className="text-[9px] font-bold text-white bg-rose-600 hover:bg-rose-500 px-1.5 py-0.5 rounded transition flex items-center gap-0.5 shadow"
                                             >
-                                                <span>Ir a Triaje</span>
-                                                <ExternalLink className="w-3 h-3" />
+                                                <span>Triaje</span>
+                                                <ExternalLink className="w-2.5 h-2.5" />
                                             </Link>
                                         </div>
-                                        <p className="text-[11px] text-slate-300 mt-1 leading-snug">
-                                            Si hay heridos o cuadros clínicos graves, active el <strong>Triaje Digital Desacoplado NTS-105</strong> para prioridad médica inmediata (<code>CUP-MINSA</code>).
+                                        <p className="text-[10px] text-slate-300 mt-1 leading-snug">
+                                            Triaje vital desacoplado NTS-105 y prioridad asistencial SAMU / camas hospitalarias (<code>CUP-MINSA</code>).
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* 3. CUP-AGRO */}
+                                <div className="bg-slate-950/90 border border-amber-600/70 hover:border-amber-400 rounded-xl p-3 shadow-md flex items-start gap-2.5 transition group">
+                                    <div className="p-2 rounded-lg bg-amber-500/20 text-amber-400 shrink-0 mt-0.5 border border-amber-500/30">
+                                        <Compass className="w-4 h-4" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <div className="flex items-center justify-between flex-wrap gap-1">
+                                            <h4 className="font-bold text-xs text-amber-300 uppercase tracking-wide flex items-center gap-1.5">
+                                                <span>🦙 Ganado & Cultivos</span>
+                                                <span className="text-[9px] bg-amber-950 text-amber-300 border border-amber-700 px-1 py-0.2 rounded font-mono font-bold">
+                                                    CUP-AGRO
+                                                </span>
+                                            </h4>
+                                            <div className="flex items-center gap-1">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setFormTipoEvento("HELADA_MORTANDAD_GANADO");
+                                                        const el = document.getElementById("select-tipo-fenomeno");
+                                                        if (el) {
+                                                            el.scrollIntoView({ behavior: 'smooth' });
+                                                            el.focus();
+                                                        }
+                                                    }}
+                                                    className="text-[9px] font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 px-1.5 py-0.5 rounded transition flex items-center gap-0.5 shadow cursor-pointer"
+                                                >
+                                                    <span>Reportar Daño</span>
+                                                </button>
+                                                <Link
+                                                    href="/edan"
+                                                    className="text-[9px] font-bold text-amber-300 bg-amber-950/90 hover:bg-amber-900 border border-amber-700/80 px-1.5 py-0.5 rounded transition flex items-center gap-0.5"
+                                                >
+                                                    <span>Ficha SAC</span>
+                                                    <ExternalLink className="w-2.5 h-2.5" />
+                                                </Link>
+                                            </div>
+                                        </div>
+                                        <p className="text-[10px] text-slate-300 mt-1 leading-snug">
+                                            Mortandad alpaquera/ovina por heladas y cultivos anegados para indemnización SAC / MIDAGRI.
                                         </p>
                                     </div>
                                 </div>
@@ -617,14 +698,17 @@ export default function ReporteCiudadanoPage() {
                                             4. Tipo de Fenómeno:
                                         </label>
                                         <select
+                                            id="select-tipo-fenomeno"
                                             value={formTipoEvento}
                                             onChange={(e) => setFormTipoEvento(e.target.value)}
-                                            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500"
+                                            className="w-full bg-slate-950 border border-amber-500/50 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400 font-medium"
                                         >
                                             <option value="INUNDACION_PLUVIAL">🌧️ Inundación Pluvial (Lluvia Urbana)</option>
                                             <option value="DESBORDE_RIO">🌊 Desborde de Río / Rotura de Dique</option>
                                             <option value="HUAICO_ALUVION">🏔️ Huaico / Flujo de Detritos</option>
                                             <option value="ACTIVACION_QUEBRADA">⚡ Activación de Quebrada Seca</option>
+                                            <option value="HELADA_MORTANDAD_GANADO">🦙 Helada Extrema / Mortandad Alpaquera y Ovina (CUP-AGRO)</option>
+                                            <option value="CULTIVOS_ANEGADOS_SAC">🌾 Cultivos Anegados / Pérdida Agrícola SAC (MIDAGRI)</option>
                                             <option value="COLAPSO_DRENAJE">🚰 Colapso de Drenaje / Alcantarillado</option>
                                         </select>
                                     </div>
@@ -1100,7 +1184,7 @@ export default function ReporteCiudadanoPage() {
                                 <p className="text-xs text-slate-400 mt-1">
                                     {c2ViewMode === "publica"
                                         ? "Demostración de lo que la población ve: puntos discretos y nivel de afectación. CERO fotos y CERO pánico."
-                                        : "Acceso reservado a operadores COEN: peritaje IA Gemini Vision, fotos forenses completas, EXIF y consenso espacial."}
+                                        : "Acceso reservado a operadores COED Nacional: peritaje IA Gemini Vision, fotos forenses completas, EXIF y consenso espacial."}
                                 </p>
                             </div>
 
@@ -1201,7 +1285,7 @@ export default function ReporteCiudadanoPage() {
                                     <div className="flex items-center gap-2">
                                         <Lock className="w-4 h-4 text-rose-400" />
                                         <span>
-                                            <strong>CANAL RESTRINGIDO COEN / FF.AA.:</strong> Inspección forense de fotografías,
+                                            <strong>CANAL RESTRINGIDO COED NACIONAL / FF.AA.:</strong> Inspección forense de fotografías,
                                             metadatos EXIF, triangulación CENEPRED y detección de noticias falsas.
                                         </span>
                                     </div>
@@ -1398,7 +1482,7 @@ export default function ReporteCiudadanoPage() {
                                                 1. Sandbox de Cuarentena
                                             </div>
                                             <p className="text-[11px] text-slate-400">
-                                                El enlace de streaming ingresa a un monitor interno de la Sala de Crisis del COEN. <strong>NO se retransmite directamente al público general</strong>.
+                                                El enlace de streaming ingresa a un monitor interno de la Sala de Crisis del COED Nacional. <strong>NO se retransmite directamente al público general</strong>.
                                             </p>
                                         </div>
 
@@ -1408,7 +1492,7 @@ export default function ReporteCiudadanoPage() {
                                                 2. Triangulación con Aforos ANA
                                             </div>
                                             <p className="text-[11px] text-slate-400">
-                                                Si el streamer grita &ldquo;se desbordó el río&rdquo;, el operador del COEN verifica inmediatamente la estación hidrológica oficial de aforo para confirmar o descartar el caudal.
+                                                Si el streamer grita &ldquo;se desbordó el río&rdquo;, el operador del COED Nacional verifica inmediatamente la estación hidrológica oficial de aforo para confirmar o descartar el caudal.
                                             </p>
                                         </div>
 
@@ -1503,7 +1587,7 @@ export default function ReporteCiudadanoPage() {
                         <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl">
                             <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
                                 <ShieldCheck className="w-4 h-4 text-amber-400" />
-                                Matriz Comparativa: Redes Sociales vs Gemelo Digital Soberano COEN
+                                Matriz Comparativa: Redes Sociales vs Gemelo Digital Soberano COED Nacional
                             </h3>
                             <div className="overflow-x-auto">
                                 <table className="w-full text-xs text-left border-collapse">
@@ -1511,7 +1595,7 @@ export default function ReporteCiudadanoPage() {
                                         <tr className="border-b border-slate-800 text-slate-400 font-semibold bg-slate-950/60">
                                             <th className="py-2.5 px-3">Criterio de Información</th>
                                             <th className="py-2.5 px-3 text-rose-400">Redes Sociales Abiertas (TikTok / X / WhatsApp)</th>
-                                            <th className="py-2.5 px-3 text-emerald-400">Consola Soberana de Reporte COEN</th>
+                                            <th className="py-2.5 px-3 text-emerald-400">Consola Soberana de Reporte COED Nacional</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-slate-800/60 text-slate-300">
@@ -1666,8 +1750,8 @@ export default function ReporteCiudadanoPage() {
                             </span>
                         </div>
 
-                        {/* Dictamen Preliminar IA */}
-                        <div className="grid grid-cols-2 gap-3 text-xs">
+                        {/* Dictamen Preliminar IA & Motor Determinista IPAD Saaty AHP 4x4 */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                             <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
                                 <span className="text-[10px] text-slate-400 block uppercase font-semibold">
                                     {tEdan.preClasificacionLabel}
@@ -1677,13 +1761,35 @@ export default function ReporteCiudadanoPage() {
                                      damnReceiptModal.pre_clasificacion === "DAMNIFICADO_VIVIENDA_INHABITABLE" ? "🟠 " + tEdan.opcionDanoInhabitable.split("(")[0] :
                                      "🔵 " + tEdan.opcionDanoAfectada.split("(")[0]}
                                 </span>
+                                <div className="mt-1.5 flex items-center gap-1 text-[10px] font-mono text-cyan-400">
+                                    <span>IPAD Saaty:</span>
+                                    <strong>{damnReceiptModal.score_ipad || damnReceiptModal.score_consistencia} pts</strong>
+                                    <span className="text-slate-500">(CR: 0.0115)</span>
+                                </div>
                             </div>
-                            <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
-                                <span className="text-[10px] text-slate-400 block uppercase font-semibold">
-                                    {tEdan.scoreTerritorialLabel}
-                                </span>
-                                <span className="font-bold text-sm text-emerald-400 mt-1 block">
-                                    {damnReceiptModal.score_consistencia}% (AMARU-CLIMATE)
+
+                            <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 flex flex-col justify-between">
+                                <div>
+                                    <span className="text-[10px] text-slate-400 block uppercase font-semibold">
+                                        Semáforo Humanitario & SLA
+                                    </span>
+                                    <div className="mt-1 flex items-center gap-1.5">
+                                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                                            damnReceiptModal.semaforo_humanitario?.nivel_prioridad === "CRITICO_URGENTE"
+                                                ? "bg-rose-950 text-rose-300 border border-rose-700 animate-pulse"
+                                                : damnReceiptModal.semaforo_humanitario?.nivel_prioridad === "ALTO"
+                                                ? "bg-amber-950 text-amber-300 border border-amber-700"
+                                                : "bg-blue-950 text-blue-300 border border-blue-700"
+                                        }`}>
+                                            {damnReceiptModal.semaforo_humanitario?.nivel_prioridad || "PRIORIDAD ALTA"}
+                                        </span>
+                                        <span className="text-xs font-mono font-bold text-white">
+                                            ≤ {damnReceiptModal.semaforo_humanitario?.plazo_sla_horas || 24} hrs
+                                        </span>
+                                    </div>
+                                </div>
+                                <span className="text-[10px] text-slate-400 mt-2 block">
+                                    Despacho de auxilio municipal supervisado (HITL)
                                 </span>
                             </div>
                         </div>

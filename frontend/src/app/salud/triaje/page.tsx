@@ -23,7 +23,11 @@ import {
     Share2,
     RefreshCw,
     UserCheck,
-    Stethoscope
+    Stethoscope,
+    Users,
+    Radio,
+    GraduationCap,
+    BookOpen
 } from "lucide-react";
 import { API_BASE } from "@/config/api";
 
@@ -138,13 +142,21 @@ export default function TriajeCiudadanoSaludPage() {
             <div className="bg-slate-900 border-b border-slate-800 px-4 py-3">
                 <div className="max-w-4xl mx-auto flex flex-wrap justify-between items-center gap-3">
                     <div className="flex items-center gap-2">
-                        <Link href="/" className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition">
+                        <Link href="/reporte-ciudadano" className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition" title="Volver a Reporte Ciudadano">
                             <ArrowLeft className="w-4 h-4" />
                         </Link>
                         <div className="p-1.5 rounded-lg bg-rose-500/20 text-rose-400 border border-rose-500/30">
                             <HeartPulse className="w-5 h-5" />
                         </div>
                         <div>
+                            <div className="flex items-center gap-1.5 mb-0.5">
+                                <span className="px-2 py-0.2 rounded-full text-[9px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                                    NIVEL 3 • COED SOCIAL AMARU
+                                </span>
+                                <span className="text-[9px] font-mono text-emerald-400">
+                                    RÉGIMEN CUP-MINSA
+                                </span>
+                            </div>
                             <h1 className="text-sm font-bold text-white flex items-center gap-2">
                                 SALUD-AMARU • Triaje Digital de Emergencia FEN
                             </h1>
@@ -154,13 +166,27 @@ export default function TriajeCiudadanoSaludPage() {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-2 text-xs">
+                    <div className="flex items-center gap-2 text-xs flex-wrap">
+                        <Link
+                            href="/reporte-ciudadano"
+                            className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-medium border border-slate-700 transition flex items-center gap-1"
+                        >
+                            <Radio className="w-3 h-3 text-rose-400" />
+                            <span>Sensor Humano</span>
+                        </Link>
+                        <Link
+                            href="/ayni"
+                            className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-medium border border-slate-700 transition flex items-center gap-1"
+                        >
+                            <Users className="w-3 h-3 text-rose-400" />
+                            <span>Red AYNI</span>
+                        </Link>
                         <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold flex items-center gap-1">
                             <Lock className="w-3 h-3" /> Privacidad Cripto CUP
                         </span>
                         <Link
                             href="/salud/consola-medica"
-                            className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-medium border border-slate-700 transition"
+                            className="px-2.5 py-1 rounded-lg bg-emerald-950/60 hover:bg-emerald-900 text-emerald-300 text-[11px] font-medium border border-emerald-700/50 transition"
                         >
                             Acceso Médicos MINSA →
                         </Link>

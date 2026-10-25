@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import {
     Search,
     CloudRain,
@@ -411,7 +412,7 @@ export default function DistrictWeatherInspector({
     return (
         <div className={`w-full bg-slate-950/90 border border-slate-800/80 rounded-2xl p-4 md:p-6 shadow-2xl backdrop-blur-xl ${className}`}>
             {/* -------------------------------------------------------------
-                1. TOP BAR: LOGO CLIMA PERÚ / COEN + BUSCADOR AUTOCOMPLETE
+                1. TOP BAR: LOGO CLIMA PERÚ / COED + BUSCADOR AUTOCOMPLETE
                ------------------------------------------------------------- */}
             <div className="flex flex-col md:flex-row items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
                 <div className="flex items-center gap-3 self-start md:self-auto">
@@ -672,7 +673,7 @@ export default function DistrictWeatherInspector({
                         </div>
                     </div>
 
-                    {/* BARRA TÁCTICA COEN: CAPE + HUMEDAD SUELO 4 CAPAS */}
+                    {/* BARRA TÁCTICA COED: CAPE + HUMEDAD SUELO 4 CAPAS */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 bg-gradient-to-r from-slate-900/90 to-slate-950 border border-sky-900/30 rounded-xl p-3.5">
                         <div className="flex items-center gap-3">
                             <div className="p-2 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
@@ -1073,6 +1074,33 @@ export default function DistrictWeatherInspector({
                                     </div>
                                 ))}
                             </div>
+                        </div>
+                    )}
+
+                    {/* Alerta y enlace táctico a AMARU-CHIRI si el distrito es de PUNO o zona de heladas */}
+                    {(forecastData?.metadata?.departamento?.toUpperCase() === "PUNO" || forecastData?.metadata?.ubigeo?.startsWith("21")) && (
+                        <div className="mt-4 p-4 rounded-xl bg-gradient-to-r from-cyan-950/60 via-slate-900 to-blue-950/60 border border-cyan-800/40 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                            <div className="flex items-center gap-2.5">
+                                <Snowflake className="w-5 h-5 text-cyan-400 shrink-0 animate-pulse" />
+                                <div>
+                                    <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                                        <span>Zona Altoandina de Bajas Temperaturas • AMARU-CHIRI</span>
+                                        <span className="text-[10px] px-2 py-0.2 bg-cyan-900/60 text-cyan-300 rounded border border-cyan-700/60">
+                                            CENEPRED ERHF
+                                        </span>
+                                    </h4>
+                                    <p className="text-[11px] text-slate-300">
+                                        Este distrito cuenta con matriz de riesgo ante heladas extremas, censo alpaquero y protocolos EAP en la consola de Puno.
+                                    </p>
+                                </div>
+                            </div>
+                            <Link
+                                href="/pronostico"
+                                className="px-3.5 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 shrink-0 shadow-md shadow-cyan-900/40"
+                            >
+                                <span>Ver Consola EAP Puno</span>
+                                <ChevronRight className="w-3.5 h-3.5" />
+                            </Link>
                         </div>
                     )}
                 </div>

@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
+import Link from "next/link";
+import CrioclimaPunoConsole from "@/components/CrioclimaPunoConsole";
 import {
   AlertTriangle,
   ShieldAlert,
@@ -19,6 +21,7 @@ import {
   Activity,
   Zap,
   Building,
+  Building2,
   CheckCircle2,
   FileText,
   X,
@@ -33,7 +36,8 @@ import {
   Compass,
   Gauge,
   Flame,
-  Satellite
+  Satellite,
+  Snowflake
 } from "lucide-react";
 import IndeciGroundTruthPanel from "@/components/IndeciGroundTruthPanel";
 
@@ -142,6 +146,7 @@ export default function SimulacionMegaFenPage() {
   const [distritos, setDistritos] = useState<DistritoSimulado[]>([]);
 
   // Escenario de severidad y calibración dinámica
+  const [tipoFen, setTipoFen] = useState<"NINO" | "NINA">("NINO");
   const [severidad, setSeveridad] = useState<"MODERADO" | "FUERTE" | "EXTREMO">("EXTREMO");
   const [modoAjuste, setModoAjuste] = useState<"PRESETS" | "CONTINUO">("PRESETS");
   const [tsmSlider, setTsmSlider] = useState<number>(2.6);
@@ -244,8 +249,75 @@ export default function SimulacionMegaFenPage() {
   return (
     <div className="space-y-6 pb-20">
       {/* ========================================================================= */}
-      {/* 1. WATERMARK & BANNER DE SEGURIDAD (ESTRICTAMENTE SIMULACIÓN) */}
+      {/* 0. SELECTOR DE EVENTO CLIMÁTICO: EL NIÑO (CÁLIDO) vs LA NIÑA (FRÍO/HELADAS) */}
       {/* ========================================================================= */}
+      <div className="bg-slate-900/90 border-2 border-slate-700/80 p-3 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl backdrop-blur-md">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+            <Compass className="w-6 h-6 text-amber-400 animate-spin" style={{ animationDuration: "12s" }} />
+          </div>
+          <div>
+            <div className="text-xs font-mono font-bold uppercase tracking-widest text-slate-400">
+              CONSOLA DE SIMULACIÓN Y ESTRÉS NACIONAL AMARU-CLIMATE
+            </div>
+            <div className="text-sm font-black text-white flex items-center gap-2">
+              <span>Modo de Amenaza Climática Activa:</span>
+              <span className={`px-2.5 py-0.5 rounded text-xs font-mono font-bold uppercase ${tipoFen === "NINO" ? "bg-red-950 text-red-300 border border-red-800" : "bg-sky-950 text-sky-300 border border-sky-800"}`}>
+                {tipoFen === "NINO" ? "🔥 MEGA-FEN EL NIÑO (CÁLIDO)" : "❄️ FEN LA NIÑA / CRIOCLIMA (FRÍO)"}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 w-full md:w-auto justify-end">
+          <button
+            onClick={() => setTipoFen("NINO")}
+            className={`px-4 py-2.5 rounded-xl text-xs font-black font-mono transition-all flex items-center justify-center gap-2 flex-1 md:flex-initial ${
+              tipoFen === "NINO"
+                ? "bg-gradient-to-r from-red-600 via-amber-600 to-orange-600 text-white shadow-lg shadow-red-950/60 ring-2 ring-amber-400 scale-[1.02]"
+                : "bg-slate-950 text-slate-400 hover:text-white border border-slate-800 hover:border-slate-700"
+            }`}
+          >
+            <Flame className="w-4 h-4 text-amber-300" />
+            <span>🔥 FEN EL NIÑO (CÁLIDO)</span>
+          </button>
+
+          <button
+            onClick={() => setTipoFen("NINA")}
+            className={`px-4 py-2.5 rounded-xl text-xs font-black font-mono transition-all flex items-center justify-center gap-2 flex-1 md:flex-initial ${
+              tipoFen === "NINA"
+                ? "bg-gradient-to-r from-sky-600 via-indigo-600 to-cyan-600 text-white shadow-lg shadow-sky-950/60 ring-2 ring-sky-300 scale-[1.02]"
+                : "bg-slate-950 text-slate-400 hover:text-white border border-slate-800 hover:border-slate-700"
+            }`}
+          >
+            <Snowflake className="w-4 h-4 text-sky-200 animate-spin" style={{ animationDuration: "6s" }} />
+            <span>❄️ FEN LA NIÑA / CRIOCLIMA</span>
+          </button>
+        </div>
+      </div>
+
+      {tipoFen === "NINA" ? (
+        <div className="space-y-6">
+          <div className="bg-gradient-to-r from-sky-950/80 via-indigo-950/50 to-slate-900 border-2 border-sky-500/50 rounded-2xl p-6 shadow-2xl">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-sky-500/20 text-sky-300 border border-sky-500/40">
+                ❄️ SIMULACIÓN LA NIÑA - HELADAS EXTREMAS (AMARU-CHIRI)
+              </span>
+              <span className="px-2.5 py-0.5 rounded text-[11px] font-mono bg-slate-800 text-slate-300 border border-slate-700">
+                MONITOREO ALTIPLANO & SIERRA SUR (-22.0°C EMA MAZOCRUZ)
+              </span>
+            </div>
+            <h2 className="text-xl md:text-2xl font-black text-white">
+              Consola Táctica de Heladas, Friajes y Resiliencia Agromining en La Niña
+            </h2>
+            <p className="text-xs text-sky-200/80 mt-1">
+              Escenario de enfriamiento anómalo en el Pacífico Central (ONI ≤ -1.8°C). Simulación de heladas extremas sobre 110 distritos del Altiplano, afección respiratoria a menores de 5 años, mortalidad de alpacas y vulnerabilidad de bofedales.
+            </p>
+          </div>
+          <CrioclimaPunoConsole />
+        </div>
+      ) : (
+        <>
       <div className="relative overflow-hidden rounded-2xl border-2 border-amber-500/60 bg-gradient-to-r from-amber-950/40 via-red-950/30 to-slate-900 p-6 shadow-2xl backdrop-blur-md">
         <div className="absolute top-0 right-0 -mr-10 -mt-10 w-44 h-44 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
         
@@ -1405,13 +1477,22 @@ export default function SimulacionMegaFenPage() {
                         +${d.con_amaru.ahorro_fiscal_usd_m}M
                       </td>
                       <td className="py-2.5 px-3 text-center">
-                        <button
-                          onClick={() => setSelectedDistritoModal(d)}
-                          className="p-1.5 rounded bg-slate-800 hover:bg-amber-500 hover:text-slate-950 transition-colors border border-slate-700"
-                          title="Ver Ficha Pericial"
-                        >
-                          <FileText className="w-3.5 h-3.5" />
-                        </button>
+                        <div className="flex items-center justify-center gap-1.5">
+                          <button
+                            onClick={() => setSelectedDistritoModal(d)}
+                            className="p-1.5 rounded bg-slate-800 hover:bg-amber-500 hover:text-slate-950 transition-colors border border-slate-700"
+                            title="Ver Ficha Pericial"
+                          >
+                            <FileText className="w-3.5 h-3.5" />
+                          </button>
+                          <Link
+                            href={`/edan?ubigeo=${d.ubigeo}&origen=simulacion`}
+                            className="p-1.5 rounded bg-emerald-950/80 hover:bg-emerald-600 text-emerald-300 hover:text-white transition-colors border border-emerald-700/60"
+                            title={`Iniciar Ficha EDAN Digital para ${d.distrito}`}
+                          >
+                            <Building2 className="w-3.5 h-3.5" />
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -1951,6 +2032,8 @@ export default function SimulacionMegaFenPage() {
             </div>
           </div>
         </div>
+      )}
+      </>
       )}
 
       {/* ========================================================================= */}

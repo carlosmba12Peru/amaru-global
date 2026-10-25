@@ -86,7 +86,7 @@ export default function MunicipalCommand({ ubigeo, nombreDistrito = "Distrito Lo
             {/* Diagnóstico Operativo de Defensa Civil */}
             <div className="space-y-1.5">
                 <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                    Dictamen Situacional COEL (Agente Táctico IA)
+                    Dictamen Situacional COED Municipal (Agente Táctico IA)
                 </span>
                 <div className="bg-slate-950 border border-slate-800 p-3.5 rounded-lg text-xs text-slate-300 leading-relaxed font-sans">
                     {reporte.diagnostico_coel}
@@ -142,7 +142,7 @@ export default function MunicipalCommand({ ubigeo, nombreDistrito = "Distrito Lo
                             className="bg-slate-950 border border-slate-700 text-slate-300 text-xs px-2.5 py-1.5 rounded-lg focus:outline-none focus:border-blue-500"
                         >
                             <option value="ambos">Ambos (Técnico + Red Abierta)</option>
-                            <option value="tecnico">Solo Canal Privado COEL</option>
+                            <option value="tecnico">Solo Canal Privado COED Municipal</option>
                             <option value="comunitario">Solo Canal Abierto Comunitario</option>
                         </select>
                     </div>

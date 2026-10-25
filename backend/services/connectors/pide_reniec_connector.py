@@ -166,6 +166,88 @@ class PideReniecConnector:
                 "restriccion": "MENOR DE EDAD",
                 "esValidoBae": False,
                 "mensaje": "OBSERVACIÓN: Titular es Menor de Edad no emancipado. Debe registrarse al padre, madre o tutor legal como titular del hogar."
+            },
+            # CASOS CHUPACA - JUNÍN (MODELO SIERRA CENTRAL / CASO MINISTRO VINELLI):
+            "20045612": {
+                "coResultado": "0000",
+                "nuDni": "20045612",
+                "preNombres": "JUAN CARLOS",
+                "apPrimer": "MAYTA",
+                "apSegundo": "BASTIDAS",
+                "nombreCompleto": "MAYTA BASTIDAS JUAN CARLOS",
+                "fechaNacimiento": "1984-07-28",
+                "edad": 42,
+                "sexo": "M",
+                "estadoCivil": "CASADO",
+                "ubigeo": "120901",
+                "departamento": "JUNIN",
+                "provincia": "CHUPACA",
+                "distrito": "CHUPACA",
+                "direccion": "JR. GRAU 340 - BARRIO LA LIBERTAD",
+                "restriccion": "NINGUNA",
+                "esValidoBae": True,
+                "mensaje": "Identidad validada conforme en RENIEC. Domicilio coincide con UBIGEO de emergencia Chupaca."
+            },
+            "19874523": {
+                "coResultado": "0000",
+                "nuDni": "19874523",
+                "preNombres": "MARIA ELENA",
+                "apPrimer": "HUAMAN",
+                "apSegundo": "QUISPE",
+                "nombreCompleto": "HUAMAN QUISPE MARIA ELENA",
+                "fechaNacimiento": "1960-03-14",
+                "edad": 66,
+                "sexo": "F",
+                "estadoCivil": "VIUDA",
+                "ubigeo": "120901",
+                "departamento": "JUNIN",
+                "provincia": "CHUPACA",
+                "distrito": "CHUPACA",
+                "direccion": "CASERIO SAN JUAN DE YAUYOS MZ C LT 08",
+                "restriccion": "NINGUNA",
+                "esValidoBae": True,
+                "mensaje": "Adulto mayor de zona rural andina verificada. Apta para albergue y Bono BAE."
+            },
+            # CASOS DE PRUEBA DE ARRAIGO Y HOMONIMIA:
+            "99990003": {
+                "coResultado": "0000",
+                "nuDni": "99990003",
+                "preNombres": "ALBERTO ENRIQUE",
+                "apPrimer": "CONDORI",
+                "apSegundo": "MAMANI",
+                "nombreCompleto": "CONDORI MAMANI ALBERTO ENRIQUE",
+                "fechaNacimiento": "1990-11-20",
+                "edad": 35,
+                "sexo": "M",
+                "estadoCivil": "SOLTERO",
+                "ubigeo": "040101",
+                "departamento": "AREQUIPA",
+                "provincia": "AREQUIPA",
+                "distrito": "AREQUIPA",
+                "direccion": "AV. GOYENECHE 120",
+                "restriccion": "FUERA_DE_JURISDICCION",
+                "esValidoBae": False,
+                "mensaje": "ALERTA DE ARRAIGO: Titular tiene DNI registrado en Arequipa (040101). Para acceder a subsidios locales, requiere constancia de posesión o ratificación presencial del Alcalde/Juez de Paz."
+            },
+            "99990004": {
+                "coResultado": "0004",
+                "nuDni": "99990004",
+                "preNombres": "VICTOR RAUL",
+                "apPrimer": "PAREDES",
+                "apSegundo": "CASTRO",
+                "nombreCompleto": "PAREDES CASTRO VICTOR RAUL",
+                "fechaNacimiento": "1975-01-30",
+                "edad": 51,
+                "sexo": "M",
+                "estadoCivil": "CASADO",
+                "ubigeo": "150118",
+                "departamento": "LIMA",
+                "provincia": "LIMA",
+                "distrito": "LURIGANCHO",
+                "direccion": "CARRETERA CENTRAL KM 32",
+                "restriccion": "SUSPENSION_CIUDADANIA",
+                "esValidoBae": False,
+                "mensaje": "OBSERVACIÓN JUDICIAL: Titular con suspensión de ejercicio de ciudadanía. Requiere designación de cónyuge o familiar para recepción de subsidios."
             }
         }
 
@@ -411,6 +493,114 @@ class PideReniecConnector:
     def listar_bitacora(self) -> List[Dict[str, Any]]:
         return self._bitacora_consultas
 
+    def simular_evaluacion_tripartita(
+        self,
+        dni: str,
+        ubigeo_emergencia: str = "200105",
+        rol_evaluador: str = "TODOS"
+    ) -> Dict[str, Any]:
+        """
+        Ejecuta la Mesa de Evaluación y Homologación Tripartita de 3 Puertas:
+        - Puerta 1 (RENIEC): Validez del DNI, supervivencia y mayoría de edad.
+        - Puerta 2 (MUNICIPIO): Arraigo territorial y correspondencia de UBIGEO.
+        - Puerta 3 (INDECI / OCI): Calificación para ayuda humanitaria (BAH) y Bono BAE sin duplicidad.
+        """
+        res_reniec = self.consultar_dni(dni)
+        restriccion = res_reniec.get("restriccion", "NINGUNA")
+        dni_ubigeo = res_reniec.get("ubigeo", "")
+
+        # 1. Puerta 1: RENIEC / PIDE
+        puerta_reniec = {
+            "nombre_puerta": "PUERTA 1: RENIEC / PIDE INTEROPERABILIDAD",
+            "estado": "APROBADO" if res_reniec.get("coResultado") == "0000" and restriccion not in ["FALLECIDO", "FORMATO_INVALIDO"] else "RECHAZADO",
+            "detalles": {
+                "dni": dni,
+                "nombre_titular": res_reniec.get("nombreCompleto"),
+                "edad": res_reniec.get("edad"),
+                "restriccion_identidad": restriccion,
+                "mensaje_oficial": res_reniec.get("mensaje", "")
+            }
+        }
+
+        # 2. Puerta 2: GOBIERNO LOCAL (Municipio / Juez de Paz)
+        mismo_distrito = (dni_ubigeo == ubigeo_emergencia) if (dni_ubigeo and ubigeo_emergencia) else True
+        if restriccion == "FALLECIDO":
+            estado_muni = "BLOQUEO_FRAUDE"
+            mensaje_muni = "Intento de cobro con DNI de persona fallecida. Notificación automática a Procuraduría Municipal y CGR."
+        elif restriccion == "MENOR DE EDAD":
+            estado_muni = "OBSERVADO_REQUIERE_TUTOR"
+            mensaje_muni = "Titular es menor de edad. Se requiere vincular a la madre o tutor legal de la familia."
+        elif not mismo_distrito:
+            estado_muni = "REQUIERE_RATIFICACION_ARRAIGO"
+            mensaje_muni = f"DNI registrado en UBIGEO {dni_ubigeo} ({res_reniec.get('distrito', 'OTRO')}). Requiere firma presencial de arraigo por el Alcalde o Teniente Gobernador."
+        else:
+            estado_muni = "ARRAIGO_VERIFICADO"
+            mensaje_muni = f"Titular reside efectivamente en {res_reniec.get('distrito', 'DISTRITO LOCAL')}. Arraigo domiciliario confirmado."
+
+        puerta_municipio = {
+            "nombre_puerta": "PUERTA 2: GOBIERNO LOCAL (DEFENSA CIVIL Y ALCALDÍA)",
+            "estado": estado_muni,
+            "coincidencia_ubigeo": mismo_distrito,
+            "ubigeo_declarado": ubigeo_emergencia,
+            "ubigeo_reniec": dni_ubigeo,
+            "mensaje_evaluador": mensaje_muni
+        }
+
+        # 3. Puerta 3: INDECI / CONTRALORÍA (OCI)
+        if restriccion == "FALLECIDO":
+            estado_indeci = "RECHAZO_DEFINITIVO"
+            califica_bae = False
+            califica_bah = False
+            mensaje_indeci = "Alerta de Control Concurrente: DNI inhabilitado en base de datos fiscal. Prohibida la entrega de bienes o dinero público."
+        elif restriccion == "MENOR DE EDAD":
+            estado_indeci = "SUSPENDIDO_HASTA_REGISTRO_TUTOR"
+            califica_bae = False
+            califica_bah = True  # Ayuda humanitaria de emergencia no se niega al infante
+            mensaje_indeci = "Habilitada la entrega de raciones y abrigo al menor. Bono BAE suspendido hasta acreditación de tutor."
+        elif not mismo_distrito:
+            estado_indeci = "CONDICIONADO_A_INSPECCION_CAMPO"
+            califica_bae = False
+            califica_bah = True
+            mensaje_indeci = "Se entrega ayuda humanitaria inmediata (agua/alimentos). El subsidio BAE S/ 500 queda condicionado al informe de la brigada municipal."
+        else:
+            estado_indeci = "HABILITADO_CONFORME"
+            califica_bae = True
+            califica_bah = True
+            mensaje_indeci = "Elegibilidad total confirmada: Habilitado para entrega de Bienes de Ayuda Humanitaria (BAH) y registro prioritario en SINPAD para Bono BAE S/ 500."
+
+        puerta_indeci = {
+            "nombre_puerta": "PUERTA 3: INDECI / CONTROL CONCURRENTE OCI",
+            "estado": estado_indeci,
+            "califica_bienes_ayuda_humanitaria_bah": califica_bah,
+            "califica_bono_arrendamiento_bae_500": califica_bae,
+            "alerta_control_concurrente": mensaje_indeci
+        }
+
+        # Dictamen Final Consolidado
+        if restriccion == "FALLECIDO":
+            dictamen = "RECHAZADO_FRAUDE_FALLECIDO"
+            color_semaforo = "ROJO"
+        elif restriccion == "MENOR DE EDAD":
+            dictamen = "OBSERVADO_MENOR_DE_EDAD"
+            color_semaforo = "AMBAR"
+        elif not mismo_distrito:
+            dictamen = "CONDICIONADO_ARRAIGO_TERRITORIAL"
+            color_semaforo = "AMBAR"
+        else:
+            dictamen = "APROBADO_CONFORME_TRIPARTITO"
+            color_semaforo = "VERDE"
+
+        return {
+            "dni": dni,
+            "ubigeo_evaluado": ubigeo_emergencia,
+            "dictamen_final": dictamen,
+            "semaforo": color_semaforo,
+            "fecha_evaluacion": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "puerta_1_reniec": puerta_reniec,
+            "puerta_2_municipio": puerta_municipio,
+            "puerta_3_indeci_oci": puerta_indeci
+        }
+
     def obtener_estado_conexion(self) -> Dict[str, Any]:
         return {
             "pide_live_activo": self.live_mode,
@@ -422,3 +612,4 @@ class PideReniecConnector:
         }
 
 pide_reniec_connector = PideReniecConnector()
+

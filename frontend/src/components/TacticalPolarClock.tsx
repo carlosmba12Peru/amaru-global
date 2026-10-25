@@ -37,14 +37,14 @@ import {
 
 export interface TacticalPolarClockProps {
     className?: string;
-    initialMode?: "AMARU-FEN" | "AMARU-CHIRI";
+    initialMode?: "AMARU-FEN" | "AMARU-CHIRI" | "AMARU-FUEGO";
 }
 
 export default function TacticalPolarClock({
     className = "",
     initialMode = "AMARU-FEN"
 }: TacticalPolarClockProps) {
-    const [clockType, setClockType] = useState<"AMARU-FEN" | "AMARU-CHIRI">(initialMode);
+    const [clockType, setClockType] = useState<"AMARU-FEN" | "AMARU-CHIRI" | "AMARU-FUEGO">(initialMode);
     const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
     const [selectedStation, setSelectedStation] = useState<any>(null);
     const [hoveredStationId, setHoveredStationId] = useState<string | null>(null);
@@ -138,7 +138,7 @@ export default function TacticalPolarClock({
                     {
                         id: "G5_CAPACIDAD_OPERATIVA",
                         nombre: "Capacidad Operativa, Maquinaria y Logística de Emergencia",
-                        descripcion: "Pool de maquinaria pesada, combustible para motobombas, almacenes de ayuda humanitaria y COEN/COER.",
+                        descripcion: "Pool de maquinaria pesada, combustible para motobombas, almacenes de ayuda humanitaria y COED Nacional/Regional.",
                         icono: "Truck",
                         color_alerta: "#10b981",
                         diagnostico_doctrina: "Alto nivel de devengado central (Acciones Comunes INDECI / FFAA), requiriendo preposicionamiento territorial acelerado en almacenes adelantados.",
@@ -306,7 +306,45 @@ export default function TacticalPolarClock({
         ]
     };
 
-    const activeClock = clockType === "AMARU-FEN" ? fen : chiri;
+    const fuego = data?.amaru_fuego || {
+        titulo: "Reloj AMARU-FUEGO (Incendios Forestales & Estrés de Biomasa)",
+        amenaza: "INCENDIOS_FORESTALES_Y_PROPAGACION_TERMICA",
+        focos_activos_24h: 6,
+        frp_total_mw: 485.0,
+        humedad_suelo_0_7cm_pct: 6.5,
+        estado_dinamico: "TRANSICIÓN_CON_VIGILANCIA_ESTRICTA",
+        badge_alerta: "🟠 FASE RESIDUAL ACTIVA",
+        color_destacado: "#ea580c",
+        hay_anomalia_prolongada: false,
+        fuente_satelital: "NASA FIRMS (VIIRS 375m) + Open-Meteo Pro (ECMWF IFS)",
+        angulo_aguja: 285.0,
+        geometria_c2: { centro_x: 260.0, centro_y: 260.0, radio_exterior: 247.0 },
+        arco_amenaza: {
+            sector: "Julio a Octubre (Histórico CENEPRED 10471) • Fin dinámico: 300°",
+            angulo_inicio: 180.0,
+            angulo_fin: 300.0,
+            color_base: "#ea580c"
+        },
+        ventana_dorada: {
+            mes: "Abril",
+            badge: "ABR★ GOLDEN WINDOW CORTAFUEGOS",
+            dias_restantes: 165,
+            color_destacado: "#facc15",
+            borde_destacado: "#fef08a",
+            doctrina_logistica: [
+                { hitos: "Apertura y mantenimiento de fajas cortafuego comunales en cabeceras", progreso_nacional: 68, critico: true },
+                { hitos: "Inspección y calibración de motobombas forestales Mark-3 y batefuegos", progreso_nacional: 74, critico: true },
+                { hitos: "Fiscalización satelital y prohibición de quemas de rastrojos", progreso_nacional: 59, critico: true }
+            ]
+        },
+        analogos_historicos: [
+            { evento: "Crisis Nacional de Fuego 2024", focos_pico: "350+ focos", impacto: "Emergencia Nivel 5 en Amazonas, Junín (Río Tambo), Cusco", color: "#dc2626" },
+            { evento: "Incendios en Valle Sagrado 2020", focos_pico: "85 focos", impacto: "Amenaza a monumentos arqueológicos de Machu Picchu", color: "#ea580c" },
+            { evento: "Incendios Forestales Apurímac 2023", focos_pico: "Ráfagas >45 km/h", impacto: "Pérdida de vidas de brigadistas en laderas escarpadas", color: "#ef4444" }
+        ]
+    };
+
+    const activeClock = clockType === "AMARU-FEN" ? fen : (clockType === "AMARU-CHIRI" ? chiri : fuego);
     const carteraObras = clockType === "AMARU-FEN" ? (fen?.ventana_dorada?.cartera_obras_pp0068 || fen?.doctrina_logistica_obras_pp0068) : null;
     const resumenAna = clockType === "AMARU-FEN" ? (fen?.resumen_obras_ana || {
         programa: "PLAN NACIONAL DE INTERVENCIONES EN CAUCES FEN 2026-2027",
@@ -465,11 +503,10 @@ export default function TacticalPolarClock({
     const minuteBase2 = getPoint(minuteAngle + 90, 4.5);
     const minuteTail = getPoint(minuteAngle + 180, 20);
 
-    // 2. HORARIO: Posibilidad de Inicio del Fenómeno El Niño 2026-2027 (Manecilla Corta y Robusta)
-    // Marca Diciembre 2026 (334.5° / 11:10 h) con 84% de probabilidad ENFEN / Calentamiento costero
+    // 2. HORARIO: Posibilidad de Inicio o Pico de Amenaza (Manecilla Corta y Robusta)
     const hourAngle = clockType === "AMARU-FEN"
         ? (data?.horario_inicio_fen?.angulo ?? fen.angulo_aguja ?? 334.5)
-        : chiri.angulo_aguja;
+        : (clockType === "AMARU-CHIRI" ? chiri.angulo_aguja : (fuego.angulo_aguja ?? 285.0));
     const hourTip = getPoint(hourAngle, r - 66);
     const hourBase1 = getPoint(hourAngle - 90, 12);
     const hourBase2 = getPoint(hourAngle + 90, 12);
@@ -485,9 +522,9 @@ export default function TacticalPolarClock({
                 {/* Header del Widget */}
                 <div className="flex justify-between items-center pb-2 border-b border-slate-800">
                     <div className="flex items-center gap-2">
-                        <Clock className={`w-4 h-4 ${clockType === "AMARU-FEN" ? "text-red-400 animate-pulse" : "text-sky-400"}`} />
+                        <Clock className={`w-4 h-4 ${clockType === "AMARU-FEN" ? "text-red-400 animate-pulse" : (clockType === "AMARU-FUEGO" ? "text-orange-400 animate-pulse" : "text-sky-400")}`} />
                         <span className="text-xs font-bold uppercase tracking-wider text-slate-200">
-                            {clockType === "AMARU-FEN" ? "Reloj AMARU-FEN" : "Reloj AMARU-CHIRI"}
+                            {clockType === "AMARU-FEN" ? "Reloj AMARU-FEN" : (clockType === "AMARU-CHIRI" ? "Reloj AMARU-CHIRI" : "Reloj AMARU-FUEGO")}
                         </span>
                     </div>
 
@@ -508,6 +545,14 @@ export default function TacticalPolarClock({
                             }`}
                         >
                             CHIRI (Niña)
+                        </button>
+                        <button
+                            onClick={() => setClockType("AMARU-FUEGO")}
+                            className={`px-2 py-0.5 rounded text-[10px] font-bold transition flex items-center gap-1 ${
+                                clockType === "AMARU-FUEGO" ? "bg-orange-600 text-white shadow" : "text-slate-400 hover:text-white"
+                            }`}
+                        >
+                            <Flame className="w-2.5 h-2.5" /> FUEGO
                         </button>
                         <button
                             onClick={() => setYachayMode(!yachayMode)}
@@ -629,7 +674,7 @@ export default function TacticalPolarClock({
                                         {/* Julio 2027: Cierre Interanual (195°) */}
                                         <circle cx={getPoint(195, r - 15).x} cy={getPoint(195, r - 15).y} r="4.5" fill="#10b981" stroke="#ffffff" strokeWidth="1.5" />
                                     </g>
-                                ) : (
+                                ) : clockType === "AMARU-CHIRI" ? (
                                     <>
                                         {/* Arco Amenaza CHIRI Glacial (Mayo a Julio: 120° a 210°) */}
                                         <path
@@ -647,6 +692,28 @@ export default function TacticalPolarClock({
                                             strokeWidth="24"
                                             strokeLinecap="round"
                                         />
+                                    </>
+                                ) : (
+                                    /* AMARU-FUEGO: Arco Dinámico (Julio a Octubre / Noviembre prolongado) */
+                                    <>
+                                        {/* Arco Amenaza FUEGO Dinámico */}
+                                        <path
+                                            d={`M ${getPoint(180, r - 15).x} ${getPoint(180, r - 15).y} A ${r - 15} ${r - 15} 0 0 1 ${getPoint(fuego.arco_amenaza?.angulo_fin || 300, r - 15).x} ${getPoint(fuego.arco_amenaza?.angulo_fin || 300, r - 15).y}`}
+                                            fill="none"
+                                            stroke={fuego.color_destacado || "#ea580c"}
+                                            strokeWidth="24"
+                                            strokeLinecap="round"
+                                        />
+                                        {/* Ventana Dorada Silvícola Abril-Mayo (90° a 150°) */}
+                                        <path
+                                            d={`M ${getPoint(90, r - 15).x} ${getPoint(90, r - 15).y} A ${r - 15} ${r - 15} 0 0 1 ${getPoint(150, r - 15).x} ${getPoint(150, r - 15).y}`}
+                                            fill="none"
+                                            stroke="#facc15"
+                                            strokeWidth="20"
+                                            strokeLinecap="round"
+                                        />
+                                        {/* Baliza del Pico Histórico (Agosto 240°) */}
+                                        <circle cx={getPoint(240, r - 15).x} cy={getPoint(240, r - 15).y} r="5" fill="#ef4444" stroke="#ffffff" strokeWidth="2" />
                                     </>
                                 )}
 
@@ -683,11 +750,11 @@ export default function TacticalPolarClock({
                                     </text>
                                 </g>
 
-                                {/* 1. HORARIO: Posibilidad de Inicio del Fenómeno El Niño 2026-2027 (Manecilla Corta y Táctica) */}
+                                {/* 1. HORARIO: Posibilidad de Inicio o Pico (Manecilla Corta y Táctica) */}
                                 <g id="mini-horario-inicio-fen" className="opacity-95">
                                     <polygon
                                         points={`${hourTip.x},${hourTip.y} ${hourBase1.x},${hourBase1.y} ${hourTail.x},${hourTail.y} ${hourBase2.x},${hourBase2.y}`}
-                                        fill={clockType === "AMARU-FEN" ? "#ef4444" : "#38bdf8"}
+                                        fill={clockType === "AMARU-FEN" ? "#ef4444" : (clockType === "AMARU-FUEGO" ? "#ea580c" : "#38bdf8")}
                                         stroke="#ffffff"
                                         strokeWidth="2.5"
                                     />
@@ -703,7 +770,7 @@ export default function TacticalPolarClock({
                                             strokeLinecap="round"
                                         />
                                     )}
-                                    <circle cx={hourTip.x} cy={hourTip.y} r="5" fill="#ef4444" stroke="#ffffff" strokeWidth="1.5" />
+                                    <circle cx={hourTip.x} cy={hourTip.y} r="5" fill={clockType === "AMARU-FEN" ? "#ef4444" : (clockType === "AMARU-FUEGO" ? "#f97316" : "#38bdf8")} stroke="#ffffff" strokeWidth="1.5" />
                                 </g>
 
                                 {/* 2. MINUTERO: Día Actualizado del Calendario Civil (Manecilla Larga y Precisa) */}
@@ -719,7 +786,7 @@ export default function TacticalPolarClock({
                                     <circle cx={minuteTip.x} cy={minuteTip.y} r="2" fill="#38bdf8" />
                                 </g>
                                 {/* Buje Central Dinámico con Métricas en Vivo */}
-                                <circle cx={cx} cy={cy} r="48" fill="#090d16" stroke={clockType === "AMARU-FEN" ? "#ef4444" : "#38bdf8"} strokeWidth="2.5" />
+                                <circle cx={cx} cy={cy} r="48" fill="#090d16" stroke={clockType === "AMARU-FEN" ? "#ef4444" : (clockType === "AMARU-FUEGO" ? "#ea580c" : "#38bdf8")} strokeWidth="2.5" />
                                 {clockType === "AMARU-FEN" ? (
                                     <g className="select-none pointer-events-none">
                                         <circle cx={cx} cy={cy} r="42" fill="#0f172a" opacity="0.9" />
@@ -736,7 +803,7 @@ export default function TacticalPolarClock({
                                             IMARPE IN-SITU
                                         </text>
                                     </g>
-                                ) : (
+                                ) : clockType === "AMARU-CHIRI" ? (
                                     <g className="select-none pointer-events-none">
                                         <circle cx={cx} cy={cy} r="42" fill="#0f172a" opacity="0.9" />
                                         <text x={cx} y={cy - 16} textAnchor="middle" fill="#94a3b8" fontSize="9" fontWeight="bold" letterSpacing="0.8">
@@ -750,6 +817,22 @@ export default function TacticalPolarClock({
                                         </text>
                                         <text x={cx} y={cy + 34} textAnchor="middle" fill="#64748b" fontSize="7" fontWeight="bold">
                                             SENAMHI EMA
+                                        </text>
+                                    </g>
+                                ) : (
+                                    <g className="select-none pointer-events-none">
+                                        <circle cx={cx} cy={cy} r="42" fill="#0f172a" opacity="0.9" />
+                                        <text x={cx} y={cy - 16} textAnchor="middle" fill="#94a3b8" fontSize="8" fontWeight="bold" letterSpacing="0.8">
+                                            FOCOS 24H
+                                        </text>
+                                        <text x={cx} y={cy + 5} textAnchor="middle" fill="#f97316" fontSize="21" fontWeight="900" fontFamily="monospace">
+                                            {fuego.focos_activos_24h ?? 6}
+                                        </text>
+                                        <text x={cx} y={cy + 22} textAnchor="middle" fill="#fbbf24" fontSize="10" fontWeight="bold" fontFamily="monospace">
+                                            {fuego.frp_total_mw ? `${Math.round(fuego.frp_total_mw)} MW` : "485 MW"}
+                                        </text>
+                                        <text x={cx} y={cy + 34} textAnchor="middle" fill="#64748b" fontSize="7" fontWeight="bold">
+                                            VIIRS 375m
                                         </text>
                                     </g>
                                 )}
@@ -1009,7 +1092,7 @@ export default function TacticalPolarClock({
                                         {/* Directiva Autoridades */}
                                         {selectedStation.mensaje_autoridad && (
                                             <div className="text-[10px] text-amber-200/90 bg-amber-950/30 border border-amber-900/50 p-2 rounded">
-                                                <strong className="text-amber-300 block">🏛️ Mando para el Alcalde / COEL:</strong>
+                                                <strong className="text-amber-300 block">🏛️ Mando para el Alcalde / COED Municipal:</strong>
                                                 {selectedStation.mensaje_autoridad}
                                             </div>
                                         )}
@@ -1187,7 +1270,7 @@ export default function TacticalPolarClock({
                                         </span>
                                     </div>
                                     <p className="text-xs text-slate-400 font-medium">
-                                        Doctrina Logística C2 y Cronometría Táctica de Ventanas Doradas • COEN-Digital
+                                        Doctrina Logística C2 y Cronometría Táctica de Ventanas Doradas • COED Nacional Digital
                                     </p>
                                 </div>
                             </div>
@@ -1210,6 +1293,14 @@ export default function TacticalPolarClock({
                                         }`}
                                     >
                                         <Snowflake className="w-3.5 h-3.5" /> AMARU-CHIRI (Niña / Altiplano)
+                                    </button>
+                                    <button
+                                        onClick={() => setClockType("AMARU-FUEGO")}
+                                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
+                                            clockType === "AMARU-FUEGO" ? "bg-orange-600 text-white shadow-lg" : "text-slate-400 hover:text-white"
+                                        }`}
+                                    >
+                                        <Flame className="w-3.5 h-3.5" /> AMARU-FUEGO (Incendios / Biomasa)
                                     </button>
                                 </div>
 
@@ -1267,7 +1358,9 @@ export default function TacticalPolarClock({
                                     <p className="text-[11px] text-amber-200/80 leading-tight">
                                         {clockType === "AMARU-FEN"
                                             ? "Plazo fatal para descolmatar cauces y conformar defensas ribereñas antes de las lluvias de verano."
-                                            : "Plazo fatal para dosificar camélidos y almacenar pacas de forraje antes del friaje de mayo."}
+                                            : (clockType === "AMARU-CHIRI"
+                                                ? "Plazo fatal para dosificar camélidos y almacenar pacas de forraje antes del friaje de mayo."
+                                                : "Plazo fatal para apertura de fajas cortafuego comunales y equipamiento de brigadas antes del estiaje.")}
                                     </p>
                                 </div>
 
@@ -1291,7 +1384,7 @@ export default function TacticalPolarClock({
                                                 <span className="text-red-400 font-bold">Alerta El Niño</span>
                                             </div>
                                         </div>
-                                    ) : (
+                                    ) : clockType === "AMARU-CHIRI" ? (
                                         <div className="space-y-1.5 font-mono text-[11px]">
                                             <div className="flex justify-between text-slate-300">
                                                 <span>EMA Mazocruz:</span>
@@ -1304,6 +1397,25 @@ export default function TacticalPolarClock({
                                             <div className="flex justify-between text-slate-300">
                                                 <span>Altitud Estación:</span>
                                                 <span className="text-slate-400">3,970 msnm</span>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-1.5 font-mono text-[11px]">
+                                            <div className="flex justify-between text-slate-300">
+                                                <span>VIIRS Focos 24h:</span>
+                                                <span className="text-orange-400 font-bold">{fuego.focos_activos_24h ?? 6} focos</span>
+                                            </div>
+                                            <div className="flex justify-between text-slate-300">
+                                                <span>FRP Acumulado:</span>
+                                                <span className="text-red-400 font-bold">{fuego.frp_total_mw ? `${Math.round(fuego.frp_total_mw)} MW` : "485 MW"}</span>
+                                            </div>
+                                            <div className="flex justify-between text-slate-300">
+                                                <span>Humedad Suelo:</span>
+                                                <span className="text-amber-400 font-bold">{fuego.humedad_suelo_0_7cm_pct ?? 6.5}%</span>
+                                            </div>
+                                            <div className="flex justify-between text-slate-300 pt-1 border-t border-slate-800">
+                                                <span>Estado Dinámico:</span>
+                                                <span className="text-emerald-400 font-bold text-[10px]">{fuego.badge_alerta || "RESIDUAL"}</span>
                                             </div>
                                         </div>
                                     )}
@@ -1602,6 +1714,83 @@ export default function TacticalPolarClock({
                                             </>
                                         )}
 
+                                        {/* ==================================================== */}
+                                        {/* RENDER AMARU-FUEGO: 3 Pistas Radiales & Ventana Dorada */}
+                                        {/* ==================================================== */}
+                                        {clockType === "AMARU-FUEGO" && (
+                                            <>
+                                                {/* Pista Exterior: FWI Meteorológico (180° a fin dinámico) */}
+                                                <path
+                                                    d={`M ${getPoint(180, r - 10).x} ${getPoint(180, r - 10).y} A ${r - 10} ${r - 10} 0 0 1 ${getPoint(fuego.arco_amenaza?.angulo_fin || 300, r - 10).x} ${getPoint(fuego.arco_amenaza?.angulo_fin || 300, r - 10).y}`}
+                                                    fill="none"
+                                                    stroke="#ef4444"
+                                                    strokeWidth="18"
+                                                    strokeLinecap="round"
+                                                />
+                                                {/* Pista Media: Estrés Hídrico Suelo <10% (180° a fin dinámico) */}
+                                                <path
+                                                    d={`M ${getPoint(180, r - 35).x} ${getPoint(180, r - 35).y} A ${r - 35} ${r - 35} 0 0 1 ${getPoint(fuego.arco_amenaza?.angulo_fin || 300, r - 35).x} ${getPoint(fuego.arco_amenaza?.angulo_fin || 300, r - 35).y}`}
+                                                    fill="none"
+                                                    stroke="#ea580c"
+                                                    strokeWidth="18"
+                                                    strokeLinecap="round"
+                                                />
+                                                {/* Pista Interior: Detección Térmica Satelital VIIRS/MODIS */}
+                                                <path
+                                                    d={`M ${getPoint(180, r - 60).x} ${getPoint(180, r - 60).y} A ${r - 60} ${r - 60} 0 0 1 ${getPoint(fuego.arco_amenaza?.angulo_fin || 300, r - 60).x} ${getPoint(fuego.arco_amenaza?.angulo_fin || 300, r - 60).y}`}
+                                                    fill="none"
+                                                    stroke="#b91c1c"
+                                                    strokeWidth="18"
+                                                    strokeLinecap="round"
+                                                />
+
+                                                {/* Rótulos en negro sólido (#000000, font-weight: 900) para C2 */}
+                                                <text
+                                                    x={getPoint(240, r - 10).x}
+                                                    y={getPoint(240, r - 10).y}
+                                                    fill="#000000"
+                                                    fontSize="8"
+                                                    fontWeight="900"
+                                                    textAnchor="middle"
+                                                    dominantBaseline="central"
+                                                >
+                                                    PICO HISTÓRICO FWI
+                                                </text>
+                                                <text
+                                                    x={getPoint(240, r - 35).x}
+                                                    y={getPoint(240, r - 35).y}
+                                                    fill="#000000"
+                                                    fontSize="8"
+                                                    fontWeight="900"
+                                                    textAnchor="middle"
+                                                    dominantBaseline="central"
+                                                >
+                                                    SUELO SECO &lt;10%
+                                                </text>
+
+                                                {/* Ventana Dorada Silvícola Abril (90° a 120°) */}
+                                                <path
+                                                    d={`M ${getPoint(90, r - 15).x} ${getPoint(90, r - 15).y} A ${r - 15} ${r - 15} 0 0 1 ${getPoint(120, r - 15).x} ${getPoint(120, r - 15).y}`}
+                                                    fill="none"
+                                                    stroke="#facc15"
+                                                    strokeWidth="28"
+                                                    strokeLinecap="round"
+                                                />
+                                                <circle cx={getPoint(105, r - 15).x} cy={getPoint(105, r - 15).y} r="14" fill="#fef08a" />
+                                                <text
+                                                    x={getPoint(105, r - 15).x}
+                                                    y={getPoint(105, r - 15).y}
+                                                    fill="#000000"
+                                                    fontSize="8.5"
+                                                    fontWeight="900"
+                                                    textAnchor="middle"
+                                                    dominantBaseline="central"
+                                                >
+                                                    CORTAFUEGO
+                                                </text>
+                                            </>
+                                        )}
+
                                         {/* 1. MINUTERO: Día Actualizado del Calendario Civil (Manecilla Larga y Precisa) */}
                                         <g id="modal-minutero-dia-actual">
                                             <polygon
@@ -1697,7 +1886,7 @@ export default function TacticalPolarClock({
                                             )}
                                         </g>
                                             {/* Buje central C2 con Telemetría en Vivo */}
-                                            <circle cx={cx} cy={cy} r="54" fill="#030712" stroke={clockType === "AMARU-FEN" ? "#ef4444" : "#38bdf8"} strokeWidth="3" />
+                                            <circle cx={cx} cy={cy} r="54" fill="#030712" stroke={clockType === "AMARU-FEN" ? "#ef4444" : (clockType === "AMARU-FUEGO" ? "#ea580c" : "#38bdf8")} strokeWidth="3" />
                                             {clockType === "AMARU-FEN" ? (
                                                 <g className="select-none pointer-events-none">
                                                     <circle cx={cx} cy={cy} r="48" fill="#090d16" />
@@ -1714,7 +1903,7 @@ export default function TacticalPolarClock({
                                                         PAITA • IMARPE
                                                     </text>
                                                 </g>
-                                            ) : (
+                                            ) : clockType === "AMARU-CHIRI" ? (
                                                 <g className="select-none pointer-events-none">
                                                     <circle cx={cx} cy={cy} r="48" fill="#090d16" />
                                                     <text x={cx} y={cy - 20} textAnchor="middle" fill="#94a3b8" fontSize="10" fontWeight="bold" letterSpacing="1">
@@ -1728,6 +1917,22 @@ export default function TacticalPolarClock({
                                                     </text>
                                                     <text x={cx} y={cy + 36} textAnchor="middle" fill="#64748b" fontSize="8" fontWeight="bold">
                                                         SENAMHI EMA
+                                                    </text>
+                                                </g>
+                                            ) : (
+                                                <g className="select-none pointer-events-none">
+                                                    <circle cx={cx} cy={cy} r="48" fill="#090d16" />
+                                                    <text x={cx} y={cy - 20} textAnchor="middle" fill="#94a3b8" fontSize="9" fontWeight="bold" letterSpacing="1">
+                                                        FOCOS ACTIVOS (24H)
+                                                    </text>
+                                                    <text x={cx} y={cy + 4} textAnchor="middle" fill="#f97316" fontSize="26" fontWeight="900" fontFamily="monospace">
+                                                        {fuego.focos_activos_24h ?? 6}
+                                                    </text>
+                                                    <text x={cx} y={cy + 22} textAnchor="middle" fill="#fbbf24" fontSize="12" fontWeight="bold" fontFamily="monospace">
+                                                        FRP {fuego.frp_total_mw ? `${Math.round(fuego.frp_total_mw)} MW` : "485 MW"}
+                                                    </text>
+                                                    <text x={cx} y={cy + 36} textAnchor="middle" fill="#64748b" fontSize="8" fontWeight="bold">
+                                                        NASA FIRMS VIIRS
                                                     </text>
                                                 </g>
                                             )}
@@ -1864,18 +2069,19 @@ export default function TacticalPolarClock({
                                         </div>
                                     </div>
                                 ) : (
-                                    /* Análogos para AMARU-CHIRI */
+                                    /* Análogos para AMARU-CHIRI / AMARU-FUEGO */
                                     <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 space-y-2.5">
                                         <span className="text-xs font-bold text-slate-400 uppercase flex items-center gap-1.5">
-                                            <History className="w-4 h-4 text-sky-400" /> Análogos Históricos
+                                            {clockType === "AMARU-FUEGO" ? <Flame className="w-4 h-4 text-orange-400" /> : <History className="w-4 h-4 text-sky-400" />}
+                                            {clockType === "AMARU-FUEGO" ? "Grandes Incendios Históricos" : "Análogos Históricos"}
                                         </span>
                                         <div className="space-y-2">
                                             {activeClock.analogos_historicos.map((an: any, idx: number) => (
                                                 <div key={idx} className="bg-slate-900 p-2 rounded-xl border border-slate-850 text-xs space-y-0.5">
                                                     <div className="flex justify-between items-center font-bold text-slate-200">
                                                         <span>{an.evento}</span>
-                                                        <span className="text-[10px] font-mono text-sky-400 bg-sky-950 px-1 rounded">
-                                                            {an.tmin || an.anomalia_tsm}
+                                                        <span className={`text-[10px] font-mono px-1 rounded ${clockType === "AMARU-FUEGO" ? "text-orange-400 bg-orange-950" : "text-sky-400 bg-sky-950"}`}>
+                                                            {an.tmin || an.anomalia_tsm || an.focos_pico}
                                                         </span>
                                                     </div>
                                                     <p className="text-[10px] text-slate-400 leading-tight">
@@ -2584,7 +2790,7 @@ export default function TacticalPolarClock({
                         {/* Footer del Modal */}
                         <div className="pt-3 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
                             <span>
-                                🏛️ <b>COEN-Digital:</b> Visualización Polar C2 • Resoluciones INDECI y Mandatos Sectoriales MIDAGRI / MTC / MINSA.
+                                🏛️ <b>COED Nacional Digital:</b> Visualización Polar C2 • Resoluciones INDECI y Mandatos Sectoriales MIDAGRI / MTC / MINSA.
                             </span>
                             <button
                                 onClick={() => setIsFullscreen(false)}

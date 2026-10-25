@@ -89,7 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } catch (err: any) {
             return {
                 success: false,
-                error: "No se pudo conectar con el servidor de autenticación COEN."
+                error: "No se pudo conectar con el servidor de autenticación COED Nacional."
             };
         }
     };

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import DistrictWeatherInspector from "@/components/DistrictWeatherInspector";
+import LiveReinforcedForecastMap from "@/components/LiveReinforcedForecastMap";
 import { API_BASE } from "@/config/api";
 import {
     Zap,
@@ -60,15 +61,45 @@ interface DistritoMeteo {
     descripcion_clima: string;
     temp_max: number;
     temp_min: number;
+    snowfall_cm?: number;
+    nieve_cm?: number;
+    temperatura_minima?: number;
+    tipo_amenaza?: string;
+    regimen_fen?: boolean;
+    regimen_chiri?: boolean;
+    doble_vulnerabilidad?: boolean;
+    es_puno_altiplano?: boolean;
+    tipo_amenaza_frio?: string;
+    alpacas?: number;
+    ovinos?: number;
+    vacunos?: number;
+    ninos_menores_5?: number;
+    ninos_menores_5a?: number;
+    adultos_mayores_65?: number;
+    nivel_riesgo_heladas?: string;
+    nivel_riesgo_friaje?: string;
 }
 
 interface MeteoMatrixResponse {
     metadata: {
+        sistema?: string;
         norma: string;
         asunto: string;
+        teatro_operacional?: string;
         total_distritos_declarados: number;
+        modo_operativo?: string;
+        conectado_open_meteo_live?: boolean;
         fuente_meteorologica: string;
-        fecha_emision: string;
+        fecha_emision?: string;
+        ultima_actualizacion?: string;
+        resumen_teatros?: {
+            FEN: number;
+            PIURA?: number;
+            CHIRI: number;
+            PUNO: number;
+            DOBLE_RIESGO: number;
+            TODOS: number;
+        };
         reglas_semaforo: Record<string, string>;
     };
     estadisticas: {
@@ -83,6 +114,7 @@ interface MeteoMatrixResponse {
         poblacion_riesgo_extremo: number;
         departamentos_afectados: number;
         top_10_precipitacion: DistritoMeteo[];
+        top_10_frio_extremo?: DistritoMeteo[];
         departamentos_resumen: Record<string, { total: number; ROJO: number; NARANJA: number; AMARILLO: number; VERDE: number; poblacion: number }>;
     };
     distritos: DistritoMeteo[];
@@ -125,9 +157,13 @@ export default function MeteoFenConsole() {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Filtros
+    // Filtros y Teatros de Operación (AMARU-FEN vs PIURA vs AMARU-CHIRI vs PUNO vs DOBLE_RIESGO)
+    const [teatroOperacional, setTeatroOperacional] = useState<"FEN" | "PIURA" | "CHIRI" | "PUNO" | "DOBLE_RIESGO" | "TODOS">("FEN");
     const [filtroAlerta, setFiltroAlerta] = useState<string>("TODOS");
     const [filtroDepto, setFiltroDepto] = useState<string>("TODOS");
+    const [filtroUmbral, setFiltroUmbral] = useState<string>("TODOS");
+    const [campoOrden, setCampoOrden] = useState<string>("default");
+    const [direccionOrden, setDireccionOrden] = useState<"asc" | "desc">("desc");
     const [busqueda, setBusqueda] = useState<string>("");
     const [distritoSeleccionado, setDistritoSeleccionado] = useState<DistritoMeteo | null>(null);
     const [showInspector, setShowInspector] = useState<boolean>(true);
@@ -135,7 +171,7 @@ export default function MeteoFenConsole() {
 
     // Estado visual y capas
     const [primaryMode, setPrimaryMode] = useState<"clima" | "alerta">("alerta");
-    const [baseMap, setBaseMap] = useState<"dark" | "satellite" | "terrain">("dark");
+    const [baseMap, setBaseMap] = useState<"satellite" | "terrain" | "dark">("satellite");
     const [indicatorMode, setIndicatorMode] = useState<"rain" | "cape" | "soil" | "glofas">("rain");
     const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
     const [liveLoading, setLiveLoading] = useState<boolean>(false);
@@ -156,33 +192,55 @@ export default function MeteoFenConsole() {
 
     const [operatingMode, setOperatingMode] = useState<"LIVE" | "SIMULACION">("LIVE");
 
-    // Cargar datos desde el Backend
-    const fetchData = async (overrideMode?: "LIVE" | "SIMULACION") => {
+    // Cargar datos desde el Backend según Teatro Operacional y Modo
+    const fetchData = async (overrideMode?: "LIVE" | "SIMULACION", overrideTeatro?: string) => {
         setLoading(true);
         setError(null);
         const modeToUse = overrideMode || operatingMode;
+        const teatroToUse = overrideTeatro || teatroOperacional;
         try {
-            const res = await fetch(`${API_BASE}/api/meteo/ds124-matrix?mode=${modeToUse}`);
+            const res = await fetch(`${API_BASE}/api/meteo/ds124-matrix?mode=${modeToUse}&teatro=${teatroToUse}`);
             if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
             const json: MeteoMatrixResponse = await res.json();
             setData(json);
-            // Seleccionar por defecto el distrito con mayor precipitación
+            // Seleccionar por defecto el distrito con mayor criticidad
             if (json.distritos && json.distritos.length > 0) {
                 const topDist = json.distritos.find(d => d.nivel_alerta === "ROJO") || json.distritos[0];
                 setDistritoSeleccionado(topDist);
             }
         } catch (err: any) {
-            console.error("Error al cargar matriz Open-Meteo DS124:", err);
+            console.error("Error al cargar matriz Open-Meteo Multi-Régimen:", err);
             setError("No se pudo conectar con el servicio meteorológico. Reintentando...");
         } finally {
             setLoading(false);
         }
     };
 
+    const handleTeatroChange = (nuevoTeatro: "FEN" | "PIURA" | "CHIRI" | "PUNO" | "DOBLE_RIESGO" | "TODOS") => {
+        setTeatroOperacional(nuevoTeatro);
+        setPaginaActual(1);
+        setFiltroDepto("TODOS");
+        setFiltroAlerta("TODOS");
+        setFiltroUmbral("TODOS");
+        setCampoOrden("default");
+        setDireccionOrden(nuevoTeatro === "CHIRI" || nuevoTeatro === "PUNO" ? "asc" : "desc");
+        fetchData(operatingMode, nuevoTeatro);
+    };
+
+    const handleSortColumn = (col: string) => {
+        if (campoOrden === col) {
+            setDireccionOrden(prev => prev === "asc" ? "desc" : "asc");
+        } else {
+            setCampoOrden(col);
+            setDireccionOrden(col === "temp_min" || col === "temperatura_minima" ? "asc" : "desc");
+        }
+        setPaginaActual(1);
+    };
+
     const toggleOperatingMode = () => {
         const nextMode = operatingMode === "LIVE" ? "SIMULACION" : "LIVE";
         setOperatingMode(nextMode);
-        fetchData(nextMode);
+        fetchData(nextMode, teatroOperacional);
     };
 
     useEffect(() => {
@@ -208,7 +266,7 @@ export default function MeteoFenConsole() {
     // Filtrar distritos
     const distritosFiltrados = useMemo(() => {
         if (!data?.distritos) return [];
-        return data.distritos.filter(d => {
+        const filtrados = data.distritos.filter(d => {
             const matchAlerta = filtroAlerta === "TODOS" || d.nivel_alerta === filtroAlerta;
             const matchDepto = filtroDepto === "TODOS" || d.departamento === filtroDepto;
             const q = busqueda.toLowerCase().trim();
@@ -217,9 +275,81 @@ export default function MeteoFenConsole() {
                 d.provincia.toLowerCase().includes(q) ||
                 d.departamento.toLowerCase().includes(q) ||
                 d.ubigeo.includes(q);
-            return matchAlerta && matchDepto && matchQuery;
+
+            // Filtro contextual de umbral cuantitativo
+            let matchUmbral = true;
+            if (filtroUmbral === "LLUVIA_30") matchUmbral = (d.lluvia_24h || 0) >= 30;
+            else if (filtroUmbral === "LLUVIA_15") matchUmbral = (d.lluvia_24h || 0) >= 15;
+            else if (filtroUmbral === "LLUVIA_5") matchUmbral = (d.lluvia_24h || 0) >= 5;
+            else if (filtroUmbral === "GLOFAS_50") matchUmbral = (d.caudal_glofas_m3s || 0) >= 50;
+            else if (filtroUmbral === "SUELO_70") matchUmbral = (d.suelo_4_capas?.talud_28_100cm || d.suelo_saturacion_pct || 0) >= 70;
+            else if (filtroUmbral === "FRIO_8") matchUmbral = (d.temperatura_minima ?? d.temp_min ?? 10) <= -8;
+            else if (filtroUmbral === "FRIO_4") matchUmbral = (d.temperatura_minima ?? d.temp_min ?? 10) <= -4;
+            else if (filtroUmbral === "FRIO_0") matchUmbral = (d.temperatura_minima ?? d.temp_min ?? 10) <= 0;
+            else if (filtroUmbral === "NIEVE_0") matchUmbral = (d.snowfall_cm ?? d.nieve_cm ?? 0) > 0;
+            else if (filtroUmbral === "NIEVE_5") matchUmbral = (d.snowfall_cm ?? d.nieve_cm ?? 0) >= 5;
+            else if (filtroUmbral === "ALPACAS_5000") matchUmbral = (d.alpacas || 0) >= 5000;
+            else if (filtroUmbral === "ALPACAS_1000") matchUmbral = (d.alpacas || 0) >= 1000;
+            else if (filtroUmbral === "NINOS_1000") matchUmbral = (d.ninos_menores_5 || d.ninos_menores_5a || 0) >= 1000;
+            else if (filtroUmbral === "DOBLE_SEVERO") matchUmbral = (d.lluvia_24h || 0) >= 15 && (d.temperatura_minima ?? d.temp_min ?? 10) <= -4;
+
+            return matchAlerta && matchDepto && matchQuery && matchUmbral;
         });
-    }, [data, filtroAlerta, filtroDepto, busqueda]);
+
+        // Ordenamiento dinámico multicriterio
+        filtrados.sort((a, b) => {
+            let valA: any = 0;
+            let valB: any = 0;
+
+            if (campoOrden === "lluvia_24h") {
+                valA = a.lluvia_24h || 0;
+                valB = b.lluvia_24h || 0;
+            } else if (campoOrden === "temp_min" || campoOrden === "temperatura_minima") {
+                valA = a.temperatura_minima ?? a.temp_min ?? 99;
+                valB = b.temperatura_minima ?? b.temp_min ?? 99;
+            } else if (campoOrden === "snowfall_cm" || campoOrden === "nieve") {
+                valA = a.snowfall_cm ?? a.nieve_cm ?? 0;
+                valB = b.snowfall_cm ?? b.nieve_cm ?? 0;
+            } else if (campoOrden === "alpacas") {
+                valA = a.alpacas || 0;
+                valB = b.alpacas || 0;
+            } else if (campoOrden === "ovinos") {
+                valA = a.ovinos || 0;
+                valB = b.ovinos || 0;
+            } else if (campoOrden === "ninos") {
+                valA = a.ninos_menores_5 || a.ninos_menores_5a || 0;
+                valB = b.ninos_menores_5 || b.ninos_menores_5a || 0;
+            } else if (campoOrden === "glofas") {
+                valA = a.caudal_glofas_m3s || 0;
+                valB = b.caudal_glofas_m3s || 0;
+            } else if (campoOrden === "suelo") {
+                valA = a.suelo_4_capas?.talud_28_100cm || a.suelo_saturacion_pct || 0;
+                valB = b.suelo_4_capas?.talud_28_100cm || b.suelo_saturacion_pct || 0;
+            } else if (campoOrden === "poblacion") {
+                valA = a.poblacion || 0;
+                valB = b.poblacion || 0;
+            } else if (campoOrden === "distrito") {
+                const cmp = a.distrito.localeCompare(b.distrito);
+                return direccionOrden === "asc" ? cmp : -cmp;
+            } else {
+                // Modo default según el teatro operacional
+                if (teatroOperacional === "CHIRI" || teatroOperacional === "PUNO") {
+                    valA = a.temperatura_minima ?? a.temp_min ?? 99;
+                    valB = b.temperatura_minima ?? b.temp_min ?? 99;
+                    return valA - valB; // Ascendente por defecto (los más gélidos primero)
+                } else {
+                    valA = a.lluvia_24h || 0;
+                    valB = b.lluvia_24h || 0;
+                    return valB - valA; // Descendente por defecto (los más lluviosos primero)
+                }
+            }
+
+            if (direccionOrden === "asc") return valA - valB;
+            return valB - valA;
+        });
+
+        return filtrados;
+    }, [data, filtroAlerta, filtroDepto, busqueda, filtroUmbral, campoOrden, direccionOrden, teatroOperacional]);
 
     // Lista de departamentos ordenada
     const listaDepartamentos = useMemo(() => {
@@ -317,7 +447,7 @@ export default function MeteoFenConsole() {
         if (!script) {
             script = document.createElement("script");
             script.id = scriptId;
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=__gmapsMeteoInit&loading=async`;
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=__gmapsMeteoInit&loading=async&libraries=drawing,places,geometry`;
             script.async = true;
             script.defer = true;
             script.onload = () => {
@@ -359,13 +489,13 @@ export default function MeteoFenConsole() {
             const map = new google.maps.Map(googleMapRef.current, {
                 center: centroPeru,
                 zoom: 6,
-                mapTypeId: baseMap === "dark" ? "roadmap" : baseMap === "satellite" ? google.maps.MapTypeId.HYBRID : google.maps.MapTypeId.TERRAIN,
-                styles: baseMap === "dark" ? TACTICAL_DARK_STYLE : [],
+                mapTypeId: baseMap === "satellite" ? google.maps.MapTypeId.HYBRID : baseMap === "terrain" ? google.maps.MapTypeId.TERRAIN : "roadmap",
+                tilt: 45,
                 disableDefaultUI: false,
                 zoomControl: true,
                 mapTypeControl: false,
                 streetViewControl: false,
-                fullscreenControl: false,
+                fullscreenControl: true,
                 backgroundColor: "#020617"
             });
 
@@ -377,20 +507,32 @@ export default function MeteoFenConsole() {
         }
     }, [googleMapLoaded, mapProvider]);
 
-    // 3. Sincronizar estilo de mapa base (dark, satellite, terrain) con Google Maps
+    // 3. Sincronizar estilo de mapa base (Híbrido Satélite, Relieve / Curvas, Trochas / Vías) con Google Maps
     useEffect(() => {
         if (!googleMapInstance.current || !(window as any).google?.maps) return;
         const google = (window as any).google;
 
-        if (baseMap === "dark") {
-            googleMapInstance.current.setMapTypeId("roadmap");
-            googleMapInstance.current.setOptions({ styles: TACTICAL_DARK_STYLE });
-        } else if (baseMap === "satellite") {
+        if (baseMap === "satellite") {
             googleMapInstance.current.setMapTypeId(google.maps.MapTypeId.HYBRID);
+            googleMapInstance.current.setTilt(45);
             googleMapInstance.current.setOptions({ styles: [] });
         } else if (baseMap === "terrain") {
             googleMapInstance.current.setMapTypeId(google.maps.MapTypeId.TERRAIN);
             googleMapInstance.current.setOptions({ styles: [] });
+        } else if (baseMap === "dark") {
+            googleMapInstance.current.setMapTypeId("roadmap");
+            googleMapInstance.current.setOptions({
+                styles: [
+                    { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+                    { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+                    { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+                    {
+                        featureType: "administrative.locality",
+                        elementType: "labels.text.fill",
+                        stylers: [{ color: "#d59563" }]
+                    }
+                ]
+            });
         }
     }, [baseMap]);
 
@@ -429,59 +571,117 @@ export default function MeteoFenConsole() {
 
             marker.addListener("click", () => {
                 setDistritoSeleccionado(d);
+                if (googleMapInstance.current) {
+                    googleMapInstance.current.panTo({ lat: d.latitud, lng: d.longitud });
+                }
                 if (infoWindowRef.current) {
+                    const rafaga10m = d.viento_rafagas_kmh || 0;
+                    const rafaga25m = Math.round(rafaga10m * 1.25);
+                    const s0_7 = d.suelo_4_capas?.superficial_0_7cm ?? d.suelo_saturacion_pct;
+                    const s7_28 = d.suelo_4_capas?.radicular_7_28cm ?? Math.round(d.suelo_saturacion_pct * 0.95);
+                    const s28_100 = d.suelo_4_capas?.talud_28_100cm ?? d.suelo_saturacion_pct;
+                    const s100_255 = d.suelo_4_capas?.profunda_100_255cm ?? Math.round(d.suelo_saturacion_pct * 0.85);
+
                     const content = primaryMode === "clima" ? `
-                        <div style="color: #0f172a; font-family: system-ui, -apple-system, sans-serif; font-size: 12px; padding: 6px; min-width: 260px; line-height: 1.45;">
+                        <div style="color: #0f172a; font-family: system-ui, -apple-system, sans-serif; font-size: 11px; padding: 6px; min-width: 290px; max-width: 330px; line-height: 1.4;">
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; padding-bottom:3px; border-bottom: 1px solid #e2e8f0;">
                                 <div style="display:flex; align-items:center; gap:4px;">
                                     <span style="font-size:14px;">🌦️</span>
                                     <strong style="font-size: 13px; color: #0284c7;">${d.distrito}</strong>
                                 </div>
-                                <span style="background: #0284c7; color: #ffffff; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px;">
-                                    OPEN-METEO
+                                <span style="background: #0284c7; color: #ffffff; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 9.5px;">
+                                    OPEN-METEO PRO
                                 </span>
                             </div>
-                            <div style="color: #64748b; font-size: 11px; margin-bottom: 6px;">
-                                ${d.provincia}, ${d.departamento} (UBIGEO: ${d.ubigeo})
+                            <div style="color: #64748b; font-size: 10.5px; margin-bottom: 6px;">
+                                ${d.provincia}, ${d.departamento} • UBIGEO: <b>${d.ubigeo}</b>
                             </div>
+
                             <div style="background: #f8fafc; border-radius: 6px; padding: 6px; margin-bottom: 6px; border: 1px solid #e2e8f0;">
-                                <div style="font-weight:bold; color: #1e293b; font-size: 11.5px;">🌤️ Condición: ${d.descripcion_clima}</div>
-                                <div style="color: #475569; font-size: 11px; margin-top:2px;">🌡️ Temp: <b>${d.temp_min}°C – ${d.temp_max}°C</b> • 💨 Viento: <b>${d.viento_rafagas_kmh} km/h</b></div>
-                            </div>
-                            <div style="font-size: 11px; color: #334155; display: flex; flex-direction: column; gap: 3px;">
-                                <div style="display:flex; justify-content:space-between;">
-                                    <span>🌧️ <b>Lluvia 24h:</b> ${d.lluvia_24h} mm</span>
-                                    <span style="color:#0284c7; font-size:10px;">(72h: ${d.lluvia_72h} mm)</span>
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span style="font-weight:bold; color: #1e293b; font-size: 11px;">🌤️ ${d.descripcion_clima}</span>
+                                    <span style="font-size: 11px; font-weight:bold; color: #0284c7;">${d.temp_min}°C – ${d.temp_max}°C</span>
                                 </div>
-                                <div>⚡ <b>CAPE Gatillo:</b> ${d.cape_j_kg} J/kg</div>
-                                <div>💧 <b>Suelo Talud:</b> ${d.suelo_saturacion_pct}% saturado</div>
-                                <div>🌊 <b>Caudal Fluvial GloFAS:</b> ${d.caudal_glofas_m3s} m³/s</div>
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 4px; font-size: 10px; color: #475569;">
+                                    <div>🌧️ Lluvia 24h: <b style="color: ${d.lluvia_24h >= 25 ? '#dc2626' : '#0284c7'};">${d.lluvia_24h} mm</b></div>
+                                    <div>⚡ CAPE: <b>${d.cape_j_kg} J/kg</b></div>
+                                    <div>💨 Ráfaga 10m: <b>${rafaga10m} km/h</b></div>
+                                    <div>🌪️ Ráfaga 25m: <b style="color: #9333ea;">${rafaga25m} km/h</b></div>
+                                </div>
+                            </div>
+
+                            <!-- PERFIL BIOFÍSICO EDÁFICO 4 CAPAS -->
+                            <div style="background: #0f172a; color: #f8fafc; border-radius: 6px; padding: 6px; margin-bottom: 6px; font-size: 10px;">
+                                <div style="color: #38bdf8; font-weight: bold; margin-bottom: 4px; display:flex; justify-content:space-between;">
+                                    <span>💧 HUMEDAD SUELO 4 CAPAS:</span>
+                                    <span style="color: #4ade80;">Infiltración</span>
+                                </div>
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 4px 8px; font-size: 9.5px;">
+                                    <div>0–7cm (Sup): <b>${s0_7}%</b></div>
+                                    <div>7–28cm (Rad): <b>${s7_28}%</b></div>
+                                    <div style="color:${s28_100 >= 80 ? '#f87171' : '#fde047'}; font-weight:bold;">
+                                        28–100cm (Talud): ${s28_100}%
+                                    </div>
+                                    <div>100–255cm (Freát): <b>${s100_255}%</b></div>
+                                </div>
+                            </div>
+
+                            <!-- GOOGLE PLACES: INFRAESTRUCTURA TÁCTICA -->
+                            <div style="display:flex; gap: 4px;">
+                                <a href="https://www.google.com/maps/search/hospital+centro+de+salud+cerca+de+${encodeURIComponent(d.distrito + ', ' + d.provincia + ', Peru')}" target="_blank" rel="noopener noreferrer" style="flex:1; background:#f1f5f9; color:#0f172a; border:1px solid #cbd5e1; border-radius:4px; padding:4px 2px; font-size:9px; font-weight:bold; text-align:center; text-decoration:none;">
+                                    🏥 Salud (Places)
+                                </a>
+                                <a href="https://www.google.com/maps/search/comisaria+policia+cerca+de+${encodeURIComponent(d.distrito + ', ' + d.provincia + ', Peru')}" target="_blank" rel="noopener noreferrer" style="flex:1; background:#f1f5f9; color:#0f172a; border:1px solid #cbd5e1; border-radius:4px; padding:4px 2px; font-size:9px; font-weight:bold; text-align:center; text-decoration:none;">
+                                    👮 PNP (Places)
+                                </a>
+                                <a href="https://www.google.com/maps/search/municipalidad+distrital+de+${encodeURIComponent(d.distrito + ', ' + d.provincia + ', Peru')}" target="_blank" rel="noopener noreferrer" style="flex:1; background:#0284c7; color:#ffffff; border-radius:4px; padding:4px 2px; font-size:9px; font-weight:bold; text-align:center; text-decoration:none;">
+                                    🏛️ Muni C2
+                                </a>
                             </div>
                         </div>
                     ` : `
-                        <div style="color: #0f172a; font-family: system-ui, -apple-system, sans-serif; font-size: 12px; padding: 6px; min-width: 260px; line-height: 1.45;">
+                        <div style="color: #0f172a; font-family: system-ui, -apple-system, sans-serif; font-size: 11px; padding: 6px; min-width: 290px; max-width: 330px; line-height: 1.4;">
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; padding-bottom:3px; border-bottom: 1px solid #e2e8f0;">
                                 <div style="display:flex; align-items:center; gap:4px;">
                                     <span style="font-size:14px;">🚨</span>
                                     <strong style="font-size: 13px; color: #0f172a;">${d.distrito}</strong>
                                 </div>
-                                <span style="background: ${color}; color: #ffffff; padding: 2px 7px; border-radius: 4px; font-weight: 800; font-size: 10.5px; letter-spacing:0.5px;">
+                                <span style="background: ${color}; color: #ffffff; padding: 2px 7px; border-radius: 4px; font-weight: 800; font-size: 10px; letter-spacing:0.5px;">
                                     ALERTA ${d.nivel_alerta}
                                 </span>
                             </div>
-                            <div style="color: #64748b; font-size: 11px; margin-bottom: 6px;">
+                            <div style="color: #64748b; font-size: 10.5px; margin-bottom: 6px;">
                                 ${d.provincia}, ${d.departamento} (D.S. 124-2026-PCM)
                             </div>
+
                             <div style="background: ${isRed ? '#fef2f2' : '#f8fafc'}; border-radius: 6px; padding: 6px; margin-bottom: 6px; border: 1px solid ${isRed ? '#fecaca' : '#e2e8f0'};">
-                                <div style="font-weight:bold; color: ${isRed ? '#991b1b' : '#334155'}; font-size: 11px;">
-                                    👥 Población en Riesgo: <b>${d.poblacion.toLocaleString()} hab.</b>
+                                <div style="font-weight:bold; color: ${isRed ? '#991b1b' : '#334155'}; font-size: 11px; display:flex; justify-content:space-between;">
+                                    <span>👥 Población en Riesgo:</span>
+                                    <span><b>${d.poblacion.toLocaleString()} hab.</b></span>
                                 </div>
-                                <div style="color: #64748b; font-size: 10px; margin-top:2px;">
-                                    Criterio: Lluvia ${d.lluvia_24h} mm + Suelo ${d.suelo_saturacion_pct}%
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 3px; font-size: 10px; margin-top:4px; color: #475569;">
+                                    <div>🌧️ Lluvia: <b>${d.lluvia_24h} mm</b></div>
+                                    <div>💧 Talud: <b style="color:${s28_100 >= 80 ? '#dc2626' : '#ea580c'};">${s28_100}%</b></div>
+                                    <div>💨 10m: <b>${rafaga10m} km/h</b></div>
+                                    <div>🌪️ 25m: <b>${rafaga25m} km/h</b></div>
                                 </div>
                             </div>
-                            <div style="background: #0f172a; color: #f8fafc; padding: 5px 7px; border-radius: 5px; font-size: 10.5px; font-weight: 500;">
+
+                            <div style="background: #0f172a; color: #f8fafc; padding: 5px 7px; border-radius: 5px; font-size: 10px; font-weight: 600; margin-bottom: 6px;">
                                 ${d.nivel_alerta === 'ROJO' ? '⚠️ EVACUACIÓN Y ALERTA MÁXIMA EN QUEBRADAS' : d.nivel_alerta === 'NARANJA' ? '⚡ ALISTAMIENTO DE MAQUINARIA (D.U. 031)' : d.nivel_alerta === 'AMARILLO' ? '📢 MONITOREO Y LIMPIEZA PREVENTIVA' : '✅ VIGILANCIA DE RUTINA'}
+                            </div>
+
+                            <!-- GOOGLE PLACES: INFRAESTRUCTURA TÁCTICA -->
+                            <div style="display:flex; gap: 4px;">
+                                <a href="https://www.google.com/maps/search/hospital+centro+de+salud+cerca+de+${encodeURIComponent(d.distrito + ', ' + d.provincia + ', Peru')}" target="_blank" rel="noopener noreferrer" style="flex:1; background:#f1f5f9; color:#0f172a; border:1px solid #cbd5e1; border-radius:4px; padding:4px 2px; font-size:9px; font-weight:bold; text-align:center; text-decoration:none;">
+                                    🏥 Salud (Places)
+                                </a>
+                                <a href="https://www.google.com/maps/search/comisaria+policia+cerca+de+${encodeURIComponent(d.distrito + ', ' + d.provincia + ', Peru')}" target="_blank" rel="noopener noreferrer" style="flex:1; background:#f1f5f9; color:#0f172a; border:1px solid #cbd5e1; border-radius:4px; padding:4px 2px; font-size:9px; font-weight:bold; text-align:center; text-decoration:none;">
+                                    👮 PNP (Places)
+                                </a>
+                                <a href="https://www.google.com/maps/search/municipalidad+distrital+de+${encodeURIComponent(d.distrito + ', ' + d.provincia + ', Peru')}" target="_blank" rel="noopener noreferrer" style="flex:1; background:${isRed ? '#dc2626' : '#0f172a'}; color:#ffffff; border-radius:4px; padding:4px 2px; font-size:9px; font-weight:bold; text-align:center; text-decoration:none;">
+                                    🏛️ Muni C2
+                                </a>
                             </div>
                         </div>
                     `;
@@ -528,26 +728,38 @@ export default function MeteoFenConsole() {
                     <div>
                         <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                             <span className="px-2 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-800 text-[10px] font-mono font-bold tracking-wider">
-                                COEN C2 • METEOROLOGÍA PRO
+                                COED NACIONAL C2 • METEOROLOGÍA MULTI-RÉGIMEN
                             </span>
-                            <span className="px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-800 text-[10px] font-mono font-bold">
-                                D.S. Nº 124-2026-PCM (893 DISTRITOS)
+                            <span className="px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800 text-[10px] font-mono font-bold">
+                                {teatroOperacional === "FEN" ? "D.S. Nº 124-2026-PCM (875 DISTRITOS PLUVIAL)" :
+                                 teatroOperacional === "CHIRI" ? "CENEPRED ERHF 2024 (1,530 DISTRITOS HELADAS & FRIAJE)" :
+                                 teatroOperacional === "PUNO" ? "EPICENTRO ALTIPLÁNICO PUNO (110 DISTRITOS)" :
+                                 teatroOperacional === "DOBLE_RIESGO" ? "PINZA MULTI-AMENAZA (592 DISTRITOS DOBLE RIESGO)" :
+                                 "MATRIZ NACIONAL CONSOLIDADA (1,813 DISTRITOS)"}
                             </span>
                             <span className="px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800 text-[10px] font-mono flex items-center gap-1">
                                 <Zap className="w-3 h-3 text-amber-400" />
-                                ECMWF IFS 9km + GLOFAS
+                                ECMWF IFS 9km + GLOFAS + PMHF
+                            </span>
+                            <span className="px-2 py-0.5 rounded bg-slate-900 text-sky-300 border border-slate-750 text-[10px] font-mono flex items-center gap-1.5" title="Telemetría climática actualizada automáticamente cada 1 hora o manual mediante 'Sincronizar'">
+                                <Clock className="w-3 h-3 text-sky-400" />
+                                <span>ACTUALIZACIÓN: <strong className="text-white">{data?.metadata.ultima_actualizacion || "30/09/2026 12:53 PET"}</strong></span>
+                                <span className="text-emerald-400 font-semibold">• Frecuencia: Cada 1 hora</span>
                             </span>
                         </div>
                         <h1 className="text-xl md:text-2xl font-black tracking-tight text-white flex items-center gap-2.5">
                             <CloudRain className="w-6 h-6 text-sky-400" />
-                            <span>CONSOLA METEOROLÓGICA DE CONTINGENCIA FEN</span>
+                            <span>CONSOLA METEOROLÓGICA TERRITORIAL MULTI-RÉGIMEN</span>
                             <span className="text-sm font-semibold text-slate-400 font-mono">
-                                (893 Distritos Declarados)
+                                ({data?.estadisticas.total_distritos || 875} Distritos Activos)
                             </span>
                         </h1>
                         <p className="text-xs text-slate-400 max-w-4xl mt-1">
-                            Evaluación cuantitativa de precipitaciones en 24h, inestabilidad convectiva CAPE (gatillo de huaicos),
-                            saturación edáfica en 4 estratos y caudales fluviales para los 893 distritos en estado de emergencia.
+                            {teatroOperacional === "FEN"
+                                ? "Evaluación cuantitativa de precipitaciones en 24h/72h, inestabilidad convectiva CAPE (gatillo de huaicos), saturación edáfica en 4 estratos y caudales fluviales GLOFAS."
+                                : teatroOperacional === "CHIRI" || teatroOperacional === "PUNO"
+                                ? "Vigilancia crioclimática de temperaturas mínimas extremas, espesor de nieve, masa ganadera expuesta (alpacas/ovinos) y riesgo de hipotermia/IRAs en población vulnerable (ERHF CENEPRED)."
+                                : "Monitoreo integral de la pinza climática: huaicos/deslizamientos de día y heladas/nevadas severas de noche en distritos con doble régimen de emergencia."}
                         </p>
                     </div>
 
@@ -559,10 +771,10 @@ export default function MeteoFenConsole() {
                                     ? "bg-red-950 text-red-300 border-red-700 animate-pulse"
                                     : "bg-emerald-950 text-emerald-300 border-emerald-700"
                             }`}
-                            title="Alternar entre Telemetría Real de Hoy (Open-Meteo Pro) y Escenario de Contingencia FEN Lluvia Crítica (>30 mm/24h)"
+                            title="Alternar entre Telemetría Real de Hoy (Open-Meteo Pro) y Escenario de Contingencia Pico"
                         >
                             <Zap className="w-3.5 h-3.5" />
-                            <span>{operatingMode === "SIMULACION" ? "🔴 MODO HIDROMETEO CRÍTICO (>30mm)" : "🟢 EN VIVO OPEN-METEO PRO"}</span>
+                            <span>{operatingMode === "SIMULACION" ? "🔴 MODO CONTINGENCIA PICO" : "🟢 EN VIVO OPEN-METEO PRO"}</span>
                         </button>
                         <button
                             onClick={() => setShowInspector(!showInspector)}
@@ -606,6 +818,110 @@ export default function MeteoFenConsole() {
                     </div>
                 </div>
 
+                {/* SELECTOR DE TEATRO OPERACIONAL DE COMANDO (COED NACIONAL) */}
+                <div className="bg-slate-900/90 border border-slate-800 p-2.5 rounded-2xl shadow-xl flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5 pl-1">
+                            <Layers className="w-3.5 h-3.5 text-sky-400" />
+                            Teatro Operacional:
+                        </span>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-1.5">
+                        <button
+                            onClick={() => handleTeatroChange("FEN")}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border ${
+                                teatroOperacional === "FEN"
+                                    ? "bg-red-600 text-white border-red-500 shadow-md shadow-red-600/30"
+                                    : "bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white"
+                            }`}
+                            title="Régimen Cálido: Lluvias Torrenciales, Inundaciones y Huaicos D.S. 124"
+                        >
+                            <span className="w-2 h-2 rounded-full bg-red-400" />
+                            <span>🔴 AMARU-FEN</span>
+                            <span className="px-1.5 py-0.2 rounded text-[10px] bg-red-950/80 border border-red-800/80 font-mono">
+                                {data?.metadata.resumen_teatros?.FEN || 875} Dist.
+                            </span>
+                        </button>
+
+                        <button
+                            onClick={() => handleTeatroChange("PIURA")}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border ${
+                                teatroOperacional === "PIURA"
+                                    ? "bg-emerald-600 text-white border-emerald-500 shadow-md shadow-emerald-600/30"
+                                    : "bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white"
+                            }`}
+                            title="Epicentro Pluvial FEN Norte: 64 Distritos de Piura (Cuencas Ciegas SARE / Radar Doppler / Río Piura)"
+                        >
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                            <span>🌊 Epicentro Piura</span>
+                            <span className="px-1.5 py-0.2 rounded text-[10px] bg-emerald-950/80 border border-emerald-800/80 font-mono">
+                                {data?.metadata.resumen_teatros?.PIURA || 64} Dist.
+                            </span>
+                        </button>
+
+                        <button
+                            onClick={() => handleTeatroChange("CHIRI")}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border ${
+                                teatroOperacional === "CHIRI"
+                                    ? "bg-sky-600 text-white border-sky-500 shadow-md shadow-sky-600/30"
+                                    : "bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white"
+                            }`}
+                            title="Régimen Frío Nacional: Heladas Andinas y Friajes Amazónicos CENEPRED ERHF"
+                        >
+                            <span className="w-2 h-2 rounded-full bg-sky-400" />
+                            <span>🔵 AMARU-CHIRI (Heladas & Friaje)</span>
+                            <span className="px-1.5 py-0.2 rounded text-[10px] bg-sky-950/80 border border-sky-800/80 font-mono">
+                                {data?.metadata.resumen_teatros?.CHIRI || 1530} Dist.
+                            </span>
+                        </button>
+
+                        <button
+                            onClick={() => handleTeatroChange("PUNO")}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border ${
+                                teatroOperacional === "PUNO"
+                                    ? "bg-cyan-600 text-white border-cyan-500 shadow-md shadow-cyan-600/30"
+                                    : "bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white"
+                            }`}
+                            title="Epicentro Crioclimático Altiplánico: 110 Distritos de Puno (106 ERHF)"
+                        >
+                            <span className="w-2 h-2 rounded-full bg-cyan-300 animate-pulse" />
+                            <span>❄️ Epicentro Puno</span>
+                            <span className="px-1.5 py-0.2 rounded text-[10px] bg-cyan-950/80 border border-cyan-800/80 font-mono">
+                                {data?.metadata.resumen_teatros?.PUNO || 110} Dist.
+                            </span>
+                        </button>
+
+                        <button
+                            onClick={() => handleTeatroChange("DOBLE_RIESGO")}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border ${
+                                teatroOperacional === "DOBLE_RIESGO"
+                                    ? "bg-purple-600 text-white border-purple-500 shadow-md shadow-purple-600/30"
+                                    : "bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white"
+                            }`}
+                            title="Pinza Multi-Amenaza: Distritos con Doble Vulnerabilidad (D.S. FEN + Helada/Friaje)"
+                        >
+                            <span className="w-2 h-2 rounded-full bg-purple-400" />
+                            <span>🟣 Pinza Multi-Amenaza (Doble Riesgo)</span>
+                            <span className="px-1.5 py-0.2 rounded text-[10px] bg-purple-950/80 border border-purple-800/80 font-mono">
+                                {data?.metadata.resumen_teatros?.DOBLE_RIESGO || 592} Dist.
+                            </span>
+                        </button>
+
+                        <button
+                            onClick={() => handleTeatroChange("TODOS")}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border ${
+                                teatroOperacional === "TODOS"
+                                    ? "bg-slate-700 text-white border-slate-600 shadow-md"
+                                    : "bg-slate-950 text-slate-400 border-slate-800 hover:border-slate-700 hover:text-white"
+                            }`}
+                            title="Universo Territorial Total Monitoreado por el COED Nacional"
+                        >
+                            <span>🌐 Universo Total ({data?.metadata.resumen_teatros?.TODOS || 1813})</span>
+                        </button>
+                    </div>
+                </div>
+
                 {/* INSPECTOR CLIMÁTICO DISTRITAL DE ALTA PRECISIÓN (ESTILO PORTAL CLIMA PERÚ) */}
                 {showInspector && (
                     <div className="mb-4">
@@ -622,44 +938,67 @@ export default function MeteoFenConsole() {
                     </div>
                 )}
 
-                {/* Tarjetas KPI de Estado de Emergencia FEN */}
+                {/* MAPA INTERACTIVO LIVE DE ESTIMACIÓN REFORZADA & ACTIVACIÓN DE QUEBRADAS CRÍTICAS */}
+                <div className="mb-6">
+                    <LiveReinforcedForecastMap />
+                </div>
+
+                {/* Tarjetas KPI de Estado de Emergencia Territorial */}
                 {data && (
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                         <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl flex flex-col justify-between shadow-lg">
-                            <span className="text-[10px] uppercase font-bold text-slate-400">Total Declarados</span>
+                            <span className="text-[10px] uppercase font-bold text-slate-400">Total Monitoreados</span>
                             <div className="text-2xl font-black text-white font-mono">{data.estadisticas.total_distritos}</div>
-                            <span className="text-[10px] text-slate-500 font-mono">100% Cobertura D.S. 124</span>
+                            <span className="text-[10px] text-slate-500 font-mono">
+                                {teatroOperacional === "FEN" ? "100% D.S. 124 Pluvial" :
+                                 teatroOperacional === "CHIRI" ? "PMHF / ERHF Heladas & Friaje" :
+                                 teatroOperacional === "PUNO" ? "106 Distritos CENEPRED Puno" :
+                                 teatroOperacional === "DOBLE_RIESGO" ? "Solapamiento FEN + PMHF" :
+                                 "Matriz Territorial Nacional"}
+                            </span>
                         </div>
 
                         <div className="bg-slate-900 border border-red-900/60 p-3 rounded-xl flex flex-col justify-between shadow-lg bg-gradient-to-b from-red-950/20 to-transparent">
                             <span className="text-[10px] uppercase font-bold text-red-400 flex items-center gap-1">
                                 <span className="h-2 w-2 rounded-full bg-red-500 animate-ping" />
-                                Alarma Roja (&gt; 30 mm)
+                                {teatroOperacional === "CHIRI" || teatroOperacional === "PUNO" ? "Helada Extrema (≤ -8°C)" : "Alarma Roja (> 30 mm)"}
                             </span>
                             <div className="text-2xl font-black text-red-400 font-mono">
                                 {data.estadisticas.conteo_alertas.ROJO}
                             </div>
-                            <span className="text-[10px] text-red-300/80 font-mono">Lluvias Torrenciales</span>
+                            <span className="text-[10px] text-red-300/80 font-mono">
+                                {teatroOperacional === "CHIRI" || teatroOperacional === "PUNO" ? "Congelamiento / Nieve" : "Lluvias Torrenciales"}
+                            </span>
                         </div>
 
                         <div className="bg-slate-900 border border-orange-900/60 p-3 rounded-xl flex flex-col justify-between shadow-lg bg-gradient-to-b from-orange-950/20 to-transparent">
-                            <span className="text-[10px] uppercase font-bold text-orange-400">Alerta Naranja (15-30mm)</span>
+                            <span className="text-[10px] uppercase font-bold text-orange-400">
+                                {teatroOperacional === "CHIRI" || teatroOperacional === "PUNO" ? "Helada Severa (-4° a -8°C)" : "Alerta Naranja (15-30mm)"}
+                            </span>
                             <div className="text-2xl font-black text-orange-400 font-mono">
                                 {data.estadisticas.conteo_alertas.NARANJA}
                             </div>
-                            <span className="text-[10px] text-orange-300/80 font-mono">Peligro de Huaicos</span>
+                            <span className="text-[10px] text-orange-300/80 font-mono">
+                                {teatroOperacional === "CHIRI" || teatroOperacional === "PUNO" ? "Riesgo Alpaquero e IRAs" : "Peligro de Huaicos"}
+                            </span>
                         </div>
 
                         <div className="bg-slate-900 border border-yellow-900/60 p-3 rounded-xl flex flex-col justify-between shadow-lg bg-gradient-to-b from-yellow-950/20 to-transparent">
-                            <span className="text-[10px] uppercase font-bold text-yellow-400">Atención Amarilla (5-15mm)</span>
+                            <span className="text-[10px] uppercase font-bold text-yellow-400">
+                                {teatroOperacional === "CHIRI" || teatroOperacional === "PUNO" ? "Isoterma Cero (0° a -4°C)" : "Atención Amarilla (5-15mm)"}
+                            </span>
                             <div className="text-2xl font-black text-yellow-400 font-mono">
                                 {data.estadisticas.conteo_alertas.AMARILLO}
                             </div>
-                            <span className="text-[10px] text-yellow-300/80 font-mono">Vigilancia de Cuencas</span>
+                            <span className="text-[10px] text-yellow-300/80 font-mono">
+                                {teatroOperacional === "CHIRI" || teatroOperacional === "PUNO" ? "Alerta Agraria Preventiva" : "Vigilancia de Cuencas"}
+                            </span>
                         </div>
 
                         <div className="bg-slate-900 border border-emerald-900/60 p-3 rounded-xl flex flex-col justify-between shadow-lg bg-gradient-to-b from-emerald-950/20 to-transparent">
-                            <span className="text-[10px] uppercase font-bold text-emerald-400">Normal Verde (&lt; 5mm)</span>
+                            <span className="text-[10px] uppercase font-bold text-emerald-400">
+                                {teatroOperacional === "CHIRI" || teatroOperacional === "PUNO" ? "Térmico Normal (> 0°C)" : "Normal Verde (< 5mm)"}
+                            </span>
                             <div className="text-2xl font-black text-emerald-400 font-mono">
                                 {data.estadisticas.conteo_alertas.VERDE}
                             </div>
@@ -671,7 +1010,7 @@ export default function MeteoFenConsole() {
                             <div className="text-2xl font-black text-blue-300 font-mono">
                                 {(data.estadisticas.poblacion_riesgo_extremo / 1000000).toFixed(1)}M
                             </div>
-                            <span className="text-[10px] text-blue-400/80 font-mono">Rojo + Naranja FEN</span>
+                            <span className="text-[10px] text-blue-400/80 font-mono">Rojo + Naranja C2</span>
                         </div>
                     </div>
                 )}
@@ -901,26 +1240,91 @@ export default function MeteoFenConsole() {
             </div>
 
             {/* Panel Principal Dividido: MAPA VECTORIAL (Izquierda) + DRAWER TELEMETRÍA DETALLADA (Derecha) */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8 items-start">
                 {/* Visualizador del Mapa Vectorial Táctico (893 Distritos) */}
-                <div className="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col justify-between relative overflow-hidden">
-                    <div className="flex flex-wrap justify-between items-center gap-2 mb-3 pb-2 border-b border-slate-800">
+                <div className="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl relative overflow-hidden space-y-3">
+                    <div className="flex flex-wrap justify-between items-center gap-2 pb-2 border-b border-slate-800">
                         <div className="flex items-center gap-2">
                             <MapPin className="w-4 h-4 text-sky-400" />
                             <h2 className="text-xs font-bold uppercase tracking-wider text-slate-200">
                                 {primaryMode === "clima"
-                                    ? `Situación Climática Actual • Open-Meteo (${mapProvider === "google" ? "Google Maps Platform" : "SVG"})`
-                                    : `Nivel de Alerta Oficial D.S. 124-2026-PCM (${mapProvider === "google" ? "Google Maps Platform" : "SVG"})`}
+                                    ? `Situación Climática Actual • Open-Meteo (${mapProvider === "google" ? "Google Maps Platform 3D" : "SVG"})`
+                                    : `Nivel de Alerta Oficial D.S. 124-2026-PCM (${mapProvider === "google" ? "Google Maps Platform 3D" : "SVG"})`}
                             </h2>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
+                            {/* Selector de Universo Territorial: 1,893 Municipalidades vs D.S. 124 */}
+                            <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-mono font-bold">
+                                <button
+                                    onClick={() => handleTeatroChange("TODOS")}
+                                    className={`px-2.5 py-1 rounded-lg transition ${
+                                        teatroOperacional === "TODOS"
+                                            ? "bg-blue-600 text-white shadow"
+                                            : "text-slate-400 hover:text-white"
+                                    }`}
+                                    title="Ver todas las 1,893 Municipalidades Distritales del Perú (INEI)"
+                                >
+                                    🏛️ 1,893 Distritos INEI
+                                </button>
+                                <button
+                                    onClick={() => handleTeatroChange("FEN")}
+                                    className={`px-2.5 py-1 rounded-lg transition ml-1.5 ${
+                                        teatroOperacional === "FEN"
+                                            ? "bg-sky-600 text-white shadow"
+                                            : "text-slate-400 hover:text-white"
+                                    }`}
+                                    title="Ver los 875 Distritos priorizados por D.S. 124-2026-PCM"
+                                >
+                                    ⚠️ D.S. 124 (875 Dist.)
+                                </button>
+                            </div>
+
+                            {/* Controles de Capas Google Maps Idénticos a Incendios (Híbrido Satélite, Relieve / Curvas, Trochas / Vías) */}
+                            {mapProvider === "google" && (
+                                <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-mono font-bold">
+                                    <button
+                                        onClick={() => setBaseMap("satellite")}
+                                        className={`px-3 py-1 rounded-lg text-xs font-mono font-bold transition ${
+                                            baseMap === "satellite"
+                                                ? "bg-orange-600 text-white shadow"
+                                                : "bg-slate-800 text-slate-400 hover:text-white"
+                                        }`}
+                                        title="Visión Táctica Submétrica Satelital 3D (Ladeo 45°)"
+                                    >
+                                        Híbrido Satélite
+                                    </button>
+                                    <button
+                                        onClick={() => setBaseMap("terrain")}
+                                        className={`px-3 py-1 rounded-lg text-xs font-mono font-bold transition ml-1.5 ${
+                                            baseMap === "terrain"
+                                                ? "bg-orange-600 text-white shadow"
+                                                : "bg-slate-800 text-slate-400 hover:text-white"
+                                        }`}
+                                        title="Relieve topográfico y curvas de nivel"
+                                    >
+                                        Relieve / Curvas
+                                    </button>
+                                    <button
+                                        onClick={() => setBaseMap("dark")}
+                                        className={`px-3 py-1 rounded-lg text-xs font-mono font-bold transition ml-1.5 ${
+                                            baseMap === "dark"
+                                                ? "bg-orange-600 text-white shadow"
+                                                : "bg-slate-800 text-slate-400 hover:text-white"
+                                        }`}
+                                        title="Trochas, vías de comunicación y centros poblados"
+                                    >
+                                        Trochas / Vías
+                                    </button>
+                                </div>
+                            )}
+
                             {/* Selector de Motor de Mapa: Google Maps Platform vs SVG */}
-                            <div className="flex items-center bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-[11px]">
+                            <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-mono font-bold">
                                 <button
                                     onClick={() => setMapProvider("google")}
-                                    className={`px-2.5 py-1 rounded-md font-semibold transition flex items-center gap-1.5 ${
+                                    className={`px-2.5 py-1 rounded-lg transition flex items-center gap-1.5 ${
                                         mapProvider === "google"
-                                            ? "bg-sky-600 text-white shadow-sm font-bold"
+                                            ? "bg-sky-600 text-white shadow font-bold"
                                             : "text-slate-400 hover:text-white"
                                     }`}
                                     title="Google Maps Platform (Satelital, Terreno y Táctico con zoom interactivo)"
@@ -930,9 +1334,9 @@ export default function MeteoFenConsole() {
                                 </button>
                                 <button
                                     onClick={() => setMapProvider("svg")}
-                                    className={`px-2.5 py-1 rounded-md font-semibold transition flex items-center gap-1.5 ${
+                                    className={`px-2.5 py-1 rounded-lg transition ml-1.5 ${
                                         mapProvider === "svg"
-                                            ? "bg-slate-700 text-white shadow-sm font-bold"
+                                            ? "bg-slate-700 text-white shadow font-bold"
                                             : "text-slate-400 hover:text-white"
                                     }`}
                                     title="Mapa Vectorial Nativo SVG (Modo ligero para baja conectividad)"
@@ -948,7 +1352,7 @@ export default function MeteoFenConsole() {
                     </div>
 
                     {/* Canvas Cartográfico Interactivo (Google Maps Platform + SVG Fallback) */}
-                    <div className="relative w-full h-[580px] bg-slate-950 rounded-xl overflow-hidden border border-slate-800 shadow-inner">
+                    <div className="relative w-full h-[620px] bg-slate-950 rounded-xl overflow-hidden border border-slate-800 shadow-inner">
                         {/* Contenedor Google Maps Platform */}
                         <div
                             ref={googleMapRef}
@@ -1348,6 +1752,73 @@ export default function MeteoFenConsole() {
                             )}
 
                             {/* Tarjeta de Lluvia 24h y 72h */}
+                            {/* Indicador Crioclimático y Pecuario para Heladas / Friaje / Puno */}
+                            {(distritoSeleccionado.tipo_amenaza === "HELADA" || distritoSeleccionado.tipo_amenaza === "FRIAJE" || distritoSeleccionado.tipo_amenaza === "DOBLE_AMENAZA" || teatroOperacional === "CHIRI" || teatroOperacional === "PUNO") && (
+                                <div className="bg-slate-950 border border-sky-800/60 rounded-xl p-3.5 space-y-2.5">
+                                    <div className="flex justify-between items-center text-xs">
+                                        <span className="text-sky-300 font-semibold flex items-center gap-1.5">
+                                            <Thermometer className="w-3.5 h-3.5 text-sky-400" />
+                                            Monitoreo Crioclimático & Pecuario
+                                        </span>
+                                        <span className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold ${
+                                            distritoSeleccionado.temperatura_minima != null && distritoSeleccionado.temperatura_minima <= -8
+                                                ? "bg-red-950 text-red-300 border border-red-800"
+                                                : distritoSeleccionado.temperatura_minima != null && distritoSeleccionado.temperatura_minima <= -4
+                                                ? "bg-orange-950 text-orange-300 border border-orange-800"
+                                                : "bg-sky-950 text-sky-300 border border-sky-800"
+                                        }`}>
+                                            {distritoSeleccionado.tipo_amenaza || "HELADA"}
+                                        </span>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-2 text-center text-xs">
+                                        <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
+                                            <div className="text-[10px] text-slate-400">T. Mínima Prevista</div>
+                                            <div className={`text-lg font-black font-mono ${
+                                                distritoSeleccionado.temperatura_minima != null && distritoSeleccionado.temperatura_minima <= -4
+                                                    ? "text-sky-300"
+                                                    : "text-white"
+                                            }`}>
+                                                {distritoSeleccionado.temperatura_minima ?? distritoSeleccionado.temp_min}°C
+                                            </div>
+                                        </div>
+                                        <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
+                                            <div className="text-[10px] text-slate-400">Nieve / Granizada</div>
+                                            <div className="text-lg font-black text-cyan-300 font-mono">
+                                                {distritoSeleccionado.nieve_cm ?? 0} cm
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Exposición Pecuaria y Niños */}
+                                    <div className="pt-1 text-[11px] space-y-1 bg-slate-900/60 p-2.5 rounded-lg border border-slate-800/80">
+                                        <div className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">
+                                            Censo de Exposición Pecuaria & Vulnerabilidad
+                                        </div>
+                                        <div className="grid grid-cols-3 gap-1.5 text-center text-[10px] pt-1">
+                                            <div className="bg-slate-950 p-1 rounded border border-slate-800">
+                                                <span className="text-slate-400 block text-[9px]">Alpacas</span>
+                                                <span className="font-bold text-amber-300 font-mono">
+                                                    {(distritoSeleccionado.alpacas ?? 0).toLocaleString()}
+                                                </span>
+                                            </div>
+                                            <div className="bg-slate-950 p-1 rounded border border-slate-800">
+                                                <span className="text-slate-400 block text-[9px]">Ovinos</span>
+                                                <span className="font-bold text-slate-200 font-mono">
+                                                    {(distritoSeleccionado.ovinos ?? 0).toLocaleString()}
+                                                </span>
+                                            </div>
+                                            <div className="bg-slate-950 p-1 rounded border border-slate-800">
+                                                <span className="text-slate-400 block text-[9px]">Niños &lt;5a</span>
+                                                <span className="font-bold text-rose-300 font-mono">
+                                                    {(distritoSeleccionado.ninos_menores_5a ?? 0).toLocaleString()}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             <div className="bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-2">
                                 <div className="flex justify-between items-center text-xs">
                                     <span className="text-slate-400 font-semibold flex items-center gap-1">
@@ -1457,12 +1928,14 @@ export default function MeteoFenConsole() {
                                 </div>
                             </div>
 
-                            {/* Otros Indicadores: Viento, Caudal y Temperatura */}
+                            {/* Otros Indicadores: Viento (10m / 25m), Caudal GloFAS y Temperatura */}
                             <div className="grid grid-cols-3 gap-2 text-center text-xs">
                                 <div className="bg-slate-950 border border-slate-800 p-2 rounded-xl">
                                     <Wind className="w-3.5 h-3.5 text-slate-400 mx-auto mb-1" />
-                                    <div className="text-[9px] text-slate-500">Ráfagas</div>
-                                    <div className="font-bold text-white font-mono">{distritoSeleccionado.viento_rafagas_kmh} km/h</div>
+                                    <div className="text-[9px] text-slate-500">Ráfagas (10m / 25m)</div>
+                                    <div className="font-bold text-white font-mono text-[11px]">
+                                        {distritoSeleccionado.viento_rafagas_kmh} <span className="text-[9px] text-purple-400">/ {Math.round(distritoSeleccionado.viento_rafagas_kmh * 1.25)}</span> <span className="text-[8px] text-slate-400">km/h</span>
+                                    </div>
                                 </div>
                                 <div className="bg-slate-950 border border-slate-800 p-2 rounded-xl">
                                     <Activity className="w-3.5 h-3.5 text-cyan-400 mx-auto mb-1" />
@@ -1473,6 +1946,43 @@ export default function MeteoFenConsole() {
                                     <Thermometer className="w-3.5 h-3.5 text-amber-400 mx-auto mb-1" />
                                     <div className="text-[9px] text-slate-500">Temp. Max/Min</div>
                                     <div className="font-bold text-amber-300 font-mono">{distritoSeleccionado.temp_max}° / {distritoSeleccionado.temp_min}°</div>
+                                </div>
+                            </div>
+
+                            {/* Inspección Rápida de Infraestructura Táctica (Google Places) */}
+                            <div className="bg-slate-950 border border-slate-800 p-2.5 rounded-xl space-y-1.5">
+                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
+                                    <span>Infraestructura Crítica (Google Places)</span>
+                                    <span className="text-[9px] text-sky-400 font-mono">Enlace Submétrico</span>
+                                </div>
+                                <div className="grid grid-cols-3 gap-1.5 pt-0.5">
+                                    <a
+                                        href={`https://www.google.com/maps/search/hospital+centro+de+salud+cerca+de+${encodeURIComponent(distritoSeleccionado.distrito + ', ' + distritoSeleccionado.provincia + ', Peru')}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="py-1 px-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white rounded border border-slate-800 text-[9.5px] font-bold text-center transition block truncate"
+                                        title="Centros de Salud, Postas Médicas y Hospitales más cercanos"
+                                    >
+                                        🏥 Salud MINSA
+                                    </a>
+                                    <a
+                                        href={`https://www.google.com/maps/search/comisaria+policia+cerca+de+${encodeURIComponent(distritoSeleccionado.distrito + ', ' + distritoSeleccionado.provincia + ', Peru')}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="py-1 px-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white rounded border border-slate-800 text-[9.5px] font-bold text-center transition block truncate"
+                                        title="Comisarías PNP y Puestos de Vigilancia"
+                                    >
+                                        👮 Comisaría PNP
+                                    </a>
+                                    <a
+                                        href={`https://www.google.com/maps/search/municipalidad+distrital+de+${encodeURIComponent(distritoSeleccionado.distrito + ', ' + distritoSeleccionado.provincia + ', Peru')}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="py-1 px-1.5 bg-sky-950/80 hover:bg-sky-900 text-sky-300 hover:text-white rounded border border-sky-800/80 text-[9.5px] font-bold text-center transition block truncate"
+                                        title="Sede de la Municipalidad Distrital y Centro de Operaciones de Emergencia Local"
+                                    >
+                                        🏛️ Muni C2
+                                    </a>
                                 </div>
                             </div>
 
@@ -1505,20 +2015,307 @@ export default function MeteoFenConsole() {
                 </div>
             </div>
 
-            {/* Matriz Tabular de Contingencia (893 Distritos) */}
+            {/* Matriz Tabular de Contingencia Territorial Multi-Régimen */}
             <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+                <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 pb-3 border-b border-slate-800">
                     <div>
-                        <h2 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                        <h2 className="text-base font-bold text-white uppercase tracking-wider flex items-center gap-2">
                             <Database className="w-4 h-4 text-sky-400" />
-                            <span>Matriz Oficial de Distritos en Emergencia FEN 2026–2027</span>
+                            <span>
+                                {teatroOperacional === "FEN"
+                                    ? "Matriz FEN 2026–2027: Lluvias y Huaicos (D.S. 124)"
+                                    : teatroOperacional === "CHIRI"
+                                    ? "Matriz Nacional CHIRI: Heladas Andinas y Friajes Amazónicos (CENEPRED)"
+                                    : teatroOperacional === "PUNO"
+                                    ? "Matriz Altiplánica PUNO: Heladas Severas, Nieve y Protección Ganadera (110 Distritos)"
+                                    : teatroOperacional === "DOBLE_RIESGO"
+                                    ? "Pinza Multi-Amenaza: Distritos con Doble Vulnerabilidad (FEN + Heladas/Friaje)"
+                                    : "Matriz Territorial Unificada Nacional (Multi-Régimen)"}
+                            </span>
                         </h2>
-                        <p className="text-xs text-slate-400">
-                            Listado completo de los 893 distritos ordenados por nivel de lluvia acumulada 24h e impacto territorial.
+                        <p className="text-xs text-slate-400 mt-0.5">
+                            {teatroOperacional === "FEN"
+                                ? "Listado de los distritos declarados por D.S. 124 ordenados por lluvia acumulada 24h e impacto hidrográfico."
+                                : teatroOperacional === "CHIRI" || teatroOperacional === "PUNO"
+                                ? "Monitoreo criotérmico de temperaturas mínimas extremas, caída de nieve y censo pecuario vulnerable."
+                                : teatroOperacional === "DOBLE_RIESGO"
+                                ? "Distritos bajo riesgo simultáneo o sucesivo de inundaciones/huaicos y heladas severas."
+                                : "Visión integrada de todos los distritos bajo monitoreo activo en el territorio peruano."}
                         </p>
                     </div>
-                    <div className="text-xs text-slate-400 font-mono">
-                        Mostrando {distritosPaginados.length} de {distritosFiltrados.length} distritos filtrados
+
+                    {/* Metadatos de Actualización Climática y Frecuencia */}
+                    <div className="flex flex-wrap items-center gap-2 self-start xl:self-auto">
+                        <div className="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center gap-2 shadow-sm">
+                            <Clock className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                            <div>
+                                <span className="text-[9px] text-slate-400 uppercase font-semibold block leading-tight">Hora y Fecha de Actualización</span>
+                                <span className="font-mono text-xs text-white font-bold">{data?.metadata.ultima_actualizacion || "30/09/2026 12:53:08 PET"}</span>
+                            </div>
+                        </div>
+
+                        <div className="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center gap-2 shadow-sm" title="El modelo ECMWF IFS 9km se ingesta y refresca cada 1 hora">
+                            <RefreshCw className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                            <div>
+                                <span className="text-[9px] text-slate-400 uppercase font-semibold block leading-tight">Frecuencia de Actualización</span>
+                                <span className="font-mono text-xs text-emerald-300 font-semibold">Cada 1 hora (automático)</span>
+                            </div>
+                        </div>
+
+                        <button
+                            onClick={() => fetchData()}
+                            className="px-3 py-2 rounded-xl bg-sky-950 hover:bg-sky-900 border border-sky-700/60 text-sky-200 text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+                            title="Sincronizar telemetría climática en vivo inmediatamente"
+                        >
+                            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-sky-300" : "text-sky-400"}`} />
+                            <span>Sincronizar</span>
+                        </button>
+                    </div>
+                </div>
+
+                {/* Barra de Filtros Contextuales y Selector de Ordenamiento */}
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 p-3 bg-slate-950/80 border border-slate-800/80 rounded-xl">
+                    {/* Filtros de Umbrales Cuantitativos */}
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mr-1">
+                            <Filter className="w-3.5 h-3.5 text-sky-400" />
+                            Filtros:
+                        </span>
+
+                        <button
+                            onClick={() => { setFiltroUmbral("TODOS"); setPaginaActual(1); }}
+                            className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                                filtroUmbral === "TODOS"
+                                    ? "bg-slate-700 text-white font-bold shadow-sm"
+                                    : "bg-slate-900 text-slate-400 hover:text-white border border-slate-800"
+                            }`}
+                        >
+                            Todos ({distritosFiltrados.length})
+                        </button>
+
+                        {teatroOperacional === "FEN" ? (
+                            <>
+                                <button
+                                    onClick={() => { setFiltroUmbral("LLUVIA_30"); setPaginaActual(1); }}
+                                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                                        filtroUmbral === "LLUVIA_30"
+                                            ? "bg-red-600 text-white font-bold shadow-md shadow-red-600/30"
+                                            : "bg-red-950/40 text-red-300 border border-red-800/60 hover:bg-red-900/50"
+                                    }`}
+                                >
+                                    🌧️ Lluvia ≥ 30 mm (Crítico)
+                                </button>
+                                <button
+                                    onClick={() => { setFiltroUmbral("LLUVIA_15"); setPaginaActual(1); }}
+                                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                                        filtroUmbral === "LLUVIA_15"
+                                            ? "bg-orange-600 text-white font-bold shadow-md shadow-orange-600/30"
+                                            : "bg-orange-950/40 text-orange-300 border border-orange-800/60 hover:bg-orange-900/50"
+                                    }`}
+                                >
+                                    🌧️ Lluvia ≥ 15 mm (Fuerte)
+                                </button>
+                                <button
+                                    onClick={() => { setFiltroUmbral("LLUVIA_5"); setPaginaActual(1); }}
+                                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                                        filtroUmbral === "LLUVIA_5"
+                                            ? "bg-yellow-600 text-black font-bold shadow-md shadow-yellow-600/30"
+                                            : "bg-yellow-950/40 text-yellow-300 border border-yellow-800/60 hover:bg-yellow-900/50"
+                                    }`}
+                                >
+                                    💧 Lluvia ≥ 5 mm (Moderada)
+                                </button>
+                                <button
+                                    onClick={() => { setFiltroUmbral("GLOFAS_50"); setPaginaActual(1); }}
+                                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                                        filtroUmbral === "GLOFAS_50"
+                                            ? "bg-cyan-600 text-white font-bold shadow-md shadow-cyan-600/30"
+                                            : "bg-cyan-950/40 text-cyan-300 border border-cyan-800/60 hover:bg-cyan-900/50"
+                                    }`}
+                                >
+                                    🌊 GloFAS ≥ 50 m³/s
+                                </button>
+                                <button
+                                    onClick={() => { setFiltroUmbral("SUELO_70"); setPaginaActual(1); }}
+                                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                                        filtroUmbral === "SUELO_70"
+                                            ? "bg-amber-600 text-white font-bold shadow-md shadow-amber-600/30"
+                                            : "bg-amber-950/40 text-amber-300 border border-amber-800/60 hover:bg-amber-900/50"
+                                    }`}
+                                >
+                                    🏔️ Talud ≥ 70%
+                                </button>
+                            </>
+                        ) : teatroOperacional === "CHIRI" || teatroOperacional === "PUNO" ? (
+                            <>
+                                <button
+                                    onClick={() => { setFiltroUmbral("FRIO_8"); setPaginaActual(1); }}
+                                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                                        filtroUmbral === "FRIO_8"
+                                            ? "bg-purple-600 text-white font-bold shadow-md shadow-purple-600/30"
+                                            : "bg-purple-950/40 text-purple-300 border border-purple-800/60 hover:bg-purple-900/50"
+                                    }`}
+                                >
+                                    🥶 T. Mín ≤ -8°C (Extrema)
+                                </button>
+                                <button
+                                    onClick={() => { setFiltroUmbral("FRIO_4"); setPaginaActual(1); }}
+                                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                                        filtroUmbral === "FRIO_4"
+                                            ? "bg-sky-600 text-white font-bold shadow-md shadow-sky-600/30"
+                                            : "bg-sky-950/40 text-sky-300 border border-sky-800/60 hover:bg-sky-900/50"
+                                    }`}
+                                >
+                                    ❄️ T. Mín ≤ -4°C (Severa)
+                                </button>
+                                <button
+                                    onClick={() => { setFiltroUmbral("FRIO_0"); setPaginaActual(1); }}
+                                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                                        filtroUmbral === "FRIO_0"
+                                            ? "bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30"
+                                            : "bg-blue-950/40 text-blue-300 border border-blue-800/60 hover:bg-blue-900/50"
+                                    }`}
+                                >
+                                    🧊 T. Mín ≤ 0°C (Bajo Cero)
+                                </button>
+                                <button
+                                    onClick={() => { setFiltroUmbral("NIEVE_0"); setPaginaActual(1); }}
+                                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                                        filtroUmbral === "NIEVE_0"
+                                            ? "bg-cyan-600 text-white font-bold shadow-md shadow-cyan-600/30"
+                                            : "bg-cyan-950/40 text-cyan-300 border border-cyan-800/60 hover:bg-cyan-900/50"
+                                    }`}
+                                >
+                                    🌨️ Nieve &gt; 0 cm
+                                </button>
+                                <button
+                                    onClick={() => { setFiltroUmbral("ALPACAS_5000"); setPaginaActual(1); }}
+                                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                                        filtroUmbral === "ALPACAS_5000"
+                                            ? "bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/30"
+                                            : "bg-emerald-950/40 text-emerald-300 border border-emerald-800/60 hover:bg-emerald-900/50"
+                                    }`}
+                                >
+                                    🦙 Alpacas ≥ 5,000
+                                </button>
+                                <button
+                                    onClick={() => { setFiltroUmbral("NINOS_1000"); setPaginaActual(1); }}
+                                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                                        filtroUmbral === "NINOS_1000"
+                                            ? "bg-rose-600 text-white font-bold shadow-md shadow-rose-600/30"
+                                            : "bg-rose-950/40 text-rose-300 border border-rose-800/60 hover:bg-rose-900/50"
+                                    }`}
+                                >
+                                    👶 Niños &lt;5a ≥ 1,000
+                                </button>
+                            </>
+                        ) : teatroOperacional === "DOBLE_RIESGO" ? (
+                            <>
+                                <button
+                                    onClick={() => { setFiltroUmbral("DOBLE_SEVERO"); setPaginaActual(1); }}
+                                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                                        filtroUmbral === "DOBLE_SEVERO"
+                                            ? "bg-purple-600 text-white font-bold shadow-md shadow-purple-600/30"
+                                            : "bg-purple-950/40 text-purple-300 border border-purple-800/60 hover:bg-purple-900/50"
+                                    }`}
+                                >
+                                    ⚡ Doble Severo (Lluvia ≥15mm & T.Mín ≤-4°C)
+                                </button>
+                                <button
+                                    onClick={() => { setFiltroUmbral("LLUVIA_15"); setPaginaActual(1); }}
+                                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                                        filtroUmbral === "LLUVIA_15"
+                                            ? "bg-red-600 text-white font-bold"
+                                            : "bg-red-950/40 text-red-300 border border-red-800/60 hover:bg-red-900/50"
+                                    }`}
+                                >
+                                    🌧️ Lluvia ≥ 15 mm
+                                </button>
+                                <button
+                                    onClick={() => { setFiltroUmbral("FRIO_4"); setPaginaActual(1); }}
+                                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                                        filtroUmbral === "FRIO_4"
+                                            ? "bg-sky-600 text-white font-bold"
+                                            : "bg-sky-950/40 text-sky-300 border border-sky-800/60 hover:bg-sky-900/50"
+                                    }`}
+                                >
+                                    ❄️ T. Mín ≤ -4°C
+                                </button>
+                                <button
+                                    onClick={() => { setFiltroUmbral("ALPACAS_1000"); setPaginaActual(1); }}
+                                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                                        filtroUmbral === "ALPACAS_1000"
+                                            ? "bg-emerald-600 text-white font-bold"
+                                            : "bg-emerald-950/40 text-emerald-300 border border-emerald-800/60 hover:bg-emerald-900/50"
+                                    }`}
+                                >
+                                    🦙 Alpacas ≥ 1,000
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <button
+                                    onClick={() => { setFiltroUmbral("LLUVIA_15"); setPaginaActual(1); }}
+                                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                                        filtroUmbral === "LLUVIA_15"
+                                            ? "bg-red-600 text-white font-bold"
+                                            : "bg-red-950/40 text-red-300 border border-red-800/60 hover:bg-red-900/50"
+                                    }`}
+                                >
+                                    🌧️ Lluvia ≥ 15 mm
+                                </button>
+                                <button
+                                    onClick={() => { setFiltroUmbral("FRIO_4"); setPaginaActual(1); }}
+                                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+                                        filtroUmbral === "FRIO_4"
+                                            ? "bg-sky-600 text-white font-bold"
+                                            : "bg-sky-950/40 text-sky-300 border border-sky-800/60 hover:bg-sky-900/50"
+                                    }`}
+                                >
+                                    ❄️ T. Mín ≤ -4°C
+                                </button>
+                            </>
+                        )}
+                    </div>
+
+                    {/* Selector de Ordenamiento */}
+                    <div className="flex items-center gap-2 self-start lg:self-auto shrink-0">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Ordenar por:</span>
+                        <select
+                            value={campoOrden}
+                            onChange={(e) => {
+                                setCampoOrden(e.target.value);
+                                if (e.target.value === "temp_min" || e.target.value === "temperatura_minima") {
+                                    setDireccionOrden("asc");
+                                } else if (e.target.value === "distrito") {
+                                    setDireccionOrden("asc");
+                                } else {
+                                    setDireccionOrden("desc");
+                                }
+                                setPaginaActual(1);
+                            }}
+                            className="bg-slate-900 border border-slate-750 rounded-lg px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:border-sky-500 font-mono"
+                        >
+                            <option value="default">Por Defecto ({teatroOperacional === "CHIRI" || teatroOperacional === "PUNO" ? "Más Frío" : "Más Lluvia"})</option>
+                            <option value="lluvia_24h">Lluvia 24h (Mayor a Menor)</option>
+                            <option value="lluvia_72h">Lluvia 72h (Mayor a Menor)</option>
+                            <option value="temp_min">T. Mínima (Más Frío Primero)</option>
+                            <option value="snowfall_cm">Nieve (Mayor a Menor)</option>
+                            <option value="alpacas">Alpacas (Mayor Rebaño)</option>
+                            <option value="ovinos">Ovinos (Mayor Rebaño)</option>
+                            <option value="ninos">Niños &lt;5a (Mayor Población)</option>
+                            <option value="glofas">GloFAS (Mayor Caudal)</option>
+                            <option value="suelo">Suelo Talud (Mayor Saturación)</option>
+                            <option value="poblacion">Población (Mayor a Menor)</option>
+                            <option value="distrito">Nombre de Distrito (A-Z)</option>
+                        </select>
+                        <button
+                            onClick={() => setDireccionOrden(prev => prev === "asc" ? "desc" : "asc")}
+                            className="px-2 py-1 rounded-lg bg-slate-900 border border-slate-750 text-xs font-mono text-slate-300 hover:text-white"
+                            title={`Cambiar a orden ${direccionOrden === "asc" ? "descendente" : "ascendente"}`}
+                        >
+                            {direccionOrden === "asc" ? "▲ ASC" : "▼ DESC"}
+                        </button>
                     </div>
                 </div>
 
@@ -1527,15 +2324,69 @@ export default function MeteoFenConsole() {
                         <thead className="bg-slate-950 text-slate-400 uppercase text-[10px] font-mono border-b border-slate-800">
                             <tr>
                                 <th className="py-2.5 px-3">Alerta</th>
-                                <th className="py-2.5 px-3">UBIGEO</th>
-                                <th className="py-2.5 px-3">Distrito</th>
+                                <th className="py-2.5 px-3 cursor-pointer hover:text-white transition" onClick={() => handleSortColumn("distrito")}>
+                                    UBIGEO
+                                </th>
+                                <th className="py-2.5 px-3 cursor-pointer hover:text-white transition" onClick={() => handleSortColumn("distrito")}>
+                                    Distrito {campoOrden === "distrito" ? (direccionOrden === "asc" ? "▲" : "▼") : ""}
+                                </th>
                                 <th className="py-2.5 px-3">Provincia</th>
                                 <th className="py-2.5 px-3">Departamento</th>
-                                <th className="py-2.5 px-3 text-right">Lluvia 24h</th>
-                                <th className="py-2.5 px-3 text-right">CAPE</th>
-                                <th className="py-2.5 px-3 text-right">Suelo 28-100cm</th>
-                                <th className="py-2.5 px-3 text-right">GloFAS</th>
-                                <th className="py-2.5 px-3 text-right">Población</th>
+                                {teatroOperacional === "CHIRI" || teatroOperacional === "PUNO" ? (
+                                    <>
+                                        <th className="py-2.5 px-3 text-right cursor-pointer hover:text-white transition" onClick={() => handleSortColumn("temp_min")}>
+                                            T. Mínima {campoOrden === "temp_min" ? (direccionOrden === "asc" ? "▲" : "▼") : ""}
+                                        </th>
+                                        <th className="py-2.5 px-3 text-right cursor-pointer hover:text-white transition" onClick={() => handleSortColumn("snowfall_cm")}>
+                                            Nieve (cm) {campoOrden === "snowfall_cm" ? (direccionOrden === "asc" ? "▲" : "▼") : ""}
+                                        </th>
+                                        <th className="py-2.5 px-3 text-right cursor-pointer hover:text-white transition" onClick={() => handleSortColumn("alpacas")}>
+                                            Alpacas {campoOrden === "alpacas" ? (direccionOrden === "asc" ? "▲" : "▼") : ""}
+                                        </th>
+                                        <th className="py-2.5 px-3 text-right cursor-pointer hover:text-white transition" onClick={() => handleSortColumn("ovinos")}>
+                                            Ovinos {campoOrden === "ovinos" ? (direccionOrden === "asc" ? "▲" : "▼") : ""}
+                                        </th>
+                                        <th className="py-2.5 px-3 text-right cursor-pointer hover:text-white transition" onClick={() => handleSortColumn("ninos")}>
+                                            Niños &lt;5a {campoOrden === "ninos" ? (direccionOrden === "asc" ? "▲" : "▼") : ""}
+                                        </th>
+                                    </>
+                                ) : teatroOperacional === "DOBLE_RIESGO" ? (
+                                    <>
+                                        <th className="py-2.5 px-3 text-right cursor-pointer hover:text-white transition" onClick={() => handleSortColumn("lluvia_24h")}>
+                                            Lluvia 24h {campoOrden === "lluvia_24h" ? (direccionOrden === "asc" ? "▲" : "▼") : ""}
+                                        </th>
+                                        <th className="py-2.5 px-3 text-right cursor-pointer hover:text-white transition" onClick={() => handleSortColumn("temp_min")}>
+                                            T. Mínima {campoOrden === "temp_min" ? (direccionOrden === "asc" ? "▲" : "▼") : ""}
+                                        </th>
+                                        <th className="py-2.5 px-3 text-right cursor-pointer hover:text-white transition" onClick={() => handleSortColumn("suelo")}>
+                                            Suelo Talud {campoOrden === "suelo" ? (direccionOrden === "asc" ? "▲" : "▼") : ""}
+                                        </th>
+                                        <th className="py-2.5 px-3 text-right cursor-pointer hover:text-white transition" onClick={() => handleSortColumn("alpacas")}>
+                                            Alpacas {campoOrden === "alpacas" ? (direccionOrden === "asc" ? "▲" : "▼") : ""}
+                                        </th>
+                                        <th className="py-2.5 px-3 text-right cursor-pointer hover:text-white transition" onClick={() => handleSortColumn("glofas")}>
+                                            GloFAS {campoOrden === "glofas" ? (direccionOrden === "asc" ? "▲" : "▼") : ""}
+                                        </th>
+                                    </>
+                                ) : (
+                                    <>
+                                        <th className="py-2.5 px-3 text-right cursor-pointer hover:text-white transition" onClick={() => handleSortColumn("lluvia_24h")}>
+                                            Lluvia 24h {campoOrden === "lluvia_24h" ? (direccionOrden === "asc" ? "▲" : "▼") : ""}
+                                        </th>
+                                        <th className="py-2.5 px-3 text-right cursor-pointer hover:text-white transition" onClick={() => handleSortColumn("lluvia_72h")}>
+                                            CAPE
+                                        </th>
+                                        <th className="py-2.5 px-3 text-right cursor-pointer hover:text-white transition" onClick={() => handleSortColumn("suelo")}>
+                                            Suelo 28-100cm {campoOrden === "suelo" ? (direccionOrden === "asc" ? "▲" : "▼") : ""}
+                                        </th>
+                                        <th className="py-2.5 px-3 text-right cursor-pointer hover:text-white transition" onClick={() => handleSortColumn("glofas")}>
+                                            GloFAS {campoOrden === "glofas" ? (direccionOrden === "asc" ? "▲" : "▼") : ""}
+                                        </th>
+                                        <th className="py-2.5 px-3 text-right cursor-pointer hover:text-white transition" onClick={() => handleSortColumn("poblacion")}>
+                                            Población {campoOrden === "poblacion" ? (direccionOrden === "asc" ? "▲" : "▼") : ""}
+                                        </th>
+                                    </>
+                                )}
                                 <th className="py-2.5 px-3 text-center">Acción</th>
                             </tr>
                         </thead>
@@ -1562,14 +2413,56 @@ export default function MeteoFenConsole() {
                                         </span>
                                     </td>
                                     <td className="py-2.5 px-3 text-slate-400">{d.ubigeo}</td>
-                                    <td className="py-2.5 px-3 font-semibold text-white font-sans">{d.distrito}</td>
+                                    <td className="py-2.5 px-3 font-semibold text-white font-sans">
+                                        <div className="flex items-center gap-1.5">
+                                            <span>{d.distrito}</span>
+                                            {d.tipo_amenaza === "DOBLE_AMENAZA" && (
+                                                <span className="px-1 py-0.2 text-[9px] bg-purple-950 text-purple-300 border border-purple-800 rounded">
+                                                    DOBLE
+                                                </span>
+                                            )}
+                                        </div>
+                                    </td>
                                     <td className="py-2.5 px-3 text-slate-400 font-sans">{d.provincia}</td>
                                     <td className="py-2.5 px-3 text-slate-400 font-sans">{d.departamento}</td>
-                                    <td className="py-2.5 px-3 text-right font-bold text-sky-400">{d.lluvia_24h} mm</td>
-                                    <td className="py-2.5 px-3 text-right text-amber-300">{d.cape_j_kg} J/kg</td>
-                                    <td className="py-2.5 px-3 text-right text-red-300">{d.suelo_saturacion_pct}%</td>
-                                    <td className="py-2.5 px-3 text-right text-cyan-300">{d.caudal_glofas_m3s} m³/s</td>
-                                    <td className="py-2.5 px-3 text-right text-slate-300">{d.poblacion.toLocaleString()}</td>
+
+                                    {/* Columnas dinámicas según el Teatro Operacional */}
+                                    {teatroOperacional === "CHIRI" || teatroOperacional === "PUNO" ? (
+                                        <>
+                                            <td className="py-2.5 px-3 text-right font-bold text-sky-400">
+                                                {d.temperatura_minima ?? d.temp_min}°C
+                                            </td>
+                                            <td className="py-2.5 px-3 text-right text-cyan-300">
+                                                {d.nieve_cm ?? 0} cm
+                                            </td>
+                                            <td className="py-2.5 px-3 text-right text-amber-300">
+                                                {(d.alpacas ?? 0).toLocaleString()}
+                                            </td>
+                                            <td className="py-2.5 px-3 text-right text-slate-300">
+                                                {(d.ovinos ?? 0).toLocaleString()}
+                                            </td>
+                                            <td className="py-2.5 px-3 text-right text-rose-300 font-bold">
+                                                {(d.ninos_menores_5a ?? 0).toLocaleString()}
+                                            </td>
+                                        </>
+                                    ) : teatroOperacional === "DOBLE_RIESGO" ? (
+                                        <>
+                                            <td className="py-2.5 px-3 text-right font-bold text-sky-400">{d.lluvia_24h} mm</td>
+                                            <td className="py-2.5 px-3 text-right font-bold text-blue-300">{d.temperatura_minima ?? d.temp_min}°C</td>
+                                            <td className="py-2.5 px-3 text-right text-red-300">{d.suelo_saturacion_pct}%</td>
+                                            <td className="py-2.5 px-3 text-right text-amber-300">{(d.alpacas ?? 0).toLocaleString()}</td>
+                                            <td className="py-2.5 px-3 text-right text-cyan-300">{d.caudal_glofas_m3s} m³/s</td>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <td className="py-2.5 px-3 text-right font-bold text-sky-400">{d.lluvia_24h} mm</td>
+                                            <td className="py-2.5 px-3 text-right text-amber-300">{d.cape_j_kg} J/kg</td>
+                                            <td className="py-2.5 px-3 text-right text-red-300">{d.suelo_saturacion_pct}%</td>
+                                            <td className="py-2.5 px-3 text-right text-cyan-300">{d.caudal_glofas_m3s} m³/s</td>
+                                            <td className="py-2.5 px-3 text-right text-slate-300">{d.poblacion.toLocaleString()}</td>
+                                        </>
+                                    )}
+
                                     <td className="py-2.5 px-3 text-center">
                                         <button
                                             onClick={(e) => {

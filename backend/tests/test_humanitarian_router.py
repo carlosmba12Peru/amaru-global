@@ -9,6 +9,10 @@ from services.routing.humanitarian_router import humanitarian_router
 class TestHumanitarianRouter(unittest.TestCase):
     def setUp(self):
         self.router = humanitarian_router
+        self.router.bloqueos_activos.clear()
+
+    def tearDown(self):
+        self.router.bloqueos_activos.clear()
 
     def test_catalogos_cargados(self):
         self.assertGreaterEqual(len(self.router.almacenes), 7, "Debe cargar al menos 7 almacenes INDECI")

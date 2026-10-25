@@ -102,6 +102,10 @@ export default function DopplerRadarConsole({
     const [rainViewerTimestamps, setRainViewerTimestamps] = useState<number[]>([]);
     const [rainViewerIndex, setRainViewerIndex] = useState<number>(0);
 
+    // Auto-actualización periódica en vivo (cada 120s)
+    const [secondsToNextPoll, setSecondsToNextPoll] = useState<number>(120);
+    const [lastAutoUpdate, setLastAutoUpdate] = useState<string>("");
+
     const isMounted = useRef(true);
     const gmapRadarRef = useRef<HTMLDivElement>(null);
     const gmapRadarInstance = useRef<any>(null);
@@ -165,9 +169,33 @@ export default function DopplerRadarConsole({
         };
     }, []);
 
-    // Consulta inicial del radar Banda C
-    const fetchRadarData = async (bypass = false) => {
-        setLoading(true);
+    // Función para formatear marcas temporales UTC del SENAMHI a Hora Oficial de Perú (UTC-5)
+    const formatRadarTimestamp = (utcStr?: string) => {
+        if (!utcStr) return "En Vivo";
+        try {
+            const parts = utcStr.trim().split(" ");
+            if (parts.length === 2) {
+                const [datePart, timePart] = parts;
+                const [y, m, d] = datePart.split("-").map(Number);
+                const [hh, mm] = timePart.split(":").map(Number);
+                const dUtc = new Date(Date.UTC(y, m - 1, d, hh, mm));
+                const peruHour = dUtc.toLocaleTimeString("es-PE", {
+                    timeZone: "America/Lima",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false
+                });
+                return `${timePart} UTC (${peruHour} Hora Perú)`;
+            }
+        } catch {
+            // fallback
+        }
+        return utcStr;
+    };
+
+    // Consulta del radar Banda C
+    const fetchRadarData = async (bypass = false, silent = false) => {
+        if (!silent) setLoading(true);
         setError(null);
         try {
             const url = `${API_BASE}/api/v1/national/radar/${localidad}?producto=${producto}&nivel=${nivel}${bypass ? "&bypass_cache=true" : ""}`;
@@ -179,8 +207,12 @@ export default function DopplerRadarConsole({
             if (isMounted.current) {
                 setData(json);
                 if (json.frames && json.frames.length > 0) {
-                    setCurrentFrameIndex(json.frames.length - 1);
+                    if (!isPlaying) {
+                        setCurrentFrameIndex(json.frames.length - 1);
+                    }
                 }
+                setSecondsToNextPoll(120);
+                setLastAutoUpdate(new Date().toLocaleTimeString("es-PE", { hour: "2-digit", minute: "2-digit" }));
             }
         } catch (err: any) {
             console.warn("Fallo de acceso a endpoint de radar SENAMHI. Activando contingencia...", err);
@@ -189,7 +221,7 @@ export default function DopplerRadarConsole({
                 setRadarEngine("RAINVIEWER_DOPPLER");
             }
         } finally {
-            if (isMounted.current) setLoading(false);
+            if (isMounted.current && !silent) setLoading(false);
         }
     };
 
@@ -215,8 +247,23 @@ export default function DopplerRadarConsole({
         fetchRainViewer();
     }, []);
 
+    // Consulta inicial ante cambios de parámetros
     useEffect(() => {
         fetchRadarData();
+    }, [localidad, producto, nivel]);
+
+    // Auto-polling automático continuo cada 120s (2 min) con cuenta regresiva en vivo
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setSecondsToNextPoll((prev) => {
+                if (prev <= 1) {
+                    fetchRadarData(true, true);
+                    return 120;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+        return () => clearInterval(interval);
     }, [localidad, producto, nivel]);
 
     // Timer del loop de reproducción
@@ -244,7 +291,7 @@ export default function DopplerRadarConsole({
         : { lat: -14.0678, lng: -75.7286, x: 58, y: 72 };
 
     const activeTimestamp = radarEngine === "BANDA_C_SENAMHI"
-        ? (currentFrame?.timestamp_utc_pe || "2026-09-24 14:30 UTC-5")
+        ? formatRadarTimestamp(currentFrame?.timestamp_utc_pe)
         : (rainViewerTimestamps[rainViewerIndex]
             ? new Date(rainViewerTimestamps[rainViewerIndex] * 1000).toLocaleTimeString("es-PE", { hour: "2-digit", minute: "2-digit" })
             : "En Vivo");
@@ -334,13 +381,21 @@ export default function DopplerRadarConsole({
                         </button>
                     </div>
 
+                    {/* Indicador de Auto-Sincronización en Vivo */}
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 font-mono text-[11px]">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                        <span className="text-slate-400">Auto-Sync:</span>
+                        <span className="font-bold text-sky-400">{secondsToNextPoll}s</span>
+                    </div>
+
                     <button
                         onClick={() => fetchRadarData(true)}
                         disabled={loading}
-                        className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
-                        title="Recargar escaneo fresco"
+                        className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-sky-600/30 hover:bg-sky-600 text-sky-200 hover:text-white border border-sky-500/40 text-xs font-bold transition shadow"
+                        title="Forzar lectura fresca del radar SENAMHI"
                     >
-                        <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin text-sky-400" : ""}`} />
+                        <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-sky-300" : ""}`} />
+                        <span>{loading ? "Sincronizando..." : "Actualizar Ahora"}</span>
                     </button>
                 </div>
             </div>
@@ -415,8 +470,23 @@ export default function DopplerRadarConsole({
                                 />
                             </div>
                         ) : (
-                            /* Celdas Convectivas Sintéticas Calibradas por CAPE y Alerta FEN */
-                            <div className="absolute inset-0 z-10 pointer-events-none">
+                            <>
+                                {/* Superposición del Scan Oficial Real del SENAMHI */}
+                                {currentFrame?.imagen_url_completa && (
+                                    <div className="absolute inset-0 z-10 opacity-70 mix-blend-screen pointer-events-none flex items-center justify-center p-2">
+                                        <img
+                                            src={currentFrame.imagen_url_completa}
+                                            alt={`Scan Radar SENAMHI ${currentFrame.timestamp_utc_pe}`}
+                                            className="w-full h-full object-contain filter contrast-125 saturate-150"
+                                            onError={(e) => {
+                                                (e.target as HTMLElement).style.display = "none";
+                                            }}
+                                        />
+                                    </div>
+                                )}
+
+                                {/* Celdas Convectivas Sintéticas Calibradas por CAPE y Alerta FEN */}
+                                <div className="absolute inset-0 z-15 pointer-events-none">
                                 {/* Celda Convectiva 1 (Cabecera Chira / Piura) */}
                                 <div
                                     className="absolute rounded-full filter blur-md opacity-80 animate-pulse"
@@ -440,7 +510,8 @@ export default function DopplerRadarConsole({
                                     }}
                                 />
                             </div>
-                        )}
+                        </>
+                    )}
 
                         {/* MARCADORES INTERACTIVOS DE CELDAS POR KILÓMETRO & AZIMUT */}
                         {(data?.celdas_convectivas_georreferenciadas || [

@@ -2,8 +2,8 @@ import React from "react";
 import MeteoFenConsole from "@/components/MeteoFenConsole";
 
 export const metadata = {
-    title: "Consola Meteorológica FEN (893 Distritos D.S. 124) | COEN C2",
-    description: "Monitoreo cuantitativo de lluvias, inestabilidad convectiva CAPE e infiltración de suelo Open-Meteo Pro para los 893 distritos declarados en emergencia por el Fenómeno El Niño 2026-2027.",
+    title: "Consola Meteorológica Multi-Régimen (FEN 893 & Heladas 1531) | COED Nacional C2",
+    description: "Monitoreo cuantitativo de lluvias, inestabilidad convectiva CAPE e infiltración de suelo Open-Meteo Pro, y régimen de heladas/friajes para el COED Nacional y Gobiernos Locales.",
 };
 
 export default function MeteoPage() {

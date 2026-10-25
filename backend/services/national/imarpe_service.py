@@ -80,15 +80,15 @@ def get_imarpe_data_dirs() -> List[str]:
     """Obtiene posibles directorios donde se ubica la carpeta 'Reporte de Imarpe diario'."""
     base_dirs = []
     
-    # 1. Desde backend/data
-    b_data = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data", "Reporte de Imarpe diario")
-    if os.path.exists(b_data):
-        base_dirs.append(b_data)
-        
-    # 2. Desde raíz Lab4/data
+    # 1. Desde raíz Lab4/data (prioridad)
     root_data = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))), "data", "Reporte de Imarpe diario")
-    if os.path.exists(root_data) and root_data not in base_dirs:
+    if os.path.exists(root_data):
         base_dirs.append(root_data)
+        
+    # 2. Desde backend/data
+    b_data = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data", "Reporte de Imarpe diario")
+    if os.path.exists(b_data) and b_data not in base_dirs:
+        base_dirs.append(b_data)
         
     return base_dirs
 
@@ -322,6 +322,31 @@ class ImarpeService:
         sorted_files = sorted(pdf_map.keys())
         logger.info(f"Encontrados {len(sorted_files)} boletines IMARPE únicos.")
 
+        if not sorted_files:
+            logger.warning("No se encontraron PDFs en los directorios de IMARPE. Manteniendo cache existente si está disponible.")
+            if self._cache_data:
+                return {
+                    "status": "warning",
+                    "mensaje": "No se encontraron PDFs en disco; se conservó la caché en memoria",
+                    "boletines_procesados": len(self._cache_data.get("boletines", [])),
+                    "ultimo_boletin": self._cache_data.get("ultima_actualizacion"),
+                    "cache_file": self.cache_file
+                }
+            if os.path.exists(self.cache_file):
+                try:
+                    with open(self.cache_file, "r", encoding="utf-8") as f_in:
+                        cached = json.load(f_in)
+                    self._cache_data = cached
+                    return {
+                        "status": "warning",
+                        "mensaje": "No se encontraron PDFs en disco; se conservó la caché en disco",
+                        "boletines_procesados": len(cached.get("boletines", [])),
+                        "ultimo_boletin": cached.get("ultima_actualizacion"),
+                        "cache_file": self.cache_file
+                    }
+                except Exception:
+                    pass
+
         boletines = []
         for f in sorted_files:
             res = parse_single_imarpe_pdf(pdf_map[f])
@@ -341,8 +366,8 @@ class ImarpeService:
                 public_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))), "frontend", "public", "imarpe_images")
                 os.makedirs(public_dir, exist_ok=True)
                 
-                # Extraer para los últimos boletines
-                for b in boletines[-3:]:
+                # Extraer para los últimos boletines (últimos 7 días)
+                for b in boletines[-7:]:
                     b_fecha = b.get("fecha")
                     b_pdf = pdf_map.get(b.get("archivo"))
                     if not b_pdf or not os.path.exists(b_pdf):

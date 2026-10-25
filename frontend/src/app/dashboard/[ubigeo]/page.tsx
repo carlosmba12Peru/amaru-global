@@ -443,7 +443,7 @@ export default function ConsolaMunicipalPage({
                     originaria: data.aviso_originaria,
                     lengua_nombre: data.lengua_nombre,
                     canales: [
-                        { canal: "COER_COEL_TACTICO", destinatario: "Canal Autoridades COER/COEL (-1001234567890)", estado: "ENVIADO" },
+                        { canal: "COER_COEL_TACTICO", destinatario: "Canal Autoridades COED Regional/Municipal (-1001234567890)", estado: "ENVIADO" },
                         { canal: "VECINAL_COMUNITARIO", destinatario: "Canal Vecinal Ciudadano (-1009876543210)", estado: "ENVIADO" }
                     ],
                     latencia_total_ms: 294.0,
@@ -452,7 +452,7 @@ export default function ConsolaMunicipalPage({
                     cape_index: data.cape_j_kg,
                     senamhi_estacion: "EMA-CHOSICA-472",
                     cap_v12_json: {
-                        identifier: `PE-COEN-2026-CAP-${Math.floor(100000 + Math.random() * 900000)}`,
+                        identifier: `PE-COED-2026-CAP-${Math.floor(100000 + Math.random() * 900000)}`,
                         sender: "sat-coen@indeci.gob.pe",
                         status: "Actual",
                         msgType: "Alert",
@@ -920,7 +920,7 @@ export default function ConsolaMunicipalPage({
                                     {pipelineResult.canales?.map((c, i) => (
                                         <div key={i} className="bg-slate-950 p-2.5 rounded-lg border border-slate-800 flex justify-between items-center text-xs">
                                             <div>
-                                                <div className="font-semibold text-slate-200">{c.canal === "COER_COEL_TACTICO" ? "🏢 Canal Autoridades (COER/COEL)" : "👥 Canal Vecinal Comunitario"}</div>
+                                                <div className="font-semibold text-slate-200">{c.canal === "COER_COEL_TACTICO" ? "🏢 Canal Autoridades (COED Regional/Municipal)" : "👥 Canal Vecinal Comunitario"}</div>
                                                 <div className="text-[10px] text-slate-500 font-mono">{c.destinatario}</div>
                                             </div>
                                             <span className="bg-emerald-950 border border-emerald-700 text-emerald-400 font-bold px-2 py-0.5 rounded text-[11px]">
@@ -986,7 +986,7 @@ export default function ConsolaMunicipalPage({
                             📋 Doctrina Táctica INDECI / SINAGERD
                         </h3>
                         <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                            En nivel de alerta ROJO, la activación del COEL debe ser inmediata. El Agente Táctico recomienda priorizar la movilización de maquinaria pesada a los vados y quebradas de mayor pendiente para evitar represamientos destructivos.
+                            En nivel de alerta ROJO, la activación del COED Municipal debe ser inmediata. El Agente Táctico recomienda priorizar la movilización de maquinaria pesada a los vados y quebradas de mayor pendiente para evitar represamientos destructivos.
                         </p>
 
                         <div className="bg-slate-950 border border-slate-800 p-4 rounded-lg text-xs space-y-2 text-slate-300">

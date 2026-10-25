@@ -269,12 +269,34 @@ class ContraloriaAuditService:
         registro["visto_bueno_concurrente"] = visto_bueno
         registro["autoriza_reparto_inmediato_bah"] = True
 
+        # Acuñar evento inmutable en Bitácora WORM CGR
+        bloque_worm_hash = None
+        try:
+            from services.cgr_worm_service import cgr_worm_service
+            bloque = cgr_worm_service.acunar_evento(
+                tipo_evento="CONSTANCIA_OCI_CONCURRENTE",
+                actor_responsable=visto_bueno["auditor_responsable"],
+                entidad_origen="CONTRALORIA_GENERAL_DE_LA_REPUBLICA",
+                datos_evento={
+                    "constancia_codigo": constancia_codigo,
+                    "registro_cgr_id": registro["registro_cgr_id"],
+                    "edan_id": registro["edan_id"],
+                    "distrito": registro.get("distrito"),
+                    "dictamen": visto_bueno["dictamen"]
+                }
+            )
+            bloque_worm_hash = bloque["block_hash"]
+            registro["bloque_worm_cgr"] = bloque_worm_hash
+        except Exception:
+            pass
+
         self._guardar_bandeja()
         return {
             "exito": True,
             "registro_cgr_id": registro["registro_cgr_id"],
             "edan_id": registro["edan_id"],
-            "constancia_cgr": visto_bueno
+            "constancia_cgr": visto_bueno,
+            "bloque_worm_cgr": bloque_worm_hash
         }
 
 contraloria_service = ContraloriaAuditService()

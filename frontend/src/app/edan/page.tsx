@@ -32,8 +32,17 @@ import {
     Trash2,
     UserCheck,
     ShieldAlert,
-    MapPin
+    MapPin,
+    Scale,
+    Landmark,
+    ChevronRight,
+    MessageSquare,
+    Lock,
+    Truck
 } from "lucide-react";
+import WhatsAppEmulatorTab from "@/components/WhatsAppEmulatorTab";
+import CgrWormTab from "@/components/CgrWormTab";
+import EmergencyLifecycleStepper, { EmergencyStepId } from "@/components/EmergencyLifecycleStepper";
 
 interface Familia {
     numero_orden: number;
@@ -125,6 +134,12 @@ interface FichaEmitida {
     total_familias: number;
     familias_bono_bae: number;
     seguro_agricola_sac_activado: boolean;
+    quorum_dual?: {
+        cumplido: boolean;
+        estado_desbloqueo: string;
+        total_firmas: number;
+        firmas: any[];
+    };
     disparo_contraloria: {
         registro_cgr_id: string;
         estado_control: string;
@@ -132,7 +147,10 @@ interface FichaEmitida {
     };
 }
 
+
 const DISTRITOS_PRIORITARIOS = [
+    { ubigeo: "120901", nombre: "Chupaca (Junín)", provincia: "Chupaca", depto: "Junín", ds: true },
+    { ubigeo: "150118", nombre: "Lurigancho-Chosica", provincia: "Lima", depto: "Lima", ds: true },
     { ubigeo: "200105", nombre: "Catacaos", provincia: "Piura", depto: "Piura", ds: true },
     { ubigeo: "200107", nombre: "Cura Mori", provincia: "Piura", depto: "Piura", ds: true },
     { ubigeo: "200114", nombre: "Tambogrande", provincia: "Piura", depto: "Piura", ds: true },
@@ -144,16 +162,19 @@ const DISTRITOS_PRIORITARIOS = [
 ];
 
 export default function EdanSinpadPage() {
-    const [ubigeoSeleccionado, setUbigeoSeleccionado] = useState<string>("200105");
+    const [ubigeoSeleccionado, setUbigeoSeleccionado] = useState<string>("120901");
     const [plantilla, setPlantilla] = useState<PlantillaEDAN | null>(null);
-    const [activeTab, setActiveTab] = useState<"f1" | "f2a" | "f2b" | "anexo2" | "previsualizacion">("f2a");
+    const [activeTab, setActiveTab] = useState<"f1" | "f2a" | "f2b" | "anexo2" | "previsualizacion" | "whatsapp" | "worm">("f2a");
     const [cargando, setCargando] = useState<boolean>(true);
     const [auditando, setAuditando] = useState<boolean>(false);
     const [auditoria, setAuditoria] = useState<AuditoriaResultado | null>(null);
     const [emitiendo, setEmitiendo] = useState<boolean>(false);
     const [fichaEmitida, setFichaEmitida] = useState<FichaEmitida | null>(null);
     const [tokenFirma, setTokenFirma] = useState<string>("MUNI-DEFENSA-CIVIL-KEY-2026");
+    const [tokenAlcalde, setTokenAlcalde] = useState<string>("TOKEN-ALCALDE-2026-CHUPACA");
+    const [tokenIndeci, setTokenIndeci] = useState<string>("TOKEN-INDECI-COEN-DESPACHO");
     const [ineiVulnerabilidad, setIneiVulnerabilidad] = useState<any | null>(null);
+
 
     // Referencias Institucionales Obligatorias (PNP & MINEDU)
     const [referencias, setReferencias] = useState<{
@@ -191,6 +212,22 @@ export default function EdanSinpadPage() {
             }
         };
         fetchCatalogoYCasos();
+    }, []);
+
+    // Soporte de Cross-Linking Operativo por URL Query Params (?ubigeo=...&tab=...)
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const params = new URLSearchParams(window.location.search);
+            const ubigeoParam = params.get("ubigeo");
+            const tabParam = params.get("tab");
+            if (ubigeoParam && ubigeoParam !== "120901") {
+                setUbigeoSeleccionado(ubigeoParam);
+                cargarPlantilla(ubigeoParam);
+            }
+            if (tabParam && ["f1", "f2a", "f2b", "anexo2", "previsualizacion", "whatsapp", "worm"].includes(tabParam)) {
+                setActiveTab(tabParam as any);
+            }
+        }
     }, []);
 
     const calcularPlanilla = async (data: PlantillaEDAN) => {
@@ -455,9 +492,12 @@ export default function EdanSinpadPage() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     ficha: plantilla,
-                    token_autoridad: tokenFirma
+                    token_autoridad: tokenFirma,
+                    token_alcalde: tokenAlcalde,
+                    token_indeci: tokenIndeci
                 })
             });
+
             if (res.ok) {
                 const data: FichaEmitida = await res.json();
                 setFichaEmitida(data);
@@ -469,46 +509,97 @@ export default function EdanSinpadPage() {
         }
     };
 
+    const currentStepperStep: EmergencyStepId =
+        activeTab === "whatsapp" ? "alerta" :
+        activeTab === "previsualizacion" ? "quorum" :
+        activeTab === "worm" ? "worm" : "edan";
+
     return (
         <div className="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8 font-sans">
+            {/* Stepper del Ciclo de Emergencia */}
+            <div className="max-w-7xl mx-auto">
+                <EmergencyLifecycleStepper
+                    currentStep={currentStepperStep}
+                    distrito={plantilla?.distrito}
+                    ubigeo={plantilla?.ubigeo || ubigeoSeleccionado}
+                />
+            </div>
+
             {/* Header Estratégico */}
             <header className="max-w-7xl mx-auto mb-8">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-800">
                     <div>
-                        <div className="flex items-center gap-2 mb-2">
-                            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
-                                <FileCheck2 className="w-3.5 h-3.5" />
-                                R.S. Nº 002-2026-PCM/SGRD & R.M. Nº 324-2023-PCM
+                        <div className="flex flex-wrap items-center gap-2 mb-2">
+                            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1.5">
+                                <Scale className="w-3.5 h-3.5" />
+                                NIVEL 4 • GOBERNANZA, AUDITORÍA &amp; FE PÚBLICA (ANILLO 3)
                             </span>
                             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/30">
-                                SINPAD v2.0 Homologado
+                                R.S. Nº 002-2026-PCM &amp; SINPAD v2.0
+                            </span>
+                            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-purple-950 text-purple-300 border border-purple-800 font-bold">
+                                REGLA I_CT &ge; 0.70 &amp; BONO BAE
                             </span>
                         </div>
                         <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
                             <Building2 className="w-8 h-8 text-emerald-400" />
-                            Consola Municipal EDAN Digital & Bono BAE
+                            Consola Municipal EDAN Digital &amp; Bono BAE
                         </h1>
                         <p className="text-sm text-slate-400 mt-1 max-w-3xl">
                             Eliminación de la brecha burocrática de 20 a 35 días en el empadronamiento. Pre-auditoría algorítmica para evitar el rechazo del subsidio de arrendamiento BAE (S/ 500/mes), Seguro Agrícola Catastrófico y despacho instantáneo a Contraloría.
                         </p>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-2">
                         <Link
-                            href="/reniec"
-                            className="px-4 py-2.5 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-300 text-sm font-semibold flex items-center gap-2 transition"
+                            href="/lex"
+                            className="px-3.5 py-2 rounded-xl bg-amber-950/60 hover:bg-amber-900 border border-amber-700/50 text-amber-200 text-xs font-semibold flex items-center gap-1.5 transition shadow"
                         >
-                            <UserCheck className="w-4 h-4" />
-                            Validación RENIEC (PIDE)
-                            <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+                            <Scale className="w-3.5 h-3.5 text-amber-400" />
+                            <span>AMARU-LEX</span>
                         </Link>
                         <Link
                             href="/contraloria"
-                            className="px-4 py-2.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-sm font-semibold flex items-center gap-2 transition"
+                            className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition"
                         >
-                            <Shield className="w-4 h-4" />
-                            Consola Contraloría (Control Concurrente)
-                            <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+                            <Shield className="w-3.5 h-3.5 text-amber-400" />
+                            <span>Control CGR</span>
+                        </Link>
+                        <Link
+                            href="/auditoria"
+                            className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition"
+                        >
+                            <FileCheck2 className="w-3.5 h-3.5 text-emerald-400" />
+                            <span>Bitácora WORM</span>
+                        </Link>
+                        <Link
+                            href="/fiscal"
+                            className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition"
+                        >
+                            <Landmark className="w-3.5 h-3.5 text-cyan-400" />
+                            <span>Fiscal PP 068</span>
+                        </Link>
+                    </div>
+                </div>
+
+                {/* Dock de Gobernanza Legal & Trazabilidad C2 */}
+                <div className="mt-4 p-3 bg-slate-900/90 border border-emerald-900/40 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs">
+                    <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                        <span className="font-bold text-emerald-300">ANILLO 3 DE BLINDAJE LEGAL:</span>
+                        <span className="text-slate-400 hidden md:inline">Cierre de bucle administrativo, fe pública y prueba digital ISO 27037</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Link href="/reniec" className="px-2.5 py-1 rounded-lg bg-sky-950/60 hover:bg-sky-900 text-sky-200 border border-sky-800/40 transition flex items-center gap-1">
+                            <UserCheck className="w-3 h-3 text-sky-400" />
+                            <span>Validación RENIEC PIDE</span>
+                        </Link>
+                        <Link href="/doctrina" className="px-2.5 py-1 rounded-lg bg-purple-950/60 hover:bg-purple-900 text-purple-200 border border-purple-800/40 transition flex items-center gap-1">
+                            <span>Fórmulas C2</span>
+                        </Link>
+                        <span className="text-slate-600">|</span>
+                        <Link href="/alertas" className="px-2.5 py-1 rounded-lg bg-amber-950/50 hover:bg-amber-900 text-amber-200 border border-amber-800/40 transition flex items-center gap-1 text-[11px]">
+                            <span>⬆ Nivel 2 Municipal</span>
                         </Link>
                     </div>
                 </div>
@@ -981,6 +1072,32 @@ export default function EdanSinpadPage() {
                         <FileText className="w-4 h-4 text-purple-400" />
                         Previsualización Oficial en Vivo
                         <span className="text-[10px] bg-purple-500/20 text-purple-300 px-1.5 py-0.5 rounded font-mono">Oficial INDECI</span>
+                    </button>
+
+                    <button
+                        onClick={() => setActiveTab("whatsapp")}
+                        className={`px-4 py-2.5 text-xs sm:text-sm font-semibold border-b-2 flex items-center gap-2 transition ${
+                            activeTab === "whatsapp"
+                                ? "border-emerald-500 text-emerald-400 bg-emerald-500/10 rounded-t-lg"
+                                : "border-transparent text-slate-400 hover:text-slate-200"
+                        }`}
+                    >
+                        <MessageSquare className="w-4 h-4 text-emerald-400" />
+                        💬 Emulador WhatsApp (Campo)
+                        <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-mono font-bold">Módulo 5</span>
+                    </button>
+
+                    <button
+                        onClick={() => setActiveTab("worm")}
+                        className={`px-4 py-2.5 text-xs sm:text-sm font-semibold border-b-2 flex items-center gap-2 transition ${
+                            activeTab === "worm"
+                                ? "border-purple-500 text-purple-400 bg-purple-500/10 rounded-t-lg"
+                                : "border-transparent text-slate-400 hover:text-slate-200"
+                        }`}
+                    >
+                        <Lock className="w-4 h-4 text-purple-400" />
+                        🛡️ Bitácora WORM CGR
+                        <span className="text-[10px] bg-purple-500/20 text-purple-300 px-1.5 py-0.5 rounded font-mono font-bold">Módulo 6</span>
                     </button>
                 </div>
 
@@ -1579,16 +1696,29 @@ export default function EdanSinpadPage() {
                                 </div>
                             </div>
                         )}
-                        <div className="mt-8 bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6">
-                            <div className="space-y-1">
-                                <div className="text-sm font-bold text-white flex items-center gap-2">
-                                    <Shield className="w-4 h-4 text-emerald-400" />
-                                    Firma Digital y Envío Homologado SINPAD v2
+
+                        {/* TAB MÓDULO 5: EMULADOR WHATSAPP COMUNITARIO */}
+                        {activeTab === "whatsapp" && (
+                            <WhatsAppEmulatorTab />
+                        )}
+
+                        {/* TAB MÓDULO 6: BITÁCORA WORM CGR */}
+                        {activeTab === "worm" && (
+                            <CgrWormTab />
+                        )}
+
+                        {/* BARRA DE FIRMA OFICIAL (Solo visible en pestañas de la Ficha EDAN) */}
+                        {activeTab !== "whatsapp" && activeTab !== "worm" && (
+                            <div className="mt-8 bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+                                <div className="space-y-1">
+                                    <div className="text-sm font-bold text-white flex items-center gap-2">
+                                        <Shield className="w-4 h-4 text-emerald-400" />
+                                        Firma Digital y Envío Homologado SINPAD v2
+                                    </div>
+                                    <p className="text-xs text-slate-400 max-w-xl">
+                                        Al emitir la ficha, se sella criptográficamente con SHA-256, se genera el código QR fiscalizable y se despacha de inmediato por webhook a la Contraloría General de la República para su control concurrente.
+                                    </p>
                                 </div>
-                                <p className="text-xs text-slate-400 max-w-xl">
-                                    Al emitir la ficha, se sella criptográficamente con SHA-256, se genera el código QR fiscalizable y se despacha de inmediato por webhook a la Contraloría General de la República para su control concurrente.
-                                </p>
-                            </div>
 
                             <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
                                 <button
@@ -1610,6 +1740,7 @@ export default function EdanSinpadPage() {
                                 </button>
                             </div>
                         </div>
+                        )}
 
                         {/* RESULTADO TRAS EMISIÓN DE FICHA OFICIAL */}
                         {fichaEmitida && (
@@ -1684,6 +1815,14 @@ export default function EdanSinpadPage() {
                                     >
                                         <Shield className="w-3.5 h-3.5" />
                                         Ver en Consola de Control Concurrente
+                                    </Link>
+
+                                    <Link
+                                        href={`/logistica?edan_id=${fichaEmitida.edan_id}&distrito=${encodeURIComponent(fichaEmitida.distrito)}&ubigeo=${plantilla?.ubigeo || ""}&familias=${fichaEmitida.total_familias}`}
+                                        className="px-4 py-2 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-bold text-xs rounded-lg flex items-center gap-2 shadow-md shadow-sky-600/20 transition"
+                                    >
+                                        <Truck className="w-3.5 h-3.5" />
+                                        🚛 Despachar Convoy Humanitario Anti-Corte
                                     </Link>
                                 </div>
                             </div>

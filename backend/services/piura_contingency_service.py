@@ -10,11 +10,13 @@ Incorpora:
 """
 
 import json
+import math
 import hashlib
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from pydantic import BaseModel, Field
+
 
 
 class PiuraContingencyService:
@@ -356,5 +358,115 @@ class PiuraContingencyService:
             "timestamp_auditoria": datetime.now(timezone.utc).isoformat()
         }
 
+    # =========================================================================
+    # 6. PLAN TÁCTICO C2: CHULUCANAS - MERCADO MODELO & CUENCAS CIEGAS
+    # =========================================================================
+
+    def generar_plan_contingencia_chulucanas_mercado(self, lluvia_mm: float = 45.0) -> Dict[str, Any]:
+        """
+        Calcula el plan táctico de contingencia y desagüe inmediato para el Mercado Modelo
+        y sectores críticos de Chulucanas (Morropón), enlazando la física pluvial con
+        el dimensionamiento de motobombas y el blindaje presupuestal PP 0068 (Art. 27 Ley 30225).
+        """
+        # Parámetros físicos del centro de abastos y cuencas ciegas
+        area_mercado_m2 = 12500.0  # Área techada e inmediaciones del Mercado Modelo
+        area_cuenca_ciega_chulucanas_m2 = 85000.0  # Cuenca de drenaje hacia Jr. Pisagua / Mercado
+        
+        # Coeficiente de escorrentía urbano (asfalto, techos, veredas impermeables) = 0.85
+        volumen_agua_mercado_m3 = round((area_mercado_m2 * (lluvia_mm / 1000.0)) * 0.90, 1)
+        volumen_cuenca_completa_m3 = round((area_cuenca_ciega_chulucanas_m2 * (lluvia_mm / 1000.0)) * 0.85, 1)
+        
+        # Tirante estimado en calles (calado de inundación en cm)
+        tirante_cm = min(65.0, round((lluvia_mm * 0.72), 1))
+        
+        # Dimensionamiento de motobombas (Capacidad motobomba 6" = 250 m³/h; 8" = 450 m³/h)
+        horas_objetivo_desague = 2.0  # Ventana de rescate comercial
+        caudal_necesario_m3h = round(volumen_agua_mercado_m3 / horas_objetivo_desague, 1)
+        bombas_6_pulgadas = max(2, math.ceil(caudal_necesario_m3h / 250.0))
+        cisternas_hidrojet = 2 if tirante_cm >= 25.0 else 1
+        
+        # Presupuesto referencial de alquiler y combustible de emergencia
+        costo_alquiler_bomba_dia = 1200.0
+        costo_combustible_diesel_gl = 22.5
+        costo_total_operativo_soles = round((bombas_6_pulgadas * costo_alquiler_bomba_dia) + (cisternas_hidrojet * 2800.0) + (180 * costo_combustible_diesel_gl), 2)
+        
+        # Lead-Time hacia la cuenca baja
+        lead_time_tambogrande_min = 70
+        lead_time_piura_horas = 12.0
+        
+        # Generación de Hash de Blindaje Pericial para el OCI / Contraloría
+        cadena_sustento = f"CHULUCANAS-200401-{lluvia_mm}-{volumen_agua_mercado_m3}-{tirante_cm}-{datetime.now(timezone.utc).strftime('%Y%m%d%H')}"
+        hash_pericial = hashlib.sha256(cadena_sustento.encode()).hexdigest()[:16].upper()
+
+        return {
+            "status": "SUCCESS",
+            "ubigeo": "200401",
+            "distrito": "CHULUCANAS",
+            "provincia": "MORROPON",
+            "departamento": "PIURA",
+            "sector_critico": "Mercado Modelo de Chulucanas & Jr. Pisagua",
+            "alcalde_titular": "Sr. Richard Baca Palacios",
+            "evento_meteorologico": {
+                "lluvia_registrada_mm": lluvia_mm,
+                "tirante_inundacion_estimado_cm": tirante_cm,
+                "estado_alerta": "ROJO_CRITICO" if tirante_cm >= 25.0 else ("NARANJA" if tirante_cm >= 15.0 else "AMARILLO"),
+                "volumen_inundacion_mercado_m3": volumen_agua_mercado_m3,
+                "volumen_cuenca_ciega_total_m3": volumen_cuenca_completa_m3
+            },
+            "puntos_criticos_asociados": [
+                {"nombre": "Mercado Modelo de Chulucanas", "calado_cm": tirante_cm, "comerciantes_expuestos": 850, "accion": "Cierre preventivo y elevación de mercadería a tarimas"},
+                {"nombre": "Barrio Monte Verde", "calado_cm": round(tirante_cm * 0.85, 1), "viviendas_expuestas": 140, "accion": "Activación de electrobomba comunal y sacos terreros"},
+                {"nombre": "AA.HH. Villa Mercedes / Consuelo de Velasco", "calado_cm": round(tirante_cm * 0.75, 1), "viviendas_expuestas": 220, "accion": "Zanja de coronación y desvío hacia dren"},
+                {"nombre": "AA.HH. José Carlos Mariátegui", "calado_cm": round(tirante_cm * 0.90, 1), "viviendas_expuestas": 180, "accion": "Evacuación de familias ribereñas"}
+            ],
+            "dimensionamiento_motobombas_c2": {
+                "unidades_motobomba_6_pulgadas": bombas_6_pulgadas,
+                "unidades_cisterna_hidrojet": cisternas_hidrojet,
+                "capacidad_desfogue_m3_hora": bombas_6_pulgadas * 250,
+                "tiempo_estimado_achique_horas": horas_objetivo_desague,
+                "manguera_descarga_requerida_metros": 600
+            },
+            "transito_hidraulico_aguas_abajo": {
+                "quebrada_receptora": "Quebrada Sol Sol / Quebrada San Francisco",
+                "lead_time_tambogrande": f"T - {lead_time_tambogrande_min} minutos (Corte del badén San Francisco)",
+                "lead_time_bajo_piura": f"T - {lead_time_piura_horas} horas (Crecida hacia Puente Sánchez Cerro y Catacaos)"
+            },
+            "blindaje_legal_contraloria_mef": {
+                "programa_presupuestal": "PP 0068 (Reducción de la Vulnerabilidad y Atención de Emergencias)",
+                "modalidad_contratacion": "Contratación Directa por Situación de Emergencia (Art. 27 lit. b Ley N.° 30225)",
+                "costo_estimado_soles": costo_total_operativo_soles,
+                "hash_certificacion_pericial": f"SHA256-CHUL-{hash_pericial}",
+                "fundamento_penal": "Evita delito de Omisión de Actos Funcionales (Art. 377 Código Penal) al acreditar el requerimiento objetivo de bombeo."
+            },
+            "pdu_chulucanas_2020_2030": {
+                "documento_fuente": "Plan de Desarrollo Urbano de Chulucanas 2020-2030 (Resumen Ejecutivo MVCS / MP Morropón)",
+                "proyecto_mercado_pdu": {
+                    "codigo": "P.1.1.2.2 (OE-1, ES-2)",
+                    "nombre": "Construcción de Nuevo Mercado Distrital de Chulucanas",
+                    "responsable": "Municipalidad Provincial de Morropón - Chulucanas",
+                    "monto_inversion_soles": 25800000.0,
+                    "estado_brecha": "EN CARTERA PDU / NO EJECUTADO (Justifica bombeo de emergencia C2)"
+                },
+                "proyecto_macro_drenaje": {
+                    "codigo": "P.5.4.12.1 (OE-4, ES-12)",
+                    "nombre": "Implementación de Medidas Estructurales de Prevención, Reducción y Rehabilitación de Riesgo de Desastres en Chulucanas",
+                    "responsable": "GORE Piura",
+                    "monto_inversion_soles": 91860000.0
+                },
+                "sectores_riesgo_pluvial_pdu": [
+                    {"sector": "Sector 02 (Norte / Canadá, Pilar Nores)", "exposicion_pluvial_pct": 12.28},
+                    {"sector": "Sector 06 (Este / Ñácara, Santa Rosa)", "exposicion_pluvial_pct": 11.61},
+                    {"sector": "Sector 04 (Suroeste / Vate Manrique, Mercedes)", "exposicion_pluvial_pct": 10.46},
+                    {"sector": "Sector 03 (Oeste / Mariátegui, Consuelo de Velasco)", "exposicion_pluvial_pct": 7.06}
+                ]
+            },
+            "mensaje_operativo_c2": (
+                f"🚨 ALERTA ROJA TÁCTICA C2 EN CHULUCANAS: Lluvia de {lluvia_mm} mm genera anegamiento de {tirante_cm} cm en Mercado Modelo. "
+                f"Requerimiento pericial: Despliegue de {bombas_6_pulgadas}x Motobombas 6\" + {cisternas_hidrojet}x Hidrojets con cargo al PP 0068. "
+                f"Alerta aguas abajo: Onda aluvial alcanzará Tambogrande en {lead_time_tambogrande_min} min."
+            )
+        }
+
 
 piura_contingency_service = PiuraContingencyService()
+

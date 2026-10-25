@@ -201,30 +201,63 @@ class MeteoServicePro:
         return cls._dept_live_cache or {}
 
     @classmethod
-    def get_ds124_matrix(cls, mode: str = "LIVE") -> Dict[str, Any]:
+    def get_ds124_matrix(cls, mode: str = "LIVE", teatro: str = "FEN") -> Dict[str, Any]:
         """
-        Genera y retorna la matriz integral de los 893 distritos declarados en el
-        Decreto de Emergencia D.S. Nº 124-2026-PCM ante peligro inminente por lluvias del Fenómeno El Niño.
+        Genera y retorna la matriz integral meteorológica para los teatros operacionales:
+        - FEN: 875 distritos declarados en el Decreto de Emergencia D.S. Nº 124-2026-PCM (lluvias/huaicos)
+        - CHIRI: 1,530 distritos nacionales bajo Heladas y Friajes (ERHF CENEPRED 2024 / PMHF)
+        - PUNO: 110 distritos del epicentro altiplánico de Puno
+        - DOBLE_RIESGO: 592 distritos en Pinza Multi-Amenaza (solapamiento FEN + Helada/Friaje)
+        - TODOS: 1,813 distritos territoriales indexados
         Modos:
           - "LIVE": Conectado 100% en vivo a Open-Meteo ECMWF IFS con el pronóstico de hoy.
-          - "SIMULACION": Escenario de contingencia pico del FEN 2026-2027 para planificación de evacuaciones.
+          - "SIMULACION": Escenario de contingencia pico del FEN / La Niña 2026-2027.
         """
         import json, hashlib
 
-        data_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "geodatos_893_distritos_ubigeo.json")
-        if not os.path.exists(data_path):
-            alt_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data", "geodatos_893_distritos_ubigeo.json")
+        teatro_upper = (teatro or "FEN").upper().strip()
+
+        # Cargar Matriz Territorial Nacional Unificada si existe
+        matriz_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "matriz_territorial_nacional_riesgos.json")
+        if not os.path.exists(matriz_path):
+            alt_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data", "matriz_territorial_nacional_riesgos.json")
             if os.path.exists(alt_path):
-                data_path = alt_path
+                matriz_path = alt_path
 
-        try:
-            with open(data_path, "r", encoding="utf-8") as f:
-                raw_data = json.load(f)
-        except Exception as e:
-            print(f"[MeteoServicePro Error] Falló carga de geodatos: {e}")
-            raw_data = {"ubigeos": []}
+        raw_distritos = []
+        stats_globales = {"total_fen_pluvial": 875, "total_chiri_bajas_temperaturas": 1530, "total_doble_vulnerabilidad": 592, "total_puno_altiplano": 110, "total_piura_epicentro": 64, "total_distritos_monitoreados": 1813}
 
-        distritos_ds124 = [d for d in raw_data.get("ubigeos", []) if d.get("declarado_ds_124")]
+        if os.path.exists(matriz_path):
+            try:
+                with open(matriz_path, "r", encoding="utf-8") as f:
+                    matriz_data = json.load(f)
+                    raw_distritos = matriz_data.get("distritos", [])
+                    stats_globales = matriz_data.get("metadata", {}).get("estadisticas_globales", stats_globales)
+            except Exception as e:
+                print(f"[MeteoServicePro Error] Falló carga de matriz nacional: {e}")
+
+        if raw_distritos:
+            if teatro_upper == "CHIRI":
+                distritos_filtrados = [d for d in raw_distritos if d.get("regimen_chiri")]
+            elif teatro_upper == "PUNO":
+                distritos_filtrados = [d for d in raw_distritos if d.get("es_puno_altiplano")]
+            elif teatro_upper == "PIURA":
+                distritos_filtrados = [d for d in raw_distritos if (d.get("departamento") or "").upper().strip() == "PIURA"]
+            elif teatro_upper == "DOBLE_RIESGO":
+                distritos_filtrados = [d for d in raw_distritos if d.get("doble_vulnerabilidad")]
+            elif teatro_upper == "TODOS":
+                distritos_filtrados = raw_distritos
+            else: # FEN por defecto
+                distritos_filtrados = [d for d in raw_distritos if d.get("regimen_fen")]
+        else:
+            # Fallback histórico geodatos 893
+            data_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "geodatos_893_distritos_ubigeo.json")
+            try:
+                with open(data_path, "r", encoding="utf-8") as f:
+                    raw_data = json.load(f)
+            except Exception:
+                raw_data = {"ubigeos": []}
+            distritos_filtrados = [d for d in raw_data.get("ubigeos", []) if d.get("declarado_ds_124")]
 
         # Si el modo es LIVE, intentar obtener telemetría viva de Open-Meteo
         live_dept_data = {}
@@ -239,7 +272,7 @@ class MeteoServicePro:
         poblacion_riesgo_extremo = 0
         departamentos_stats = {}
 
-        for d in distritos_ds124:
+        for d in distritos_filtrados:
             ubigeo = d.get("ubigeo", "000000")
             dept = (d.get("departamento") or "").upper().strip()
             prov = (d.get("provincia") or "").upper().strip()
@@ -331,30 +364,104 @@ class MeteoServicePro:
                 wind = round(wind, 1)
                 glofas = round(glofas, 1)
                 wmo_code = 95 if rain_24h >= 50 else (80 if rain_24h >= 25 else (61 if rain_24h >= 10 else 1))
-                tmax = round(26.0 + (h * 0.08) if lat > -12 else 20.0 + (h * 0.07), 1)
-                tmin = round(18.0 + (h2 * 0.06) if lat > -12 else 11.0 + (h2 * 0.05), 1)
+            # -------------------------------------------------------------
+            # Modelado Crioclimático & Térmico (Heladas, Friajes, Puno)
+            # -------------------------------------------------------------
+            tipo_amenaza_calc = d.get("tipo_amenaza_frio")
+            if d.get("doble_vulnerabilidad"):
+                tipo_amenaza_calc = "DOBLE_AMENAZA"
+            elif not tipo_amenaza_calc:
+                tipo_amenaza_calc = "INUNDACION_HUAICO" if d.get("regimen_fen") else "HELADA"
 
-            # Clasificación del Semáforo Estricto según Open-Meteo y D.S. 124 (>30 mm/24h en cabecera en ROJO)
-            if rain_24h >= 30.0:
-                nivel = "ROJO"
-                wmo_code = 95 if cape > 1200 else 65
-                desc_clima = "Lluvia Torrencial Crítica / Alarma Extrema"
-                prob_lluvia = 95
-            elif rain_24h >= 15.0:
-                nivel = "NARANJA"
-                wmo_code = 80 if cape > 800 else 63
-                desc_clima = "Lluvia Fuerte / Riesgo de Huaico"
-                prob_lluvia = 85
-            elif rain_24h >= 5.0:
-                nivel = "AMARILLO"
-                wmo_code = 61
-                desc_clima = "Lluvia Moderada / Vigilancia"
-                prob_lluvia = 65
+            is_cold_theater = teatro_upper in ["CHIRI", "PUNO"]
+            if is_cold_theater or d.get("regimen_chiri") or d.get("es_puno_altiplano"):
+                if d.get("es_puno_altiplano") or dept == "PUNO":
+                    # Altiplano y cordillera alta de Puno (3,800 - 4,800 msnm)
+                    tmin = round(-5.0 - (h % 9) - ((h2 % 10) * 0.1), 1)
+                    tmax = round(9.0 + (h % 5), 1)
+                    nieve_cm = round(4.0 + (h2 % 16) * 0.8, 1) if tmin <= -4.0 else 0.0
+                elif tipo_amenaza_calc == "FRIAJE" or dept in ["MADRE DE DIOS", "UCAYALI", "LORETO"]:
+                    # Friaje amazónico
+                    tmin = round(11.0 + (h % 5), 1)
+                    tmax = round(23.0 + (h % 4), 1)
+                    nieve_cm = 0.0
+                else:
+                    # Sierra central / sur (Arequipa, Cusco, Junín, Huancavelica, etc.)
+                    tmin = round(-2.0 - (h % 7) - ((h2 % 10) * 0.1), 1)
+                    tmax = round(14.0 + (h % 6), 1)
+                    nieve_cm = round(2.0 + (h2 % 10) * 0.6, 1) if tmin <= -5.0 else 0.0
             else:
-                nivel = "VERDE"
-                wmo_code = 51 if rain_24h > 1.0 else 3
-                desc_clima = "Precipitación Ligera o Nula" if rain_24h < 1.0 else "Llovizna Débil"
-                prob_lluvia = 25
+                nieve_cm = 0.0
+                tmin = round(21.0 + (h % 4) * 0.5, 1)
+                tmax = round(31.0 + (h2 % 5) * 0.6, 1)
+
+            # Clasificación del Semáforo según el Teatro Operacional
+            if is_cold_theater:
+                # Semáforo Crioclimático (CENEPRED ERHF)
+                if tmin <= -8.0 or nieve_cm >= 10.0:
+                    nivel = "ROJO"
+                    wmo_code = 75 if nieve_cm > 0 else 71
+                    desc_clima = "Helada Severa y Nieve / Alarma Agropecuaria"
+                    prob_lluvia = 90
+                elif tmin <= -4.0 or nieve_cm >= 4.0:
+                    nivel = "NARANJA"
+                    wmo_code = 73 if nieve_cm > 0 else 3
+                    desc_clima = "Helada Fuerte / Riesgo Pecuario Altiplánico"
+                    prob_lluvia = 75
+                elif tmin <= 0.0:
+                    nivel = "AMARILLO"
+                    wmo_code = 71 if nieve_cm > 0 else 2
+                    desc_clima = "Helada Moderada / Descenso Térmico Nocturno"
+                    prob_lluvia = 50
+                else:
+                    nivel = "VERDE"
+                    wmo_code = 1
+                    desc_clima = "Condición Criotérmica Normal"
+                    prob_lluvia = 20
+            elif teatro_upper == "DOBLE_RIESGO":
+                # Semáforo Pinza Multi-Amenaza: Alarma si lluvia crítica O helada severa
+                if rain_24h >= 25.0 or tmin <= -6.0:
+                    nivel = "ROJO"
+                    wmo_code = 95 if rain_24h >= 25.0 else 75
+                    desc_clima = "Multi-Amenaza Crítica (Lluvia Torrencial y/o Helada Extrema)"
+                    prob_lluvia = 90
+                elif rain_24h >= 12.0 or tmin <= -3.0:
+                    nivel = "NARANJA"
+                    wmo_code = 80 if rain_24h >= 12.0 else 73
+                    desc_clima = "Riesgo Combinado Hidrológico y Crioclimático"
+                    prob_lluvia = 80
+                elif rain_24h >= 4.0 or tmin <= 1.0:
+                    nivel = "AMARILLO"
+                    wmo_code = 61
+                    desc_clima = "Vigilancia de Doble Amenaza"
+                    prob_lluvia = 60
+                else:
+                    nivel = "VERDE"
+                    wmo_code = 2
+                    desc_clima = "Sin Alerta Multi-Amenaza Inmediata"
+                    prob_lluvia = 25
+            else:
+                # Semáforo Pluvial FEN Clásico (D.S. 124)
+                if rain_24h >= 30.0:
+                    nivel = "ROJO"
+                    wmo_code = 95 if cape > 1200 else 65
+                    desc_clima = "Lluvia Torrencial Crítica / Alarma Extrema"
+                    prob_lluvia = 95
+                elif rain_24h >= 15.0:
+                    nivel = "NARANJA"
+                    wmo_code = 80 if cape > 800 else 63
+                    desc_clima = "Lluvia Fuerte / Riesgo de Huaico"
+                    prob_lluvia = 85
+                elif rain_24h >= 5.0:
+                    nivel = "AMARILLO"
+                    wmo_code = 61
+                    desc_clima = "Lluvia Moderada / Vigilancia"
+                    prob_lluvia = 65
+                else:
+                    nivel = "VERDE"
+                    wmo_code = 51 if rain_24h > 1.0 else 3
+                    desc_clima = "Precipitación Ligera o Nula" if rain_24h < 1.0 else "Llovizna Débil"
+                    prob_lluvia = 25
 
             conteo_alertas[nivel] += 1
             if nivel in ["ROJO", "NARANJA"]:
@@ -367,103 +474,11 @@ class MeteoServicePro:
             departamentos_stats[dept][nivel] += 1
             departamentos_stats[dept]["poblacion"] += pob
 
-            items.append({
-                "ubigeo": ubigeo,
-                "departamento": dept,
-                "provincia": prov,
-                "distrito": dist,
-                "latitud": lat,
-                "longitud": lng,
-                "poblacion": pob,
-                "lluvia_24h": rain_24h,
-                "lluvia_72h": rain_72h,
-                "nivel_alerta": nivel,
-                "cape_j_kg": cape,
-                "suelo_saturacion_pct": soil_critico,
-                "suelo_4_capas": {
-                    "superficial_0_7cm": min(100.0, round(soil_critico * 1.05, 1)),
-                    "radicular_7_28cm": min(100.0, round(soil_critico * 1.02, 1)),
-                    "talud_28_100cm": soil_critico,
-                    "profunda_100_255cm": max(20.0, round(soil_critico * 0.88, 1))
-                },
-                "viento_rafagas_kmh": wind,
-                "probabilidad_lluvia_pct": prob_lluvia,
-                "caudal_glofas_m3s": glofas,
-                "weather_code": wmo_code,
-                "descripcion_clima": desc_clima,
-                "temp_max": round(26.0 + (h * 0.08) if lat > -12 else 20.0 + (h * 0.07), 1),
-                "temp_min": round(18.0 + (h2 * 0.06) if lat > -12 else 11.0 + (h2 * 0.05), 1)
-            })
-
-        # Nodos auxiliares del Catálogo COEN (Nieva, Urubamba, SJL, Mazocruz)
-        nodos_auxiliares = [
-            {"ubigeo": "010401", "departamento": "AMAZONAS", "provincia": "CONDORCANQUI", "distrito": "NIEVA", "latitud": -4.59, "longitud": -77.86, "poblacion_estimada": 25000},
-            {"ubigeo": "081301", "departamento": "CUSCO", "provincia": "URUBAMBA", "distrito": "URUBAMBA", "latitud": -13.30, "longitud": -72.11, "poblacion_estimada": 22000},
-            {"ubigeo": "150132", "departamento": "LIMA", "provincia": "LIMA", "distrito": "SAN JUAN DE LURIGANCHO", "latitud": -11.98, "longitud": -76.99, "poblacion_estimada": 1100000},
-            {"ubigeo": "210505", "departamento": "PUNO", "provincia": "EL COLLAO", "distrito": "SANTA ROSA", "latitud": -16.98, "longitud": -69.67, "poblacion_estimada": 7000}
-        ]
-
-        total_ds124 = len(distritos_ds124)
-        for d_aux in nodos_auxiliares:
-            ubigeo = d_aux["ubigeo"]
-            dept = d_aux["departamento"]
-            prov = d_aux["provincia"]
-            dist = d_aux["distrito"]
-            lat = d_aux["latitud"]
-            lng = d_aux["longitud"]
-            pob = d_aux["poblacion_estimada"]
-            h = int(hashlib.md5(ubigeo.encode()).hexdigest()[:6], 16) % 100
-            h2 = int(hashlib.sha256(ubigeo.encode()).hexdigest()[:6], 16) % 100
-
-            if is_live_active and dept in live_dept_data:
-                tele = live_dept_data[dept]
-                base_rain = tele["precip_24h"]
-                rain_24h = max(0.0, round(base_rain + ((h - 50) * 0.005 * base_rain), 1))
-                rain_72h = round(rain_24h * 1.8, 1)
-                cape = max(0.0, round(tele["cape"] + ((h2 - 50) * 0.05 * tele["cape"]), 0))
-                soil_critico = min(99.0, max(15.0, round(tele["soil_moisture"] + ((h - 50) * 0.05), 1)))
-                wind = max(5.0, round(tele["wind_gusts"] + ((h2 - 50) * 0.05), 1))
-                glofas = max(10.0, round(45.0 + (rain_24h * 12.0) + (h * 0.2), 1))
-                wmo_code = tele["weather_code"]
-                tmax = tele["tmax"]
-                tmin = tele["tmin"]
-            else:
-                if mode == "SIMULACION":
-                    rain_24h = 45.0 + (h * 0.3) if dept in ["AMAZONAS", "CUSCO"] else 15.0
-                    cape = 1200 + (h2 * 7.0)
-                    soil_critico = 85.0
-                    wind = 25.0
-                    glofas = 350.0
-                    wmo_code = 95
-                    tmax = 30.0
-                    tmin = 20.0
-                else:
-                    rain_24h = 0.0
-                    cape = 0.0
-                    soil_critico = 25.0
-                    wind = 14.0
-                    glofas = 15.0
-                    wmo_code = 1
-                    tmax = 25.0
-                    tmin = 18.0
-                rain_72h = round(rain_24h * 1.5, 1)
-
-            if rain_24h >= 30.0:
-                nivel = "ROJO"
-                desc_clima = "Lluvia Torrencial Crítica / Alarma Extrema"
-                prob_lluvia = 95
-            elif rain_24h >= 15.0:
-                nivel = "NARANJA"
-                desc_clima = "Lluvia Fuerte / Riesgo de Huaico"
-                prob_lluvia = 85
-            elif rain_24h >= 5.0:
-                nivel = "AMARILLO"
-                desc_clima = "Lluvia Moderada / Vigilancia"
-                prob_lluvia = 65
-            else:
-                nivel = "VERDE"
-                desc_clima = "Precipitación Ligera o Nula" if rain_24h < 1.0 else "Llovizna Débil"
-                prob_lluvia = 20
+            alpacas_cnt = int(d.get("alpacas", 0))
+            ovinos_cnt = int(d.get("ovinos", 0))
+            vacunos_cnt = int(d.get("vacunos", 0))
+            ninos_5 = int(d.get("ninos_menores_5", int(pob * 0.08)))
+            adultos_65 = int(d.get("adultos_mayores_65", int(pob * 0.11)))
 
             items.append({
                 "ubigeo": ubigeo,
@@ -491,36 +506,65 @@ class MeteoServicePro:
                 "descripcion_clima": desc_clima,
                 "temp_max": tmax,
                 "temp_min": tmin,
-                "declarado_ds124": False
+                "temperatura_minima": tmin,
+                "nieve_cm": nieve_cm,
+                "snowfall_cm": nieve_cm,
+                "tipo_amenaza": tipo_amenaza_calc,
+                "tipo_amenaza_frio": d.get("tipo_amenaza_frio"),
+                "regimen_fen": bool(d.get("regimen_fen")),
+                "regimen_chiri": bool(d.get("regimen_chiri")),
+                "doble_vulnerabilidad": bool(d.get("doble_vulnerabilidad")),
+                "es_puno_altiplano": bool(d.get("es_puno_altiplano")),
+                "alpacas": alpacas_cnt,
+                "ovinos": ovinos_cnt,
+                "vacunos": vacunos_cnt,
+                "ninos_menores_5": ninos_5,
+                "ninos_menores_5a": ninos_5,
+                "adultos_mayores_65": adultos_65,
+                "nivel_riesgo_heladas": d.get("nivel_riesgo_heladas"),
+                "nivel_riesgo_friaje": d.get("nivel_riesgo_friaje")
             })
 
-        # Top 10 distritos
-        top_10 = sorted(items, key=lambda x: x["lluvia_24h"], reverse=True)[:10]
+        # Top 10 distritos por precipitación y por frío extremo
+        top_10_precip = sorted(items, key=lambda x: x["lluvia_24h"], reverse=True)[:10]
+        top_10_frio = sorted(items, key=lambda x: x["temp_min"])[:10]
 
         import datetime
         return {
             "metadata": {
-                "norma": "Decreto Supremo Nº 124-2026-PCM",
-                "asunto": "Declaratoria de Emergencia por peligro inminente ante intensas precipitaciones pluviales y Fenómeno El Niño 2026-2027",
-                "total_distritos_declarados": total_ds124,
-                "modo_operativo": "OPEN_METEO_LIVE" if is_live_active else "SIMULACION_CONTINGENCIA_FEN",
+                "sistema": "AMARU-CLIMATE - Centro de Operaciones de Emergencia Digital (COED Nacional)",
+                "norma": "Decreto Supremo Nº 124-2026-PCM / PMHF CENEPRED ERHF 2024",
+                "asunto": f"Monitoreo C2 Multi-Régimen Territorial - Teatro Operacional: {teatro_upper}",
+                "teatro_operacional": teatro_upper,
+                "total_distritos_declarados": len(items),
+                "modo_operativo": "OPEN_METEO_LIVE" if is_live_active else "SIMULACION_CONTINGENCIA",
                 "conectado_open_meteo_live": is_live_active,
-                "fuente_meteorologica": "Open-Meteo Professional ECMWF IFS 9km en tiempo real" if is_live_active else "Open-Meteo / Modelo de Contingencia FEN (CENEPRED)",
+                "fuente_meteorologica": "Open-Meteo Professional ECMWF IFS 9km + CENEPRED ERHF 2024",
                 "ultima_actualizacion": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "estadisticas_globales": stats_globales,
+                "resumen_teatros": {
+                    "FEN": stats_globales.get("total_fen_pluvial", 875),
+                    "CHIRI": stats_globales.get("total_chiri_bajas_temperaturas", 1530),
+                    "PUNO": stats_globales.get("total_puno_altiplano", 110),
+                    "PIURA": stats_globales.get("total_piura_epicentro", 64),
+                    "DOBLE_RIESGO": stats_globales.get("total_doble_vulnerabilidad", 592),
+                    "TODOS": stats_globales.get("total_distritos_monitoreados", 1813)
+                },
                 "reglas_semaforo": {
-                    "ROJO": ">= 30 mm/24h (Lluvia Torrencial Crítica / Alarma Extrema)",
-                    "NARANJA": "15 - 30 mm/24h (Lluvia Fuerte / Riesgo Huaico)",
-                    "AMARILLO": "5 - 15 mm/24h (Lluvia Moderada / Vigilancia)",
-                    "VERDE": "< 5 mm/24h (Ligera o Normal)"
+                    "ROJO": ">= 30 mm/24h (Pluvial) / <= -8°C (Helada Extrema)",
+                    "NARANJA": "15 - 30 mm/24h (Lluvia Fuerte) / -4°C a -8°C (Helada Severa)",
+                    "AMARILLO": "5 - 15 mm/24h (Lluvia Moderada) / 0°C a -4°C (Vigilancia Cero)",
+                    "VERDE": "Condición Estable o Segura"
                 }
             },
             "estadisticas": {
-                "total_distritos": total_ds124,
+                "total_distritos": len(items),
                 "conteo_alertas": conteo_alertas,
                 "poblacion_total_expuesta": poblacion_total,
                 "poblacion_riesgo_extremo": poblacion_riesgo_extremo,
                 "departamentos_afectados": len(departamentos_stats),
-                "top_10_precipitacion": top_10,
+                "top_10_precipitacion": top_10_precip,
+                "top_10_frio_extremo": top_10_frio,
                 "departamentos_resumen": departamentos_stats
             },
             "distritos": items

@@ -34,7 +34,8 @@ import {
     RefreshCw,
     Globe,
     Building2,
-    Users
+    Users,
+    Database
 } from "lucide-react";
 
 const MapViewer = dynamic(() => import("@/components/MapViewer"), {
@@ -197,6 +198,12 @@ export interface DistritoFEN {
     suelo: number;
     caudal: number;
     ds124: boolean;
+    // Enriquecimiento Hidráulico y Nowcasting C2:
+    cabecera_nombre?: string;
+    cabecera_lluvia_hoy?: number;
+    lead_time_horas?: number;
+    radar_dbz?: number;
+    radar_alerta?: string;
 }
 
 export const DISTRITOS_FEN_CATALOGO: DistritoFEN[] = [
@@ -214,7 +221,12 @@ export const DISTRITOS_FEN_CATALOGO: DistritoFEN[] = [
         cape: 1890,
         suelo: 94.0,
         caudal: 1420.0,
-        ds124: true
+        ds124: true,
+        cabecera_nombre: "Huancabamba / Alto Piura",
+        cabecera_lluvia_hoy: 18.5,
+        lead_time_horas: 14.0,
+        radar_dbz: 42.0,
+        radar_alerta: "Onda de avenida del Río Piura en tránsito hacia Bajo Piura"
     },
     {
         ubigeo: "150118",
@@ -230,7 +242,12 @@ export const DISTRITOS_FEN_CATALOGO: DistritoFEN[] = [
         cape: 1620,
         suelo: 88.0,
         caudal: 118.5,
-        ds124: true
+        ds124: true,
+        cabecera_nombre: "San Mateo / Chicla (4,200 msnm)",
+        cabecera_lluvia_hoy: 24.0,
+        lead_time_horas: 2.5,
+        radar_dbz: 39.5,
+        radar_alerta: "Pulso de huaico en tránsito hacia Quebrada Carossio"
     },
     {
         ubigeo: "140304",
@@ -246,7 +263,12 @@ export const DISTRITOS_FEN_CATALOGO: DistritoFEN[] = [
         cape: 1450,
         suelo: 85.0,
         caudal: 480.0,
-        ds124: true
+        ds124: true,
+        cabecera_nombre: "Incahuasi / Cañaris (Lambayeque)",
+        cabecera_lluvia_hoy: 31.0,
+        lead_time_horas: 5.0,
+        radar_dbz: 44.0,
+        radar_alerta: "Descarga de cuenca alta hacia Valle La Leche"
     },
     {
         ubigeo: "200114",
@@ -262,7 +284,12 @@ export const DISTRITOS_FEN_CATALOGO: DistritoFEN[] = [
         cape: 1720,
         suelo: 91.0,
         caudal: 850.0,
-        ds124: true
+        ds124: true,
+        cabecera_nombre: "Morropón / San Francisco",
+        cabecera_lluvia_hoy: 22.9,
+        lead_time_horas: 1.1,
+        radar_dbz: 51.5,
+        radar_alerta: "Célula Convectiva 51.5 dBZ en Morropón: Crecida en Quebrada San Francisco en ~65 min"
     },
     {
         ubigeo: "240101",
@@ -278,7 +305,12 @@ export const DISTRITOS_FEN_CATALOGO: DistritoFEN[] = [
         cape: 1680,
         suelo: 87.0,
         caudal: 1100.0,
-        ds124: true
+        ds124: true,
+        cabecera_nombre: "Cuenca Binacional Puyango (Ecuador)",
+        cabecera_lluvia_hoy: 28.5,
+        lead_time_horas: 8.0,
+        radar_dbz: 38.0,
+        radar_alerta: "Crecida fluvial en tránsito desde estación El Tigre"
     },
     {
         ubigeo: "130101",
@@ -839,106 +871,257 @@ export default function NationalDashboard() {
             </div>
 
             {/* ========================================================================= */}
-            {/* [SUITE TRIPARTITA & SUBSERVICIOS] AMARU-CLIMATE SOBERANO                */}
+            {/* [NIVEL 1: COED NACIONAL] ANILLO 1: BLINDAJE FÍSICO-HIDROCINÉTICO & CRIO   */}
             {/* ========================================================================= */}
-            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+            <div className="bg-slate-900/90 border border-sky-800/80 rounded-2xl p-4 shadow-2xl space-y-4">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-800 pb-3">
                     <div>
-                        <div className="flex items-center gap-2">
-                            <span className="text-xs font-mono font-black px-2 py-0.5 rounded bg-gradient-to-r from-amber-500 to-sky-500 text-slate-950">
-                                SISTEMA TRIPARTITO
+                        <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-xs font-mono font-black px-2.5 py-0.5 rounded bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20">
+                                NIVEL 1 • COED NACIONAL
                             </span>
-                            <h2 className="text-base font-black text-white tracking-wide">
-                                AMARU-CLIMATE • Suite Tripartita Soberana
-                            </h2>
+                            <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-700/60">
+                                ANILLO 1: BLINDAJE FÍSICO-HIDROCINÉTICO Y CRIOCLIMÁTICO
+                            </span>
+                            <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800/60">
+                                FULL-DUPLEX TOP-DOWN
+                            </span>
                         </div>
+                        <h2 className="text-base font-black text-white tracking-wide mt-1">
+                            Centro de Comando Estratégico, Downscaling Orográfico y Telemetría Multiescala
+                        </h2>
                         <p className="text-xs text-slate-400 mt-0.5">
-                            Plataforma integral de comando, inteligencia territorial y respuesta comunitaria ante el FEN 2026-2027
+                            Cálculo de reflectividad Z, aforos telemétricos ANA, gradiente crioclimático Tmin y modelación de retardo Tlag = 0.6 · tc para 1,813 distritos.
                         </p>
                     </div>
-                    <span className="text-[10px] font-mono text-slate-400 bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800 self-start md:self-auto">
-                        Ley N.º 29664 • SINAGERD • D.S. 124-2026-PCM
-                    </span>
+
+                    <div className="flex items-center gap-2 self-start lg:self-auto">
+                        <Link
+                            href="/alertas"
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-600 via-amber-600 to-rose-600 hover:opacity-95 text-white text-xs font-bold shadow-lg shadow-sky-950/50 transition cursor-pointer"
+                        >
+                            <ShieldAlert className="w-3.5 h-3.5" />
+                            <span>Hub Alertas C2</span>
+                        </Link>
+                    </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    {/* Subservicio 1: COED Nacional AMARU */}
-                    <div className="bg-slate-950/60 border border-sky-800/60 hover:border-sky-500/80 rounded-xl p-3 flex flex-col justify-between transition group">
-                        <div className="space-y-1.5">
+                {/* DOCK DE LAS 9 CONSOLAS DE TELEMETRÍA E INSTRUMENTACIÓN DEL ANILLO 1 */}
+                <div>
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-sky-400 font-bold block mb-2">
+                        INSTRUMENTACIÓN CIENTÍFICA & TELEMETRÍA DE BORDE NACIONAL (9 CONSOLAS OPERATIVAS)
+                    </span>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5">
+                        {/* 1. Geovisor C2 3D */}
+                        <Link
+                            href="/geovisor"
+                            className="bg-slate-950/70 border border-sky-900/60 hover:border-sky-500 rounded-xl p-2.5 flex flex-col justify-between transition group hover:bg-slate-900/80 cursor-pointer"
+                        >
                             <div className="flex items-center justify-between">
-                                <span className="flex items-center gap-1.5 text-xs font-bold text-sky-300">
-                                    <Globe className="w-3.5 h-3.5 text-sky-400" />
-                                    COED Nacional AMARU
-                                </span>
-                                <span className="text-[9px] font-bold bg-sky-950 text-sky-300 px-1.5 py-0.5 rounded border border-sky-800">
-                                    NIVEL C2 MACRO
+                                <Satellite className="w-4 h-4 text-sky-400 group-hover:scale-110 transition" />
+                                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-sky-950 text-sky-300 border border-sky-800">
+                                    3D C2
                                 </span>
                             </div>
-                            <p className="text-[11px] text-slate-400 leading-snug">
-                                Comando estratégico, 159 cuencas ANA, radares Banda C, ENFEN Niño 1+2 y despacho celular CAP v1.2 / SISMATE.
-                            </p>
-                        </div>
-                        <div className="pt-2.5 mt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
-                            <span className="text-slate-500">Salas de Crisis & INDECI</span>
-                            <span className="text-sky-400 font-bold group-hover:translate-x-1 transition flex items-center gap-0.5">
-                                Activo en pantalla <ChevronRight className="w-3 h-3" />
-                            </span>
-                        </div>
+                            <div className="mt-2">
+                                <span className="text-xs font-bold text-white block group-hover:text-sky-300 transition">
+                                    Geovisor C2 3D
+                                </span>
+                                <span className="text-[10px] text-slate-400 block mt-0.5 leading-tight">
+                                    Topografía, cuencas e isócronas
+                                </span>
+                            </div>
+                        </Link>
+
+                        {/* 2. Satélites NASA */}
+                        <Link
+                            href="/satelites"
+                            className="bg-slate-950/70 border border-sky-900/60 hover:border-cyan-500 rounded-xl p-2.5 flex flex-col justify-between transition group hover:bg-slate-900/80 cursor-pointer"
+                        >
+                            <div className="flex items-center justify-between">
+                                <Satellite className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition" />
+                                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-300 border border-cyan-800">
+                                    NASA
+                                </span>
+                            </div>
+                            <div className="mt-2">
+                                <span className="text-xs font-bold text-white block group-hover:text-cyan-300 transition">
+                                    Satélites NASA
+                                </span>
+                                <span className="text-[10px] text-slate-400 block mt-0.5 leading-tight">
+                                    AQUA / TERRA MODIS
+                                </span>
+                            </div>
+                        </Link>
+
+                        {/* 3. Telemetría IMARPE BDO */}
+                        <Link
+                            href="/imarpe"
+                            className="bg-slate-950/70 border border-sky-900/60 hover:border-teal-500 rounded-xl p-2.5 flex flex-col justify-between transition group hover:bg-slate-900/80 cursor-pointer"
+                        >
+                            <div className="flex items-center justify-between">
+                                <Waves className="w-4 h-4 text-teal-400 group-hover:scale-110 transition" />
+                                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-teal-950 text-teal-300 border border-teal-800">
+                                    BDO
+                                </span>
+                            </div>
+                            <div className="mt-2">
+                                <span className="text-xs font-bold text-white block group-hover:text-teal-300 transition">
+                                    IMARPE BDO
+                                </span>
+                                <span className="text-[10px] text-slate-400 block mt-0.5 leading-tight">
+                                    TSM, ATSM y Ondas Kelvin
+                                </span>
+                            </div>
+                        </Link>
+
+                        {/* 4. Panel ENFEN Oficial */}
+                        <Link
+                            href="/enfen"
+                            className="bg-slate-950/70 border border-red-900/60 hover:border-red-500 rounded-xl p-2.5 flex flex-col justify-between transition group hover:bg-slate-900/80 cursor-pointer"
+                        >
+                            <div className="flex items-center justify-between">
+                                <ShieldAlert className="w-4 h-4 text-red-400 group-hover:scale-110 transition animate-pulse" />
+                                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-red-950 text-red-300 border border-red-800">
+                                    ALERTA
+                                </span>
+                            </div>
+                            <div className="mt-2">
+                                <span className="text-xs font-bold text-white block group-hover:text-red-300 transition">
+                                    ENFEN Oficial
+                                </span>
+                                <span className="text-[10px] text-slate-400 block mt-0.5 leading-tight">
+                                    Comunicados y Probabilidades
+                                </span>
+                            </div>
+                        </Link>
+
+                        {/* 5. Control Fluvial ANA */}
+                        <Link
+                            href="/rios-norte"
+                            className="bg-slate-950/70 border border-sky-900/60 hover:border-cyan-500 rounded-xl p-2.5 flex flex-col justify-between transition group hover:bg-slate-900/80 cursor-pointer"
+                        >
+                            <div className="flex items-center justify-between">
+                                <Waves className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition" />
+                                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-300 border border-cyan-800">
+                                    SNIRH
+                                </span>
+                            </div>
+                            <div className="mt-2">
+                                <span className="text-xs font-bold text-white block group-hover:text-cyan-300 transition">
+                                    Control Fluvial ANA
+                                </span>
+                                <span className="text-[10px] text-slate-400 block mt-0.5 leading-tight">
+                                    159 cuencas y aforos en vivo
+                                </span>
+                            </div>
+                        </Link>
+
+                        {/* 6. Monitor Quebradas ISAAC/IGP */}
+                        <Link
+                            href="/quebradas"
+                            className="bg-slate-950/70 border border-rose-900/60 hover:border-rose-500 rounded-xl p-2.5 flex flex-col justify-between transition group hover:bg-slate-900/80 cursor-pointer"
+                        >
+                            <div className="flex items-center justify-between">
+                                <AlertTriangle className="w-4 h-4 text-rose-400 group-hover:scale-110 transition" />
+                                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-800">
+                                    IGP
+                                </span>
+                            </div>
+                            <div className="mt-2">
+                                <span className="text-xs font-bold text-white block group-hover:text-rose-300 transition">
+                                    Quebradas ISAAC
+                                </span>
+                                <span className="text-[10px] text-slate-400 block mt-0.5 leading-tight">
+                                    Huaicos y mallas geodinámicas
+                                </span>
+                            </div>
+                        </Link>
+
+                        {/* 7. Simulación Mega-FEN */}
+                        <Link
+                            href="/simulacion"
+                            className="bg-slate-950/70 border border-amber-900/60 hover:border-amber-500 rounded-xl p-2.5 flex flex-col justify-between transition group hover:bg-slate-900/80 cursor-pointer"
+                        >
+                            <div className="flex items-center justify-between">
+                                <Zap className="w-4 h-4 text-amber-400 group-hover:scale-110 transition" />
+                                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-950 text-amber-300 border border-amber-800">
+                                    ESTRÉS
+                                </span>
+                            </div>
+                            <div className="mt-2">
+                                <span className="text-xs font-bold text-white block group-hover:text-amber-300 transition">
+                                    Simulación Mega-FEN
+                                </span>
+                                <span className="text-[10px] text-slate-400 block mt-0.5 leading-tight">
+                                    Escenarios 1983-1998-2017-2027
+                                </span>
+                            </div>
+                        </Link>
+
+                        {/* 8. Consola Meteo Multi-Amenaza */}
+                        <Link
+                            href="/meteo"
+                            className="bg-slate-950/70 border border-sky-900/60 hover:border-sky-500 rounded-xl p-2.5 flex flex-col justify-between transition group hover:bg-slate-900/80 cursor-pointer"
+                        >
+                            <div className="flex items-center justify-between">
+                                <Activity className="w-4 h-4 text-sky-400 group-hover:scale-110 transition" />
+                                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-sky-950 text-sky-300 border border-sky-800">
+                                    MULTI
+                                </span>
+                            </div>
+                            <div className="mt-2">
+                                <span className="text-xs font-bold text-white block group-hover:text-sky-300 transition">
+                                    Meteo Multi-Amenaza
+                                </span>
+                                <span className="text-[10px] text-slate-400 block mt-0.5 leading-tight">
+                                    ECMWF, GFS y Heladas Altiplano
+                                </span>
+                            </div>
+                        </Link>
+
+                        {/* 9. Fuentes Centrales KURAQ */}
+                        <Link
+                            href="/fuentes"
+                            className="bg-slate-950/70 border border-indigo-900/60 hover:border-indigo-500 rounded-xl p-2.5 flex flex-col justify-between transition group hover:bg-slate-900/80 cursor-pointer"
+                        >
+                            <div className="flex items-center justify-between">
+                                <Database className="w-4 h-4 text-indigo-400 group-hover:scale-110 transition" />
+                                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-indigo-950 text-indigo-300 border border-indigo-800">
+                                    KURAQ
+                                </span>
+                            </div>
+                            <div className="mt-2">
+                                <span className="text-xs font-bold text-white block group-hover:text-indigo-300 transition">
+                                    Fuentes KURAQ
+                                </span>
+                                <span className="text-[10px] text-slate-400 block mt-0.5 leading-tight">
+                                    Data Lakehouse & APIs C2
+                                </span>
+                            </div>
+                        </Link>
+
+                        {/* 10. Despacho Bidireccional hacia Municipal */}
+                        <Link
+                            href="/municipal/200101"
+                            className="bg-gradient-to-br from-amber-950/60 to-slate-950 border border-amber-700/60 hover:border-amber-400 rounded-xl p-2.5 flex flex-col justify-between transition group cursor-pointer"
+                        >
+                            <div className="flex items-center justify-between">
+                                <Building2 className="w-4 h-4 text-amber-400 group-hover:scale-110 transition" />
+                                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-950 text-amber-300 border border-amber-800">
+                                    FASE 2
+                                </span>
+                            </div>
+                            <div className="mt-2">
+                                <span className="text-xs font-bold text-amber-300 block">
+                                    Ir a COED Municipal &rarr;
+                                </span>
+                                <span className="text-[10px] text-amber-400/80 block mt-0.5 leading-tight">
+                                    Bandeja Táctica Distrital
+                                </span>
+                            </div>
+                        </Link>
                     </div>
-
-                    {/* Subservicio 2: COED Municipal AMARU */}
-                    <Link
-                        href="/municipal/150118"
-                        className="bg-slate-950/60 border border-amber-800/60 hover:border-amber-500/80 rounded-xl p-3 flex flex-col justify-between transition group cursor-pointer"
-                    >
-                        <div className="space-y-1.5">
-                            <div className="flex items-center justify-between">
-                                <span className="flex items-center gap-1.5 text-xs font-bold text-amber-300">
-                                    <Building2 className="w-3.5 h-3.5 text-amber-400" />
-                                    COED Municipal AMARU
-                                </span>
-                                <span className="text-[9px] font-bold bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-800">
-                                    1,891 ALCALDÍAS
-                                </span>
-                            </div>
-                            <p className="text-[11px] text-slate-400 leading-snug">
-                                Obras PP 0068, certificación de maquinaria (Ley 30225), Ficha EDAN preliminar, Planes PCMD y PPRRD CENEPRED.
-                            </p>
-                        </div>
-                        <div className="pt-2.5 mt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
-                            <span className="text-slate-500">Suite Municipal 360°</span>
-                            <span className="text-amber-400 font-bold group-hover:translate-x-1 transition flex items-center gap-0.5">
-                                Abrir Consola <ChevronRight className="w-3 h-3" />
-                            </span>
-                        </div>
-                    </Link>
-
-                    {/* Subservicio 3: COED Social AMARU */}
-                    <Link
-                        href="/reporte-ciudadano"
-                        className="bg-slate-950/60 border border-rose-800/60 hover:border-rose-500/80 rounded-xl p-3 flex flex-col justify-between transition group cursor-pointer"
-                    >
-                        <div className="space-y-1.5">
-                            <div className="flex items-center justify-between">
-                                <span className="flex items-center gap-1.5 text-xs font-bold text-rose-300">
-                                    <Users className="w-3.5 h-3.5 text-rose-400" />
-                                    COED Social AMARU
-                                </span>
-                                <span className="text-[9px] font-bold bg-rose-950 text-rose-300 px-1.5 py-0.5 rounded border border-rose-800">
-                                    COMUNIDAD & AYNI
-                                </span>
-                            </div>
-                            <p className="text-[11px] text-slate-400 leading-snug">
-                                Pre-Padrón EDAN bilingüe (Quechua/Aymara/Castellano), grabación oral con SHA-256, Bono BAE y alertas Telegram.
-                            </p>
-                        </div>
-                        <div className="pt-2.5 mt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
-                            <span className="text-slate-500">Ground-Truth Comunitario</span>
-                            <span className="text-rose-400 font-bold group-hover:translate-x-1 transition flex items-center gap-0.5">
-                                Participar <ChevronRight className="w-3 h-3" />
-                            </span>
-                        </div>
-                    </Link>
                 </div>
             </div>
 
@@ -1098,11 +1281,46 @@ export default function NationalDashboard() {
                                                 </div>
                                             </div>
 
+                                            {/* Sub-bloque Hidráulico: Cabecera de Cuenca & Lead-Time Táctico */}
+                                            {d.cabecera_nombre && (
+                                                <div className="bg-slate-900/90 border border-slate-800 rounded-lg p-1.5 text-[9px] space-y-1">
+                                                    <div className="flex justify-between items-center text-slate-300 font-mono">
+                                                        <span className="flex items-center gap-1 text-slate-400">
+                                                            <Mountain className="w-2.5 h-2.5 text-amber-400" />
+                                                            <span>Cabecera: <strong className="text-amber-200">{d.cabecera_nombre}</strong></span>
+                                                        </span>
+                                                        <span className="text-amber-400 font-bold">
+                                                            {d.cabecera_lluvia_hoy} mm hoy
+                                                        </span>
+                                                    </div>
+                                                    {d.lead_time_horas && (
+                                                        <div className="flex justify-between items-center text-[8.5px] text-slate-400 border-t border-slate-800/60 pt-0.5">
+                                                            <span className="flex items-center gap-1">
+                                                                <Clock className="w-2.5 h-2.5 text-sky-400" />
+                                                                <span>Tránsito Onda de Crecida:</span>
+                                                            </span>
+                                                            <span className="font-mono text-sky-300 font-bold bg-sky-950/60 border border-sky-800/60 px-1 rounded">
+                                                                T - {d.lead_time_horas} h
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                    {d.radar_dbz && (
+                                                        <div className="text-[8px] text-orange-300/90 bg-orange-950/40 border border-orange-900/50 px-1 py-0.5 rounded flex items-center justify-between">
+                                                            <span className="flex items-center gap-1 truncate max-w-[170px]" title={d.radar_alerta}>
+                                                                <Radio className="w-2.5 h-2.5 text-orange-400 shrink-0 animate-pulse" />
+                                                                <span>Radar Doppler: {d.radar_dbz} dBZ</span>
+                                                            </span>
+                                                            <span className="font-mono font-bold text-orange-400">Nowcast</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+
                                             <div className="flex justify-between items-center text-[10px] pt-1 border-t border-slate-800/60">
                                                 <span className="text-slate-400 text-[9px] truncate max-w-[160px]" title={d.impactoHistorico}>
                                                     {modoLluviaTorrencial 
                                                         ? (esRojo ? "⚠️ Riesgo activación de quebradas" : "Vigilancia preventiva")
-                                                        : (d.lluviaActual >= 30 ? "⚠️ Lluvia crítica en cabecera" : d.lluviaActual >= 5 ? "Vigilancia de cuenca" : "Cielo despejado / Estable")}
+                                                        : (d.lluviaActual >= 30 ? "⚠️ Lluvia crítica en cuenca" : (d.cabecera_lluvia_hoy && d.cabecera_lluvia_hoy >= 15) ? "🌊 Alerta Crecida desde Cabecera" : d.lluviaActual >= 5 ? "Vigilancia de cuenca" : "Costa Estable / Cuenca en Monitoreo")}
                                                 </span>
                                                 <Link
                                                     href={`/dashboard/${d.ubigeo}`}

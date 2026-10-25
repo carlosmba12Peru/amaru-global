@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
     Building2,
@@ -78,7 +78,7 @@ interface EstablecimientoSalud {
 }
 
 export default function PiuraContingencyPage() {
-    const [activeTab, setActiveTab] = useState<"cuencas" | "contraloria" | "udep_100dias" | "salud" | "planes_distritales">("cuencas");
+    const [activeTab, setActiveTab] = useState<"cuencas" | "contraloria" | "udep_100dias" | "salud" | "planes_distritales" | "escudo_departamental" | "chulucanas_mercado">("chulucanas_mercado");
     const [loading, setLoading] = useState<boolean>(true);
     const [planData, setPlanData] = useState<any>(null);
     const [cuencas, setCuencas] = useState<CuencaCiega[]>([]);
@@ -87,6 +87,72 @@ export default function PiuraContingencyPage() {
     const [transferenciaData, setTransferenciaData] = useState<any>(null);
     const [planesDistritales, setPlanesDistritales] = useState<any[]>([]);
     const [selectedPlanDistrital, setSelectedPlanDistrital] = useState<any>(null);
+
+    // Escudo Departamental y Costero (513 Puntos Críticos CENEPRED / ANA / SARE en 7 Regiones)
+    const [departamentoActivo, setDepartamentoActivo] = useState<string>("PIURA");
+    const [loadingDep, setLoadingDep] = useState<boolean>(false);
+    const [catalogoDepartamental, setCatalogoDepartamental] = useState<any>(null);
+    const [filtroProvincia, setFiltroProvincia] = useState<string>("TODAS");
+    const [filtroFuente, setFiltroFuente] = useState<string>("TODAS");
+    const [busquedaPuntoPiura, setBusquedaPuntoPiura] = useState<string>("");
+    const [certLoadingPiura, setCertLoadingPiura] = useState<string | null>(null);
+    const [certSuccessPiura, setCertSuccessPiura] = useState<Record<string, any>>({});
+
+    const cambiarDepartamento = async (dep: string) => {
+        setDepartamentoActivo(dep);
+        setFiltroProvincia("TODAS");
+        setLoadingDep(true);
+        try {
+            const res = await fetch(`${API_BASE}/api/v1/sigrid/departamental/${dep}`);
+            if (res.ok) {
+                const data = await res.json();
+                setCatalogoDepartamental(data);
+            }
+        } catch (e) {
+            console.error("Error cambiando departamento:", e);
+        } finally {
+            setLoadingDep(false);
+        }
+    };
+
+    const handleCertificarPuntoPiura = async (pt: any) => {
+        setCertLoadingPiura(pt.id);
+        const depActor = (pt.departamento || departamentoActivo || "COSTA").toUpperCase().replace(/\s+/g, "_");
+        try {
+            const res = await fetch(`${API_BASE}/api/v1/sigrid/certificar-evento`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    actor: `COER_${depActor}_SALA_CRISIS`,
+                    ubigeo: pt.ubigeo || "200101",
+                    latitud: pt.latitud,
+                    longitud: pt.longitud,
+                    datos_evento: {
+                        punto_id: pt.id,
+                        sector: pt.sector,
+                        distrito: pt.distrito,
+                        provincia: pt.provincia,
+                        departamento: pt.departamento || departamentoActivo,
+                        peligro: pt.peligro,
+                        medida: pt.medida_estructural,
+                        costo_soles: pt.costo_soles,
+                        fuente: pt.fuente
+                    }
+                })
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setCertSuccessPiura(prev => ({ ...prev, [pt.id]: data }));
+            } else {
+                alert("Error al certificar punto en Blockchain");
+            }
+        } catch (e: any) {
+            alert(`Error: ${e.message}`);
+        } finally {
+            setCertLoadingPiura(null);
+        }
+    };
+
 
     // Estados de simulación interactiva
     const [lluviaSimulada, setLluviaSimulada] = useState<number>(65);
@@ -97,7 +163,27 @@ export default function PiuraContingencyPage() {
     const [radarModalOpen, setRadarModalOpen] = useState<boolean>(false);
     const [copilotoModalOpen, setCopilotoModalOpen] = useState<boolean>(false);
 
+    // Estados tácticos Chulucanas - Mercado Modelo
+    const [lluviaChulucanas, setLluviaChulucanas] = useState<number>(45);
+    const [chulucanasData, setChulucanasData] = useState<any>(null);
+    const [chulucanasLoading, setChulucanasLoading] = useState<boolean>(false);
+
     const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+    const fetchChulucanasContingencia = async (mm: number) => {
+        setChulucanasLoading(true);
+        try {
+            const res = await fetch(`${API_BASE}/api/v1/piura/chulucanas-mercado-contingencia?lluvia_mm=${mm}`);
+            if (res.ok) {
+                const data = await res.json();
+                setChulucanasData(data);
+            }
+        } catch (e) {
+            console.error("Error cargando contingencia Chulucanas:", e);
+        } finally {
+            setChulucanasLoading(false);
+        }
+    };
 
     useEffect(() => {
         fetchPlanData();
@@ -106,13 +192,14 @@ export default function PiuraContingencyPage() {
     const fetchPlanData = async () => {
         setLoading(true);
         try {
-            const [rPlan, rCuencas, rAudit, rSalud, rTrans, rPlanesDist] = await Promise.all([
+            const [rPlan, rCuencas, rAudit, rSalud, rTrans, rPlanesDist, rDep] = await Promise.all([
                 fetch(`${API_BASE}/api/v1/piura/contingencia/plan-integral`).then(r => r.json()).catch(() => null),
                 fetch(`${API_BASE}/api/v1/piura/cuencas-ciegas`).then(r => r.json()).catch(() => ({ cuencas_ciegas_criticas: [] })),
                 fetch(`${API_BASE}/api/v1/piura/contingencia/auditoria-pp0068`).then(r => r.json()).catch(() => null),
                 fetch(`${API_BASE}/api/v1/piura/contingencia/salud-dsrslcc`).then(r => r.json()).catch(() => null),
                 fetch(`${API_BASE}/api/v1/piura/contingencia/transferencia-2026`).then(r => r.json()).catch(() => null),
                 fetch(`${API_BASE}/api/v1/planes/piura/distritales`).then(r => r.json()).catch(() => []),
+                fetch(`${API_BASE}/api/v1/sigrid/departamental/piura`).then(r => r.json()).catch(() => null),
             ]);
 
             setPlanData(rPlan);
@@ -120,6 +207,7 @@ export default function PiuraContingencyPage() {
             setAuditoriaData(rAudit);
             setSaludData(rSalud);
             setTransferenciaData(rTrans);
+            setCatalogoDepartamental(rDep);
             if (Array.isArray(rPlanesDist) && rPlanesDist.length > 0) {
                 setPlanesDistritales(rPlanesDist);
                 setSelectedPlanDistrital(rPlanesDist[0]);
@@ -128,6 +216,7 @@ export default function PiuraContingencyPage() {
             // Simular primer resultado
             ejecutarSimulacion("CC-PIU-01", 65);
             generarCertificado("200101");
+            fetchChulucanasContingencia(45);
         } catch (err) {
             console.error("Error cargando datos de contingencia Piura:", err);
         } finally {
@@ -164,6 +253,29 @@ export default function PiuraContingencyPage() {
         setCuencaSeleccionada(id);
         ejecutarSimulacion(id, lluviaSimulada);
     };
+
+    const puntosFiltradosPiura = useMemo(() => {
+        return (catalogoDepartamental?.puntos_criticos_departamental || []).filter((pt: any) => {
+            const busq = busquedaPuntoPiura.trim().toLowerCase();
+            const matchBusq = !busq ||
+                (pt.sector && pt.sector.toLowerCase().includes(busq)) ||
+                (pt.distrito && pt.distrito.toLowerCase().includes(busq)) ||
+                (pt.cauce && pt.cauce.toLowerCase().includes(busq));
+            const matchProv = filtroProvincia === "TODAS" ||
+                (pt.provincia && pt.provincia.toUpperCase().includes(filtroProvincia.toUpperCase()));
+            const matchFuente = filtroFuente === "TODAS" ||
+                (pt.fuente && pt.fuente.toUpperCase().includes(filtroFuente.toUpperCase()));
+            return matchBusq && matchProv && matchFuente;
+        });
+    }, [catalogoDepartamental, busquedaPuntoPiura, filtroProvincia, filtroFuente]);
+
+    const provinciasDisponibles = useMemo(() => {
+        const s = new Set<string>();
+        (catalogoDepartamental?.puntos_criticos_departamental || []).forEach((pt: any) => {
+            if (pt.provincia) s.add(pt.provincia.toUpperCase());
+        });
+        return Array.from(s).sort();
+    }, [catalogoDepartamental]);
 
     const handleUbigeoCertSelect = (ubigeo: string) => {
         setSelectedUbigeoCert(ubigeo);
@@ -333,6 +445,30 @@ export default function PiuraContingencyPage() {
                 >
                     <FileText className="w-4 h-4 text-emerald-300" />
                     5. Planes Distritales (El Tallán, Catacaos, etc.)
+                </button>
+
+                <button
+                    onClick={() => setActiveTab("escudo_departamental")}
+                    className={`flex-1 min-w-[220px] py-3 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                        activeTab === "escudo_departamental"
+                            ? "bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-600/30 font-bold"
+                            : "text-cyan-300 hover:text-white hover:bg-slate-800/60 border border-cyan-500/30"
+                    }`}
+                >
+                    <ShieldCheck className="w-4 h-4 text-cyan-400" />
+                    6. Escudo Departamental (102 Pts C2)
+                </button>
+
+                <button
+                    onClick={() => setActiveTab("chulucanas_mercado")}
+                    className={`flex-1 min-w-[240px] py-3 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                        activeTab === "chulucanas_mercado"
+                            ? "bg-gradient-to-r from-amber-600 to-rose-600 text-white shadow-lg shadow-rose-600/30 font-bold border border-rose-400/50"
+                            : "text-amber-300 hover:text-white hover:bg-slate-800/60 border border-amber-500/30 animate-pulse"
+                    }`}
+                >
+                    <AlertTriangle className="w-4 h-4 text-amber-300" />
+                    7. Chulucanas: Mercado & Motobombas (C2)
                 </button>
             </div>
 
@@ -920,7 +1056,7 @@ export default function PiuraContingencyPage() {
                                             </strong>
                                         </div>
                                         <div>
-                                            <span className="text-[10px] text-slate-500 block">Secretaría Técnica / COEL:</span>
+                                            <span className="text-[10px] text-slate-500 block">Secretaría Técnica / COED Municipal:</span>
                                             <span className="text-slate-300 block">
                                                 {selectedPlanDistrital.cadena_mando_c2?.secretaria_tecnica_coel}
                                             </span>
@@ -1045,6 +1181,575 @@ export default function PiuraContingencyPage() {
                     )}
                 </div>
             )}
+
+            {/* CONTENIDO TAB 6: ESCUDO DEPARTAMENTAL DE PIURA (102 PUNTOS CRÍTICOS C2) */}
+            {activeTab === "escudo_departamental" && (
+                <div className="space-y-6">
+                    {/* ENCABEZADO Y RESUMEN TÁCTICO DE COBERTURA */}
+                    <div className="bg-slate-900/90 border border-cyan-500/40 rounded-2xl p-6 shadow-2xl space-y-4">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                            <div>
+                                <div className="flex flex-wrap items-center gap-2 mb-2">
+                                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 flex items-center gap-1.5">
+                                        <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+                                        ESCUDO DEPARTAMENTAL C2 • {catalogoDepartamental?.metadata?.departamento?.toUpperCase() || departamentoActivo} 360°
+                                    </span>
+                                    <span className="px-2 py-0.5 rounded text-xs font-mono bg-slate-800 text-slate-300">
+                                        D.S. N.° 124-2026-PCM
+                                    </span>
+                                    <span className="px-2 py-0.5 rounded text-xs font-mono bg-blue-950 text-blue-300 border border-blue-800">
+                                        {catalogoDepartamental?.metadata?.total_distritos_cubiertos || catalogoDepartamental?.metadata?.total_distritos_con_puntos_directos || 28} Distritos Priorizados
+                                    </span>
+                                </div>
+                                <h2 className="text-2xl font-black text-white">
+                                    Concentrador Departamental de Mitigación y Defensas Ribereñas
+                                </h2>
+                                <p className="text-xs text-slate-400 mt-1">
+                                    Integración soberana de {catalogoDepartamental?.metadata?.total_puntos_criticos_georreferenciados || 102} puntos críticos georreferenciados (ANA FTR 2026 + CENEPRED SIGRID + Sistemas SARE MVCS).
+                                </p>
+                            </div>
+
+                            <div className="flex flex-wrap items-center gap-3">
+                                {/* SELECTOR MULTIRREGIONAL */}
+                                <div className="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-xl border border-cyan-500/50">
+                                    <span className="text-[11px] text-cyan-400 font-bold uppercase tracking-wider">Región:</span>
+                                    <select
+                                        value={departamentoActivo}
+                                        onChange={e => cambiarDepartamento(e.target.value)}
+                                        disabled={loadingDep}
+                                        className="bg-transparent text-xs font-bold text-white focus:outline-none cursor-pointer"
+                                    >
+                                        <option value="PIURA" className="bg-slate-950 text-white">Piura (102 Pts • S/ 310M)</option>
+                                        <option value="LIMA" className="bg-slate-950 text-white">Lima (142 Pts • S/ 153M)</option>
+                                        <option value="AREQUIPA" className="bg-slate-950 text-white">Arequipa (95 Pts • S/ 75M)</option>
+                                        <option value="LA LIBERTAD" className="bg-slate-950 text-white">La Libertad (61 Pts • S/ 50M)</option>
+                                        <option value="ICA" className="bg-slate-950 text-white">Ica (54 Pts • S/ 70M)</option>
+                                        <option value="LAMBAYEQUE" className="bg-slate-950 text-white">Lambayeque (44 Pts • S/ 69M)</option>
+                                        <option value="TUMBES" className="bg-slate-950 text-white">Tumbes (15 Pts • S/ 21M)</option>
+                                        <option value="COSTA_NACIONAL" className="bg-slate-950 text-white">Gran Escudo Costero (513 Pts • S/ 748M)</option>
+                                    </select>
+                                </div>
+
+                                <a
+                                    href={`${API_BASE}/api/v1/sigrid/departamental/${departamentoActivo}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-600/50 text-cyan-200 text-xs font-bold transition shadow-lg shadow-cyan-950/40"
+                                >
+                                    <Download className="w-4 h-4 text-cyan-400" />
+                                    <span>Exportar JSON</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        {/* MÉTRICAS CLAVE DEL DEPARTAMENTO */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+                                <span className="text-[10px] text-slate-400 uppercase font-mono block">Puntos Críticos</span>
+                                <strong className="text-xl font-bold text-white font-mono">
+                                    {catalogoDepartamental?.metadata?.total_puntos_criticos_georreferenciados || 102}
+                                </strong>
+                                <span className="text-[10px] text-cyan-400 block mt-0.5">100% Georreferenciados WGS84</span>
+                            </div>
+
+                            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+                                <span className="text-[10px] text-slate-400 uppercase font-mono block">Inversión en Mitigación</span>
+                                <strong className="text-xl font-bold text-emerald-400 font-mono">
+                                    S/ {(catalogoDepartamental?.metadata?.inversion_total_mitigacion_soles || 312047748).toLocaleString()}
+                                </strong>
+                                <span className="text-[10px] text-emerald-300 block mt-0.5">PP 0068 / Fondes / ANA FTR</span>
+                            </div>
+
+                            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+                                <span className="text-[10px] text-slate-400 uppercase font-mono block">Distritos Priorizados</span>
+                                <strong className="text-xl font-bold text-amber-400 font-mono">
+                                    {catalogoDepartamental?.metadata?.total_distritos_cubiertos || catalogoDepartamental?.metadata?.total_distritos_con_puntos_directos || 28} Distritos
+                                </strong>
+                                <span className="text-[10px] text-amber-300 block mt-0.5">{provinciasDisponibles.length} Provincias Involucradas</span>
+                            </div>
+
+                            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+                                <span className="text-[10px] text-slate-400 uppercase font-mono block">Blindaje Blockchain</span>
+                                <strong className="text-xl font-bold text-purple-400 font-mono">
+                                    Polygon Amoy
+                                </strong>
+                                <span className="text-[10px] text-purple-300 block mt-0.5">WORM RFC 3161 • ChainID 80002</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* MACRO-ESCENARIOS DE RIESGO DE LA REGIÓN SELECCIONADA */}
+                    <div className="space-y-3">
+                        <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                            <AlertTriangle className="w-4 h-4 text-amber-400" />
+                            Macro-Escenarios Hidrológicos de Cuenca ({catalogoDepartamental?.metadata?.departamento || departamentoActivo})
+                        </h3>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3 text-xs">
+                            {Object.entries(catalogoDepartamental?.escenarios_macrocuenca || {}).map(([key, esc]: [string, any], idx: number) => {
+                                const borderColors = ["border-rose-900/60", "border-amber-900/60", "border-purple-900/60", "border-cyan-900/60", "border-blue-900/60"];
+                                const badgeColors = [
+                                    "bg-rose-950 text-rose-300 border-rose-800",
+                                    "bg-amber-950 text-amber-300 border-amber-800",
+                                    "bg-purple-950 text-purple-300 border-purple-800",
+                                    "bg-cyan-950 text-cyan-300 border-cyan-800",
+                                    "bg-blue-950 text-blue-300 border-blue-800"
+                                ];
+                                const textColors = ["text-rose-400", "text-amber-400", "text-purple-400", "text-cyan-400", "text-blue-400"];
+                                const bCol = borderColors[idx % borderColors.length];
+                                const badgeCol = badgeColors[idx % badgeColors.length];
+                                const tCol = textColors[idx % textColors.length];
+                                return (
+                                    <div key={key} className={`p-3.5 bg-slate-950 border ${bCol} rounded-xl space-y-1.5 flex flex-col justify-between`}>
+                                        <div className="space-y-1.5">
+                                            <span className={`px-2 py-0.5 rounded text-[9px] font-mono ${badgeCol} border font-bold block w-fit`}>
+                                                {idx + 1}. {key.replace(/_/g, " ").toUpperCase()}
+                                            </span>
+                                            <strong className="text-white text-xs block">{esc.nombre || key}</strong>
+                                            <p className="text-[11px] text-slate-300 line-clamp-3">
+                                                {esc.descripcion}
+                                            </p>
+                                        </div>
+                                        <div className="pt-2 border-t border-slate-800/80 mt-2 space-y-1">
+                                            <div className={`text-[11px] font-mono font-bold ${tCol}`}>
+                                                {(esc.poblacion_expuesta_estimada || 25000).toLocaleString()} hab. en faja crítica
+                                            </div>
+                                            {esc.poblacion_censal_inei_total ? (
+                                                <div className="text-[10px] text-slate-400 leading-tight">
+                                                    Base censal: <span className="text-slate-200 font-mono font-semibold">{(esc.poblacion_censal_inei_total).toLocaleString()} hab.</span> en {esc.distritos_nombres_base?.length || 0} distritos ribereños
+                                                    <span className="block text-[9px] text-slate-500 mt-0.5 font-sans">
+                                                        Fuente: INEI 2017 / CENEPRED Escenario FEN
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                <div className="text-[9px] text-slate-500 font-sans">
+                                                    Fuente: CENEPRED / ANA FTR 2026
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* CATÁLOGO FILTRABLE DE PUNTOS CRÍTICOS */}
+                    <div className="p-5 bg-slate-900/90 border border-slate-800 rounded-xl space-y-4">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                            <div>
+                                <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                                    <MapPin className="w-4 h-4 text-cyan-400" />
+                                    Inventario Georreferenciado de Puntos Críticos ({catalogoDepartamental?.metadata?.departamento || departamentoActivo})
+                                </h3>
+                                <p className="text-xs text-slate-400">
+                                    Filtre por provincia, sector o fuente oficial para auditar y sellar en Blockchain.
+                                </p>
+                            </div>
+
+                            <div className="flex flex-wrap items-center gap-2">
+                                <div className="relative">
+                                    <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-500" />
+                                    <input
+                                        type="text"
+                                        value={busquedaPuntoPiura}
+                                        onChange={e => setBusquedaPuntoPiura(e.target.value)}
+                                        placeholder="Buscar sector, río, distrito..."
+                                        className="pl-8 pr-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500 w-44"
+                                    />
+                                </div>
+
+                                <select
+                                    value={filtroProvincia}
+                                    onChange={e => setFiltroProvincia(e.target.value)}
+                                    className="px-2.5 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-cyan-500"
+                                >
+                                    <option value="TODAS">Todas las Provincias ({provinciasDisponibles.length})</option>
+                                    {provinciasDisponibles.map(prov => (
+                                        <option key={prov} value={prov}>{prov}</option>
+                                    ))}
+                                </select>
+
+                                <select
+                                    value={filtroFuente}
+                                    onChange={e => setFiltroFuente(e.target.value)}
+                                    className="px-2.5 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-cyan-500"
+                                >
+                                    <option value="TODAS">Todas las Fuentes</option>
+                                    <option value="ANA">Autoridad Nacional del Agua (ANA)</option>
+                                    <option value="SIGRID">CENEPRED SIGRID (PPRRD)</option>
+                                    <option value="PECHP">PECHP / SARE / MVCS</option>
+                                </select>
+
+                            </div>
+                        </div>
+
+                        {/* LISTA EN CARDS DE PUNTOS */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[600px] overflow-y-auto pr-1">
+                            {puntosFiltradosPiura.map((pt: any) => {
+                                const cert = certSuccessPiura[pt.id];
+                                const isLoading = certLoadingPiura === pt.id;
+                                const txHash = cert?.blockchain_anchor?.tx_hash;
+                                const explorerUrl = cert?.blockchain_anchor?.explorer_url || (txHash ? `https://amoy.polygonscan.com/tx/${txHash}` : null);
+                                return (
+                                    <div key={pt.id} className="p-3.5 bg-slate-950 border border-slate-800 hover:border-slate-700 rounded-xl space-y-2 text-xs flex flex-col justify-between">
+                                        <div className="space-y-1.5">
+                                            <div className="flex items-center justify-between">
+                                                <span className="font-mono font-bold text-cyan-400 bg-cyan-950/60 px-1.5 py-0.5 rounded text-[10px] border border-cyan-800">
+                                                    {pt.id}
+                                                </span>
+                                                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-950 text-rose-300 border border-rose-800">
+                                                    {pt.nivel}
+                                                </span>
+                                            </div>
+
+                                            <div className="font-bold text-white text-xs line-clamp-1">
+                                                {pt.sector}
+                                            </div>
+
+                                            <div className="text-[11px] text-slate-400">
+                                                {pt.distrito}, Prov. {pt.provincia} • <strong className="text-slate-300">{pt.cauce}</strong>
+                                            </div>
+
+                                            <div className="text-[11px] text-slate-300 line-clamp-2">
+                                                {pt.descripcion}
+                                            </div>
+
+                                            <div className="p-2 bg-emerald-950/20 border border-emerald-900/40 rounded-lg text-[11px] text-emerald-300">
+                                                <strong>Medida:</strong> {pt.medida_estructural}
+                                            </div>
+                                        </div>
+
+                                        <div className="pt-2 border-t border-slate-800/80 space-y-2 mt-2">
+                                            <div className="flex items-center justify-between text-[11px] font-mono">
+                                                <span className="text-slate-400">Presupuesto:</span>
+                                                <strong className="text-white">
+                                                    S/ {(pt.costo_soles || 0).toLocaleString()}
+                                                </strong>
+                                            </div>
+
+                                            <div className="flex items-center justify-between text-[10px] font-mono text-slate-400">
+                                                <span>GPS: {pt.latitud?.toFixed(4)}, {pt.longitud?.toFixed(4)}</span>
+                                            </div>
+
+                                            {cert ? (
+                                                <div className="space-y-1">
+                                                    <span className="w-full py-1 px-2 rounded bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold text-[10px] flex items-center justify-center gap-1">
+                                                        <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                                                        WORM Blk #{cert.bloque_worm_id} • TX {txHash ? txHash.substring(0, 10) : "0x"}...
+                                                    </span>
+                                                    {explorerUrl && (
+                                                        <a
+                                                            href={explorerUrl}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="w-full py-1 px-2 rounded bg-slate-900 hover:bg-slate-800 text-[10px] font-mono text-cyan-400 hover:text-cyan-300 border border-cyan-800/60 flex items-center justify-center gap-1 transition-colors"
+                                                        >
+                                                            <ExternalLink className="w-2.5 h-2.5" /> Ver en PolygonScan Explorer
+                                                        </a>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <button
+                                                    onClick={() => handleCertificarPuntoPiura(pt)}
+                                                    disabled={isLoading}
+                                                    className="w-full py-1.5 px-3 rounded bg-slate-900 hover:bg-slate-800 border border-cyan-700/60 hover:border-cyan-500 text-cyan-300 text-xs font-bold transition flex items-center justify-center gap-1.5 disabled:opacity-50"
+                                                >
+                                                    <ShieldCheck className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : "text-cyan-400"}`} />
+                                                    <span>{isLoading ? "Sellando..." : "Sellar en WORM / Blockchain"}</span>
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* CONTENIDO TAB 7: CHULUCANAS - MERCADO MODELO & MOTOBOMBAS (C2 TÁCTICO) */}
+            {activeTab === "chulucanas_mercado" && (
+                <div className="space-y-6">
+                    {/* BANNER DE SITUACIÓN REAL: RPP NOTICIAS / COEN MORROPÓN */}
+                    <div className="bg-gradient-to-r from-red-950/80 via-slate-900 to-amber-950/50 p-6 rounded-2xl border border-red-500/40 shadow-2xl relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-80 h-80 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
+                        
+                        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative z-10">
+                            <div>
+                                <div className="flex flex-wrap items-center gap-2 mb-2">
+                                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-500/20 text-red-300 border border-red-500/40 flex items-center gap-1 animate-pulse">
+                                        <AlertTriangle className="w-3.5 h-3.5" /> CASO REAL RPP NOTICIAS • MORROPÓN-CHULUCANAS
+                                    </span>
+                                    <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                                        UBIGEO 200401
+                                    </span>
+                                    <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1">
+                                        <ShieldCheck className="w-3 h-3" /> ART. 27 LEY 30225 / PP 0068
+                                    </span>
+                                </div>
+                                <h2 className="text-2xl font-black text-white tracking-tight flex items-center gap-2">
+                                    <Building2 className="w-6 h-6 text-amber-400" />
+                                    Comando C2: Inundación Mercado Modelo de Chulucanas
+                                </h2>
+                                <p className="text-xs text-slate-300 mt-1 max-w-4xl">
+                                    A diferencia del visor de SENAMHI (que reporta exclusivamente lluvia estática en mm), AMARU-CLIMATE convierte la precipitación en <strong>tirante hidráulico ({chulucanasData?.evento_meteorologico?.tirante_inundacion_estimado_cm || 32.4} cm)</strong>, dimensiona las <strong>motobombas requeridas ({chulucanasData?.dimensionamiento_motobombas_c2?.unidades_motobomba_6_pulgadas || 2}x 6&quot;)</strong>, blinda la contratación de emergencia ante Contraloría y calcula la <strong>onda de crecida hacia Tambogrande y Piura</strong>.
+                                </p>
+                            </div>
+
+                            <div className="flex flex-col items-end gap-2">
+                                <a
+                                    href="https://rpp.pe/peru/piura/piura-lluvias-torrenciales-inundan-calles-y-obligan-a-cerrar-el-mercado-modelo-en-chulucanas-noticia-1713517"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="px-3 py-1.5 rounded-lg bg-red-600/30 hover:bg-red-600/50 border border-red-500/60 text-red-200 text-xs font-bold flex items-center gap-1.5 transition-colors"
+                                >
+                                    <ExternalLink className="w-3.5 h-3.5" /> Ver Despacho RPP Noticias
+                                </a>
+                                <span className="text-[11px] text-slate-400 font-mono">
+                                    Alcalde: {chulucanasData?.alcalde_titular || "Sr. Richard Baca Palacios"}
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* SLIDER DE PRECIPITACIÓN SIMULADA */}
+                        <div className="mt-6 pt-5 border-t border-slate-800/80 bg-slate-950/60 p-4 rounded-xl border border-slate-700/50">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                                <label className="text-xs font-bold text-slate-200 flex items-center gap-2">
+                                    <Droplets className="w-4 h-4 text-cyan-400" />
+                                    Simulador de Escorrentía Pluvial en Chulucanas:
+                                </label>
+                                <span className="text-sm font-black text-cyan-300 font-mono bg-cyan-950/80 px-2.5 py-0.5 rounded border border-cyan-800">
+                                    {lluviaChulucanas} mm de Precipitación Acumulada
+                                </span>
+                            </div>
+                            <input
+                                type="range"
+                                min={15}
+                                max={110}
+                                step={5}
+                                value={lluviaChulucanas}
+                                onChange={(e) => {
+                                    const val = Number(e.target.value);
+                                    setLluviaChulucanas(val);
+                                    fetchChulucanasContingencia(val);
+                                }}
+                                className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                            />
+                            <div className="flex justify-between text-[10px] text-slate-500 mt-1 font-mono">
+                                <span>20 mm (Lluvia Moderada)</span>
+                                <span className="text-amber-400 font-bold">45 mm (Evento Real Mercado Modelo)</span>
+                                <span>75 mm (Torrencial FEN)</span>
+                                <span>110 mm (Extraordinario 1998/2017)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 4 TARJETAS TÁCTICAS OPERACIONALES */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {/* 1. TIRANTE Y CALADO */}
+                        <div className="p-4 rounded-xl bg-slate-900/80 border border-amber-500/30 space-y-2">
+                            <div className="flex items-center justify-between text-xs text-slate-400">
+                                <span className="font-semibold uppercase tracking-wider">TIRANTE DE INUNDACIÓN</span>
+                                <Waves className="w-4 h-4 text-amber-400" />
+                            </div>
+                            <div className="text-3xl font-black text-amber-300 font-mono">
+                                {chulucanasData?.evento_meteorologico?.tirante_inundacion_estimado_cm || 32.4} cm
+                            </div>
+                            <div className="text-[11px] text-slate-300">
+                                Calado medido en Jr. Pisagua y pasajes comerciales del Mercado Modelo.
+                            </div>
+                            <div className="text-[10px] font-bold text-rose-400 bg-rose-950/60 px-2 py-0.5 rounded border border-rose-800/80 inline-block">
+                                ESTADO: {chulucanasData?.evento_meteorologico?.estado_alerta || "ROJO_CRITICO"}
+                            </div>
+                        </div>
+
+                        {/* 2. VOLUMEN DE AGUA EMBALSADA */}
+                        <div className="p-4 rounded-xl bg-slate-900/80 border border-cyan-500/30 space-y-2">
+                            <div className="flex items-center justify-between text-xs text-slate-400">
+                                <span className="font-semibold uppercase tracking-wider">VOLUMEN EMBALSADO</span>
+                                <Droplets className="w-4 h-4 text-cyan-400" />
+                            </div>
+                            <div className="text-3xl font-black text-cyan-300 font-mono">
+                                {chulucanasData?.evento_meteorologico?.volumen_inundacion_mercado_m3?.toLocaleString() || "506.2"} m³
+                            </div>
+                            <div className="text-[11px] text-slate-300">
+                                Volumen crítico techado (12,500 m²). Cuenca ciega completa: <strong>{chulucanasData?.evento_meteorologico?.volumen_cuenca_ciega_total_m3?.toLocaleString() || "3,251"} m³</strong>.
+                            </div>
+                            <div className="text-[10px] text-cyan-400 font-mono">
+                                Coeficiente escorrentía: C = 0.90 urbano
+                            </div>
+                        </div>
+
+                        {/* 3. PARQUE DE MOTOBOMBAS REQUERIDO */}
+                        <div className="p-4 rounded-xl bg-slate-900/80 border border-emerald-500/30 space-y-2">
+                            <div className="flex items-center justify-between text-xs text-slate-400">
+                                <span className="font-semibold uppercase tracking-wider">MAQUINARIA C2 EXIGIDA</span>
+                                <Truck className="w-4 h-4 text-emerald-400" />
+                            </div>
+                            <div className="text-3xl font-black text-emerald-300 font-mono">
+                                {chulucanasData?.dimensionamiento_motobombas_c2?.unidades_motobomba_6_pulgadas || 2}x 6&quot; + {chulucanasData?.dimensionamiento_motobombas_c2?.unidades_cisterna_hidrojet || 2}x Cis
+                            </div>
+                            <div className="text-[11px] text-slate-300">
+                                Capacidad desfogue: <strong>{chulucanasData?.dimensionamiento_motobombas_c2?.capacidad_desfogue_m3_hora || 500} m³/h</strong>. Tiempo de achique objetivo: <strong>2 horas</strong>.
+                            </div>
+                            <div className="text-[10px] text-emerald-400 font-mono">
+                                Manguera requerida: {chulucanasData?.dimensionamiento_motobombas_c2?.manguera_descarga_requerida_metros || 600} m hacia dren
+                            </div>
+                        </div>
+
+                        {/* 4. BLINDAJE CONTRALORÍA Y HASH */}
+                        <div className="p-4 rounded-xl bg-slate-900/80 border border-purple-500/30 space-y-2">
+                            <div className="flex items-center justify-between text-xs text-slate-400">
+                                <span className="font-semibold uppercase tracking-wider">CERTIFICACIÓN PERICIAL</span>
+                                <Lock className="w-4 h-4 text-purple-400" />
+                            </div>
+                            <div className="text-lg font-mono font-bold text-purple-300 break-all">
+                                {chulucanasData?.blindaje_legal_contraloria_mef?.hash_certificacion_pericial || "SHA256-CHUL-8F4C2A1"}
+                            </div>
+                            <div className="text-[11px] text-slate-300">
+                                Habilita Contratación Directa por Emergencia (Art. 27 Ley 30225) y previene Art. 377 Código Penal.
+                            </div>
+                            <div className="text-[10px] font-mono text-purple-300">
+                                Presupuesto Operativo: S/ {(chulucanasData?.blindaje_legal_contraloria_mef?.costo_estimado_soles || 12050).toLocaleString()}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* SECCIÓN DE CUENCAS CIEGAS ASOCIADAS Y ONDA AGUAS ABAJO */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* CUENCAS CIEGAS URBANAS EN CHULUCANAS */}
+                        <div className="lg:col-span-2 bg-slate-900/70 p-5 rounded-xl border border-slate-800 space-y-4">
+                            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                                <MapPin className="w-4 h-4 text-rose-400" />
+                                Sectores Críticos y Cuencas Ciegas Afectadas en Chulucanas
+                            </h3>
+                            <div className="space-y-3">
+                                {(chulucanasData?.puntos_criticos_asociados || [
+                                    { nombre: "Mercado Modelo de Chulucanas", calado_cm: 32.4, comerciantes_expuestos: 850, accion: "Cierre preventivo y elevación de mercadería a tarimas" },
+                                    { nombre: "Barrio Monte Verde", calado_cm: 27.5, viviendas_expuestas: 140, accion: "Activación de electrobomba comunal y sacos terreros" },
+                                    { nombre: "AA.HH. Villa Mercedes / Consuelo de Velasco", calado_cm: 24.3, viviendas_expuestas: 220, accion: "Zanja de coronación y desvío hacia dren" },
+                                    { nombre: "AA.HH. José Carlos Mariátegui", calado_cm: 29.1, viviendas_expuestas: 180, accion: "Evacuación de familias ribereñas" }
+                                ]).map((pt: any, idx: number) => (
+                                    <div key={idx} className="p-3.5 bg-slate-950/80 rounded-lg border border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                                        <div className="space-y-1">
+                                            <div className="flex items-center gap-2">
+                                                <span className="font-bold text-white text-sm">{pt.nombre}</span>
+                                                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                                                    Calado {pt.calado_cm} cm
+                                                </span>
+                                            </div>
+                                            <div className="text-slate-400 text-[11px]">
+                                                {pt.comerciantes_expuestos ? `${pt.comerciantes_expuestos} Comerciantes empadronados` : `${pt.viviendas_expuestas} Familias vulnerables`}
+                                            </div>
+                                            <div className="text-emerald-400 text-[11px]">
+                                                <strong>Acción Táctica:</strong> {pt.accion}
+                                            </div>
+                                        </div>
+                                        <span className="px-3 py-1 rounded bg-slate-900 border border-slate-700 text-slate-300 font-mono text-[10px] text-center whitespace-nowrap self-start sm:self-center">
+                                            PRIORIDAD ALTA
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* TRÁNSITO HIDRÁULICO AGUAS ABAJO (LEAD-TIME) */}
+                        <div className="bg-gradient-to-b from-indigo-950/40 via-slate-900 to-slate-950 p-5 rounded-xl border border-indigo-500/30 space-y-4">
+                            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                                <Clock className="w-4 h-4 text-cyan-400" />
+                                Alerta Temprana Aguas Abajo (Lead-Time)
+                            </h3>
+                            <p className="text-xs text-slate-300">
+                                La escorrentía en las cuencas altas de Morropón-Chulucanas transita hacia el cauce del Río Piura afectando distritos receptores:
+                            </p>
+
+                            <div className="space-y-3">
+                                <div className="p-3 bg-slate-950 rounded-lg border border-indigo-500/30 space-y-1">
+                                    <div className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                                        <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+                                        Tambogrande (Badén San Francisco)
+                                    </div>
+                                    <div className="text-lg font-black text-white font-mono">
+                                        T - 70 minutos
+                                    </div>
+                                    <p className="text-[11px] text-slate-400">
+                                        Riesgo inminente de corte vehicular en la carretera Piura - Chulucanas - Tambogrande.
+                                    </p>
+                                </div>
+
+                                <div className="p-3 bg-slate-950 rounded-lg border border-indigo-500/30 space-y-1">
+                                    <div className="text-xs font-bold text-rose-300 flex items-center gap-1.5">
+                                        <Waves className="w-3.5 h-3.5 text-rose-400" />
+                                        Bajo Piura (Sánchez Cerro / Catacaos)
+                                    </div>
+                                    <div className="text-lg font-black text-white font-mono">
+                                        T - 12.0 horas
+                                    </div>
+                                    <p className="text-[11px] text-slate-400">
+                                        Aporte al caudal pico en el Puente Sánchez Cerro y defensas ribereñas de Cura Mori.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="p-3 bg-indigo-950/60 rounded-lg border border-indigo-500/40 text-[11px] text-indigo-200">
+                                <strong>Doctrina C2:</strong> El alcalde provincial puede ordenar la evacuación vehicular y activar el plan de contingencia de Tambogrande 70 minutos antes del impacto físico de la riada.
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* VINCULACIÓN AL PDU CHULUCANAS 2020-2030 (PROYECTO MERCADO S/ 25.8M Y MACRO-DRENAJE S/ 91.8M) */}
+                    <div className="bg-slate-900/90 p-5 rounded-2xl border border-indigo-500/30 space-y-4">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+                            <div className="flex items-center gap-2">
+                                <FileText className="w-5 h-5 text-indigo-400" />
+                                <h3 className="text-sm font-bold text-white">
+                                    Cruce con el Plan de Desarrollo Urbano (PDU) Chulucanas 2020-2030 (MVCS / MP Morropón)
+                                </h3>
+                            </div>
+                            <span className="text-[11px] font-mono bg-indigo-950 text-indigo-300 px-2.5 py-0.5 rounded border border-indigo-800">
+                                Diagnóstico Multianual PDU pág. 10 y 42
+                            </span>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                            <div className="p-3.5 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5">
+                                <div className="text-[10px] font-mono text-amber-400 font-bold uppercase">PROYECTO P.1.1.2.2 (PDU PÁG. 42)</div>
+                                <div className="font-bold text-white text-sm">Nuevo Mercado Distrital de Chulucanas</div>
+                                <div className="text-slate-300 text-[11px]">
+                                    Presupuesto PDU: <strong className="text-white">S/ 25,800,000</strong> a cargo de la MP Morropón.
+                                </div>
+                                <div className="text-[10px] text-rose-300 bg-rose-950/40 p-1.5 rounded border border-rose-900/40">
+                                    Brecha no ejecutada: Obliga a la respuesta C2 inmediata de bombeo (S/ 12,050) para evitar colapso sanitario de comerciantes.
+                                </div>
+                            </div>
+
+                            <div className="p-3.5 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5">
+                                <div className="text-[10px] font-mono text-cyan-400 font-bold uppercase">PROYECTO P.5.4.12.1 (PDU PÁG. 41)</div>
+                                <div className="font-bold text-white text-sm">Medidas Estructurales de Prevención y Drenaje</div>
+                                <div className="text-slate-300 text-[11px]">
+                                    Presupuesto PDU: <strong className="text-white">S/ 91,860,000</strong> a cargo del GORE Piura.
+                                </div>
+                                <div className="text-[10px] text-cyan-300 bg-cyan-950/40 p-1.5 rounded border border-cyan-900/40">
+                                    Macro-drenaje de cuencas ciegas y defensas ribereñas del Río Yapatera y Quebrada Sol Sol.
+                                </div>
+                            </div>
+
+                            <div className="p-3.5 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5">
+                                <div className="text-[10px] font-mono text-emerald-400 font-bold uppercase">SECTORES CRÍTICOS PDU (TABLA 1-3)</div>
+                                <div className="font-bold text-white text-sm">Matriz de Exposición Pluvial</div>
+                                <div className="space-y-1 text-[11px] text-slate-300 font-mono">
+                                    <div>• Sector 02 (Norte / Pilar Nores): <strong>12.28%</strong></div>
+                                    <div>• Sector 06 (Este / Ñácara): <strong>11.61%</strong></div>
+                                    <div>• Sector 04 (Suroeste / Mercedes): <strong>10.46%</strong></div>
+                                    <div>• Sector 03 (Oeste / Mariátegui): <strong>7.06%</strong></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
 
             {/* MODAL RADAR METEOROLÓGICO SENAMHI BANDA C */}
             <RadarViewerModal

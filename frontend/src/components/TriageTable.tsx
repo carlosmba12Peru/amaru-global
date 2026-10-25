@@ -132,7 +132,7 @@ export default function TriageTable() {
                                         href={`/dashboard/${row.ubigeo}`}
                                         className="inline-flex items-center gap-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow transition"
                                     >
-                                        Abrir COEL →
+                                        Abrir COED Municipal →
                                     </Link>
                                 </td>
                             </tr>

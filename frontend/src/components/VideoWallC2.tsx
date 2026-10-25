@@ -67,7 +67,7 @@ const CANALES_INICIALES: StreamChannel[] = [
         ubigeo: "150118",
         distrito: "Lurigancho Chosica",
         departamento: "Lima",
-        operador: "Brigada Aérea INDECI / COEN C2",
+        operador: "Brigada Aérea INDECI / COED Nacional C2",
         categoria: "DRON_OFICIAL",
         estadoVerificacion: "OFICIAL_VERIFICADO",
         afirmacionStreamer: "Vigilancia de cono deyector. Flujo de escorrentía dentro de márgenes normales.",
@@ -539,7 +539,7 @@ export default function VideoWallC2({ isOpen, onClose, onSelectDistrict }: Video
                             </div>
                             <p className="text-[11px]">
                                 {canalSeleccionado.veredictoConsistencia === "CONSISTENTE_VALIDADO"
-                                    ? "Las imágenes del directo concuerdan con la curva hidrológica y los reportes pluviométricos del COEN. Canal apto para orientación de respuesta."
+                                    ? "Las imágenes del directo concuerdan con la curva hidrológica y los reportes pluviométricos del COED Nacional. Canal apto para orientación de respuesta."
                                     : "DISCORDANCIA CRÍTICA: El creador afirma colapso o catástrofe, pero la estación de aforo ANA registra caudal ordinario. Material retenido en Sala de Crisis para evitar pánico social."}
                             </p>
                         </div>

@@ -71,10 +71,10 @@ export default function InstitutionalLoginModal() {
                     </div>
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-xs font-semibold text-slate-300 mb-2">
                         <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-                        SINAGERD • COEN PERÚ • FEN 2026-2027
+                        SINAGERD • COED NACIONAL PERÚ
                     </div>
                     <h2 className="text-xl md:text-2xl font-bold tracking-tight text-white">
-                        COEN-Digital & AMARU-LEX
+                        COED-Digital & AMARU-LEX
                     </h2>
                     <p className="text-xs text-slate-400 mt-1">
                         Plataforma de Inteligencia Territorial y Respuesta de Emergencia

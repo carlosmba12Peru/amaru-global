@@ -224,6 +224,46 @@ class TestDamnificadosAmaru(unittest.TestCase):
         self.assertTrue(caso["identidad_linguistica"]["requiere_asistencia_bilingue"])
         self.assertEqual(caso["identidad_linguistica"]["audio_sha256"], "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
 
+    def test_10_motor_ipad_saaty_ahp_consistencia_y_sla(self):
+        """Valida la consistencia axiomática Saaty AHP 4x4 (CR = 0.0115) y los tiempos SLA del semáforo humanitario."""
+        payload_critico = {
+            "dni_jefe_hogar": "70891234",
+            "nombres": "Marcos",
+            "apellidos": "Yarlequé",
+            "telefono": "987654321",
+            "direccion_exacta": "Sector Simbilá Mz D Lote 12",
+            "ubigeo": "200105",  # Catacaos (Alerta Roja)
+            "lat": -5.265,
+            "lng": -80.678,
+            "material_muros": "ADOBE_QUINCHA",
+            "tirante_agua": "TECHO_200CM",
+            "estado_vivienda_declarado": "COLAPSADA_DESTRUIDA",
+            "total_integrantes": 6,
+            "ninos_menores_5": 2,
+            "adultos_mayores_65": 1,
+            "personas_discapacidad": 1,
+            "mujeres_gestantes": 0
+        }
+        res = self.service.registrar_pre_padron_damnificado(payload_critico)
+        self.assertIn("score_ipad", res)
+        self.assertGreaterEqual(res["score_ipad"], 80.0)
+        
+        # Validar metadatos Saaty
+        saaty = res.get("saaty_ahp_metadatos")
+        self.assertIsNotNone(saaty)
+        self.assertEqual(saaty["modelo"], "IPAD_SAATY_4x4")
+        self.assertAlmostEqual(saaty["autovalor_lambda_max"], 4.0310, places=3)
+        self.assertAlmostEqual(saaty["ratio_consistencia_cr"], 0.0115, places=3)
+        self.assertTrue(saaty["consistencia_aprobada"])
+
+        # Validar Semáforo Humanitario y SLA
+        semaforo = res.get("semaforo_humanitario")
+        self.assertIsNotNone(semaforo)
+        self.assertEqual(semaforo["nivel_prioridad"], "CRITICO_URGENTE")
+        self.assertEqual(semaforo["plazo_sla_horas"], 6)
+        self.assertTrue(semaforo["alerta_inmediata"])
+
 if __name__ == "__main__":
     unittest.main()
+
 

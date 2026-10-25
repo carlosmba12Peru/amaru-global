@@ -693,7 +693,7 @@ export default function RiosNortePage() {
                                             {/* Acción Recomendada */}
                                             <div className="p-4 rounded-xl border border-slate-800 bg-slate-950/80 space-y-2 text-xs">
                                                 <span className="font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                                                    <ShieldAlert className="w-4 h-4 text-red-400" /> Protocolo Táctico de Mando COEN / INDECI:
+                                                    <ShieldAlert className="w-4 h-4 text-red-400" /> Protocolo Táctico de Mando COED Nacional / INDECI:
                                                 </span>
                                                 <p className="text-slate-300 text-[11.5px] leading-relaxed">
                                                     {evaluacionData.accion_recomendada}
@@ -1035,7 +1035,7 @@ export default function RiosNortePage() {
 
                                         <div className="p-4 rounded-xl border border-slate-800 bg-slate-900/90 space-y-2 text-xs">
                                             <span className="font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                                                <ShieldAlert className="w-4 h-4 text-amber-400" /> Directiva Táctica para el COEN / Alcaldes:
+                                                <ShieldAlert className="w-4 h-4 text-amber-400" /> Directiva Táctica para el COED Nacional / Alcaldes:
                                             </span>
                                             <p className="text-slate-300 leading-relaxed text-[11.5px]">
                                                 {irdResult.accion_tactica_coen}
@@ -1187,7 +1187,7 @@ export default function RiosNortePage() {
                                 <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
                                 <div className="space-y-1 text-xs">
                                     <strong className="text-red-300 font-bold block">
-                                        🚨 ALERTA ROJA COEN: Hospitales Electrodependientes en Riesgo por Desenergización de Subestación
+                                        🚨 ALERTA ROJA COED NACIONAL: Hospitales Electrodependientes en Riesgo por Desenergización de Subestación
                                     </strong>
                                     <div className="flex flex-wrap gap-2 pt-1">
                                         {lifelinesData.resumen_energia_electrica.hospitales_electrodependientes_en_riesgo.map((hosp: string, idx: number) => (
@@ -1211,7 +1211,7 @@ export default function RiosNortePage() {
                                     Doctrina de Certeza de Datos C2 • Código de Colores de Procedencia (Data Pedigree):
                                 </span>
                                 <span className="text-[10px] font-mono text-slate-400 bg-slate-900 px-2.5 py-0.5 rounded border border-slate-800">
-                                    NTP-ISO 27037 / RFC 3161 • COEN-Digital
+                                    NTP-ISO 27037 / RFC 3161 • COED-Digital
                                 </span>
                             </div>
 

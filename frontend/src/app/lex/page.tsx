@@ -28,11 +28,203 @@ import {
     FolderCheck,
     BookOpen,
     Paperclip,
-    RefreshCw
+    RefreshCw,
+    Waves,
+    Flame,
+    Landmark,
+    Activity,
+    Satellite,
+    Radio
 } from "lucide-react";
 
+interface MatrizItem {
+    id: string;
+    categoria: string;
+    categoriaLabel: string;
+    nivelNormativo: string;
+    baseLegal: string;
+    procesoSinagerd: string;
+    consolaNombre: string;
+    consolaHref: string;
+    consolaIcon: string;
+    funcionCripto: string;
+}
+
+const MATRIZ_NORMATIVA_AMARU: MatrizItem[] = [
+    {
+        id: "m-1",
+        categoria: "CONSTITUCIONAL",
+        categoriaLabel: "Constitucional & SINAGERD",
+        nivelNormativo: "I. Constitucional & Ley Matriz",
+        baseLegal: "Constitución Política (Art. 137, inc. 1) • D.S. N° 074-2014-PCM",
+        procesoSinagerd: "Declaratoria de Estado de Emergencia por Catástrofe o Peligro Inminente (Trámite técnico ante PCM)",
+        consolaNombre: "AMARU-LEX & REDACTOR",
+        consolaHref: "/lex",
+        consolaIcon: "Scale",
+        funcionCripto: "Verifica en tiempo real vigencia de D.S. en Ubigeo y redacta proyecto técnico con telemetría inalterable."
+    },
+    {
+        id: "m-2",
+        categoria: "CONSTITUCIONAL",
+        categoriaLabel: "Constitucional & SINAGERD",
+        nivelNormativo: "I. Ley Matriz SINAGERD",
+        baseLegal: "Ley N° 29664 • D.S. N° 048-2011-PCM (Reglamento)",
+        procesoSinagerd: "Los 7 Procesos de la GRD (Estimación a Reconstrucción) • Roles CENEPRED/INDECI y 5 Niveles",
+        consolaNombre: "SALA C2 & GEOVISOR 3D",
+        consolaHref: "/geovisor",
+        consolaIcon: "Satellite",
+        funcionCripto: "Clasifica eventos territoriales según Niveles 1 al 5. Integra cartografía en 7 capas geoespaciales inmutables."
+    },
+    {
+        id: "m-3",
+        categoria: "PRESUPUESTAL",
+        categoriaLabel: "Presupuesto & Fondos",
+        nivelNormativo: "II. Financiero & Presupuestal",
+        baseLegal: "Programa Presupuestal 0068 (PP 0068) • MEF / DGPP",
+        procesoSinagerd: "Asignación y Ejecución de Partidas de Emergencia: Combustible, motobombas, descolmatación",
+        consolaNombre: "AMARU-FISCAL & MUNICIPAL",
+        consolaHref: "/fiscal",
+        consolaIcon: "Landmark",
+        funcionCripto: "Conexión Consulta Amigable MEF. Monitorea PIM, Devengado y Saldo para detonar acciones anticipatorias (EAP)."
+    },
+    {
+        id: "m-4",
+        categoria: "PRESUPUESTAL",
+        categoriaLabel: "Presupuesto & Fondos",
+        nivelNormativo: "II. Fondos Extraordinarios",
+        baseLegal: "Ley N° 30458 (FONDES) • Directiva N° 008-2021-INDECI • Decretos de Urgencia FEN",
+        procesoSinagerd: "Seguimiento Físico y Financiero de Intervenciones y Actividades de Emergencia",
+        consolaNombre: "AMARU-LOGISTICA & FISCAL",
+        consolaHref: "/logistica",
+        consolaIcon: "Activity",
+        funcionCripto: "Trazabilidad de avance físico de obras de contingencia y ruteo logístico de maquinaria FONDES."
+    },
+    {
+        id: "m-5",
+        categoria: "CONTRATACION",
+        categoriaLabel: "Contratación Directa CGR",
+        nivelNormativo: "II. Contratación Directa",
+        baseLegal: "Ley N° 30225 (Art. 27 lit. b) • Ley N° 31433 • Ley N° 31812",
+        procesoSinagerd: "Contratación Directa por Situación de Emergencia (Exoneración previa, regularización en 20 días)",
+        consolaNombre: "AMARU-CONTRALORIA & LEX",
+        consolaHref: "/contraloria",
+        consolaIcon: "ShieldCheck",
+        funcionCripto: "Control Concurrente CGR en Vivo: Genera expediente de contratación directa con hash SHA-256 y sello RFC 3161."
+    },
+    {
+        id: "m-6",
+        categoria: "EDAN_SINPAD",
+        categoriaLabel: "EDAN & SINPAD INDECI",
+        nivelNormativo: "III. Operativo & Daños",
+        baseLegal: "Res. Jefatural N° 035-2020-INDECI (Directiva EDAN Perú) • Criterios 2H, 8H, 72H",
+        procesoSinagerd: "Evaluación de Daños y Análisis de Necesidades (EDAN): Empadronamiento de damnificados y afectados",
+        consolaNombre: "AMARU-EDAN",
+        consolaHref: "/edan",
+        consolaIcon: "FileText",
+        funcionCripto: "Ficha EDAN 2B digital, cálculo automático de consistencia ICT >= 0.70 y validación RENIEC."
+    },
+    {
+        id: "m-7",
+        categoria: "EDAN_SINPAD",
+        categoriaLabel: "EDAN & SINPAD INDECI",
+        nivelNormativo: "III. Registro Oficial Emergencias",
+        baseLegal: "SINPAD (INDECI) (Sistema Nacional para la Respuesta y Rehabilitación)",
+        procesoSinagerd: "Cierre del Bucle Oficial: Habilitación de Bienes de Ayuda Humanitaria (BAH) y Bono BAE",
+        consolaNombre: "AMARU-EDAN & AUDITORIA",
+        consolaHref: "/edan",
+        consolaIcon: "ShieldCheck",
+        funcionCripto: "Exportación canónica oficial a SINPAD bajo bitácora inmutable WORM protegida contra alteraciones."
+    },
+    {
+        id: "m-8",
+        categoria: "EDAN_SINPAD",
+        categoriaLabel: "EDAN & SINPAD INDECI",
+        nivelNormativo: "III. Ayuda Humanitaria",
+        baseLegal: "Res. Ministerial N° 180-2016-PCM (Lineamientos BAH) • Ley N° 31458 (Ollas Comunes)",
+        procesoSinagerd: "Adquisición, Almacenamiento y Distribución de BAH (Techo, abrigo, herramientas, víveres)",
+        consolaNombre: "AMARU-LOGISTICA & AYNI",
+        consolaHref: "/logistica",
+        consolaIcon: "Activity",
+        funcionCripto: "Algoritmo VRP para abastecimiento de almacenes de avanzada distritales y redes de ollas comunes."
+    },
+    {
+        id: "m-9",
+        categoria: "CONSTITUCIONAL",
+        categoriaLabel: "Constitucional & SINAGERD",
+        nivelNormativo: "III. Centros de Operaciones",
+        baseLegal: "Res. Ministerial N° 173-2015-PCM (Lineamientos de COE)",
+        procesoSinagerd: "Organización y Funcionamiento de Salas de Crisis: Articulación COEN, COER y COEL",
+        consolaNombre: "HUB ALERTAS & MUNICIPAL",
+        consolaHref: "/alertas",
+        consolaIcon: "Radio",
+        funcionCripto: "Pantallas de crisis COEN y consola de mando COEL para despacho telemático y semáforos."
+    },
+    {
+        id: "m-10",
+        categoria: "SECTORIAL_FEN",
+        categoriaLabel: "El Niño / ENFEN",
+        nivelNormativo: "IV. Sectorial: El Niño / La Niña",
+        baseLegal: "D.S. N° 007-2017-MINAM (Comisión ENFEN) • Planes de Contingencia FEN",
+        procesoSinagerd: "Sustento Científico Oficial para Declaratorias de Emergencia: Alertas ENFEN (No Activo / Vigilancia / Alerta)",
+        consolaNombre: "AMARU-ENFEN & SIMULACION",
+        consolaHref: "/enfen",
+        consolaIcon: "Waves",
+        funcionCripto: "Ingesta automática de comunicados y boyas BDO; correlaciona TSM con gatillos de gasto de preparación."
+    },
+    {
+        id: "m-11",
+        categoria: "SECTORIAL_CUENCAS",
+        categoriaLabel: "Cuencas & ANA",
+        nivelNormativo: "IV. Sectorial: Recursos Hídricos",
+        baseLegal: "Ley N° 29338 (Recursos Hídricos) • Res. Jefatural N° 136-2020-ANA",
+        procesoSinagerd: "Monitoreo de Caudales, Fajas Marginales y Emergencias Hídricas en Bocatomas",
+        consolaNombre: "AMARU-RIOS & QUEBRADAS",
+        consolaHref: "/rios-norte",
+        consolaIcon: "Waves",
+        funcionCripto: "Aforos en tiempo real (Piura, Chira, Tumbes, Rímac) con disparo de alerta anticipada de desborde."
+    },
+    {
+        id: "m-12",
+        categoria: "SECTORIAL_HELADAS",
+        categoriaLabel: "Heladas & MIDAGRI",
+        nivelNormativo: "IV. Sectorial: Heladas & Friajes",
+        baseLegal: "Planes Multisectoriales de Heladas y Friajes (PCM) • Lineamientos MIDAGRI",
+        procesoSinagerd: "Protección Agropecuaria y Asistencia: Kits veterinarios, pacas de heno y cobertizos",
+        consolaNombre: "RELOJ POLAR (PRONOSTICO)",
+        consolaHref: "/pronostico",
+        consolaIcon: "Activity",
+        funcionCripto: "Predicción a 144h de helada bajo cero; orden de despacho de forraje y dosificación previa al frío extremo."
+    },
+    {
+        id: "m-13",
+        categoria: "SECTORIAL_INCENDIOS",
+        categoriaLabel: "Incendios & SERFOR",
+        nivelNormativo: "IV. Sectorial: Incendios Forestales",
+        baseLegal: "Ley N° 29763 (Ley Forestal) • D.S. N° 018-2015-MINAGRI (SERFOR) • Ley N° 31297 (CGBVP)",
+        procesoSinagerd: "Detección Temprana de Focos de Calor para Brigadas SERNANP y Bomberos",
+        consolaNombre: "AMARU-SATELITES & METEO",
+        consolaHref: "/satelites",
+        consolaIcon: "Flame",
+        funcionCripto: "Ingesta de sensores MODIS/VIIRS (NASA) para alertar puntos de calor y vectores de viento propagadores."
+    },
+    {
+        id: "m-14",
+        categoria: "AUDITORIA_WORM",
+        categoriaLabel: "Auditoría & Prueba Digital",
+        nivelNormativo: "V. Auditoría & Prueba Digital",
+        baseLegal: "Norma Técnica Peruana ISO/IEC 27037 • Art. 377 Código Penal",
+        procesoSinagerd: "Preservación Inmutable de Evidencia Digital: Registro pericial de alertas, órdenes y firmas",
+        consolaNombre: "AMARU-AUDITORIA",
+        consolaHref: "/auditoria",
+        consolaIcon: "ShieldCheck",
+        funcionCripto: "Bitácora WORM con árboles de Merkle. Demuestra judicialmente que la autoridad actuó con diligencia técnica."
+    }
+];
+
 export default function LexPage() {
-    const [activeTab, setActiveTab] = useState<"radar" | "catalogo" | "formatos" | "copiloto" | "planes">("radar");
+    const [activeTab, setActiveTab] = useState<"radar" | "matriz" | "catalogo" | "formatos" | "copiloto" | "planes">("radar");
+    const [matrizFilter, setMatrizFilter] = useState<string>("TODOS");
+    const [matrizSearch, setMatrizSearch] = useState<string>("");
     const [summary, setSummary] = useState<any>(null);
     const [lifecycleSummary, setLifecycleSummary] = useState<any>(null);
     const [norms, setNorms] = useState<any[]>([]);
@@ -421,6 +613,17 @@ export default function LexPage() {
                         <span>Radar Geolegal &amp; Blindaje de Alcaldía</span>
                     </button>
                     <button
+                        onClick={() => setActiveTab("matriz")}
+                        className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-t-xl transition border-t border-x ${
+                            activeTab === "matriz"
+                                ? "bg-slate-900 text-amber-300 border-amber-500/40 border-b-2 border-b-amber-300 shadow-md"
+                                : "text-slate-400 hover:text-slate-200 border-transparent hover:bg-slate-800/50"
+                        }`}
+                    >
+                        <Scale className="w-4 h-4 text-amber-400" />
+                        <span>⚖️ Matriz SINAGERD &amp; Consolas C2</span>
+                    </button>
+                    <button
                         onClick={() => setActiveTab("catalogo")}
                         className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-t-xl transition border-t border-x ${
                             activeTab === "catalogo"
@@ -643,6 +846,181 @@ export default function LexPage() {
                                 </div>
                             </div>
                         )}
+                    </div>
+                </div>
+            )}
+
+            {/* ========================================================================= */}
+            {/* PESTAÑA 1.5: MATRIZ INTEGRAL DE ASOCIACIÓN NORMATIVA Y CONSOLAS C2        */}
+            {/* ========================================================================= */}
+            {activeTab === "matriz" && (
+                <div className="space-y-6">
+                    {/* Encabezado Doctrinal de la Matriz */}
+                    <div className="bg-slate-900 border border-amber-500/30 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+                        <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-4">
+                            <div>
+                                <div className="flex items-center gap-2 mb-1.5">
+                                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1.5">
+                                        <Scale className="w-3.5 h-3.5" />
+                                        ARQUITECTURA DE BLINDAJE LEGAL C2
+                                    </span>
+                                    <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold">
+                                        ANILLO 3: FE PÚBLICA &amp; GOBERNANZA
+                                    </span>
+                                </div>
+                                <h2 className="text-xl md:text-2xl font-black text-white">
+                                    Matriz Integral de Asociación: Marco Legal, Procesos Subyacentes &amp; Consolas AMARU-CLIMATE
+                                </h2>
+                                <p className="text-xs text-slate-300 max-w-3xl mt-1">
+                                    Mapeo exhaustivo entre la pirámide jurídica del Perú (Constitución, SINAGERD, MEF, INDECI, Contraloría, ENFEN, ANA, SERFOR) y las consolas operacionales del sistema para garantizar fe pública y evitar responsabilidad civil o penal funcional.
+                                </p>
+                            </div>
+
+                            <Link
+                                href="/doctrina"
+                                className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-purple-950/60 hover:bg-purple-900 text-purple-200 border border-purple-700/50 transition flex items-center gap-1.5 shadow shrink-0"
+                            >
+                                <span>Ver Consola Doctrinal</span>
+                                <ChevronRight className="w-3.5 h-3.5" />
+                            </Link>
+                        </div>
+
+                        {/* Barra de Búsqueda y Filtros de la Matriz */}
+                        <div className="pt-4 flex flex-col md:flex-row gap-3 items-center justify-between">
+                            <div className="relative w-full md:w-80">
+                                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                                <input
+                                    type="text"
+                                    placeholder="Filtrar por ley, artículo, proceso o consola..."
+                                    value={matrizSearch}
+                                    onChange={(e) => setMatrizSearch(e.target.value)}
+                                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                                />
+                            </div>
+
+                            <div className="flex flex-wrap gap-1.5 w-full md:w-auto text-[11px]">
+                                {[
+                                    { id: "TODOS", label: "Todas (14)" },
+                                    { id: "CONSTITUCIONAL", label: "Constitucional & SINAGERD" },
+                                    { id: "PRESUPUESTAL", label: "Presupuesto & FONDES" },
+                                    { id: "CONTRATACION", label: "Contratación Directa" },
+                                    { id: "EDAN_SINPAD", label: "EDAN & SINPAD" },
+                                    { id: "SECTORIAL_FEN", label: "El Niño & ENFEN" },
+                                    { id: "SECTORIAL_CUENCAS", label: "Cuencas & ANA" },
+                                    { id: "SECTORIAL_HELADAS", label: "Heladas & MIDAGRI" },
+                                    { id: "SECTORIAL_INCENDIOS", label: "Incendios & SERFOR" },
+                                    { id: "AUDITORIA_WORM", label: "Auditoría ISO 27037" }
+                                ].map((cat) => (
+                                    <button
+                                        key={cat.id}
+                                        onClick={() => setMatrizFilter(cat.id)}
+                                        className={`px-2.5 py-1 rounded-lg font-medium transition ${
+                                            matrizFilter === cat.id
+                                                ? "bg-amber-600 text-white font-bold shadow"
+                                                : "bg-slate-950 text-slate-400 hover:text-slate-200 border border-slate-800"
+                                        }`}
+                                    >
+                                        {cat.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Tabla Interactiva de Correspondencia */}
+                    <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr className="bg-slate-950/80 border-b border-slate-800 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                                        <th className="p-3.5">Nivel &amp; Base Legal Peruana</th>
+                                        <th className="p-3.5">Proceso SINAGERD / Subyacente</th>
+                                        <th className="p-3.5">Consola AMARU-CLIMATE</th>
+                                        <th className="p-3.5">Función Operativa &amp; Blindaje Criptográfico</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-800/80 font-sans">
+                                    {MATRIZ_NORMATIVA_AMARU
+                                        .filter((item) => {
+                                            const matchCat = matrizFilter === "TODOS" || item.categoria === matrizFilter;
+                                            const q = matrizSearch.toLowerCase().trim();
+                                            const matchSearch =
+                                                !q ||
+                                                item.baseLegal.toLowerCase().includes(q) ||
+                                                item.procesoSinagerd.toLowerCase().includes(q) ||
+                                                item.consolaNombre.toLowerCase().includes(q) ||
+                                                item.funcionCripto.toLowerCase().includes(q) ||
+                                                item.nivelNormativo.toLowerCase().includes(q);
+                                            return matchCat && matchSearch;
+                                        })
+                                        .map((row) => (
+                                            <tr key={row.id} className="hover:bg-slate-800/40 transition">
+                                                <td className="p-3.5 align-top space-y-1">
+                                                    <span className="text-[10px] font-mono text-amber-400 font-bold block">
+                                                        {row.nivelNormativo}
+                                                    </span>
+                                                    <span className="text-white font-semibold block leading-tight">
+                                                        {row.baseLegal}
+                                                    </span>
+                                                    <span className="inline-block px-2 py-0.5 rounded text-[9px] bg-slate-950 text-slate-400 border border-slate-800">
+                                                        {row.categoriaLabel}
+                                                    </span>
+                                                </td>
+                                                <td className="p-3.5 align-top text-slate-300 leading-relaxed max-w-xs">
+                                                    {row.procesoSinagerd}
+                                                </td>
+                                                <td className="p-3.5 align-top">
+                                                    <Link
+                                                        href={row.consolaHref}
+                                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-950/40 hover:bg-amber-900/60 text-amber-300 border border-amber-700/50 font-bold text-xs transition group shadow"
+                                                    >
+                                                        <span>{row.consolaNombre}</span>
+                                                        <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition" />
+                                                    </Link>
+                                                </td>
+                                                <td className="p-3.5 align-top text-slate-300 leading-relaxed max-w-sm">
+                                                    <div className="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800 text-[11px]">
+                                                        {row.funcionCripto}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* Banner de Cierre: Transición de Mandato Municipal & Blindaje CGR */}
+                    <div className="bg-gradient-to-r from-purple-950/40 via-slate-900 to-amber-950/40 border border-purple-800/40 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 rounded-xl bg-purple-900/60 text-purple-300 border border-purple-700">
+                                <ShieldCheck className="w-5 h-5" />
+                            </div>
+                            <div>
+                                <span className="font-bold text-white block">
+                                    Vigilancia de Continuidad de Mando Municipal (Mandatos 2023 - 2026):
+                                </span>
+                                <span className="text-slate-300 text-[11px]">
+                                    Entrega de cargo inmutable ante el relevo del 31 de diciembre de 2026 para garantizar la custodia de almacenes de ayuda humanitaria (BAH) y cuentas del PP 0068.
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 shrink-0">
+                            <Link
+                                href="/contraloria"
+                                className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-xs transition"
+                            >
+                                Control Concurrente CGR →
+                            </Link>
+                            <Link
+                                href="/auditoria"
+                                className="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs transition shadow"
+                            >
+                                Bitácora WORM →
+                            </Link>
+                        </div>
                     </div>
                 </div>
             )}

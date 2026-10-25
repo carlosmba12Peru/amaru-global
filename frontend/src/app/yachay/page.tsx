@@ -34,7 +34,10 @@ import {
     ExternalLink,
     Eye,
     History,
-    Flame
+    Flame,
+    Users,
+    Radio,
+    HeartPulse
 } from "lucide-react";
 
 export default function YachayPage() {
@@ -255,12 +258,15 @@ export default function YachayPage() {
                 <div className="absolute -right-8 -bottom-8 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
                 <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 relative z-10">
                     <div className="space-y-2">
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
                             <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1.5">
                                 <GraduationCap className="w-3.5 h-3.5" />
+                                NIVEL 3 • COED SOCIAL AMARU
+                            </span>
+                            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-950 text-blue-300 border border-blue-800 font-bold">
                                 ACADEMIA DOCTRINARIA &amp; SABERES TERRITORIALES
                             </span>
-                            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-950 text-blue-300 border border-blue-800">
+                            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 text-slate-300 border border-slate-700">
                                 LEY SINAGERD N° 29664
                             </span>
                         </div>
@@ -276,21 +282,42 @@ export default function YachayPage() {
                         </p>
                     </div>
 
-                    {/* Botonera de Enlaces Rápidos */}
-                    <div className="flex items-center gap-2">
+                    {/* Botonera de Enlaces Rápidos y Dock Social */}
+                    <div className="flex flex-wrap items-center gap-2">
                         <Link
-                            href="/"
-                            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5 shadow"
+                            href="/reporte-ciudadano"
+                            className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-rose-950/60 hover:bg-rose-900 text-rose-200 border border-rose-700/50 transition flex items-center gap-1.5 shadow"
                         >
-                            <Clock className="w-4 h-4 text-amber-400" />
-                            <span>Ver Reloj Táctico</span>
+                            <Radio className="w-3.5 h-3.5 text-rose-400" />
+                            <span>Sensor Humano</span>
                         </Link>
                         <Link
-                            href="/doctrina"
-                            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-purple-900/60 hover:bg-purple-800 text-purple-200 border border-purple-700/50 transition flex items-center gap-1.5 shadow"
+                            href="/ayni"
+                            className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5 shadow"
                         >
-                            <Scale className="w-4 h-4 text-purple-400" />
-                            <span>Fórmulas C2</span>
+                            <Users className="w-3.5 h-3.5 text-rose-400" />
+                            <span>Red AYNI</span>
+                        </Link>
+                        <Link
+                            href="/salud/triaje"
+                            className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5 shadow"
+                        >
+                            <HeartPulse className="w-3.5 h-3.5 text-rose-400" />
+                            <span>Triaje Salud</span>
+                        </Link>
+                        <Link
+                            href="/glosario"
+                            className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5 shadow"
+                        >
+                            <BookOpen className="w-3.5 h-3.5 text-cyan-400" />
+                            <span>Glosario</span>
+                        </Link>
+                        <Link
+                            href="/pronostico"
+                            className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-950/60 hover:bg-amber-900 text-amber-200 border border-amber-700/50 transition flex items-center gap-1.5 shadow"
+                        >
+                            <Clock className="w-3.5 h-3.5 text-amber-400" />
+                            <span>Reloj Táctico</span>
                         </Link>
                     </div>
                 </div>
@@ -882,7 +909,7 @@ export default function YachayPage() {
                                     </div>
                                     <div className="flex items-center justify-between p-2 rounded bg-slate-900 border border-slate-800">
                                         <span className="text-slate-300">DICIEMBRE</span>
-                                        <span className="font-bold text-red-400">Guardias COEL 24/7</span>
+                                        <span className="font-bold text-red-400">Guardias COED Municipal 24/7</span>
                                     </div>
                                 </div>
                             </div>

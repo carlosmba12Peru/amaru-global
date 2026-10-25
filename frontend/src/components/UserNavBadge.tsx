@@ -25,7 +25,7 @@ export default function UserNavBadge() {
                 return (
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-red-950 border border-red-500/50 text-red-300">
                         <ShieldAlert className="w-3 h-3 text-red-400" />
-                        COMANDO COEN
+                        COMANDO COED NACIONAL
                     </span>
                 );
             case "AUTORIDAD_MUNICIPAL":

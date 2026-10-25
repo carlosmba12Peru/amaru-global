@@ -24,7 +24,11 @@ import {
     Compass,
     BookOpen,
     Database,
-    Search
+    Search,
+    ShieldCheck,
+    ChevronRight,
+    Home,
+    UserCheck
 } from "lucide-react";
 
 interface RankingItem {
@@ -54,7 +58,7 @@ interface RankingItem {
 }
 
 export default function DoctrinaFormulasPage() {
-    const [tabActiva, setTabActiva] = useState<"IRCE" | "IPH" | "IPI" | "ISH" | "GLOSARIO" | "FUENTES">("IRCE");
+    const [tabActiva, setTabActiva] = useState<"IRCE" | "IPAD" | "IPH" | "IPI" | "ISH" | "GLOSARIO" | "FUENTES">("IRCE");
     const [filtroRanking, setFiltroRanking] = useState<string>("todos");
     const [busquedaGlosario, setBusquedaGlosario] = useState<string>("");
     const [categoriaGlosario, setCategoriaGlosario] = useState<string>("TODAS");
@@ -182,43 +186,84 @@ export default function DoctrinaFormulasPage() {
             {/* ========================================================================= */}
             {/* BARRA SUPERIOR DE MANDO Y RETORNO                                         */}
             {/* ========================================================================= */}
-            <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-900/90 border border-slate-800 p-4 rounded-2xl shadow-xl">
-                <div className="flex items-center gap-3">
-                    <Link
-                        href="/"
-                        className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-semibold transition"
-                    >
-                        <ArrowLeft className="w-3.5 h-3.5" />
-                        <span>Consola Principal</span>
-                    </Link>
-                    <span className="text-slate-600">/</span>
-                    <div className="flex items-center gap-2">
-                        <Scale className="w-4 h-4 text-amber-400" />
-                        <h1 className="text-sm font-bold text-white uppercase tracking-wider">
-                            Consola Doctrinal de Fórmulas &amp; Modelos Matemáticos (COEN)
-                        </h1>
+            <div className="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl shadow-xl space-y-4">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                        <Link
+                            href="/lex"
+                            className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-semibold transition"
+                            title="Volver a la consola legal"
+                        >
+                            <ArrowLeft className="w-3.5 h-3.5" />
+                            <span>AMARU-LEX</span>
+                        </Link>
+                        <div>
+                            <div className="flex flex-wrap items-center gap-2 mb-1">
+                                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 flex items-center gap-1.5">
+                                    <Scale className="w-3.5 h-3.5" />
+                                    NIVEL 4 • GOBERNANZA, AUDITORÍA &amp; FE PÚBLICA (ANILLO 3)
+                                </span>
+                                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-950 text-blue-300 border border-blue-800">
+                                    1,891 DISTRITOS ESTANDARIZADOS
+                                </span>
+                            </div>
+                            <h1 className="text-base md:text-lg font-black text-white">
+                                Consola Doctrinal de Fórmulas &amp; Modelos Matemáticos C2 (COEN)
+                            </h1>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2">
+                        <Link
+                            href="/doctrina/matriz-sinagerd"
+                            className="inline-flex items-center gap-1.5 bg-gradient-to-r from-purple-900/80 to-indigo-900/80 hover:from-purple-800 hover:to-indigo-800 text-purple-200 border border-purple-500/50 text-xs font-bold px-3 py-1.5 rounded-lg transition shadow ring-1 ring-purple-500/40"
+                        >
+                            <Scale className="w-3.5 h-3.5 text-purple-300" />
+                            <span>🏛️ Matriz SINAGERD &amp; Blockchain</span>
+                        </Link>
+                        <button
+                            onClick={descargarCsvOficial}
+                            className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-md shadow-emerald-600/30"
+                            title="Descargar matriz en formato CSV de los 1,891 distritos nacionales"
+                        >
+                            <Download className="w-3.5 h-3.5" />
+                            <span>Exportar Matriz IPI (CSV)</span>
+                        </button>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={descargarCsvOficial}
-                        className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-md shadow-emerald-600/30"
-                        title="Descargar matriz en formato CSV de los 1,891 distritos nacionales"
-                    >
-                        <Download className="w-3.5 h-3.5" />
-                        <span>Exportar Matriz IPI (CSV)</span>
-                    </button>
-                    <span className="text-[10px] font-mono bg-blue-950 text-blue-300 border border-blue-800 px-2 py-1 rounded">
-                        1,891 Distritos Estandarizados
-                    </span>
+                {/* Dock de Gobernanza Legal & Trazabilidad C2 */}
+                <div className="p-3 bg-slate-950/90 border border-purple-900/40 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs">
+                    <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
+                        <span className="font-bold text-purple-300">ANILLO 3 DE BLINDAJE LEGAL:</span>
+                        <span className="text-slate-400 hidden md:inline">Fundamentación matemática pericial de algoritmos IPI, IPH, ISH e IRCE</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Link href="/contraloria" className="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 transition flex items-center gap-1">
+                            <span>Control CGR</span>
+                        </Link>
+                        <Link href="/edan" className="px-2.5 py-1 rounded-lg bg-emerald-950/60 hover:bg-emerald-900 text-emerald-200 border border-emerald-800/40 transition flex items-center gap-1">
+                            <span>Ficha EDAN</span>
+                        </Link>
+                        <Link href="/auditoria" className="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 transition flex items-center gap-1">
+                            <span>Bitácora WORM</span>
+                        </Link>
+                        <Link href="/fiscal" className="px-2.5 py-1 rounded-lg bg-cyan-950/60 hover:bg-cyan-900 text-cyan-200 border border-cyan-800/40 transition flex items-center gap-1">
+                            <span>Fiscal PP 068</span>
+                        </Link>
+                        <span className="text-slate-600">|</span>
+                        <Link href="/alertas" className="px-2.5 py-1 rounded-lg bg-amber-950/50 hover:bg-amber-900 text-amber-200 border border-amber-800/40 transition flex items-center gap-1 text-[11px]">
+                            <span>⬆ Nivel 2 Municipal</span>
+                        </Link>
+                    </div>
                 </div>
             </div>
 
             {/* ========================================================================= */}
             {/* SELECTOR DE ÍNDICES DOCTRINALES & GLOSARIO MULTIFUENTE                    */}
             {/* ========================================================================= */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-4">
                 {/* Índice 1: IRCE-FEN (Macro: Distrital) */}
                 <button
                     onClick={() => setTabActiva("IRCE")}
@@ -246,6 +291,36 @@ export default function DoctrinaFormulasPage() {
                     </div>
                     <div className="text-[11px] font-mono text-red-400/90 pt-1 border-t border-slate-800">
                         IRCE = (w_P·P + w_V·V + w_E·E) / (w_C·C)
+                    </div>
+                </button>
+
+                {/* Índice IPAD: Priorización Micro-Humanitaria Familiar */}
+                <button
+                    onClick={() => setTabActiva("IPAD")}
+                    className={`p-4 rounded-2xl border text-left transition flex flex-col justify-between space-y-2 shadow-lg ${
+                        tabActiva === "IPAD"
+                            ? "bg-slate-900 border-rose-500 ring-2 ring-rose-500/40"
+                            : "bg-slate-950/80 border-slate-800 hover:bg-slate-900"
+                    }`}
+                >
+                    <div className="flex justify-between items-start">
+                        <span className="text-xs font-mono font-bold bg-rose-950 text-rose-300 border border-rose-800 px-2 py-0.5 rounded">
+                            MICRO • DAMNIFICADOS
+                        </span>
+                        <span className="text-xs text-rose-400 font-bold flex items-center gap-1">
+                            <UserCheck className="w-3.5 h-3.5" /> CUP-DAMN BAE
+                        </span>
+                    </div>
+                    <div>
+                        <h2 className="text-sm font-bold text-white">
+                            Índice Priorización Damnificados (IPAD)
+                        </h2>
+                        <p className="text-xs text-slate-400 mt-0.5">
+                            Algoritmo Saaty AHP 4×4 determinista (CR = 0.0115). Bono BAE (S/ 500) y SLA vinculante.
+                        </p>
+                    </div>
+                    <div className="text-[11px] font-mono text-rose-400/90 pt-1 border-t border-slate-800">
+                        IPAD = 0.467·S_viv + 0.277·V_fam + 0.160·F_fen + 0.096·A_acc
                     </div>
                 </button>
 
@@ -615,6 +690,352 @@ export default function DoctrinaFormulasPage() {
                             >
                                 <ExternalLink className="w-3.5 h-3.5" /> Verificar Hash Oficial
                             </Link>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* ========================================================================= */}
+            {/* PESTAÑA ÍNDICE IPAD (PRIORIZACIÓN DE ATENCIÓN AL DAMNIFICADO - MICRO SAATY) */}
+            {/* ========================================================================= */}
+            {tabActiva === "IPAD" && (
+                <div className="space-y-6">
+                    {/* Header Doctrinal IPAD */}
+                    <div className="bg-slate-900 border border-rose-900/60 rounded-3xl p-6 md:p-8 space-y-6 shadow-2xl relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-96 h-96 bg-rose-600/10 rounded-full blur-3xl pointer-events-none" />
+                        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-5">
+                            <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs font-mono font-bold bg-rose-950 text-rose-300 border border-rose-800 px-3 py-1 rounded-full inline-flex items-center gap-1.5">
+                                        <Home className="w-3.5 h-3.5" /> NIVEL 3: MICRO-HUMANITARIO FAMILIAR
+                                    </span>
+                                    <span className="text-xs font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2.5 py-1 rounded-full flex items-center gap-1">
+                                        <ShieldCheck className="w-3.5 h-3.5" /> Saaty AHP 4×4 • CR = 0.0115 ≤ 0.10
+                                    </span>
+                                    <span className="text-xs font-mono text-cyan-400 bg-cyan-950/60 border border-cyan-800 px-2.5 py-1 rounded-full">
+                                        Token Zero-PII: CUP-DAMN
+                                    </span>
+                                </div>
+                                <h2 className="text-2xl md:text-3xl font-black text-white">
+                                    IPAD: Índice de Priorización de Atención al Damnificado
+                                </h2>
+                                <p className="text-xs text-slate-400 max-w-4xl leading-relaxed">
+                                    Algoritmo determinista de caja blanca y varianza cero (<span className="font-mono text-slate-300">σ² = 0.0000</span>) basado en el Proceso Analítico Jerárquico de Saaty. Prioriza la asignación de auxilio humanitario, albergues temporales y la elegibilidad automática al <strong className="text-rose-300">Bono de Arrendamiento de Emergencia (BAE - S/ 500)</strong> bajo la Ley N.° 31526 y el D.S. N.° 008-2022-VIVIENDA, eliminando la intermediación política mediante el comprobante ciudadano inmutable <strong className="text-rose-300">CUP-DAMN</strong>.
+                                </p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Link
+                                    href="/reporte-ciudadano"
+                                    className="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-lg shadow-rose-600/30 transition flex items-center gap-2"
+                                >
+                                    <UserCheck className="w-4 h-4" /> Registrar Damnificado en Vivo
+                                </Link>
+                                <Link
+                                    href="/edan"
+                                    className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-700 transition flex items-center gap-2"
+                                >
+                                    <FileSpreadsheet className="w-4 h-4" /> Módulo EDAN
+                                </Link>
+                            </div>
+                        </div>
+
+                        {/* Comparación Tri-Escala Canónica */}
+                        <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-4">
+                            <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-2">
+                                <Scale className="w-4 h-4 text-rose-400" /> Taxonomía de Escalas Operacionales AMARU-CLIMATE
+                            </h4>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                                <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
+                                    <div className="text-[10px] font-mono text-red-400 font-bold">NIVEL 1 • MACRO-TERRITORIAL</div>
+                                    <div className="font-bold text-white mt-1">IRCE-FEN &amp; IPI</div>
+                                    <p className="text-[11px] text-slate-400 mt-1">
+                                        Escala de 1,891 Distritos (UBIGEO). Despacho presupuestal soberano FONDEN y D.S. 124-2026-PCM.
+                                    </p>
+                                </div>
+                                <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
+                                    <div className="text-[10px] font-mono text-blue-400 font-bold">NIVEL 2 • BIOFÍSICO &amp; CUENCA</div>
+                                    <div className="font-bold text-white mt-1">IPH-FEN &amp; ISH-CHIRI</div>
+                                    <p className="text-[11px] text-slate-400 mt-1">
+                                        Escala de 54 Quebradas y Cuencas Altoandinas. Manning, CAPE, Suelo S4 y heladas pecuarias.
+                                    </p>
+                                </div>
+                                <div className="p-3 rounded-xl bg-rose-950/40 border border-rose-800/80 ring-1 ring-rose-500/30">
+                                    <div className="text-[10px] font-mono text-rose-300 font-bold">NIVEL 3 • MICRO-HUMANITARIO (HOGAR)</div>
+                                    <div className="font-bold text-white mt-1">IPAD &amp; CUP-DAMN</div>
+                                    <p className="text-[11px] text-rose-200/90 mt-1">
+                                        Escala de Vivienda / Familia damnificada. Saaty 4x4, SLAs vinculantes y Bono BAE sin clientelismo.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Ecuación Maestra y Autovectores Saaty */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            {/* Panel Ecuación */}
+                            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-xs font-bold text-rose-300 uppercase tracking-wider flex items-center gap-2">
+                                        <Calculator className="w-4 h-4 text-rose-400" /> Formulación Matemática Matricial (Score 0 - 100)
+                                    </h3>
+                                    <span className="text-[10px] font-mono text-slate-400">Backend: damnificados_service.py</span>
+                                </div>
+                                <div className="p-4 bg-slate-900 rounded-xl border border-rose-900/40 text-center space-y-2">
+                                    <div className="text-xs text-slate-400 font-mono">Ecuación Maestra Saaty AHP 4×4:</div>
+                                    <div className="text-sm md:text-base font-mono font-bold text-rose-300 tracking-wide">
+                                        IPAD = (0.4673 · S_viv) + (0.2772 · V_fam) + (0.1601 · F_fen) + (0.0954 · A_acc)
+                                    </div>
+                                    <p className="text-[11px] text-slate-400">
+                                        Puntaje final acotado entre <span className="text-white font-mono font-bold">0.0</span> y <span className="text-white font-mono font-bold">100.0</span> puntos.
+                                    </p>
+                                </div>
+
+                                {/* Matriz de Comparación Pareada */}
+                                <div className="space-y-2">
+                                    <div className="text-xs font-bold text-slate-300 flex items-center justify-between">
+                                        <span>Matriz de Juicios Saaty 4×4 [A]:</span>
+                                        <span className="text-[11px] font-mono text-emerald-400">CR = 0.0115 ≤ 0.10 (Consistente)</span>
+                                    </div>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-center text-xs font-mono border-collapse">
+                                            <thead>
+                                                <tr className="bg-slate-900 text-slate-300 border-b border-slate-800">
+                                                    <th className="p-2 text-left">Criterio</th>
+                                                    <th className="p-2 text-rose-400">S_viv</th>
+                                                    <th className="p-2 text-amber-400">V_fam</th>
+                                                    <th className="p-2 text-blue-400">F_fen</th>
+                                                    <th className="p-2 text-emerald-400">A_acc</th>
+                                                    <th className="p-2 text-white bg-slate-800">Peso (w)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                                                <tr>
+                                                    <td className="p-2 text-left font-sans font-bold text-white">S_viv (Severidad Vivienda)</td>
+                                                    <td className="p-2 bg-slate-900/50 font-bold text-white">1</td>
+                                                    <td className="p-2">2</td>
+                                                    <td className="p-2">3</td>
+                                                    <td className="p-2">5</td>
+                                                    <td className="p-2 font-bold text-rose-300 bg-rose-950/40">46.73%</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="p-2 text-left font-sans font-bold text-white">V_fam (Carga Familiar / Salud)</td>
+                                                    <td className="p-2">1/2</td>
+                                                    <td className="p-2 bg-slate-900/50 font-bold text-white">1</td>
+                                                    <td className="p-2">2</td>
+                                                    <td className="p-2">3</td>
+                                                    <td className="p-2 font-bold text-amber-300 bg-amber-950/40">27.72%</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="p-2 text-left font-sans font-bold text-white">F_fen (Exposición FEN / Cauce)</td>
+                                                    <td className="p-2">1/3</td>
+                                                    <td className="p-2">1/2</td>
+                                                    <td className="p-2 bg-slate-900/50 font-bold text-white">1</td>
+                                                    <td className="p-2">2</td>
+                                                    <td className="p-2 font-bold text-blue-300 bg-blue-950/40">16.01%</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="p-2 text-left font-sans font-bold text-white">A_acc (Inaccesibilidad / Aislamiento)</td>
+                                                    <td className="p-2">1/5</td>
+                                                    <td className="p-2">1/3</td>
+                                                    <td className="p-2">1/2</td>
+                                                    <td className="p-2 bg-slate-900/50 font-bold text-white">1</td>
+                                                    <td className="p-2 font-bold text-emerald-300 bg-emerald-950/40">9.54%</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div className="grid grid-cols-4 gap-2 pt-2 text-[10px] font-mono text-slate-400 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
+                                        <div>λ_max: <span className="text-white font-bold">4.0308</span></div>
+                                        <div>CI: <span className="text-white font-bold">0.0103</span></div>
+                                        <div>RI (n=4): <span className="text-white font-bold">0.9000</span></div>
+                                        <div>CR Saaty: <span className="text-emerald-400 font-bold">0.0115 (≤0.10)</span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Panel de Desglose de Criterios & Variables de Entrada */}
+                            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-4">
+                                <h3 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                                    <Layers className="w-4 h-4 text-cyan-400" /> Criterios Operativos del Peritaje Humanitario
+                                </h3>
+
+                                <div className="space-y-3">
+                                    <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+                                        <div className="flex justify-between items-center text-xs">
+                                            <span className="font-bold text-rose-300">1. S_viv: Severidad Estructural &amp; Tirante (46.73%)</span>
+                                            <span className="text-[10px] font-mono text-slate-400">R.J. 188-2015-INDECI</span>
+                                        </div>
+                                        <p className="text-[11px] text-slate-400">
+                                            Mide el colapso físico o inhabitabilidad. Tirante crítico: Techo &gt;200 cm (100 pts), Cintura 100 cm (75 pts), Rodilla 50 cm en Adobe/Quincha disuelto (50 pts). Daño declarado: Colapsada (100 pts), Inhabitable (75 pts), Afectada (40 pts).
+                                        </p>
+                                    </div>
+
+                                    <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+                                        <div className="flex justify-between items-center text-xs">
+                                            <span className="font-bold text-amber-300">2. V_fam: Carga Familiar &amp; Salud Crítica (27.72%)</span>
+                                            <span className="text-[10px] font-mono text-slate-400">Ley N.° 29664</span>
+                                        </div>
+                                        <p className="text-[11px] text-slate-400">
+                                            Evalúa la vulnerabilidad biológica: presencia de lactantes, adultos mayores (&gt;65 años), gestantes, personas con discapacidad severa CONADIS o personas atrapadas en azotea (+30 pts adicionales por rescate aéreo).
+                                        </p>
+                                    </div>
+
+                                    <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+                                        <div className="flex justify-between items-center text-xs">
+                                            <span className="font-bold text-blue-300">3. F_fen: Dinámica Aluvial &amp; Faja Marginal ANA (16.01%)</span>
+                                            <span className="text-[10px] font-mono text-slate-400">R.J. 164-ANA / SIGRID</span>
+                                        </div>
+                                        <p className="text-[11px] text-slate-400">
+                                            Cruce geoespacial contra el catastro de fajas marginales de la ANA y conos de deyección activos de CENEPRED. Viviendas en cono aluvial o faja marginal reciben 100 pts por riesgo inminente de remoción en masa.
+                                        </p>
+                                    </div>
+
+                                    <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+                                        <div className="flex justify-between items-center text-xs">
+                                            <span className="font-bold text-emerald-300">4. A_acc: Inaccesibilidad &amp; Aislamiento Vial (9.54%)</span>
+                                            <span className="text-[10px] font-mono text-slate-400">MTC / COEN Logística</span>
+                                        </div>
+                                        <p className="text-[11px] text-slate-400">
+                                            Distancia al centro de acopio o carretera transitable: aislamiento completo por corte de puente o quebrada activa (100 pts), semiaislamiento a &gt;2.5 km (75 pts), proximidad a vía (25 pts).
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Semáforo Humanitario, SLAs Vinculantes y Bono BAE */}
+                        <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-4">
+                            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                                <div>
+                                    <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                                        <Clock className="w-4 h-4 text-amber-400" /> Semáforo Humanitario de Respuesta Rápida &amp; SLAs Vinculantes
+                                    </h3>
+                                    <p className="text-xs text-slate-400 mt-0.5">
+                                        Plazos perentorios de atención articulados con el Fondo para Intervenciones ante la Ocurrencia de Desastres Naturales (FONDES).
+                                    </p>
+                                </div>
+                                <span className="text-xs font-mono font-bold bg-purple-950 text-purple-300 border border-purple-800 px-3 py-1 rounded-full">
+                                    Auditable por CGR
+                                </span>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                {/* Nivel Crítico */}
+                                <div className="p-4 rounded-xl bg-red-950/40 border border-red-800/80 space-y-2 relative overflow-hidden">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-xs font-bold text-red-300 font-mono">≥ 80.0 PUNTOS</span>
+                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-900 text-red-100">
+                                            SLA ≤ 6 Horas
+                                        </span>
+                                    </div>
+                                    <div className="font-bold text-white text-sm">CRÍTICO URGENTE</div>
+                                    <p className="text-[11px] text-red-200/90 leading-relaxed">
+                                        Evacuación táctica inmediata, rescate aéreo o fluvial, instalación de módulo temporal de vivienda (MVCS) y activación prioritaria del <strong>Bono BAE (S/ 500)</strong>.
+                                    </p>
+                                    <div className="text-[10px] font-mono text-red-400 pt-1 border-t border-red-900/50">
+                                        Prioridad 01 en Padrón Digital
+                                    </div>
+                                </div>
+
+                                {/* Nivel Alto */}
+                                <div className="p-4 rounded-xl bg-amber-950/40 border border-amber-800/80 space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-xs font-bold text-amber-300 font-mono">60.0 - 79.9 PUNTOS</span>
+                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-900 text-amber-100">
+                                            SLA ≤ 24 Horas
+                                        </span>
+                                    </div>
+                                    <div className="font-bold text-white text-sm">ALTO / INHABITABLE</div>
+                                    <p className="text-[11px] text-amber-200/90 leading-relaxed">
+                                        Vivienda inhabitable por anegamiento severo. Traslado a carpa unifamiliar, entrega de <strong>Kit Alimentos BAH</strong> y despacho de subsidio BAE mensual.
+                                    </p>
+                                    <div className="text-[10px] font-mono text-amber-400 pt-1 border-t border-amber-900/50">
+                                        Certificación CUP-DAMN automática
+                                    </div>
+                                </div>
+
+                                {/* Nivel Moderado */}
+                                <div className="p-4 rounded-xl bg-blue-950/40 border border-blue-800/80 space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-xs font-bold text-blue-300 font-mono">40.0 - 59.9 PUNTOS</span>
+                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-900 text-blue-100">
+                                            SLA ≤ 48 Horas
+                                        </span>
+                                    </div>
+                                    <div className="font-bold text-white text-sm">MODERADO / AFECTADO</div>
+                                    <p className="text-[11px] text-blue-200/90 leading-relaxed">
+                                        Vivienda afectada con daños recuperables. Asignación de motobombas de achique, calaminas, sacos terreros y asistencia alimentaria preventiva.
+                                    </p>
+                                    <div className="text-[10px] font-mono text-blue-400 pt-1 border-t border-blue-900/50">
+                                        Rehabilitación estructural guiada
+                                    </div>
+                                </div>
+
+                                {/* Nivel Bajo */}
+                                <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-xs font-bold text-slate-300 font-mono">&lt; 40.0 PUNTOS</span>
+                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-200">
+                                            SLA ≤ 72 Horas
+                                        </span>
+                                    </div>
+                                    <div className="font-bold text-white text-sm">BAJO PREVENTIVO</div>
+                                    <p className="text-[11px] text-slate-400 leading-relaxed">
+                                        Afectación leve sin riesgo estructural. Monitoreo municipal, registro en base de datos secundaria y auxilio con herramientas de limpieza barrial.
+                                    </p>
+                                    <div className="text-[10px] font-mono text-slate-500 pt-1 border-t border-slate-800">
+                                        Seguimiento distrital EDAN
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Caso de Estudio Real & Comprobante CUP-DAMN */}
+                        <div className="p-5 rounded-2xl bg-gradient-to-r from-rose-950/40 via-purple-950/30 to-slate-950 border border-rose-900/40 space-y-4">
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                                <div className="flex items-center gap-2">
+                                    <Sparkles className="w-4 h-4 text-amber-400" />
+                                    <h4 className="text-xs font-bold text-white uppercase tracking-wider">
+                                        Ejemplo de Emisión Oficial: Caso Catacaos (UBIGEO 200105)
+                                    </h4>
+                                </div>
+                                <span className="font-mono text-[11px] bg-slate-900 text-rose-300 border border-rose-800 px-2.5 py-1 rounded-lg">
+                                    CUP-DAMN-2026-9F83A1
+                                </span>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+                                <div className="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                                    <span className="text-slate-400 block text-[10px]">TIRANTE &amp; DAÑO:</span>
+                                    <span className="font-bold text-white">Cintura 100 cm • Adobe</span>
+                                    <span className="text-rose-400 block text-[10px] mt-1">S_viv = 75.0 pts</span>
+                                </div>
+                                <div className="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                                    <span className="text-slate-400 block text-[10px]">CARGA FAMILIAR:</span>
+                                    <span className="font-bold text-white">Adulto mayor + 1 Lactante</span>
+                                    <span className="text-amber-400 block text-[10px] mt-1">V_fam = 80.0 pts</span>
+                                </div>
+                                <div className="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                                    <span className="text-slate-400 block text-[10px]">SCORE IPAD MATRICIAL:</span>
+                                    <span className="text-base font-black text-rose-300 font-mono">73.9 / 100</span>
+                                    <span className="text-emerald-400 block text-[10px] mt-0.5">SLA ≤ 24 Horas</span>
+                                </div>
+                                <div className="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                                    <span className="text-slate-400 block text-[10px]">BENEFICIO HABILITADO:</span>
+                                    <span className="font-bold text-emerald-400">Bono BAE (S/ 500)</span>
+                                    <span className="text-slate-400 block text-[10px] mt-1">Kit Alimentos + Carpa</span>
+                                </div>
+                            </div>
+                            <div className="text-[11px] text-slate-400 flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800">
+                                <div className="flex items-center gap-1.5">
+                                    <ShieldAlert className="w-4 h-4 text-emerald-400" />
+                                    <span>Certificación Zero-PII: DNI y nombres protegidos en bóveda HSM; el peritaje solo procesa el hash del CUP-DAMN.</span>
+                                </div>
+                                <Link
+                                    href="/municipal/200105"
+                                    className="text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1 transition"
+                                >
+                                    Ver en Consola Municipal Catacaos <ChevronRight className="w-3.5 h-3.5" />
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1399,6 +1820,34 @@ export default function DoctrinaFormulasPage() {
                                 definicion: "Cuerpo lacustre efímero de más de 3,000 km² que se forma en la depresión del desierto de Sechura cuando los caudales extraordinarios del río Piura rebasan la capacidad de evacuación hacia el estuario de Virrilá, sumergiendo decenas de kilómetros de la carretera Bayóvar.",
                                 formula: "Volumen acumulado > 5,000 MMC en eventos Mega",
                                 fuente: "CAF / INDECI"
+                            },
+                            {
+                                termino: "IPAD (Priorización de Atención al Damnificado)",
+                                categoria: "INDICES",
+                                definicion: "Índice micro-humanitario determinista de caja blanca (0.0 a 100.0 pts) basado en Saaty AHP 4×4. Evalúa y prioriza familias damnificadas mediante cuatro criterios: daño en vivienda (46.73%), carga familiar y salud (27.72%), exposición al cauce FEN (16.01%) e inaccesibilidad física (9.54%).",
+                                formula: "IPAD = (0.4673·S_viv) + (0.2772·V_fam) + (0.1601·F_fen) + (0.0954·A_acc)",
+                                fuente: "AMARU-CLIMATE / SINAGERD / MVCS"
+                            },
+                            {
+                                termino: "CUP-DAMN (Código Único de Peritaje de Damnificado)",
+                                categoria: "LEGAL",
+                                definicion: "Comprobante digital inmutable emitido por el motor neuro-simbólico AMARU con hash criptográfico SHA-256. Desacopla la identidad personal civil del padrón bajo arquitectura Zero-PII (Ley N° 29733) y consigna el score IPAD, el SLA máximo de respuesta y el derecho al auxilio humanitario.",
+                                formula: "Hash(UBIGEO + Timestamp + Coordenadas + Score_IPAD)",
+                                fuente: "COEN-DIGITAL / Bóveda Zero-PII"
+                            },
+                            {
+                                termino: "Bono BAE (Ley N° 31526 / D.S. 008-2022-VIVIENDA)",
+                                categoria: "LEGAL",
+                                definicion: "Bono de Arrendamiento de Emergencia para Damnificados que otorga un subsidio mensual de S/ 500 hasta por un plazo máximo de dos años para el alquiler de una vivienda digna a aquellas familias cuyas casas hayan sido declaradas colapsadas o inhabitables.",
+                                formula: "S/ 500.00 mensuales durante 24 meses",
+                                fuente: "MVCS / Fondo MIVIVIENDA"
+                            },
+                            {
+                                termino: "Ratio de Consistencia Saaty (CR)",
+                                categoria: "INDICES",
+                                definicion: "Métrica axiomática del Proceso Analítico Jerárquico (AHP) de Thomas Saaty que evalúa la transitividad y consistencia lógica de las matrices pareadas. En AMARU-CLIMATE, tanto el IRCE macro (CR = 0.0113) como el IPAD micro (CR = 0.0115) cumplen rigurosamente con el umbral axiomático CR ≤ 0.10.",
+                                formula: "CR = CI / RI = [(λ_max - n) / (n - 1)] / RI_n ≤ 0.10",
+                                fuente: "Thomas L. Saaty / Decision Science"
                             }
                         ]
                             .filter(item => {

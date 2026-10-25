@@ -38,7 +38,9 @@ import {
     HeartPulse,
     Filter,
     Info,
-    Waves
+    Waves,
+    Truck,
+    FileEdit
 } from "lucide-react";
 
 export default function MunicipalSuitePage() {
@@ -69,7 +71,7 @@ export default function MunicipalSuitePage() {
     const [filtroClasificacion, setFiltroClasificacion] = useState<string>("TODOS");
     const [filtroEstadoEdan, setFiltroEstadoEdan] = useState<string>("TODOS");
 
-    // Break-the-Glass State
+    // Break-the-Glass State & Candado Cognitivo HITL (T_min >= 30s)
     const [unlockTargetCup, setUnlockTargetCup] = useState<string | null>(null);
     const [oficialDni, setOficialDni] = useState<string>("");
     const [oficialNombre, setOficialNombre] = useState<string>("");
@@ -77,6 +79,14 @@ export default function MunicipalSuitePage() {
     const [oficialMotivo, setOficialMotivo] = useState<string>("");
     const [unlockResult, setUnlockResult] = useState<any | null>(null);
     const [unlocking, setUnlocking] = useState<boolean>(false);
+    const [inspectionStartTime, setInspectionStartTime] = useState<Record<string, number>>({});
+    const [nowTime, setNowTime] = useState<number>(Date.now());
+
+    // Actualizador de tiempo para candado cognitivo
+    useEffect(() => {
+        const interval = setInterval(() => setNowTime(Date.now()), 1000);
+        return () => clearInterval(interval);
+    }, []);
 
     // SINPAD Approval State
     const [sinpadTargetCup, setSinpadTargetCup] = useState<string | null>(null);
@@ -104,6 +114,46 @@ export default function MunicipalSuitePage() {
     const [filtroAlcanceObras, setFiltroAlcanceObras] = useState<"AUTO" | "DISTRITAL" | "PROVINCIAL" | "REGIONAL">("AUTO");
     const [distritoFiltroObras, setDistritoFiltroObras] = useState<string>("");
     const [loadingObrasOnly, setLoadingObrasOnly] = useState<boolean>(false);
+
+    // SIGRID CENEPRED States
+    const [busquedaPuntoCritico, setBusquedaPuntoCritico] = useState<string>("");
+    const [filtroPeligroPunto, setFiltroPeligroPunto] = useState<string>("TODOS");
+    const [sigridCertLoading, setSigridCertLoading] = useState<number | null>(null);
+    const [sigridCertSuccess, setSigridCertSuccess] = useState<Record<number, any>>({});
+
+    const handleCertificarPuntoSigrid = async (punto: any) => {
+        setSigridCertLoading(punto.id);
+        try {
+            const res = await fetch(`${API_BASE}/api/v1/sigrid/certificar-evento`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    actor: "ODC_DEFENSA_CIVIL_MUNICIPAL",
+                    ubigeo: ubigeo,
+                    latitud: punto.latitud,
+                    longitud: punto.longitud,
+                    datos_evento: {
+                        punto_id: punto.id,
+                        sector: punto.sector,
+                        centro_poblado: punto.centro_poblado,
+                        peligro: punto.peligro,
+                        nivel: punto.nivel,
+                        accion: "VERIFICACION_IN_SITU_AMARU_C2"
+                    }
+                })
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setSigridCertSuccess(prev => ({ ...prev, [punto.id]: data }));
+            } else {
+                alert("Error al certificar punto en WORM/Blockchain");
+            }
+        } catch (e: any) {
+            alert(`Error de red: ${e.message}`);
+        } finally {
+            setSigridCertLoading(null);
+        }
+    };
 
     const apiBase = API_BASE;
 
@@ -351,11 +401,14 @@ export default function MunicipalSuitePage() {
                             <ArrowLeft className="w-5 h-5" />
                         </Link>
                         <div>
-                            <div className="flex items-center gap-2">
-                                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-cyan-950 text-cyan-400 border border-cyan-800 font-bold uppercase tracking-wider">
-                                    COED MUNICIPAL AMARU • C2 DIGITAL
+                            <div className="flex items-center gap-2 flex-wrap">
+                                <span className="px-2.5 py-0.5 rounded text-[10px] font-mono bg-amber-500 text-slate-950 font-black uppercase tracking-wider shadow-md shadow-amber-500/20">
+                                    NIVEL 2 • COED MUNICIPAL
                                 </span>
-                                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-950 text-amber-400 border border-amber-800 font-bold">
+                                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-950 text-amber-300 border border-amber-700/60 font-bold">
+                                    ANILLO 2: TÁCTICO TERRITORIAL & DESPLIEGUE LOCAL
+                                </span>
+                                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-cyan-950 text-cyan-400 border border-cyan-800 font-bold">
                                     UBIGEO {ubigeo}
                                 </span>
                                 {planData?.declarado_ds_124_pcm && (
@@ -365,10 +418,10 @@ export default function MunicipalSuitePage() {
                                 )}
                             </div>
                             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white mt-1">
-                                Suite Municipal 360°: <span className="text-cyan-400">{distNombre}</span>
+                                Suite Municipal 360°: <span className="text-amber-400">{distNombre}</span>
                             </h1>
                             <p className="text-xs text-slate-400 mt-0.5">
-                                {provNombre}, {depNombre} • Alcalde / Pdte. GT-GRD: <strong className="text-slate-200">{alcaldeNombre}</strong>
+                                {provNombre}, {depNombre} • Alcalde / Pdte. GT-GRD: <strong className="text-slate-200">{alcaldeNombre}</strong> • <span className="text-amber-400/90 font-mono">Amparo: PP 0068 / Art. 27 Ley 30225</span>
                             </p>
                         </div>
                     </div>
@@ -412,6 +465,70 @@ export default function MunicipalSuitePage() {
                         >
                             <Scale className="w-3.5 h-3.5 text-amber-400" />
                             Auditoría SIAF
+                        </Link>
+                    </div>
+                </div>
+
+                {/* DOCK TÁCTICO MUNICIPAL DE HERRAMIENTAS INTEGRADAS DEL NIVEL 2 */}
+                <div className="bg-slate-900/80 border border-amber-900/50 rounded-2xl p-3.5 space-y-2">
+                    <div className="flex items-center justify-between text-xs font-mono">
+                        <span className="text-amber-400 font-bold flex items-center gap-1.5 uppercase">
+                            <Building2 className="w-4 h-4 text-amber-400" />
+                            Consolas Tácticas y Despliegue en Territorio (Anillo 2 COED Municipal)
+                        </span>
+                        <span className="text-slate-400 text-[10px]">T-lag = 0.6 · tc • PP 0068 • Art. 377 CP</span>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[11px]">
+                        <Link href="/pronostico" className="bg-slate-950 border border-slate-800 hover:border-amber-500 p-2.5 rounded-xl transition group">
+                            <Clock className="w-4 h-4 text-amber-400 mb-1 group-hover:scale-110 transition" />
+                            <span className="font-bold text-white block">Reloj Polar & EAP</span>
+                            <span className="text-[10px] text-slate-400 block mt-0.5">Ventana Dorada tc</span>
+                        </Link>
+                        <Link href={`/dashboard/${ubigeo}`} className="bg-slate-950 border border-slate-800 hover:border-cyan-500 p-2.5 rounded-xl transition group">
+                            <Building2 className="w-4 h-4 text-cyan-400 mb-1 group-hover:scale-110 transition" />
+                            <span className="font-bold text-white block">Inspector Distrital</span>
+                            <span className="text-[10px] text-slate-400 block mt-0.5">Ficha de cuenca local</span>
+                        </Link>
+                        <Link href="/alertas" className="bg-slate-950 border border-slate-800 hover:border-rose-500 p-2.5 rounded-xl transition group">
+                            <ShieldAlert className="w-4 h-4 text-rose-400 mb-1 group-hover:scale-110 transition" />
+                            <span className="font-bold text-white block">Bandeja Alertas</span>
+                            <span className="text-[10px] text-slate-400 block mt-0.5">Recepción Top-Down</span>
+                        </Link>
+                        <Link href="/planes" className="bg-slate-950 border border-slate-800 hover:border-emerald-500 p-2.5 rounded-xl transition group">
+                            <FileText className="w-4 h-4 text-emerald-400 mb-1 group-hover:scale-110 transition" />
+                            <span className="font-bold text-white block">Planes Contingencia</span>
+                            <span className="text-[10px] text-slate-400 block mt-0.5">PCMD y PPRRD</span>
+                        </Link>
+                        <Link href="/piura" className="bg-slate-950 border border-slate-800 hover:border-emerald-500 p-2.5 rounded-xl transition group">
+                            <Building2 className="w-4 h-4 text-emerald-400 mb-1 group-hover:scale-110 transition" />
+                            <span className="font-bold text-white block">Plan Piura 2026-27</span>
+                            <span className="text-[10px] text-slate-400 block mt-0.5">Epicentro FEN Norte</span>
+                        </Link>
+                        <Link href="/cajamarca" className="bg-slate-950 border border-slate-800 hover:border-cyan-500 p-2.5 rounded-xl transition group">
+                            <Waves className="w-4 h-4 text-cyan-400 mb-1 group-hover:scale-110 transition" />
+                            <span className="font-bold text-white block">PPRRD Cajamarca</span>
+                            <span className="text-[10px] text-slate-400 block mt-0.5">PISCO / Ley 21362</span>
+                        </Link>
+                        <Link href="/redactor" className="bg-slate-950 border border-slate-800 hover:border-amber-500 p-2.5 rounded-xl transition group">
+                            <FileEdit className="w-4 h-4 text-amber-400 mb-1 group-hover:scale-110 transition" />
+                            <span className="font-bold text-white block">Redactor QILQAY</span>
+                            <span className="text-[10px] text-slate-400 block mt-0.5">Actas C2 Notariales</span>
+                        </Link>
+                        <Link href="/logistica" className="bg-slate-950 border border-slate-800 hover:border-emerald-500 p-2.5 rounded-xl transition group">
+                            <Truck className="w-4 h-4 text-emerald-400 mb-1 group-hover:scale-110 transition" />
+                            <span className="font-bold text-white block">Logística VRP</span>
+                            <span className="text-[10px] text-slate-400 block mt-0.5">Rutas Anti-Corte</span>
+                        </Link>
+                        <Link href="/historico" className="bg-slate-950 border border-slate-800 hover:border-slate-500 p-2.5 rounded-xl transition group">
+                            <Clock className="w-4 h-4 text-slate-400 mb-1 group-hover:scale-110 transition" />
+                            <span className="font-bold text-white block">Memoria Histórica</span>
+                            <span className="text-[10px] text-slate-400 block mt-0.5">1983-1998-2017</span>
+                        </Link>
+                        <Link href="/reporte-ciudadano" className="bg-gradient-to-br from-rose-950/70 to-slate-950 border border-rose-700/60 hover:border-rose-400 p-2.5 rounded-xl transition group">
+                            <Users className="w-4 h-4 text-rose-400 mb-1 group-hover:scale-110 transition" />
+                            <span className="font-bold text-rose-300 block">COED Social &rarr;</span>
+                            <span className="text-[10px] text-rose-400/80 block mt-0.5">Sensor Humano RAM</span>
                         </Link>
                     </div>
                 </div>
@@ -1787,16 +1904,245 @@ export default function MunicipalSuitePage() {
                 {activeTab === "pprrd" && (
                     <div className="space-y-6">
                         <div className="p-5 bg-slate-900/80 border border-emerald-800/80 rounded-xl">
-                            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold">
-                                {pprrdData?.marco_legal}
-                            </span>
-                            <h3 className="text-lg font-bold text-white mt-2">
-                                Plan de Prevención y Reducción del Riesgo de Desastres (PPRRD)
-                            </h3>
-                            <p className="text-xs text-slate-400 mt-1">
-                                {pprrdData?.objetivo_estrategico} • Jurisdicción: {distNombre}, {provNombre}, {depNombre}.
-                            </p>
+                            <div className="flex flex-wrap items-center justify-between gap-3">
+                                <div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold">
+                                            {pprrdData?.marco_legal || "R.J. N.° 058-2019-CENEPRED/J & Ley N.° 29664"}
+                                        </span>
+                                        {pprrdData?.sigrid_cenepred && (
+                                            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-950 text-cyan-300 border border-cyan-700 font-bold flex items-center gap-1">
+                                                <Shield className="w-3 h-3 text-cyan-400" />
+                                                BIBLIOTECA OFICIAL CENEPRED SIGRID
+                                            </span>
+                                        )}
+                                    </div>
+                                    <h3 className="text-lg font-bold text-white mt-2">
+                                        Plan de Prevención y Reducción del Riesgo de Desastres (PPRRD)
+                                    </h3>
+                                    <p className="text-xs text-slate-400 mt-1">
+                                        {pprrdData?.objetivo_estrategico || "Reducción de vulnerabilidad territorial"} • Jurisdicción: {distNombre}, {provNombre}, {depNombre}.
+                                    </p>
+                                </div>
+                                {pprrdData?.sigrid_cenepred?.metadata?.official_sigrid_url && (
+                                    <a
+                                        href={pprrdData.sigrid_cenepred.metadata.official_sigrid_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-1.5 px-3 py-2 bg-blue-950/80 hover:bg-blue-900 border border-cyan-600/50 rounded-xl text-xs font-bold text-cyan-200 transition shadow-lg shadow-cyan-950/40"
+                                    >
+                                        <ExternalLink className="w-4 h-4 text-cyan-400" />
+                                        <span>Ver PDF Oficial SIGRID-10773</span>
+                                    </a>
+                                )}
+                            </div>
                         </div>
+
+                        {/* SECCIÓN OFICIAL CENEPRED SIGRID SI ESTÁ DISPONIBLE */}
+                        {pprrdData?.sigrid_cenepred && (
+                            <div className="space-y-6">
+                                {/* Metadata Oficial CENEPRED */}
+                                <div className="p-4 bg-slate-950 border border-cyan-900/60 rounded-xl space-y-2 text-xs">
+                                    <div className="flex flex-wrap items-center justify-between gap-2 text-slate-300">
+                                        <div>
+                                            <strong className="text-white font-mono">{pprrdData.sigrid_cenepred.metadata.document_id}: </strong>
+                                            <span>{pprrdData.sigrid_cenepred.metadata.document_title}</span>
+                                        </div>
+                                        <span className="font-mono text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800 text-[10px]">
+                                            {pprrdData.sigrid_cenepred.metadata.resolucion_alcaldia}
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-wrap items-center gap-4 text-slate-400 text-[11px] pt-1 border-t border-slate-800">
+                                        <span>Cuenca: <strong className="text-slate-200">{pprrdData.sigrid_cenepred.metadata.cuenca}</strong></span>
+                                        <span>Asistencia: <strong className="text-slate-200">{pprrdData.sigrid_cenepred.metadata.asistencia_tecnica}</strong></span>
+                                        <span>Cooperación: <strong className="text-slate-200">{pprrdData.sigrid_cenepred.metadata.proyecto_cooperacion}</strong></span>
+                                    </div>
+                                </div>
+
+                                {/* Escenarios de Riesgo Catastrófico */}
+                                <div className="space-y-3">
+                                    <h4 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                                        <AlertTriangle className="w-4 h-4 text-amber-400" />
+                                        Escenarios Oficiales de Desastre (Inundación y Sequía Extrema)
+                                    </h4>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        {/* Escenario 1: Inundación */}
+                                        <div className="p-4 bg-slate-950 border border-rose-900/60 rounded-xl space-y-2 text-xs">
+                                            <div className="flex items-center justify-between">
+                                                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-rose-950 text-rose-300 border border-rose-800 font-bold">
+                                                    PELIGRO INUNDACIÓN
+                                                </span>
+                                                <span className="font-mono text-rose-400 font-bold">Q &gt; 1500 m³/s</span>
+                                            </div>
+                                            <p className="text-slate-300 font-medium">
+                                                {pprrdData.sigrid_cenepred.escenarios_riesgo?.inundacion?.descripcion}
+                                            </p>
+                                            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800 text-[11px] font-mono">
+                                                <div>
+                                                    <span className="text-slate-400 block">Población Expuesta:</span>
+                                                    <strong className="text-rose-300 text-sm">{pprrdData.sigrid_cenepred.escenarios_riesgo?.inundacion?.poblacion_expuesta_total?.toLocaleString()} hab.</strong>
+                                                </div>
+                                                <div>
+                                                    <span className="text-slate-400 block">Viviendas Expuestas:</span>
+                                                    <strong className="text-rose-300 text-sm">{pprrdData.sigrid_cenepred.escenarios_riesgo?.inundacion?.viviendas_expuestas_total?.toLocaleString()} viv.</strong>
+                                                </div>
+                                            </div>
+                                            <div className="text-[10px] text-slate-400 pt-1">
+                                                Centros Poblados críticos: Jibito (4,423 hab), Sojo (4,403 hab), Chalaco (75 hab).
+                                            </div>
+                                        </div>
+
+                                        {/* Escenario 2: Sequía Potable */}
+                                        <div className="p-4 bg-slate-950 border border-amber-900/60 rounded-xl space-y-2 text-xs">
+                                            <div className="flex items-center justify-between">
+                                                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-950 text-amber-300 border border-amber-800 font-bold">
+                                                    SEQUÍA SOCIOECONÓMICA
+                                                </span>
+                                                <span className="font-mono text-amber-400 font-bold">ESTIAJE CRÍTICO</span>
+                                            </div>
+                                            <p className="text-slate-300 font-medium">
+                                                {pprrdData.sigrid_cenepred.escenarios_riesgo?.sequia_socioeconomica?.descripcion}
+                                            </p>
+                                            <div className="pt-2 border-t border-slate-800 text-[11px] font-mono">
+                                                <span className="text-slate-400 block">Población sin Agua Potable:</span>
+                                                <strong className="text-amber-300 text-sm">{pprrdData.sigrid_cenepred.escenarios_riesgo?.sequia_socioeconomica?.poblacion_afectada_potable?.toLocaleString()} habitantes</strong>
+                                            </div>
+                                            <div className="text-[10px] text-slate-400 pt-1">
+                                                Afecta directamente la red de Jibito (4,423) y Sojo (4,403).
+                                            </div>
+                                        </div>
+
+                                        {/* Escenario 3: Sequía Agrícola */}
+                                        <div className="p-4 bg-slate-950 border border-emerald-900/60 rounded-xl space-y-2 text-xs">
+                                            <div className="flex items-center justify-between">
+                                                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold">
+                                                    SEQUÍA AGRÍCOLA
+                                                </span>
+                                                <span className="font-mono text-emerald-400 font-bold">BANANO EXPORTACIÓN</span>
+                                            </div>
+                                            <p className="text-slate-300 font-medium">
+                                                {pprrdData.sigrid_cenepred.escenarios_riesgo?.sequia_agricola?.descripcion}
+                                            </p>
+                                            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800 text-[11px] font-mono">
+                                                <div>
+                                                    <span className="text-slate-400 block">Cultivo en Riesgo:</span>
+                                                    <strong className="text-emerald-300 text-sm">{pprrdData.sigrid_cenepred.escenarios_riesgo?.sequia_agricola?.cultivo_afectado}</strong>
+                                                </div>
+                                                <div>
+                                                    <span className="text-slate-400 block">Pérdida Económica:</span>
+                                                    <strong className="text-emerald-300 text-sm">S/ {pprrdData.sigrid_cenepred.escenarios_riesgo?.sequia_agricola?.perdida_economica_proyectada_soles?.toLocaleString()}</strong>
+                                                </div>
+                                            </div>
+                                            <div className="text-[10px] text-slate-400 pt-1">
+                                                Amenaza al valle del Río Chira y empleo de agricultores locales.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Catálogo de 23 Puntos Críticos Georreferenciados (Cuadro 46) */}
+                                <div className="p-5 bg-slate-900/90 border border-slate-800 rounded-xl space-y-4">
+                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                                        <div>
+                                            <h4 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                                                <MapPin className="w-4 h-4 text-cyan-400" />
+                                                Catálogo Oficial de 23 Puntos Críticos Georreferenciados (WGS84 Lat/Lon)
+                                            </h4>
+                                            <p className="text-xs text-slate-400">
+                                                Fuente: CENEPRED SIGRID Cuadro 46 (PPRRD Miguel Checa). Permite validación espacial y sellado en Blockchain.
+                                            </p>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <div className="relative">
+                                                <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-500" />
+                                                <input
+                                                    type="text"
+                                                    value={busquedaPuntoCritico}
+                                                    onChange={e => setBusquedaPuntoCritico(e.target.value)}
+                                                    placeholder="Buscar sector, punto..."
+                                                    className="pl-8 pr-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-500 w-44"
+                                                />
+                                            </div>
+                                            <select
+                                                value={filtroPeligroPunto}
+                                                onChange={e => setFiltroPeligroPunto(e.target.value)}
+                                                className="px-2.5 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-cyan-500"
+                                            >
+                                                <option value="TODOS">Todos los Niveles</option>
+                                                <option value="Muy Alto">Muy Alto</option>
+                                                <option value="Alto">Alto</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    {/* Lista de Puntos Críticos */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[500px] overflow-y-auto pr-1">
+                                        {pprrdData.sigrid_cenepred.puntos_criticos
+                                            ?.filter((pt: any) => {
+                                                const matchBusq = !busquedaPuntoCritico.trim() ||
+                                                    pt.sector.toLowerCase().includes(busquedaPuntoCritico.toLowerCase()) ||
+                                                    pt.centro_poblado.toLowerCase().includes(busquedaPuntoCritico.toLowerCase()) ||
+                                                    pt.descripcion.toLowerCase().includes(busquedaPuntoCritico.toLowerCase());
+                                                const matchPel = filtroPeligroPunto === "TODOS" || pt.nivel === filtroPeligroPunto;
+                                                return matchBusq && matchPel;
+                                            })
+                                            .map((pt: any) => {
+                                                const cert = sigridCertSuccess[pt.id];
+                                                const isLoading = sigridCertLoading === pt.id;
+                                                return (
+                                                    <div key={pt.id} className="p-3.5 bg-slate-950 border border-slate-800 hover:border-slate-700 rounded-xl space-y-2 text-xs">
+                                                        <div className="flex items-center justify-between">
+                                                            <div className="flex items-center gap-1.5">
+                                                                <span className="font-mono font-bold text-cyan-400 bg-cyan-950/60 px-1.5 py-0.5 rounded text-[11px] border border-cyan-800">
+                                                                    #{pt.id}
+                                                                </span>
+                                                                <span className="font-bold text-white line-clamp-1">{pt.sector}</span>
+                                                            </div>
+                                                            <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
+                                                                pt.nivel === "Muy Alto"
+                                                                    ? "bg-rose-950 text-rose-300 border border-rose-800"
+                                                                    : "bg-amber-950 text-amber-300 border border-amber-800"
+                                                            }`}>
+                                                                {pt.nivel}
+                                                            </span>
+                                                        </div>
+
+                                                        <div className="text-slate-300 text-[11px] line-clamp-2">
+                                                            {pt.descripcion}
+                                                        </div>
+
+                                                        <div className="text-[11px] text-emerald-300 bg-emerald-950/30 p-2 rounded-lg border border-emerald-900/50">
+                                                            <strong>Medida Estructural:</strong> {pt.medida}
+                                                        </div>
+
+                                                        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800/80 font-mono text-[10px]">
+                                                            <span className="text-slate-400">
+                                                                GPS: {pt.latitud?.toFixed(6)}, {pt.longitud?.toFixed(6)}
+                                                            </span>
+                                                            {cert ? (
+                                                                <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold flex items-center gap-1">
+                                                                    <Check className="w-3 h-3 text-emerald-400" />
+                                                                    WORM Blk #{cert.bloque_worm_id} • TX {cert.blockchain_anchor?.tx_hash?.substring(0, 10)}...
+                                                                </span>
+                                                            ) : (
+                                                                <button
+                                                                    onClick={() => handleCertificarPuntoSigrid(pt)}
+                                                                    disabled={isLoading}
+                                                                    className="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 border border-cyan-700/60 hover:border-cyan-500 rounded text-cyan-300 transition flex items-center gap-1 disabled:opacity-50"
+                                                                >
+                                                                    <Cpu className={`w-3 h-3 ${isLoading ? "animate-spin" : "text-cyan-400"}`} />
+                                                                    <span>{isLoading ? "Sellando..." : "Sellar en WORM / Blockchain"}</span>
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Matriz de Inversiones Estructurales */}
                         <div className="p-5 bg-slate-900/80 border border-slate-800 rounded-xl space-y-4">
@@ -2026,9 +2372,21 @@ export default function MunicipalSuitePage() {
                                                     </span>
 
                                                     <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-700 flex items-center gap-1">
-                                                        <span>🎯 {c.evaluacion_ia?.score_consistencia_territorial}%</span>
-                                                        <span className="text-[10px] text-emerald-400/80 font-normal">Consistencia</span>
+                                                        <span>🎯 {c.evaluacion_ia?.score_ipad || c.evaluacion_ia?.score_consistencia_territorial}%</span>
+                                                        <span className="text-[10px] text-emerald-400/80 font-normal">IPAD Saaty (CR: 0.0115)</span>
                                                     </span>
+
+                                                    {c.evaluacion_ia?.semaforo_humanitario && (
+                                                        <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${
+                                                            c.evaluacion_ia.semaforo_humanitario.nivel_prioridad === "CRITICO_URGENTE"
+                                                                ? "bg-rose-950 text-rose-300 border border-rose-700 animate-pulse"
+                                                                : c.evaluacion_ia.semaforo_humanitario.nivel_prioridad === "ALTO"
+                                                                ? "bg-amber-950 text-amber-300 border border-amber-700"
+                                                                : "bg-blue-950 text-blue-300 border border-blue-700"
+                                                        }`}>
+                                                            SLA: ≤ {c.evaluacion_ia.semaforo_humanitario.plazo_sla_horas}h
+                                                        </span>
+                                                    )}
 
                                                     {isBae && (
                                                         <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
@@ -2117,65 +2475,104 @@ export default function MunicipalSuitePage() {
                                                 </div>
                                             )}
 
-                                            {/* SECCIÓN ZERO-PII / IDENTIDAD Y SOBERANÍA HUMANA */}
-                                            <div className="pt-3 border-t border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-                                                {/* Estado del Sello Criptográfico */}
-                                                <div>
-                                                    {!isUnsealed ? (
-                                                        <div className="flex items-center gap-2 text-xs text-slate-400">
-                                                            <Lock className="w-4 h-4 text-amber-400 shrink-0" />
-                                                            <span>
-                                                                Identidad del Jefe de Hogar cifrada bajo AES-256 (Ley N.° 29733 Zero-PII).
-                                                            </span>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="space-y-1 text-xs text-emerald-300">
-                                                            <div className="flex items-center gap-1.5 font-bold">
-                                                                <Unlock className="w-4 h-4 text-emerald-400 shrink-0" />
-                                                                <span>Identidad Desbloqueada por {c.desbloqueado_por_oficial}</span>
-                                                            </div>
-                                                            {unlockResult?.cup === c.cup && (
-                                                                <div className="font-mono text-[11px] text-slate-300 bg-slate-950 p-2 rounded-lg border border-slate-800">
-                                                                    <strong>Jefe Hogar:</strong> {unlockResult.datos_familiares_desbloqueados?.nombre_completo} (DNI: {unlockResult.datos_familiares_desbloqueados?.dni_jefe_hogar}) | <strong>Tel:</strong> {unlockResult.datos_familiares_desbloqueados?.telefono} | <strong>Dir:</strong> {unlockResult.datos_familiares_desbloqueados?.direccion_exacta}
+                                            {/* Candado Cognitivo HITL: Inspección Ocular T_min >= 30s */}
+                                            {(() => {
+                                                const startT = inspectionStartTime[c.cup] || 0;
+                                                const elapsed = startT > 0 ? Math.floor((nowTime - startT) / 1000) : 0;
+                                                const remaining = Math.max(0, 30 - elapsed);
+                                                const isUnlockedCognitive = startT > 0 && remaining === 0;
+
+                                                return (
+                                                    <div className="pt-3 border-t border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                                                        {/* Estado del Sello Criptográfico & Candado Cognitivo */}
+                                                        <div>
+                                                            {!isUnsealed ? (
+                                                                <div className="space-y-1">
+                                                                    <div className="flex items-center gap-2 text-xs text-slate-400">
+                                                                        <Lock className="w-4 h-4 text-amber-400 shrink-0" />
+                                                                        <span>
+                                                                            Identidad del Jefe de Hogar cifrada bajo AES-256 (Ley N.° 29733 Zero-PII).
+                                                                        </span>
+                                                                    </div>
+                                                                    {startT > 0 && remaining > 0 && (
+                                                                        <div className="flex items-center gap-1.5 text-[10px] text-amber-400 font-mono">
+                                                                            <Clock className="w-3 h-3 animate-spin" />
+                                                                            <span>Candado cognitivo activo: Inspección ocular obligatoria ({remaining}s restantes)...</span>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            ) : (
+                                                                <div className="space-y-1 text-xs text-emerald-300">
+                                                                    <div className="flex items-center gap-1.5 font-bold">
+                                                                        <Unlock className="w-4 h-4 text-emerald-400 shrink-0" />
+                                                                        <span>Identidad Desbloqueada por {c.desbloqueado_por_oficial}</span>
+                                                                    </div>
+                                                                    {unlockResult?.cup === c.cup && (
+                                                                        <div className="font-mono text-[11px] text-slate-300 bg-slate-950 p-2 rounded-lg border border-slate-800">
+                                                                            <strong>Jefe Hogar:</strong> {unlockResult.datos_familiares_desbloqueados?.nombre_completo} (DNI: {unlockResult.datos_familiares_desbloqueados?.dni_jefe_hogar}) | <strong>Tel:</strong> {unlockResult.datos_familiares_desbloqueados?.telefono} | <strong>Dir:</strong> {unlockResult.datos_familiares_desbloqueados?.direccion_exacta}
+                                                                        </div>
+                                                                    )}
                                                                 </div>
                                                             )}
                                                         </div>
-                                                    )}
-                                                </div>
 
-                                                {/* Botones Operativos de Soberanía Humana */}
-                                                <div className="flex flex-wrap items-center gap-2">
-                                                    {!isUnsealed && (
-                                                        <button
-                                                            onClick={() => {
-                                                                setUnlockTargetCup(c.cup);
-                                                                setOficialMotivo("Inspección ocular y empadronamiento de emergencia Ficha EDAN.");
-                                                            }}
-                                                            className="px-3 py-1.5 bg-amber-950/80 hover:bg-amber-900 border border-amber-600 rounded-lg text-xs font-bold text-amber-200 transition flex items-center gap-1.5 cursor-pointer shadow-sm"
-                                                        >
-                                                            <Unlock className="w-3.5 h-3.5" />
-                                                            <span>Romper Sello (Break-the-Glass)</span>
-                                                        </button>
-                                                    )}
+                                                        {/* Botones Operativos de Soberanía Humana */}
+                                                        <div className="flex flex-wrap items-center gap-2">
+                                                            {startT === 0 ? (
+                                                                <button
+                                                                    onClick={() => setInspectionStartTime(prev => ({ ...prev, [c.cup]: Date.now() }))}
+                                                                    className="px-3 py-1.5 bg-blue-900/80 hover:bg-blue-800 border border-blue-600 rounded-lg text-xs font-bold text-blue-200 transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                                                                >
+                                                                    <Clock className="w-3.5 h-3.5" />
+                                                                    <span>Iniciar Inspección Ocular (HITL)</span>
+                                                                </button>
+                                                            ) : (
+                                                                <>
+                                                                    {!isUnsealed && (
+                                                                        <button
+                                                                            disabled={!isUnlockedCognitive}
+                                                                            onClick={() => {
+                                                                                setUnlockTargetCup(c.cup);
+                                                                                setOficialMotivo("Inspección ocular y empadronamiento de emergencia Ficha EDAN.");
+                                                                            }}
+                                                                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-sm ${
+                                                                                isUnlockedCognitive
+                                                                                    ? "bg-amber-950/80 hover:bg-amber-900 border border-amber-600 text-amber-200 cursor-pointer"
+                                                                                    : "bg-slate-900 border border-slate-800 text-slate-500 cursor-not-allowed"
+                                                                            }`}
+                                                                        >
+                                                                            <Unlock className="w-3.5 h-3.5" />
+                                                                            <span>{isUnlockedCognitive ? "Romper Sello (Break-the-Glass)" : `Candado (${remaining}s)`}</span>
+                                                                        </button>
+                                                                    )}
 
-                                                    {!isSinpadApproved ? (
-                                                        <button
-                                                            onClick={() => {
-                                                                setSinpadTargetCup(c.cup);
-                                                                setSinpadCodigo(`SINPAD-${new Date().getFullYear()}-EDAN-${c.cup.slice(-5)}`);
-                                                            }}
-                                                            className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-md shadow-emerald-700/30 cursor-pointer"
-                                                        >
-                                                            <FileCheck className="w-3.5 h-3.5" />
-                                                            <span>Validar Ficha EDAN / SINPAD</span>
-                                                        </button>
-                                                    ) : (
-                                                        <span className="px-3 py-1.5 bg-cyan-950 border border-cyan-700 rounded-lg text-xs font-mono font-bold text-cyan-300">
-                                                            ✓ Validado en SINPAD
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            </div>
+                                                                    {!isSinpadApproved ? (
+                                                                        <button
+                                                                            disabled={!isUnlockedCognitive}
+                                                                            onClick={() => {
+                                                                                setSinpadTargetCup(c.cup);
+                                                                                setSinpadCodigo(`SINPAD-${new Date().getFullYear()}-EDAN-${c.cup.slice(-5)}`);
+                                                                            }}
+                                                                            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-md ${
+                                                                                isUnlockedCognitive
+                                                                                    ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-700/30 cursor-pointer"
+                                                                                    : "bg-slate-900 border border-slate-800 text-slate-500 cursor-not-allowed"
+                                                                            }`}
+                                                                        >
+                                                                            <FileCheck className="w-3.5 h-3.5" />
+                                                                            <span>{isUnlockedCognitive ? "Validar Ficha EDAN / SINPAD" : `Inspección (${remaining}s)`}</span>
+                                                                        </button>
+                                                                    ) : (
+                                                                        <span className="px-3 py-1.5 bg-cyan-950 border border-cyan-700 rounded-lg text-xs font-mono font-bold text-cyan-300">
+                                                                            ✓ Validado en SINPAD
+                                                                        </span>
+                                                                    )}
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })()}
                                         </div>
                                     );
                                 })}

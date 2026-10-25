@@ -20,6 +20,7 @@ from typing import Dict, Any, List, Optional
 import base64
 from services.historical_data_service import historical_service
 from services.file_sanitizer import file_sanitizer, ForensicSanitizationError
+from services.sigrid_cenepred_service import sigrid_cenepred_service
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
 GROUND_TRUTH_FILE = "reportes_ciudadanos_groundtruth.json"
@@ -64,13 +65,9 @@ class CitizenReportService:
     def _save_reports(self):
         path = self._get_storage_path()
         try:
+            os.makedirs(os.path.dirname(path), exist_ok=True)
             with open(path, "w", encoding="utf-8") as f:
                 json.dump(self.reportes, f, indent=2, ensure_ascii=False)
-            # También guardar en mirror si existe
-            alt_path = os.path.join(os.path.dirname(DATA_DIR), "data", GROUND_TRUTH_FILE)
-            if alt_path != path and os.path.exists(os.path.dirname(alt_path)):
-                with open(alt_path, "w", encoding="utf-8") as f:
-                    json.dump(self.reportes, f, indent=2, ensure_ascii=False)
         except Exception as e:
             print(f"[CitizenReportService Error] Error guardando reportes: {e}")
 
@@ -204,7 +201,7 @@ class CitizenReportService:
             dictamen_ia = f"Evidencia consistente con la dinámica morfológica de {nombre_distrito}. Niveles de turbidez fluvial concuerdan con la cuenca {nombre_cuenca}."
             mostrar_pub = True
 
-        # 3. Consenso Espacial (Contar reportes en radio de 600m)
+        # Consenso Espacial (Contar reportes en radio de 600m)
         cluster_count = 1
         for r in self.reportes:
             c = r.get("coordenadas", {})
@@ -218,6 +215,15 @@ class CitizenReportService:
             nivel_consenso = "CONSENSO_TACTICO_CONFIRMADO"
             if not es_sospechoso:
                 score = min(99.0, score + 5.0)
+
+        # Validación espacial frente al catálogo de puntos críticos CENEPRED SIGRID
+        sigrid_val = sigrid_cenepred_service.validar_coordenada_frente_a_sigrid(
+            latitud=lat, longitud=lng, ubigeo=ubigeo, radio_tolerancia_m=650.0
+        )
+        if sigrid_val.get("coincidencia_oficial"):
+            if not es_sospechoso:
+                score = min(99.5, score + 4.0)
+            distancia_critica = sigrid_val.get("distancia_metros", distancia_critica)
 
         # 4. Sanitización Forense, Magic Bytes y Cadena de Custodia ISO 27037
         foto_b64 = payload.get("foto_bytes_base64")
@@ -280,7 +286,8 @@ class CitizenReportService:
                     "cuenca": nombre_cuenca,
                     "zona_riesgo_cenepred": distrito_info.get("peligro_cenepred", "ALTO") if distrito_info else "ALTO",
                     "distancia_a_punto_critico_m": distancia_critica,
-                    "declarado_ds124": bool(historical_service.distritos_ds124.get(ubigeo))
+                    "declarado_ds124": bool(historical_service.distritos_ds124.get(ubigeo)),
+                    "sigrid_oficial": sigrid_val
                 },
                 "consenso_espacial": {
                     "total_reportes_cluster": cluster_count,
@@ -293,7 +300,8 @@ class CitizenReportService:
                 "mostrar_en_mapa": mostrar_pub,
                 "tipo_pin": "SENAL_TACTICA_EN_VIVO" if tipo_registro == "EN_VIVO_2026_2027" else "PUNTO_HISTORICO_CONFIRMADO",
                 "nivel_resumen": payload.get("nivel_afectacion", "RODILLA_50CM"),
-                "etiqueta_publica": f"Señal Táctica Calibrada - {nombre_distrito}"
+                "etiqueta_publica": f"Señal Táctica Calibrada - {nombre_distrito}",
+                "sigrid_coincidencia": sigrid_val.get("coincidencia_oficial", False)
             }
         }
 
@@ -309,6 +317,8 @@ class CitizenReportService:
             "score_autenticidad": score,
             "veredicto": veredicto,
             "consenso_cluster": cluster_count,
+            "sigrid_verificado": sigrid_val.get("coincidencia_oficial", False),
+            "sigrid_detalle": sigrid_val if sigrid_val.get("coincidencia_oficial") else None,
             "cadena_custodia": forensic_bundle["sello_tiempo_rfc3161"],
             "mensaje_al_ciudadano": "Su reporte ha sido recibido y sanitizado con éxito. Conforme a la norma ISO 27037 y en resguardo de la calma pública, sus evidencias cuentan con sello de tiempo digital inmutable (RFC 3161) y permanecen bajo reserva confidencial militar C2."
         }

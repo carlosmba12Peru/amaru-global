@@ -218,7 +218,7 @@ To prove practical usefulness beyond theoretical whitepapers, AMARU operates liv
 
 * **Geodesic DBSCAN Clustering ($R = 12\text{ km}$):** Aggregates thousands of raw NASA FIRMS (VIIRS 375m & MODIS) thermal hotspots into **86 high-severity national wildfire complexes**.
 * **48-Hour Thermal Persistence (PTT):** State-machine tracking keeps incidents active even during optical cloud occlusion or nighttime thermal inversion.
-* **Ground-Truth Cross-Validation:** Correlates active satellite complexes against 118 official civil defense bulletins, confirming **48 validated incidents** while exposing **38 "Blind Wildfires"** (high-FRP fires raging in remote areas with zero formal administrative reports).
+* **Ground-Truth Cross-Validation & The SINPAD/EDAN Latency Bridge:** Correlates active satellite complexes against 118 official civil defense bulletins and administrative registries. While mobile field tools (such as INDECI's newly launched *EDAN Digital*) require evaluators to physically reach disaster sites post-impact, AMARU's autonomous orbital fusion confirms **48 validated incidents** while uncovering **38 "Blind Wildfires"** (high-FRP blazes spreading in remote topography completely absent from administrative systems).
 * **Parametric Evidence for Agricultural Insurance (SAC):** Outputs standardized geospatial damage dossiers (burned hectares, Fire Radiative Power, perimeter polygons) without citizen PII, allowing agrarian agencies to certify catastrophe claims in hours instead of months.
 
 ---

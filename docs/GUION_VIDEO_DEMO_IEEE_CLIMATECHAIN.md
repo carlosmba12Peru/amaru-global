@@ -1,122 +1,119 @@
-# GUION OFICIAL DE GRABACIÓN: AMARU-CLIMATE (IEEE CLIMATECHAIN 2026)
-**Duración Total Estimada:** 4:00 - 4:15 minutos  
-**Idioma Recomendado:** Audio en Inglés (o Español neutro con subtítulos en inglés)  
-**Tasa de locución:** Pausada, enérgica y ejecutiva (~130 palabras por minuto)
+# GUION OFICIAL Y DEFINITIVO DE GRABACIÓN: AMARU-CLIMATE (IEEE CLIMATECHAIN 2026)
+### 5 TEXTOS EN INGLÉS CON LINKS EXACTOS DE PANTALLA, ACCIONES Y CALIBRACIÓN CIENTÍFICA
+
+**Duración Total Estimada:** 4:20 minutos (dentro del rango oficial IEEE de 3 a 5 minutos)  
+**URL Base de Producción:** `https://coen-frontend-289004262994.us-central1.run.app`  
+**Enfoque Institucional:** Prototipo I+D / Proof-of-Concept con orquestación Multi-Agente y Notaría Polygon  
+**Calibración Científica:** Integración explícita de la Discusión Diagnóstica ENSO (NOAA Climate Prediction Center / ENFEN)  
 
 ---
 
-## 🕒 BLOQUE 1: THE PLANETARY CRISIS & THE GOLDEN WINDOW PARALYSIS
-* **Tiempo:** `00:00 - 00:45` (45 segundos)
-* **Pantalla a mostrar:** 
-  - Comienza con la portada/slide inicial de AMARU-CLIMATE con el logo de IEEE ClimateChain.
-  - O en pantalla completa la vista principal de la consola de crisis: `/` (War Room Nacional) con los índices de riesgo y mapa 3D.
-* **Acciones en pantalla:** Mostrar panorámica del dashboard nacional con los mapas de calor y métricas críticas.
+## 📌 TEXT 1 (00:00 - 00:50 | 50s): THE PLANETARY CRISIS & THE GOLDEN WINDOW PARALYSIS
 
-### 🎙️ Narración en Inglés:
-> "Climate disasters are breaking records across the globe. From destructive mega-floods to raging wildfires, local governments face what we call the **'Tragedy of the Golden Window'**.  
-> In extreme flash floods, hydraulic concentration takes only four to twelve hours. Yet, local authorities often freeze in bureaucratic terror—fearing criminal prosecution for corruption if they disburse emergency funds without months of paperwork.  
-> And when funds are finally released in the chaos, billions vanish in fraudulent contracts and phantom supplies.  
-> Welcome to **AMARU-CLIMATE**: an autonomous AI Multi-Agent Command & Control platform, backed by a Triple-Layer Blockchain Notary, engineered to eliminate administrative paralysis and mathematically eradicate corruption in emergency relief."
+* **Direct Screen Link:**  
+  👉 [https://coen-frontend-289004262994.us-central1.run.app/pitch](https://coen-frontend-289004262994.us-central1.run.app/pitch) *(Pantalla Completa F11)*
+* **On-Screen Visual Actions:**
+  - `00:00 - 00:15`: Show top banner with **IEEE ClimateChain Hackathon 2026**, **Track 4: Climate Data & Environmental Monitoring**, and the badge **"PROTOTIPO / PILOT PROOF-OF-CONCEPT"**.
+  - `00:15 - 00:35`: Scroll down smoothly to the main headline: *"Breaking the Golden Window Paralysis in Climate Disasters"* and the paragraph explaining administrative paralysis.
+  - `00:35 - 00:50`: Hover over the 3 quick-access buttons (*War Room C2*, *Blind Wildfires*, *Polygon Notary*).
 
-### 🎙️ Narración en Español (si grabas en español para subtitular):
-> "Los desastres climáticos están rompiendo récords históricos. Frente a huaicos e incendios forestales, los gobiernos locales enfrentan la **'Tragedia de la Ventana Dorada'**. En un huaico, el agua tarda apenas horas en golpear, pero los alcaldes se paralizan por temor a ser procesados por corrupción si ejecutan fondos sin meses de burocracia. Cuando el dinero al fin se libera, millones se pierden en compras fantasma. Bienvenidos a **AMARU-CLIMATE**: una plataforma de Comando y Control con Inteligencia Artificial Multi-Agente y Notaría Blockchain de Triple Capa, diseñada para romper la parálisis y erradicar la corrupción en la ayuda humanitaria."
-
----
-
-## 🕒 BLOQUE 2: AUTONOMOUS AI SWARM & MULTI-HAZARD INTELLIGENCE
-* **Tiempo:** `00:45 - 01:45` (60 segundos)
-* **Pantalla a mostrar:**
-  - Navegar a `/` o `/geovisor` (Consola C2 Geovisor).
-  - Activar capas: Radar Doppler meteorológico, cuencas hidrográficas, boyas oceánicas (ENFEN/NOAA) y estaciones pluviométricas.
-* **Acciones en pantalla:**
-  - Clic en un punto crítico del río Chira o Piura.
-  - Mostrar la sincronización con planes oficiales **CENEPRED SIGRID** (ej. Plan 10773 Miguel Checa con sus 23 puntos críticos).
-  - Abrir la ventana de agentes autónomos (*Kuraq*, *Yupaq*, *Fiscalizador*).
-
-### 🎙️ Narración en Inglés:
-> "At the operational core of AMARU is a sovereign swarm of specialized AI agents.  
-> Instead of isolated dashboards, AMARU ingests and synthesizes twenty-seven real-time telemetry streams—including Doppler radar, Sentinel and VIIRS orbital satellites, and ocean buoy temperatures.  
-> Here in the Piura and Chira river basins, our engine automatically cross-references satellite rainfall predictions against official government disaster prevention plans, like CENEPRED SIGRID-10773.  
-> The system tracks critical structural vulnerabilities and models flood wave propagation days in advance, generating automated Early Action Protocols long before waters reach urban centers."
-
-### 🎙️ Narración en Español:
-> "En el núcleo de AMARU opera un enjambre de agentes de IA soberanos. En lugar de dashboards aislados, AMARU sintetiza 27 flujos telemétricos en tiempo real: radar Doppler, satélites orbitales Sentinel y VIIRS, y boyas del Pacífico. En la cuenca del río Chira y Piura, el motor cruza las precipitaciones con los planes oficiales de prevención CENEPRED SIGRID, evaluando 23 puntos críticos georreferenciados y anticipando crecidas días antes de que el agua golpee a la población."
+### 🎙️ English Voiceover / ElevenLabs Prompt:
+> "Climate disasters are breaking historical records across the planet. In the face of catastrophic flash floods and mega-wildfires, humanitarian disaster relief faces a structural breakdown we call the **'Tragedy of the Golden Window'**.
+> 
+> During a flash flood or debris flow, hydraulic concentration takes only four to twelve hours to strike populated valleys. Yet, local mayors and civil defense authorities freeze: they fear criminal prosecution under corruption statutes if they disburse emergency funds without months of pre-existing paperwork.
+> 
+> And when emergency funds are finally unlocked in the chaos, millions vanish in inflated machinery rentals and phantom relief contracts.
+> 
+> Welcome to **AMARU-CLIMATE**: an advanced prototype and sovereign Command and Control architecture powered by an AI Multi-Agent Swarm and a Triple-Layer Polygon Blockchain Notary, engineered to eliminate administrative paralysis and mathematically eradicate corruption in emergency relief."
 
 ---
 
-## 🕒 BLOQUE 3: THE CLIMATE DIPOLE: FROM FLOODS TO C2 WILDFIRE ENGINE & BLIND FIRES
-* **Tiempo:** `01:45 - 02:45` (60 segundos)
-* **Pantalla a mostrar:**
-  - Transición fluida en la barra de navegación: de la cuenca Piura a `/incendios` (Consola C2 Nacional de Incendios Forestales).
-  - Mostrar el mapa con los **86 complejos nacionales agrupados**.
-  - Filtrar por **"Incendios Ciegos" (Blind Wildfires)** y hacer zoom a un cluster (ej. Cajamarca, Amazonas o Cusco).
-* **Acciones en pantalla:**
-  - Clic en la tarjeta de un cluster que muestre la persistencia térmica **PTT 48h**.
-  - Mostrar la discrepancia: **48 complejos validados por COEN-INDECI vs 38 Incendios Ciegos** sin reporte burocrático oficial.
-  - Abrir el cálculo automático de maquinaria pesada D8 (líneas de cortafuego mecanizadas).
+## 📌 TEXT 2 (00:50 - 01:45 | 55s): NATIONAL WAR ROOM C2 & EARLY ACTION BASINS
 
-### 🎙️ Narración en Inglés:
-> "Crucially, climate anomalies never strike in isolation. Under the UN Early Warnings for All mandate, systems must be Multi-Hazard.  
-> The El Niño Southern Oscillation acts as a global **Compound Climate Dipole**: while it causes catastrophic atmospheric rivers and floods on the coast, it simultaneously triggers severe droughts and heatwaves across the Andean highlands and the Amazon Basin.  
-> As seen here at `/incendios`, blazes spread uphill at four kilometers per hour. AMARU implements geodesic DBSCAN clustering at twelve kilometers, fusing NASA FIRMS and Sentinel-3 hotspots into eighty-six national complexes.  
-> Our 48-hour Thermal Persistence prevents false negatives from cloud cover. And by cross-referencing against official COEN-INDECI bulletins, AMARU exposes thirty-eight **'Blind Wildfires'**—massive blazes burning silently without administrative reports, instantly calculating mechanized D8 bulldozer firebreak dossiers."
+* **Direct Screen Link:**  
+  👉 [https://coen-frontend-289004262994.us-central1.run.app/](https://coen-frontend-289004262994.us-central1.run.app/) *(War Room Nacional C2)*
+* **On-Screen Visual Actions:**
+  - `00:50 - 01:10`: Present the 3D national overview map and real-time risk gauges.
+  - `01:10 - 01:30`: Zoom into the northern Pacific coast (Chira and Piura river basins) and toggle the **Doppler Weather Radar** overlay.
+  - `01:30 - 01:45`: Click on a georeferenced critical infrastructure point from the official prevention plan, **CENEPRED SIGRID-10773**.
 
-### 🎙️ Narración en Español:
-> "Pero la ciencia climática nos enseña que las amenazas nunca vienen solas. La ONU exige sistemas Multi-Peligro (MHEWS) porque el Fenómeno El Niño opera como un **Dipolo Climático Compuesto**: mientras desata lluvias torrenciales e inundaciones en la costa, de forma simultánea provoca sequías extremas y olas de calor en la sierra y la Amazonía.  
-> En nuestra consola `/incendios`, donde el fuego avanza a 4 km/h colina arriba, AMARU aplica clustering geodésico DBSCAN a 12 km, unificando focos NASA FIRMS y Sentinel-3 en 86 complejos nacionales.  
-> Su persistencia térmica de 48 horas evita falsos negativos por nubosidad. Y al contrastar con los boletines oficiales de INDECI, AMARU destapa **38 incendios ciegos** que consumen biomasa sin reporte burocrático, calculando de inmediato las líneas de cortafuego con bulldozer D8."
+### 🎙️ English Voiceover / ElevenLabs Prompt:
+> "We are now inside the **AMARU National War Room C2**, the macro-strategic console where our sovereign swarm of specialized AI agents operates.
+> 
+> Instead of isolated dashboards, AMARU synthesizes twenty-seven continuous telemetry streams: real-time Doppler weather radar, orbital Sentinel and VIIRS satellite constellations, and ocean surface temperature anomalies monitored by ENFEN and NOAA buoys.
+> 
+> Across the Piura and Chira river basins, our engine cross-references satellite precipitation forecasts against official government disaster plans, such as CENEPRED SIGRID-10773.
+> 
+> Evaluating twenty-three georeferenced critical points, AMARU models flood wave propagation and triggers automated Early Action Protocols days in advance, long before overflowing waters reach urban centers."
 
 ---
 
-## 🕒 BLOQUE 4: TRIPLE-LAYER TRUST ENGINE & POLYGON AMOY ANCHOR
-* **Tiempo:** `02:45 - 03:40` (55 segundos)
-* **Pantalla a mostrar:**
-  - Navegar a `/contraloria` o `/blockchain` (Visor de Auditoría y Blockchain).
-  - Mostrar los bloques del libro mayor local (Layer 2 WORM Ledger) y el árbol Merkle.
-  - Mostrar el enlace y hash en Polygon Amoy Explorer (`PolygonScan` / `ChainID 80002`) del contrato `ClimateAuditAnchor.sol`.
-* **Acciones en pantalla:**
-  - Mostrar un evento auditado: cotización de maquinaria, reporte meteorológico o expediente de emergencia.
-  - Resaltar la raíz Merkle de 32 bytes y la transacción verificada en la testnet.
+## 📌 TEXT 3 (01:45 - 02:45 | 60s): THE CLIMATE DIPOLE (NOAA ENSO) & BLIND WILDFIRES
 
-### 🎙️ Narración en Inglés:
-> "Speed is life, but trust is non-negotiable. To bridge high-speed relief with uncompromised integrity, we developed a **Triple-Layer Trust Architecture**.  
-> **Layer 1** generates instant SHA-256 micro-proofs on local municipal edge devices, operating even if the internet goes completely down.  
-> **Layer 2** logs every procurement event, machine rental quote, and citizen report into an append-only Write-Once-Read-Many ledger following ISO-27037 digital custody.  
-> Finally, **Layer 3** constructs balanced Merkle Trees and permanently anchors the 32-byte Merkle Root to our verified Solidity smart contract, `ClimateAuditAnchor.sol`, deployed on the **Polygon Amoy EVM testnet**.  
-> Disaster audits are no longer post-mortem investigations—they are real-time mathematical guarantees."
+* **Direct Screen Link:**  
+  👉 [https://coen-frontend-289004262994.us-central1.run.app/incendios](https://coen-frontend-289004262994.us-central1.run.app/incendios) *(Consola C2 Incendios)*
+* **On-Screen Visual Actions:**
+  - `01:45 - 02:05`: Showcase the national wildfire geovisor with **86 complexes clustered via DBSCAN at 12 km**.
+  - `02:05 - 02:25`: In the left filter panel, click **"38 Incendios Ciegos" (Blind Wildfires)** and zoom into a severe cluster (e.g., Apurímac, Cusco, or Junín).
+  - `02:25 - 02:45`: Open the cluster inspection dossier to reveal the **48h Thermal Persistence (PTT)** and the **D8 Heavy Bulldozer Calculation** for mechanized firebreaks.
 
-### 🎙️ Narración en Español:
-> "La velocidad salva vidas, pero la confianza es innegociable. Para resolverlo creamos la **Arquitectura Notarial de Triple Capa**. La **Capa 1** genera micro-pruebas criptográficas locales en milisegundos, funcionando incluso sin internet. La **Capa 2** registra cada cotización y reporte en un libro inmutable WORM bajo la norma forense ISO-27037. Finalmente, la **Capa 3** construye un Árbol de Merkle y ancla la raíz de 32 bytes en nuestro contrato inteligente en la red pública **Polygon Amoy**. Las auditorías ya no son investigaciones forenses tardías: son garantías matemáticas en tiempo real."
+### 🎙️ English Voiceover / ElevenLabs Prompt:
+> "Climate science demonstrates that hazards never strike in isolation. Following the official diagnostics from **NOAA and the Climate Prediction Center (CPC)**, sea surface temperature anomalies across the **Niño 1+2 and Niño 3.4 regions** act as a global **Compound Climate Dipole**: while triggering catastrophic atmospheric rivers, debris flows, and flash floods on the Pacific coast, they simultaneously shift the Walker circulation, unleashing severe droughts and heatwaves across the Andean highlands and the Amazon Basin.
+> 
+> In our tactical console at `/incendios`, where flames propagate uphill at four kilometers per hour, AMARU applies geodesic DBSCAN clustering at twelve kilometers, consolidating thousands of satellite hotspots into eighty-six high-severity national complexes.
+> 
+> Its 48-hour Thermal Persistence state machine prevents false negatives caused by optical cloud occlusion. And by cross-referencing against official COEN-INDECI bulletins, AMARU uncovers **thirty-eight Blind Wildfires**: blazes consuming thousands of hectares in complete administrative silence, instantly generating mechanized D8 bulldozer firebreak dossiers under Public Procurement Act Ley 30225."
 
 ---
 
-## 🕒 BLOQUE 5: HUMAN SOVEREIGNTY (HITL), ZERO-PII & GLOBAL VISION
-* **Tiempo:** `03:40 - 04:15` (35 segundos)
-* **Pantalla a mostrar:**
-  - Modal de emisión de alerta temprana OASIS CAP v1.2 (mostrar el botón de firma digital con Enclaustramiento Cognitivo / HITL).
-  - Breve vistazo a la privacidad Zero-PII (Shamir Secret Sharing) o al soporte en lenguas originarias (Quechua/Awajún).
-  - Slide de cierre con el repositorio GitHub, alineación UN-EW4All, ODS 13 y agradecimientos a IEEE ClimateChain.
-* **Acciones en pantalla:**
-  - Mostrar la firma humana del oficial de guardia autorizando la alerta CAP.
-  - Cierre en pantalla con el título AMARU-CLIMATE y enlace al repositorio.
+## 📌 TEXT 4 (02:45 - 03:40 | 55s): TRIPLE-LAYER TRUST NOTARY & POLYGON AMOY ANCHOR
 
-### 🎙️ Narración en Inglés:
-> "Crucially, AMARU adheres to the strictest AI ethics. Under our **Cognitive Caging** protocol, AI agents NEVER dispatch public sirens on their own. Every OASIS CAP alert requires a verified human officer's digital signature—preserving Human Sovereignty at every step.  
-> Furthermore, affected families are protected with Zero-PII cryptographic vaults, guaranteeing humanitarian aid distribution without exposing vulnerable citizens.  
-> Built and validated in the rugged Pacific-Andean testbed of Peru, AMARU is fully compliant with the UN Early Warnings for All initiative and SDG 13.  
-> AMARU-CLIMATE: Sovereign AI and Immutable Trust to protect vulnerable communities worldwide. Thank you."
+* **Direct Screen Links:**  
+  👉 [https://coen-frontend-289004262994.us-central1.run.app/contraloria](https://coen-frontend-289004262994.us-central1.run.app/contraloria) *(Auditoría y WORM Ledger)*  
+  👉 [https://amoy.polygonscan.com/address/0x5462C7F1aC5a0C58356A21e25F883d6aF92289c0](https://amoy.polygonscan.com/address/0x5462C7F1aC5a0C58356A21e25F883d6aF92289c0) *(Smart Contract en PolygonScan)*
+* **On-Screen Visual Actions:**
+  - `02:45 - 03:05`: Display the preventive audit dossiers, the WORM ledger, and local SHA-256 micro-proofs.
+  - `03:05 - 03:25`: Show the balanced Merkle tree and the immutable forensic chain of custody complying with ISO-27037.
+  - `03:25 - 03:40`: Switch tab to **PolygonScan**, highlighting the verified contract `ClimateAuditAnchor.sol` on **Polygon Amoy Testnet (ChainID 80002)** with its live transactions and Merkle roots anchored on-chain.
 
-### 🎙️ Narración en Español:
-> "Por último, AMARU respeta los más altos estándares éticos. Mediante nuestro protocolo de Enclaustramiento Cognitivo, la IA NUNCA dispara sirenas sola: toda alerta OASIS CAP exige la firma digital de un oficial humano acreditado, garantizando la Soberanía Humana. Y los damnificados están protegidos con bóvedas Zero-PII que evitan la filtración de datos sensibles. Validado en el extremo territorio andino-costero del Perú, AMARU cumple con la iniciativa de la ONU 'Alertas Tempranas para Todos' y el ODS 13. AMARU-CLIMATE: Inteligencia y confianza inmutable para proteger a las poblaciones más vulnerables del planeta. Muchas gracias."
+### 🎙️ English Voiceover / ElevenLabs Prompt:
+> "Speed saves lives, but public trust is non-negotiable. In our **Preventive Audit and Comptroller Console**, we demonstrate that AMARU operates as a **Cryptographic Climate Data Notary and Emergency Procurement Auditor** through a three-layer architecture.
+> 
+> **Layer 1** computes local SHA-256 micro-proofs on municipal edge servers in under two milliseconds, operating seamlessly even during total internet blackouts.
+> 
+> **Layer 2** logs every machinery rental quote, field damage report, and emergency dossier into an append-only Write-Once-Read-Many ledger following ISO-27037 digital forensics standards, benchmarking prices against national procurement ceilings to prevent price gouging.
+> 
+> And **Layer 3** bundles these events into balanced Merkle Trees and permanently commits the 32-byte Merkle root onto our verified smart contract on the public **Polygon Amoy EVM network**. Emergency audits are no longer delayed post-mortem investigations: they are immutable mathematical guarantees on the blockchain."
 
 ---
 
-## 🎬 CONSEJOS TÁCTICOS PARA LA GRABACIÓN HOY MISMO:
-1. **Herramienta de Captura:** Usa **OBS Studio** (o `Windows + Alt + R` / `Win + G`) a 1080p pantalla completa (F11 en el navegador Chrome/Edge para ocultar pestañas).
-2. **Audio / Locución:**
-   - Si prefieres leerlo tú mismo: usa el teleprompter en pantalla dividida.
-   - Si prefieres voz sintetizada en inglés profesional: copia el texto en inglés en **ElevenLabs** (voz *Adam* o *Marcus*, tono documental/técnico), genera los MP3 y móntalos sobre el video en CapCut, Clipchamp o Premiere en 15 minutos.
-3. **Subida:**
-   - Sube a YouTube en calidad **Unlisted** (Oculto) o **Public**.
-   - Título sugerido: `AMARU-CLIMATE: Autonomous AI Swarm & Blockchain Notary for Climate Resilience (IEEE ClimateChain Hackathon)`
-   - Pega el enlace en [SUBMISSION_DEVPOST.md](file:///c:/Users/Usuario%20Libre/Documents/recuperacion%20de%20USB%2014%20de%20setiembre/curso-gcp-google-adk-01/Lab4/SUBMISSION_DEVPOST.md) y en el formulario de Devpost.
+## 📌 TEXT 5 (03:40 - 04:20 | 40s): TRIPARTITE WARNING HUB, HUMAN SOVEREIGNTY (HITL) & CLOSING
+
+* **Direct Screen Links:**  
+  👉 [https://coen-frontend-289004262994.us-central1.run.app/alertas](https://coen-frontend-289004262994.us-central1.run.app/alertas) *(Hub de Alertas Tripartitas)*  
+  👉 Return to [https://coen-frontend-289004262994.us-central1.run.app/pitch](https://coen-frontend-289004262994.us-central1.run.app/pitch) *(Cierre con Sellos IEEE y GitHub)*
+* **On-Screen Visual Actions:**
+  - `03:40 - 04:00`: In `/alertas`, show the tripartite warning cascade and point to the **Cognitive Caging** status: *"PENDING HUMAN SIGNATURE"*. Click the **Digital Human Officer Signature** button.
+  - `04:00 - 04:10`: Highlight the Catastrophic Agricultural Insurance (SAC) validation for smallholders backed by Zero-PII cryptographic vaults.
+  - `04:10 - 04:20`: Return to the `/pitch` portal, resting on the official IEEE badges, AMARU-CLIMATE title, and the GitHub repository link: [github.com/carlosmba12Peru/amaru-global](https://github.com/carlosmba12Peru/amaru-global).
+
+### 🎙️ English Voiceover / ElevenLabs Prompt:
+> "Finally, in our **Tripartite Warning Dispatch Hub**, AMARU strictly adheres to the highest AI ethics. Under our Cognitive Caging protocol, artificial intelligence **never** issues public sirens autonomously. Every standardized OASIS CAP alert strictly requires the digital signature of an accredited human officer, guaranteeing Human Sovereignty in life-or-death decisions.
+> 
+> Furthermore, these certified dossiers serve as an indisputable parametric oracle, enabling authorities and insurers to settle Catastrophic Agricultural Insurance claims for vulnerable smallholder farmers in hours rather than months, without exposing private data thanks to Zero-PII cryptographic vaults.
+> 
+> Stress-tested across the complex geography of Peru, AMARU fulfills the UN Early Warnings for All mandate and UN SDG 13.
+> 
+> **AMARU-CLIMATE: Sovereign AI and Immutable Trust to protect vulnerable communities worldwide**. Thank you very much."
+
+---
+
+## 📋 QUICK REFERENCE SUMMARY TABLE FOR RECORDING
+
+| Text # | Time Range | Duration | Live Screen Route | Key On-Screen Element |
+| :--- | :--- | :--- | :--- | :--- |
+| **Text 1** | `00:00 - 00:50` | 50s | [`/pitch`](https://coen-frontend-289004262994.us-central1.run.app/pitch) | IEEE Banner, Pilot Badge & Golden Window |
+| **Text 2** | `00:50 - 01:45` | 55s | [`/`](https://coen-frontend-289004262994.us-central1.run.app/) | National War Room 3D, Doppler Radar, SIGRID-10773 |
+| **Text 3** | `01:45 - 02:45` | 60s | [`/incendios`](https://coen-frontend-289004262994.us-central1.run.app/incendios) | NOAA ENSO Dipole, 38 Blind Wildfires, D8 Dossier |
+| **Text 4** | `02:45 - 03:40` | 55s | [`/contraloria`](https://coen-frontend-289004262994.us-central1.run.app/contraloria) & [PolygonScan](https://amoy.polygonscan.com/address/0x5462C7F1aC5a0C58356A21e25F883d6aF92289c0) | WORM Ledger, Merkle Tree, Polygon Amoy Contract |
+| **Text 5** | `03:40 - 04:20` | 40s | [`/alertas`](https://coen-frontend-289004262994.us-central1.run.app/alertas) ➔ [`/pitch`](https://coen-frontend-289004262994.us-central1.run.app/pitch) | Cognitive Caging (HITL), SAC Insurance, GitHub Close |

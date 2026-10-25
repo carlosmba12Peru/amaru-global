@@ -44,10 +44,10 @@
 
 ---
 
-## 🕒 BLOQUE 3: C2 GEODESIC WILDFIRE ENGINE & BLIND FIRES
+## 🕒 BLOQUE 3: THE CLIMATE DIPOLE: FROM FLOODS TO C2 WILDFIRE ENGINE & BLIND FIRES
 * **Tiempo:** `01:45 - 02:45` (60 segundos)
 * **Pantalla a mostrar:**
-  - Navegar a `/incendios` (Consola C2 Nacional de Incendios Forestales).
+  - Transición fluida en la barra de navegación: de la cuenca Piura a `/incendios` (Consola C2 Nacional de Incendios Forestales).
   - Mostrar el mapa con los **86 complejos nacionales agrupados**.
   - Filtrar por **"Incendios Ciegos" (Blind Wildfires)** y hacer zoom a un cluster (ej. Cajamarca, Amazonas o Cusco).
 * **Acciones en pantalla:**
@@ -56,14 +56,15 @@
   - Abrir el cálculo automático de maquinaria pesada D8 (líneas de cortafuego mecanizadas).
 
 ### 🎙️ Narración en Inglés:
-> "Now, let’s inspect our dedicated Wildfire Command and Control Engine at `/incendios`.  
-> Wildfires in the Andes and Amazon advance at four kilometers per hour. AMARU implements automated DBSCAN geodesic clustering at twelve kilometers, fusing NASA FIRMS VIIRS and Sentinel-3 thermal hotspots into eighty-six national complexes.  
-> Crucially, our engine features a 48-hour Multi-Temporal Thermal Persistence state machine, preventing false negatives during optical cloud occlusion.  
-> By cross-referencing these clusters against one hundred eighteen official COEN-INDECI civil defense bulletins, AMARU exposes thirty-eight **'Blind Wildfires'**—massive blazes burning silently without administrative reports.  
-> In one click, AMARU computes the exact bulldozer firebreak kilometers required and drafts legal emergency procurement dossiers under public emergency laws."
+> "Crucially, climate anomalies never strike in isolation. Under the UN Early Warnings for All mandate, systems must be Multi-Hazard.  
+> The El Niño Southern Oscillation acts as a global **Compound Climate Dipole**: while it causes catastrophic atmospheric rivers and floods on the coast, it simultaneously triggers severe droughts and heatwaves across the Andean highlands and the Amazon Basin.  
+> As seen here at `/incendios`, blazes spread uphill at four kilometers per hour. AMARU implements geodesic DBSCAN clustering at twelve kilometers, fusing NASA FIRMS and Sentinel-3 hotspots into eighty-six national complexes.  
+> Our 48-hour Thermal Persistence prevents false negatives from cloud cover. And by cross-referencing against official COEN-INDECI bulletins, AMARU exposes thirty-eight **'Blind Wildfires'**—massive blazes burning silently without administrative reports, instantly calculating mechanized D8 bulldozer firebreak dossiers."
 
 ### 🎙️ Narración en Español:
-> "Veamos ahora la consola táctica de incendios forestales en `/incendios`. Los incendios en los Andes avanzan a cuatro kilómetros por hora. AMARU implementa clustering geodésico DBSCAN a 12 kilómetros, unificando focos satelitales NASA FIRMS y Sentinel-3 en 86 complejos nacionales. Su máquina de estados con Persistencia Térmica de 48 horas evita falsos negativos cuando las nubes tapan el satélite. Al contrastar con 118 boletines oficiales del COEN-INDECI, AMARU destapa **38 incendios ciegos** que consumen miles de hectáreas sin reporte oficial, calculando de inmediato los kilómetros de cortafuego y los expedientes de maquinaria pesada D8."
+> "Pero la ciencia climática nos enseña que las amenazas nunca vienen solas. La ONU exige sistemas Multi-Peligro (MHEWS) porque el Fenómeno El Niño opera como un **Dipolo Climático Compuesto**: mientras desata lluvias torrenciales e inundaciones en la costa, de forma simultánea provoca sequías extremas y olas de calor en la sierra y la Amazonía.  
+> En nuestra consola `/incendios`, donde el fuego avanza a 4 km/h colina arriba, AMARU aplica clustering geodésico DBSCAN a 12 km, unificando focos NASA FIRMS y Sentinel-3 en 86 complejos nacionales.  
+> Su persistencia térmica de 48 horas evita falsos negativos por nubosidad. Y al contrastar con los boletines oficiales de INDECI, AMARU destapa **38 incendios ciegos** que consumen biomasa sin reporte burocrático, calculando de inmediato las líneas de cortafuego con bulldozer D8."
 
 ---
 

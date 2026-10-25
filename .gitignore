@@ -31,4 +31,10 @@ backups/
 scratch/
 backend/scratch/
 *.log
-backend/test_out.txt
+backend/test_out.txt
+
+# Propiedad Intelectual Privada y Patentes
+docs/PATENTE_INDECOPI_AMARU_CLIMATE.md
+docs/PATENTE_MADRE_AMARU_CLIMATE_INDECOPI.md
+docs/DOCUMENTO_PRIVADO_*
+

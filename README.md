@@ -17,7 +17,7 @@
 3. [Global Architecture: The 6 UN-EW4All / WMO Links](#3-global-architecture-the-6-un-ew4all--wmo-links)
 4. [Triple-Layer Cryptographic Trust Engine & Polygon Blockchain Notary](#4-triple-layer-cryptographic-trust-engine--polygon-blockchain-notary)
 5. [Ethical AI & C2 Governance: Cognitive Caging & Sovereign HITL Chain](#5-ethical-ai--c2-governance-cognitive-caging--sovereign-hitl-chain)
-6. [Cybersecurity & Data Privacy: Zero-PII Shamir Secret Sharing](#6-cybersecurity--data-privacy-zero-pii-shamir-secret-sharing)
+6. [Cybersecurity & Data Privacy: Off-Chain Privacy Protection](#6-cybersecurity--data-privacy-off-chain-privacy-protection)
 7. [Smart Contract Verification on Polygonscan](#7-smart-contract-verification-on-polygonscan)
 8. [The Field Validation Testbed: Wildfires & Blind Fires](#8-the-field-validation-testbed-wildfires--blind-fires)
 9. [Technology Stack](#9-technology-stack)
@@ -35,8 +35,9 @@ Disaster Risk Management (DRM) worldwide faces a severe operational tension: **b
 AMARU-GLOBAL solves this systemic failure by combining:
 - **Autonomous Multi-Agent Satellite Fusion:** Continuous orbital nowcasting aggregating NASA FIRMS, Sentinel-3 and ensemble weather telemetry to uncover "Blind Emergencies" in real-time.
 - **Cognitive Caging & Human-In-The-Loop (HITL) Governance:** Strict AI guardrails ensuring no autonomous alarms can trigger public panic or financial release without verified human officer credentials.
-- **Zero-PII Privacy via Shamir's Secret Sharing ($k=3, n=5$):** Mathematical protection of humanitarian census records ensuring GDPR compliance and preventing retroactive victim tampering.
+- **Citizen Privacy & Off-Chain Data Protection:** Sensitive disaster census data remains protected off-chain; only cryptographic hashes/Merkle roots are anchored onto Polygon, ensuring public auditability without exposing personal citizen information.
 - **Polygon Blockchain Notary (`ClimateAuditAnchor.sol`):** Cryptographic Merkle-root commits providing tamper-proof, publicly auditable proofs on Polygon Amoy.
+
 
 
 ---
@@ -155,16 +156,17 @@ graph LR
 
 ---
 
-## 6. Cybersecurity & Data Privacy: Zero-PII Shamir Secret Sharing
+## 6. Cybersecurity & Data Privacy: Off-Chain Privacy Protection
 
 *Directly answering IEEE Hackathon Session 2: Cybersecurity & Data Privacy in Climate Tech.*
 
-Publishing disaster damage censuses on a public blockchain introduces severe privacy risks under international data protection laws (GDPR). 
+Publishing disaster damage reports on a public blockchain introduces severe privacy risks under international data protection frameworks. 
 
-AMARU-GLOBAL implements **Zero-PII Identity Protection via Shamir’s Secret Sharing Scheme ($k=3, n=5$)**:
-- **No Plaintext PII on Chain:** Sensitive citizen data (National Identity IDs, names, exact geolocated coordinates of destroyed homes) are encrypted into a secure off-chain vault.
-- **Irreversible Hash Integrity:** Only the irreversible SHA-256 root hash of the census registry is committed to Polygon.
-- **Threshold Key Management:** Decryption requires $k=3$ out of $n=5$ independent institutional keys (e.g., Civil Defense Authority + Public Prosecutor + Red Cross + Municipal Auditor + Ombudsman), guaranteeing zero unilateral surveillance while mathematically preventing phantom victims from being added retroactively.
+AMARU-GLOBAL solves this with a clean, privacy-first off-chain architecture:
+- **Zero Plaintext PII on Chain:** Sensitive citizen data (identity numbers, names, and precise coordinates of affected households) remain securely stored off-chain in encrypted storage.
+- **On-Chain Cryptographic Integrity:** Only irreversible cryptographic hashes and Merkle roots are committed to Polygon. This guarantees that disaster records cannot be altered or retroactively fabricated, while strictly safeguarding personal privacy.
+- **Audit Traceability without Surveillance:** External auditors can mathematically verify that a specific damage dossier matches the timestamped blockchain root without needing public access to citizens' personal private data.
+
 
 ---
 

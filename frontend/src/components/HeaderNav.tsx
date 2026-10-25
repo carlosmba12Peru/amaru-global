@@ -33,7 +33,8 @@ import {
     Globe,
     Cpu,
     Key,
-    Flame
+    Flame,
+    Award
 } from "lucide-react";
 
 import UserNavBadge from "@/components/UserNavBadge";
@@ -137,6 +138,15 @@ export default function HeaderNav() {
 
     // Catálogo de Enlaces Tripartito y de Gobernanza
     const navLinks = [
+        // ==================== PRESENTACIÓN OFICIAL IEEE HACKATHON ====================
+        {
+            href: "/pitch",
+            label: "IEEE Pitch Demo",
+            pillar: "ALL",
+            icon: Award,
+            badge: "CLIMATECHAIN",
+            badgeColor: "bg-gradient-to-r from-amber-500/30 to-indigo-500/30 text-amber-200 border-amber-400 font-bold"
+        },
         // ==================== HUB CENTRAL TRIPARTITO ====================
         {
             href: "/alertas",

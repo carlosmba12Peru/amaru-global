@@ -74,10 +74,49 @@ Despite billions allocated globally under the Sendai Framework and multilateral 
 
 AMARU-GLOBAL bridges predictive climate intelligence with cryptographic accountability by implementing the **6 Core Links** mandated by the **World Meteorological Organization (WMO)** and the UN Secretary-General's **"Early Warnings for All" (EW4All)** initiative:
 
+### Autonomous AI Agent Swarm & Blockchain Binding
 ```
-[1. Global Observation] ──> [2. Multi-Hazard Forecast] ──> [3. Vulnerability Prediction]
-                                                                        │
-[6. Blockchain WORM Audit] <── [5. C2 Humanitarian Logistics] <── [4. HITL Sovereign Gatekeeper]
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                   AMARU-CLIMATE: AUTONOMOUS AI AGENT SWARM ARCHITECTURE                 │
+└──────────────────────────────────────────┬─────────────────────────────────────────────┘
+                                           │
+         ┌─────────────────────────────────┼─────────────────────────────────┐
+         ▼                                 ▼                                 ▼
+┌─────────────────────────────┐ ┌─────────────────────────────┐ ┌─────────────────────────────┐
+│ 1. AGENT KURAQ              │ │ 2. AGENT YUPAQ              │ │ 3. AGENT FISCALIZADOR       │
+│ (Master Telemetry Ingestion)│ │ (Geodesic Kinematic Engine) │ │ (Anti-Corruption Auditor)    │
+├─────────────────────────────┤ ├─────────────────────────────┤ ├─────────────────────────────┤
+│• 27 streams in real-time    │ │• Geodesic DBSCAN R=12 km    │ │• Public tender benchmarks   │
+│• NASA FIRMS (VIIRS 375m)    │ │• 48h Thermal Persistence    │ │• Ley 30225 Art. 27 dossiers │
+│• Sentinel-3 SLSTR & Doppler │ │• 38 Blind Wildfires Engine  │ │• D8 Bulldozer calculations  │
+│• NOAA & Pacific Ocean Buoys │ │• Basin Runoff Wave Models   │ │• Price-gouging protection   │
+└──────────────┬──────────────┘ └──────────────┬──────────────┘ └──────────────┬──────────────┘
+               │                               │                               │
+               └───────────────────────┬───────┴───────────────────────────────┘
+                                       │
+                                       ▼
+                     ┌───────────────────────────────────┐
+                     │   4. AGENT SENTINEL & QILQAY      │
+                     │   (Nowcasting & OASIS CAP v1.2)   │
+                     ├───────────────────────────────────┤
+                     │ • Cognitive Caging Protocol       │
+                     │ • Status: PENDING_HUMAN_SIGNATURE │
+                     │ • Zero-PII Damage Dossier Output  │
+                     └─────────────────┬─────────────────┘
+                                       │
+                                       ▼
+                     ┌───────────────────────────────────┐
+                     │ 🛡️ SOVEREIGN HUMAN GATEKEEPER    │
+                     │ (HITL Digital Officer Signature)  │
+                     └─────────────────┬─────────────────┘
+                                       │
+                                       ▼
+       ═════════════════════════════════════════════════════════════════════
+       ⛓️ TRIPLE-LAYER BLOCKCHAIN NOTARY (POLYGON AMOY EVM ANCHOR)
+       ═════════════════════════════════════════════════════════════════════
+        • Layer 1 (Edge): Local SHA-256 micro-proofs (< 2ms offline)
+        • Layer 2 (WORM): Immutable audit ledger (RFC 3161 / ISO 27037)
+        • Layer 3 (On-Chain): Merkle Root commit -> ClimateAuditAnchor.sol
 ```
 
 | UN-EW4All Link | AMARU-GLOBAL Implementation | Technical Core Component |

@@ -56,7 +56,7 @@
   - `02:25 - 02:45`: Abrir la ficha del cluster para mostrar la **Persistencia Térmica PTT 48h** (inmune a nubes) y la sección de **Cálculo de Maquinaria Pesada D8** para cortafuegos.
 
 ### 🎙️ Texto a Grabar / Locutar:
-> "La ciencia climática nos enseña que las amenazas nunca vienen solas. Bajo el mandato de las Naciones Unidas, los sistemas de alerta deben ser Multi-Peligro porque el Fenómeno El Niño opera como un **Dipolo Climático Compuesto**: mientras desata lluvias torrenciales e inundaciones en la costa, simultáneamente provoca sequías extremas y olas de calor en los Andes y la Amazonía.  
+> "La ciencia climática nos enseña que las amenazas nunca vienen solas. Siguiendo el diagnóstico oficial de la **NOAA y el CPC (Climate Prediction Center)**, las anomalías de temperatura superficial marina en las regiones **Niño 1+2 y Niño 3.4** operan como un **Dipolo Climático Compuesto**: mientras desatan lluvias torrenciales, huaicos e inundaciones fluviales en la costa, simultáneamente alteran la celda de Walker, provocando sequías extremas y olas de calor en los Andes y la Amazonía.  
 > 
 > En nuestra consola táctica `/incendios`, donde el fuego avanza a cuatro kilómetros por hora, AMARU aplica clustering geodésico DBSCAN a doce kilómetros, agrupando miles de focos satelitales en ochenta y seis complejos nacionales de alta severidad.  
 > 

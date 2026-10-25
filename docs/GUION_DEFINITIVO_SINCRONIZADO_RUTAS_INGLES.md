@@ -56,7 +56,7 @@
   - `02:25 - 02:45`: Open the cluster inspection dossier to reveal the **48h Thermal Persistence (PTT)** and the **D8 Heavy Bulldozer Calculation** for firebreaks.
 
 ### 🎙️ English Voiceover / Teleprompter:
-> "Climate science demonstrates that hazards never strike in isolation. Under the United Nations mandate, early warning systems must be Multi-Hazard because the El Niño Southern Oscillation acts as a global **Compound Climate Dipole**: while it causes catastrophic atmospheric rivers and floods on the coast, it simultaneously triggers severe droughts and heatwaves across the Andean highlands and the Amazon Basin.  
+> "Climate science demonstrates that hazards never strike in isolation. Following the official diagnostics from **NOAA and the Climate Prediction Center (CPC)**, sea surface temperature anomalies across the **Niño 1+2 and Niño 3.4 regions** act as a global **Compound Climate Dipole**: while triggering catastrophic atmospheric rivers, debris flows, and flash floods on the Pacific coast, they simultaneously shift the Walker circulation, unleashing severe droughts and heatwaves across the Andean highlands and the Amazon Basin.  
 > 
 > In our tactical console at `/incendios`, where flames propagate uphill at four kilometers per hour, AMARU applies geodesic DBSCAN clustering at twelve kilometers, consolidating thousands of satellite hotspots into eighty-six high-severity national complexes.  
 > 

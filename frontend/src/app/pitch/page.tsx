@@ -258,10 +258,10 @@ export default function PitchPage() {
             <div className="max-w-3xl">
               <h3 className="text-xl font-bold text-white flex items-center gap-2">
                 <Layers className="w-5 h-5 text-purple-400" />
-                El Dipolo Climático Compuesto (ENSO Multi-Hazard)
+                El Dipolo Climático Compuesto (ENSO Multi-Hazard • NOAA / ENFEN)
               </h3>
               <p className="text-xs text-slate-300 mt-1">
-                La física que une las lluvias torrenciales de El Niño con los megaincendios forestales bajo el estándar UN-EW4All.
+                La física que acopla el calentamiento del Pacífico (ENSO / Niño 1+2 &amp; 3.4) con huaicos costeros, sequías amazónicas y heladas altiplánicas (UN-EW4All).
               </p>
             </div>
 
@@ -269,14 +269,14 @@ export default function PitchPage() {
               <div className="p-5 rounded-xl bg-slate-950/80 border border-cyan-800/40 space-y-3">
                 <div className="flex items-center gap-2 text-cyan-400 font-bold text-sm">
                   <Waves className="w-5 h-5" />
-                  1. Frente Costero: El Niño & Inundaciones
+                  1. Frente Costero: El Niño &amp; Inundaciones
                 </div>
                 <p className="text-xs text-slate-300 leading-relaxed">
-                  El calentamiento anómalo del Mar de Grau (boyas ENFEN/NOAA) activa precipitaciones extremas en las cuencas de Piura y Chira. La onda de avenida tarda apenas 4 a 12 horas en golpear las ciudades.
+                  Conforme a la Discusión Diagnóstica de la <strong>NOAA CPC</strong> y <strong>ENFEN</strong>, el calentamiento en Niño 1+2 (&gt;26°C) desata precipitaciones torrenciales en Piura y Chira. La onda de avenida tarda apenas 4 a 12 horas en golpear valles habitados.
                 </p>
                 <div className="text-[11px] text-slate-400 font-mono">
-                  • Integración CENEPRED SIGRID-10773<br />
-                  • 23 puntos críticos georreferenciados
+                  • Diagnóstico ENSO: NOAA CPC / ENFEN<br />
+                  • Integración CENEPRED SIGRID-10773 (23 pts)
                 </div>
               </div>
 

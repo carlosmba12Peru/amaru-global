@@ -38,7 +38,7 @@
 * **Pantalla a mostrar:** Haz clic en el botón superior de navegación hacia **/incendios** (Consola C2 de Incendios Forestales).  
 * **Acciones:** Muestra los **86 complejos nacionales**, filtra por **"Incendios Ciegos"**, haz zoom a un cluster (ej. Apurímac o Cusco) y muestra el cálculo automático de maquinaria pesada D8.
 
-> "Pero la ciencia climática nos enseña que las amenazas nunca vienen solas. La iniciativa 'Alertas Tempranas para Todos' de la ONU exige sistemas Multi-Peligro porque el Fenómeno El Niño opera como un **Dipolo Climático Compuesto**: mientras desata lluvias torrenciales e inundaciones en la costa, simultáneamente detona sequías extremas y olas de calor en la cordillera andina y la Amazonía.  
+> "Pero la ciencia climática nos enseña que las amenazas nunca vienen solas. Siguiendo el diagnóstico oficial de la **NOAA y el CPC (Climate Prediction Center)**, las anomalías térmicas en las regiones **Niño 1+2 y Niño 3.4** operan como un **Dipolo Climático Compuesto**: mientras desatan lluvias torrenciales y huaicos en la costa, simultáneamente alteran la celda de Walker, detonando sequías extremas y olas de calor en la cordillera andina y la Amazonía.  
 > 
 > En nuestra consola táctica de incendios, donde el fuego avanza a cuatro kilómetros por hora, AMARU implementa clustering geodésico DBSCAN a doce kilómetros, unificando miles de focos satelitales en ochenta y seis complejos nacionales de alta severidad.  
 > 

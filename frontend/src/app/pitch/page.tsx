@@ -35,12 +35,12 @@ export default function PitchPage() {
               <span className="font-extrabold tracking-tight text-xl bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-indigo-300">
                 AMARU-CLIMATE
               </span>
-              <span className="text-xs px-2 py-0.5 rounded-full border border-cyan-500/40 bg-cyan-950/60 text-cyan-300 font-mono">
-                C2 GLOBAL v2.4
+              <span className="text-xs px-2 py-0.5 rounded-full border border-purple-500/40 bg-purple-950/60 text-purple-300 font-mono font-bold">
+                PROTOTIPO / PILOT PROOF-OF-CONCEPT
               </span>
             </div>
             <p className="text-xs text-slate-400">
-              Autonomous AI Swarm & Triple-Layer Polygon Notary for Compound Climate Emergencies
+              Propuesta de Arquitectura C2 con IA Multi-Agente & Notaría Blockchain Polygon (Sujeta a Calibración)
             </p>
           </div>
         </div>

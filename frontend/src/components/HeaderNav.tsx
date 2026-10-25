@@ -468,6 +468,9 @@ export default function HeaderNav() {
                                 <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-400 border border-amber-500/40">
                                     {language === "es" ? "COED-AMARU" : "C2-GLOBAL"}
                                 </span>
+                                <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40">
+                                    {language === "es" ? "PROTOTIPO I+D" : "PILOT PROTOTYPE"}
+                                </span>
                             </div>
                             <span className="text-[10px] text-slate-400 block tracking-wider uppercase">
                                 {t("app_subtitle")}

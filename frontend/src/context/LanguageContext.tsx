@@ -22,8 +22,8 @@ export const DICTIONARY: Translations = {
     ay: "AMARU-PACHAMAMA"
   },
   app_subtitle: {
-    es: "Centro de Operaciones de Emergencia Digital",
-    en: "Sovereign Multi-Agent C2 & UN-EW4All Notary",
+    es: "Prototipo C2 & Notaría de Prueba de Concepto",
+    en: "Working Prototype & Proof-of-Concept C2 Notary",
     qu: "Chani llapan llakiypi kamachina chakra chaski",
     ay: "Pacha llaki yanapaña amuyt'awi uta"
   },

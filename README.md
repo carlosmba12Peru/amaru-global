@@ -13,16 +13,17 @@
 
 ## 📑 Table of Contents
 1. [Executive Summary & Core Mission](#1-executive-summary--core-mission)
-2. [The Core Dilemma: The Golden Window vs. Post-Disaster Corruption](#2-the-core-dilemma-the-golden-window-vs-post-disaster-corruption)
-3. [Global Architecture: The 6 UN-EW4All / WMO Links](#3-global-architecture-the-6-un-ew4all--wmo-links)
-4. [Triple-Layer Cryptographic Trust Engine & Polygon Blockchain Notary](#4-triple-layer-cryptographic-trust-engine--polygon-blockchain-notary)
-5. [Ethical AI & C2 Governance: Cognitive Caging & Sovereign HITL Chain](#5-ethical-ai--c2-governance-cognitive-caging--sovereign-hitl-chain)
-6. [Cybersecurity & Data Privacy: Off-Chain Privacy Protection](#6-cybersecurity--data-privacy-off-chain-privacy-protection)
-7. [Smart Contract Verification on Polygonscan](#7-smart-contract-verification-on-polygonscan)
-8. [The Field Validation Testbed: Wildfires & Blind Fires](#8-the-field-validation-testbed-wildfires--blind-fires)
-9. [Technology Stack](#9-technology-stack)
-10. [Quickstart: Local Execution & Testing](#10-quickstart-local-execution--testing)
-11. [License & IEEE Acknowledgement](#11-license--ieee-acknowledgement)
+2. [Climate Context: Global Boiling, The 2026–2027 Mega-ENSO & The Last-Mile Gap](#2-climate-context-global-boiling-the-20262027-mega-enso--the-last-mile-gap)
+3. [The Core Dilemma: The Golden Window vs. Post-Disaster Corruption](#3-the-core-dilemma-the-golden-window-vs-post-disaster-corruption)
+4. [Global Architecture: The 6 UN-EW4All / WMO Links](#4-global-architecture-the-6-un-ew4all--wmo-links)
+5. [Triple-Layer Cryptographic Trust Engine & Polygon Blockchain Notary](#5-triple-layer-cryptographic-trust-engine--polygon-blockchain-notary)
+6. [Ethical AI & C2 Governance: Cognitive Caging & Sovereign HITL Chain](#6-ethical-ai--c2-governance-cognitive-caging--sovereign-hitl-chain)
+7. [Cybersecurity & Data Privacy: Off-Chain Privacy Protection](#7-cybersecurity--data-privacy-off-chain-privacy-protection)
+8. [Smart Contract Verification on Polygonscan](#8-smart-contract-verification-on-polygonscan)
+9. [The Field Validation Testbed: Wildfires & Blind Fires](#9-the-field-validation-testbed-wildfires--blind-fires)
+10. [Technology Stack](#10-technology-stack)
+11. [Quickstart: Local Execution & Testing](#11-quickstart-local-execution--testing)
+12. [License & IEEE Acknowledgement](#12-license--ieee-acknowledgement)
 
 ---
 
@@ -38,11 +39,27 @@ AMARU-GLOBAL solves this systemic failure by combining:
 - **Citizen Privacy & Off-Chain Data Protection:** Sensitive disaster census data remains protected off-chain; only cryptographic hashes/Merkle roots are anchored onto Polygon, ensuring public auditability without exposing personal citizen information.
 - **Polygon Blockchain Notary (`ClimateAuditAnchor.sol`):** Cryptographic Merkle-root commits providing tamper-proof, publicly auditable proofs on Polygon Amoy.
 
+---
 
+## 2. Climate Context: Global Boiling, The 2026–2027 Mega-ENSO & The Last-Mile Gap
+
+### The Anthropogenic Multiplier: From Climate Variability to Compound Mega-Disasters
+Global surface temperature anomalies and accumulated ocean heat content across the Tropical Pacific have reached unprecedented thermodynamic saturation. Authoritative climatological projections indicate that the **2026–2027 El Niño / Southern Oscillation (ENSO) cycle is trending toward a high-magnitude "Mega-Niño" event**, triggering cascading transboundary catastrophes:
+- **Catastrophic Convective Cloudbursts:** Accelerated moisture loading driving torrential rainfall that overwhelms river basins within tight 4-to-12-hour hydrological concentration windows.
+- **Cryospheric & Agro-Pastoral Collapse:** Sharp cold fronts and freeze surges (*heladas*) crippling vulnerable high-altitude Andean communities.
+- **Thermal Chimney Wildfires:** Extreme low-humidity heat waves generating intense wildfire fronts spreading across remote, inaccessible canopies.
+
+### The Critical Vulnerability: The State-to-Citizen Last-Mile Communication Breakdown
+While international and national meteorological sentries (NOAA, ECMWF, SENAMHI) generate high-precision orbital telemetry, **early warnings systematically fail at the operational "Last Mile" (from Central State authorities to the frontline citizen)**:
+1. **Semantic Incomprehension:** Official alerts are trapped in dense academic or bureaucratic jargon, failing to deliver clear, actionable survival instructions to frontline rural and indigenous communities.
+2. **Administrative Latency vs. Kinetic Hazard:** Institutional validation processes often require days to formally publish emergency decrees, whereas convective flash floods and wildfire fronts propagate in hours.
+3. **Erosion of Public Trust:** Citizens frequently disregard warnings due to past false positives or broken promises of post-disaster relief.
+
+**AMARU-GLOBAL bridges this last-mile gap:** By ingesting multi-sensor telemetry, executing autonomous nowcasting under ethical human supervision (HITL), and publishing standardized **OASIS CAP v1.2 alerts notarized on the Polygon blockchain**, it establishes an unbroken, tamper-proof chain of trust from the satellite orbit directly to the frontline citizen and local civil defense responders.
 
 ---
 
-## 2. The Core Dilemma: The Golden Window vs. Post-Disaster Corruption
+## 3. The Core Dilemma: The Golden Window vs. Post-Disaster Corruption
 
 Despite billions allocated globally under the Sendai Framework and multilateral funds, Disaster Risk Management suffers from two systemic failure modes:
 
@@ -51,13 +68,15 @@ Despite billions allocated globally under the Sendai Framework and multilateral 
 
 **AMARU-GLOBAL eliminates this trade-off:** it mathematically protects honest officials with immutable pre-disaster evidence while closing the door to post-disaster fraud.
 
+
 ---
 
-## 3. Global Architecture: The 6 UN-EW4All / WMO Links
+## 4. Global Architecture: The 6 UN-EW4All / WMO Links
 
 AMARU-GLOBAL bridges predictive climate intelligence with cryptographic accountability by implementing the **6 Core Links** mandated by the **World Meteorological Organization (WMO)** and the UN Secretary-General's **"Early Warnings for All" (EW4All)** initiative:
 
 ### Autonomous AI Agent Swarm & Blockchain Binding
+
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
 │                   AMARU-GLOBAL: AUTONOMOUS AI AGENT SWARM ARCHITECTURE                 │
@@ -114,7 +133,7 @@ AMARU-GLOBAL bridges predictive climate intelligence with cryptographic accounta
 
 ---
 
-## 4. Triple-Layer Cryptographic Trust Engine & Polygon Blockchain Notary
+## 5. Triple-Layer Cryptographic Trust Engine & Polygon Blockchain Notary
 
 To resolve the trade-off between **sub-second emergency response** and **public blockchain confirmation latency**, AMARU employs a 3-Layer architecture:
 
@@ -133,7 +152,7 @@ graph TD
 
 ---
 
-## 5. Ethical AI & C2 Governance: Cognitive Caging & Sovereign HITL Chain
+## 6. Ethical AI & C2 Governance: Cognitive Caging & Sovereign HITL Chain
 
 *Directly answering IEEE Hackathon Session 4: AI Ethics, Cybersecurity, and Responsibility in ClimateChain.*
 
@@ -156,7 +175,7 @@ graph LR
 
 ---
 
-## 6. Cybersecurity & Data Privacy: Off-Chain Privacy Protection
+## 7. Cybersecurity & Data Privacy: Off-Chain Privacy Protection
 
 *Directly answering IEEE Hackathon Session 2: Cybersecurity & Data Privacy in Climate Tech.*
 
@@ -167,10 +186,9 @@ AMARU-GLOBAL solves this with a clean, privacy-first off-chain architecture:
 - **On-Chain Cryptographic Integrity:** Only irreversible cryptographic hashes and Merkle roots are committed to Polygon. This guarantees that disaster records cannot be altered or retroactively fabricated, while strictly safeguarding personal privacy.
 - **Audit Traceability without Surveillance:** External auditors can mathematically verify that a specific damage dossier matches the timestamped blockchain root without needing public access to citizens' personal private data.
 
-
 ---
 
-## 7. Smart Contract Verification on Polygonscan
+## 8. Smart Contract Verification on Polygonscan
 
 The notary smart contract is deployed and verified on the **Polygon Amoy EVM Testnet**:
 
@@ -236,7 +254,7 @@ contract ClimateAuditAnchor is Ownable {
 
 ---
 
-## 8. The Field Validation Testbed: Wildfires & Blind Fires
+## 9. The Field Validation Testbed: Wildfires & Blind Fires
 
 To prove practical usefulness beyond theoretical whitepapers, AMARU operates live on real climate emergencies:
 
@@ -247,17 +265,17 @@ To prove practical usefulness beyond theoretical whitepapers, AMARU operates liv
 
 ---
 
-## 9. Technology Stack
+## 10. Technology Stack
 
 - **Blockchain & Web3:** Solidity `^0.8.20`, Polygon Amoy EVM, OpenZeppelin, Web3.py.
-- **Backend C2 Architecture:** Python 3.12, FastAPI, PyCryptodome (Shamir Secret Sharing & SHA-256), NumPy, Haversine geodesic algorithms.
+- **Backend C2 Architecture:** Python 3.12, FastAPI, PyCryptodome (SHA-256 & Encryption), NumPy, Haversine geodesic algorithms.
 - **Mission-Control Frontend:** Next.js 14 App Router, TypeScript, Tailwind CSS, Lucide Icons, Glassmorphic Tactical C2 UI, Leaflet / Google Maps Platform integration.
 - **Cloud Infrastructure:** Google Cloud Run serverless containers, Google Cloud Build automated CI/CD.
 - **Earth Observation Feeds:** NASA FIRMS API, Open-Meteo Global Ensemble (ECMWF IFS 9km), NOAA Coral Reef Watch SST, Copernicus Sentinel layers.
 
 ---
 
-## 10. Quickstart: Local Execution & Testing
+## 11. Quickstart: Local Execution & Testing
 
 ### Prerequisites
 - Node.js >= 18.x
@@ -292,8 +310,9 @@ python -m unittest tests/test_blockchain_anchor.py tests/test_alerts_cascade.py
 
 ---
 
-## 11. License & IEEE Acknowledgement
+## 12. License & IEEE Acknowledgement
 
 Developed for the **IEEE ClimateChain Global Hackathon 2026** (Organized by IEEE Blockchain Türkiye, IEEE Blockchain Technical Committee, IEEE Orange County & AI Ecosystem Association).
 
 Licensed under the **Apache License 2.0**.
+

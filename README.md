@@ -7,14 +7,12 @@
 > **Live Production C2 (Auto-English for IEEE Judges):** [coen-frontend-289004262994.us-central1.run.app/incendios?lang=en](https://coen-frontend-289004262994.us-central1.run.app/incendios?lang=en)  
 > **Live Production C2 (Spanish Testbed):** [coen-frontend-289004262994.us-central1.run.app/incendios](https://coen-frontend-289004262994.us-central1.run.app/incendios)  
 > **Public API Gateway:** [coen-backend-289004262994.us-central1.run.app/api/v1/incendios/clusters-activos](https://coen-backend-289004262994.us-central1.run.app/api/v1/incendios/clusters-activos)  
-> **Evaluator Walkthrough & Manual (Step-by-Step):** [MANUAL_NAVEGACION_EVALUADOR_IEEE.md](docs/MANUAL_NAVEGACION_EVALUADOR_IEEE.md)  
 > **Devpost Submission:** [AMARU-CLIMATE Submission #1243712](https://devpost.com/submit-to/29114-ieee-climatechain-global-hackathon/manage/submissions/1243712/edit)  
-> **Sovereign Territorial Sandbox:** For detailed documentation on Peru's multi-hazard civil protection suite (1,891 districts, SINAGERD, SAC agricultural insurance, and MEF PP 0068 audits), see [README_PERU.md](README_PERU.md).
 
 ---
 
 ## 📑 Table of Contents
-1. [Lineage & Ecosystem Genealogy](#1-lineage--ecosystem-genealogy)
+1. [Executive Summary & Core Mission](#1-executive-summary--core-mission)
 2. [The Core Dilemma: The Golden Window vs. Post-Disaster Corruption](#2-the-core-dilemma-the-golden-window-vs-post-disaster-corruption)
 3. [Global Architecture: The 6 UN-EW4All / WMO Links](#3-global-architecture-the-6-un-ew4all--wmo-links)
 4. [Triple-Layer Cryptographic Trust Engine & Polygon Blockchain Notary](#4-triple-layer-cryptographic-trust-engine--polygon-blockchain-notary)
@@ -28,34 +26,18 @@
 
 ---
 
-## 1. Lineage & Ecosystem Genealogy
+## 1. Executive Summary & Core Mission
 
-The AMARU ecosystem is structured into three distinct, complementary tiers:
+**AMARU-GLOBAL** is a sovereign Command & Control (C2) framework and triple-layer cryptographic notary engineered for the United Nations Secretary-General’s **"Early Warnings for All" (UN-EW4All)** initiative. 
 
-```
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                               THE AMARU ECOSYSTEM GENEALOGY                            │
-└──────────────────────────────────────────┬─────────────────────────────────────────────┘
-                                           │
-         ┌─────────────────────────────────┼─────────────────────────────────┐
-         ▼                                 ▼                                 ▼
-┌─────────────────────────────┐ ┌─────────────────────────────┐ ┌─────────────────────────────┐
-│ 1. AMARU-CLIMATE (WFP SEED) │ │ 2. AMARU-CLIMATE (PERU)     │ │ 3. AMARU-GLOBAL (IEEE)      │
-│ Foundational Research Track │ │ Sovereign Regional Sandbox  │ │ Universal Standard Framework│
-├─────────────────────────────┤ ├─────────────────────────────┤ ├─────────────────────────────┤
-│• Focus: Climate Anticipatory│ │• Focus: Municipal C2 Command│ │• Focus: Global Multi-Agent  │
-│  Action (EAP) & Food Secu-  │ │  & Multi-Hazard Response    │ │  Reasoning & EVM Blockchain │
-│  rity under extreme ENSO.   │ │  for Peru's river basins.   │ │  Evidence Notary.           │
-│• Origin: WFP AFCIA LAC 2026 │ │• Architecture: 4-Tier Civil │ │• Hackathon: IEEE Climate-   │
-│  Innovation Initiative.     │ │  Protection C2 Suite.       │ │  Chain Global 2026.         │
-│• Role: The Scientific Seed  │ │• Role: High-Stress Real-    │ │• Role: Universal Standard   │
-│  and Prior Art foundation.  │ │  World Validation Testbed.  │ │  Engine for UN-EW4All MHEWS.│
-└─────────────────────────────┘ └─────────────────────────────┘ └─────────────────────────────┘
-```
+Disaster Risk Management (DRM) worldwide faces a severe operational tension: **bureaucratic paralysis during the pre-disaster "Golden Window"** (where local authorities hesitate to declare emergencies due to fear of prosecution) versus **rampant corruption and phantom procurement after impact**. 
 
-1. **AMARU-CLIMATE (WFP AFCIA LAC 2026 Seed):** Foundational research on predictive triggers and anticipatory action protocols (EAP) recognized under the **UN World Food Programme** innovation challenge.
-2. **AMARU-CLIMATE (Andean-Pacific Field Testbed):** The operational, real-world deployment across Peru's 1,891 districts. Acts as our rigorous validation laboratory, demonstrating that the architecture functions under extreme geographic stress (coastal flash floods vs. high-altitude freeze surges vs. Amazonian fires). See [README_PERU.md](README_PERU.md).
-3. **AMARU-GLOBAL (This Repository):** The universal, jurisdiction-agnostic Command & Control (C2) engine built for international disaster resilience. It operationalizes the **UN-EW4All 6-link protocol**, enforces **Human-in-the-Loop (HITL)** ethical constraints, and anchors decisions onto **Polygon** as mathematical proof against humanitarian corruption.
+AMARU-GLOBAL solves this systemic failure by combining:
+- **Autonomous Multi-Agent Satellite Fusion:** Continuous orbital nowcasting aggregating NASA FIRMS, Sentinel-3 and ensemble weather telemetry to uncover "Blind Emergencies" in real-time.
+- **Cognitive Caging & Human-In-The-Loop (HITL) Governance:** Strict AI guardrails ensuring no autonomous alarms can trigger public panic or financial release without verified human officer credentials.
+- **Zero-PII Privacy via Shamir's Secret Sharing ($k=3, n=5$):** Mathematical protection of humanitarian census records ensuring GDPR compliance and preventing retroactive victim tampering.
+- **Polygon Blockchain Notary (`ClimateAuditAnchor.sol`):** Cryptographic Merkle-root commits providing tamper-proof, publicly auditable proofs on Polygon Amoy.
+
 
 ---
 
@@ -77,8 +59,9 @@ AMARU-GLOBAL bridges predictive climate intelligence with cryptographic accounta
 ### Autonomous AI Agent Swarm & Blockchain Binding
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                   AMARU-CLIMATE: AUTONOMOUS AI AGENT SWARM ARCHITECTURE                 │
+│                   AMARU-GLOBAL: AUTONOMOUS AI AGENT SWARM ARCHITECTURE                 │
 └──────────────────────────────────────────┬─────────────────────────────────────────────┘
+
                                            │
          ┌─────────────────────────────────┼─────────────────────────────────┐
          ▼                                 ▼                                 ▼
